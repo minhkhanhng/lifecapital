@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Life Capital · Quản trị Năng lượng & Thời gian 2026</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
@@ -963,6 +963,9 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
   flex-wrap: wrap;
   gap: 10px;
 }
+:focus-visible { outline: 2px solid var(--ac); outline-offset: 2px; }
+.chg { font-weight: 700; background: var(--ac-soft); border-radius: 4px; padding: 0 3px; box-shadow: 0 0 0 1px var(--ac); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 </style>
 </head>
 <body>
@@ -972,7 +975,11 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
   <header class="app-header">
     <div class="brand-area">
       <h1 class="brand-title">Life Capital</h1>
-      <span class="brand-badge">2026</span>
+      <div class="row" style="gap:4px; align-items:center;">
+        <span class="brand-badge" id="brandYearBadge">2026</span>
+        <button class="btn btn-sm btn-ghost" onclick="changeYear(-1)" title="Xem năm trước" style="padding:2px 6px; font-size:11px;">◀</button>
+        <button class="btn btn-sm btn-ghost" onclick="changeYear(1)" title="Xem năm sau" style="padding:2px 6px; font-size:11px;">▶</button>
+      </div>
     </div>
     <div class="header-actions">
       <button class="btn btn-sm btn-ghost" id="themeBtn" onclick="toggleTheme()" title="Chuyển đổi giao diện Sáng / Tối">
@@ -1009,7 +1016,7 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
 
 <!-- Modal Editor Sheet -->
 <div class="modal-overlay" id="modalOverlay" onclick="handleBackdropClick(event)">
-  <div class="modal-sheet" id="modalSheet">
+  <div class="modal-sheet" id="modalSheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
     <div class="modal-header">
       <h3 class="modal-title" id="sheetTitle">Chi tiết ngày</h3>
       <button class="btn btn-sm btn-ghost" onclick="closeEditor()" title="Đóng (ESC)">✕</button>
@@ -1020,7 +1027,7 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
 
 <!-- Modal Tổng kết tuần -->
 <div class="modal-overlay" id="reviewModalOverlay" onclick="handleReviewBackdropClick(event)">
-  <div class="modal-sheet" id="reviewModalSheet" style="max-width:720px;">
+  <div class="modal-sheet" id="reviewModalSheet" style="max-width:720px;" role="dialog" aria-modal="true" aria-labelledby="reviewSheetTitle">
     <div class="modal-header">
       <h3 class="modal-title" id="reviewSheetTitle">🏆 Tổng kết Tuần</h3>
       <button class="btn btn-sm btn-ghost" onclick="closeReviewModal()" title="Đóng (ESC)">✕</button>
@@ -1030,7 +1037,7 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
 </div>
 
 <!-- Toast Container -->
-<div class="toast-container" id="toastContainer"></div>
+<div class="toast-container" id="toastContainer" aria-live="polite"></div>
 
 <script>
 /* ==========================================================================
@@ -1049,8 +1056,40 @@ const PALETTE = ["#E0A3BB", "#97A13B", "#4a859c", "#8b6da9", "#b88628", "#c24d5b
 
 const ad = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
 const ky = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
-const W0 = new Date(2025, 11, 29); // Monday Dec 29, 2025 = Tuần 1 năm 2026
-const W = [...Array(53)].map((_, i) => ad(W0, i * 7));
+function getWeek1Monday(year) {
+  const jan4 = new Date(year, 0, 4);
+  const day = jan4.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  return new Date(year, 0, 4 + diff);
+}
+
+function getWeeksOfYear(year) {
+  const w0 = getWeek1Monday(year);
+  const wNext0 = getWeek1Monday(year + 1);
+  const count = Math.round((wNext0 - w0) / (7 * 864e5));
+  return {
+    w0,
+    count,
+    weeks: [...Array(count)].map((_, i) => ad(w0, i * 7))
+  };
+}
+
+const isoYear = d => new Date(d.getFullYear(), d.getMonth(), d.getDate() + 3 - ((d.getDay() + 6) % 7)).getFullYear();
+let activeYear = isoYear(new Date());
+let yearData = getWeeksOfYear(activeYear);
+let W0 = yearData.w0;
+let W = yearData.weeks;
+
+function changeYear(delta) {
+  activeYear += delta;
+  yearData = getWeeksOfYear(activeYear);
+  W0 = yearData.w0;
+  W = yearData.weeks;
+  CW = wkNow();
+  sel = CW >= 0 ? CW : 0;
+  draw(true);
+  showToast(`Đã chuyển sang năm ${activeYear}`, "ok");
+}
 
 const sd = (m, d, t, c, h) => [ky(new Date(2026, m - 1, d)), { t, c, m: "u", h }];
 const SEED = [
@@ -1089,7 +1128,7 @@ function defState() {
 
 let S;
 try {
-  S = JSON.parse(localStorage.getItem("lc2") || "null") || defState();
+  S = cleanState(JSON.parse(localStorage.getItem("lc2") || "null")) || defState();
 } catch (e) {
   S = defState();
 }
@@ -1104,7 +1143,7 @@ Object.values(S.ev).forEach(sortL);
 
 const CM = k => S.caps.find(c => c.k === k) || { n: "(đã xóa)", c: "#888888", tg: 0 };
 const BL = k => S.bl[k] = S.bl[k] || { u: 0, d: 0 };
-const esc = s => String(s || "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const esc = s => String(s == null ? "" : s).replace(/[&<>"'`]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;", "`": "&#96;" }[c]));
 const $ = i => document.getElementById(i);
 const r1 = n => (Math.round((n || 0) * 10) / 10).toString();
 const pad = n => String(n).padStart(2, "0");
@@ -1115,7 +1154,9 @@ const tt = (s, h) => {
   return pad(m / 60 | 0) + ":" + pad(m % 60);
 };
 
+let CH = new Set(), PV = {}, dirty = false, TABDIR = 0;
 const save = () => {
+  dirty = true;
   try {
     localStorage.setItem("lc2", JSON.stringify(S));
   } catch (e) {
@@ -1131,7 +1172,8 @@ const wkNow = () => {
   const n = new Date();
   T0 = new Date(n.getFullYear(), n.getMonth(), n.getDate());
   tk = ky(T0);
-  return Math.min(52, Math.max(0, Math.floor(Math.round((T0 - W0) / 864e5) / 7)));
+  const i = Math.floor(Math.round((T0 - W0) / 864e5) / 7);
+  return i >= 0 && i < W.length ? i : -1;
 };
 let CW = wkNow(), lt = tk, sel = CW;
 let cur = "ca"; // Tabs: "ca" (Lịch tuần), "su" (Hiệu suất 168h), "set" (Cài đặt vốn), "bak" (Sao lưu)
@@ -1228,136 +1270,119 @@ function showToast(msg, type = "ok") {
    ========================================================================== */
 let parsedNLP = null;
 
+const toMin = s => { const [a, b] = s.split(":").map(Number); return a * 60 + b; };
+const WB = p => new RegExp("(?<![\\p{L}\\p{N}])(?:" + p + ")(?![\\p{L}\\p{N}])", "iu");
+const PER = "sáng|trưa|chiều|tối|đêm";
+
+// Kiểm tra giờ/thời lượng/trùng giờ — dùng chung cho modal, ghi nhanh và chuỗi lặp
+function chkEvent(date, s, h, skip) {
+  if (!(h > 0 && h <= 24)) return { err: "Số giờ phải lớn hơn 0 và tối đa 24." };
+  if (!s) return {};
+  const mn = toMin(s);
+  if (mn + h * 60 > 1440) return { err: "Hoạt động vượt quá nửa đêm. Hãy tách thành hai hoạt động." };
+  const hit = (S.ev[date] || []).find((y, i) => i !== skip && y.s && toMin(y.s) < mn + h * 60 && mn < toMin(y.s) + y.h * 60);
+  return { hit };
+}
+
 function parseNLPText(str) {
   if (!str || !str.trim()) return null;
-  const raw = str.trim();
-  const lower = raw.toLowerCase();
+  const raw = str.trim().normalize("NFC");
+  let w = " " + raw + " ";
+  const cut = re => { const m = w.match(re); if (m) w = w.replace(re, " "); return m; };
+  const base = new Date(); base.setHours(0, 0, 0, 0);
+  let target = base, dateDesc = "Hôm nay", per = null, m;
+  const setPer = x => { if (x) per = x.toLowerCase(); };
+  const wkBase = W[CW >= 0 ? CW : Math.min(Math.max(sel, 0), W.length - 1)];
 
-  // 1. Phân tích ngày
-  let targetDate = tk;
-  let dateDesc = "Hôm nay";
-  const now = new Date();
-
-  if (lower.includes("ngày mai") || lower.includes("sáng mai") || lower.includes("tối mai") || lower.includes("mai")) {
-    targetDate = ky(ad(now, 1));
-    dateDesc = "Ngày mai (" + targetDate.slice(5) + ")";
-  } else if (lower.includes("ngày mốt") || lower.includes("mốt") || lower.includes("ngày kia")) {
-    targetDate = ky(ad(now, 2));
-    dateDesc = "Ngày kia (" + targetDate.slice(5) + ")";
+  // 1. Ngày (khớp theo từ nguyên vẹn; "Mai" viết hoa được hiểu là tên người)
+  if ((m = cut(/(?<![\p{L}\p{N}])(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?(?![\p{L}\p{N}])/u))) {
+    const y = m[3] ? (+m[3] < 100 ? 2000 + +m[3] : +m[3]) : base.getFullYear(), d = new Date(y, +m[2] - 1, +m[1]);
+    if (d.getMonth() === +m[2] - 1) { target = d; dateDesc = DN_VI[(d.getDay() + 6) % 7] + " " + m[1] + "/" + m[2]; }
+  } else if (cut(/(?<![\p{L}\p{N}])(?:ngày\s+)?(?:mốt|kia)(?![\p{L}\p{N}])/iu)) {
+    target = ad(base, 2); dateDesc = "Ngày kia";
+  } else if ((m = cut(new RegExp("(?<![\\p{L}\\p{N}])(?:(" + PER + ")\\s+|ngày\\s+)mai(?![\\p{L}\\p{N}])", "iu"))) || (m = cut(/(?<![\p{L}\p{N}])mai(?![\p{L}\p{N}])/u))) {
+    setPer(m[1]); target = ad(base, 1); dateDesc = "Ngày mai";
+  } else if ((m = cut(new RegExp("(?<![\\p{L}\\p{N}])(?:(" + PER + ")\\s+)?(?:hôm\\s+)?nay(?![\\p{L}\\p{N}])", "iu")))) {
+    setPer(m[1]);
   } else {
-    const matchThu = lower.match(/(?:thứ|t)\s*([2-7]|hai|ba|tư|bốn|năm|sáu|bảy|cn|chủ nhật)/);
-    if (matchThu) {
-      const mapDays = { "2": 0, "hai": 0, "3": 1, "ba": 1, "4": 2, "tư": 2, "bốn": 2, "5": 3, "năm": 3, "6": 4, "sáu": 4, "7": 5, "bảy": 5, "cn": 6, "chủ nhật": 6 };
-      const dIdx = mapDays[matchThu[1]];
-      if (dIdx !== undefined) {
-        targetDate = ky(ad(W[CW], dIdx));
-        dateDesc = DN_VI[dIdx] + " (" + targetDate.slice(5) + ")";
-      }
-    }
+    let idx = null;
+    if ((m = cut(/(?<![\p{L}\p{N}])(?:thứ|thu|t)\s*([2-7])(?![\p{L}\p{N}])/iu))) idx = +m[1] - 2;
+    else if ((m = cut(/(?<![\p{L}\p{N}])thứ\s+(hai|ba|tư|bốn|năm|sáu|bảy)(?![\p{L}\p{N}])/iu))) idx = { hai: 0, ba: 1, tư: 2, bốn: 2, năm: 3, sáu: 4, bảy: 5 }[m[1].toLowerCase()];
+    else if (cut(WB("chủ nhật|cn"))) idx = 6;
+    if (idx !== null) { let d = ad(wkBase, idx); if (CW >= 0 && d < base) d = ad(d, 7); target = d; dateDesc = DN_VI[idx]; }
   }
 
-  // 2. Phân tích giờ bắt đầu
-  let startTime = "07:00";
-  const matchTime1 = lower.match(/(\d{1,2})h(\d{2})?/);
-  const matchTime2 = lower.match(/(\d{1,2}):(\d{2})/);
-  const matchTime3 = lower.match(/(\d{1,2})\s*(sáng|trưa|chiều|tối)/);
-
-  if (matchTime2) {
-    startTime = pad(matchTime2[1]) + ":" + pad(matchTime2[2]);
-  } else if (matchTime1) {
-    startTime = pad(matchTime1[1]) + ":" + pad(matchTime1[2] || 0);
-  } else if (matchTime3) {
-    let hr = parseInt(matchTime3[1], 10);
-    const period = matchTime3[2];
-    if ((period === "chiều" || period === "tối") && hr < 12) hr += 12;
-    startTime = pad(hr) + ":00";
+  // 2. Giờ bắt đầu & thời lượng ("2h" đứng một mình = thời lượng; dùng "lúc 18h", "18h30", "18:00", "7pm" để chỉ giờ bắt đầu)
+  let start = null, dur = null;
+  const hm = (a, b) => pad(Math.min(23, +a)) + ":" + pad(b ? +b : 0);
+  const adj = (hr, p) => { p = p || per; if ((p === "chiều" || p === "tối") && hr < 12) return hr + 12; if (p === "trưa" && hr >= 1 && hr <= 5) return hr + 12; if (p === "đêm" && hr >= 6 && hr < 12) return hr + 12; return hr; };
+  const ampm = (hr, ap) => /pm/i.test(ap) ? (hr < 12 ? hr + 12 : hr) : (hr === 12 ? 0 : hr);
+  if ((m = cut(/(?<![\p{L}\p{N}])(\d{1,2})(?:h|:|g)(\d{2})?\s*[-–]\s*(\d{1,2})(?:h|:|g)?(\d{2})?(?![\p{L}\p{N}])/iu))) {
+    const a = adj(+m[1]) * 60 + (+m[2] || 0), b = adj(+m[3]) * 60 + (+m[4] || 0);
+    if (b > a) { start = hm(a / 60 | 0, a % 60); dur = (b - a) / 60; }
   }
-
-  // 3. Phân tích thời lượng
-  let duration = 2;
-  const matchDurHour = lower.match(/(\d+(?:\.\d+)?)\s*(?:tiếng|giờ|h)\b/);
-  const matchDurMin = lower.match(/(\d+)\s*(?:phút|p)\b/);
-
-  if (matchDurHour) {
-    duration = parseFloat(matchDurHour[1]);
-  } else if (matchDurMin) {
-    duration = Math.round(parseInt(matchDurMin[1], 10) / 60 * 10) / 10;
+  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2}):(\d{2})(?![\p{L}\p{N}])/u))) start = hm(adj(+m[1]), m[2]);
+  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2})[hg](\d{2})(?![\p{L}\p{N}])/iu))) start = hm(adj(+m[1]), m[2]);
+  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(?:lúc|từ|vào|at|@)\s*(\d{1,2})(?:\s*(?:h|giờ|g))?(?:\s*(am|pm))?(?![\p{L}\p{N}])/iu))) start = hm(m[2] ? ampm(+m[1], m[2]) : adj(+m[1]), 0);
+  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2})\s*(?:h|giờ|g)?\s*(am|pm)(?![\p{L}\p{N}])/iu))) start = hm(ampm(+m[1], m[2]), 0);
+  if (start === null && (m = cut(new RegExp("(?<![\\p{L}\\p{N}])(\\d{1,2})\\s*(?:h|giờ|g)?\\s*(" + PER + ")(?![\\p{L}\\p{N}])", "iu")))) { start = hm(adj(+m[1], m[2].toLowerCase()), 0); setPer(m[2]); }
+  if (dur === null) {
+    if (cut(/(?<![\p{L}\p{N}])(?:nửa|1\/2)\s*(?:tiếng|giờ)(?![\p{L}\p{N}])/iu)) dur = 0.5;
+    else if ((m = cut(/(?<![\p{L}\p{N}])(\d+(?:[.,]\d+)?)\s*(?:tiếng|giờ|gio|hrs?|hours?)(\s*rưỡi)?(?![\p{L}\p{N}])/iu))) dur = parseFloat(m[1].replace(",", ".")) + (m[2] ? 0.5 : 0);
+    else if ((m = cut(/(?<![\p{L}\p{N}])(\d+)\s*(?:phút|phut|min|p)(?![\p{L}\p{N}])/iu))) dur = Math.round(+m[1] / 60 * 100) / 100;
   }
+  if ((m = cut(/(?<![\p{L}\p{N}])(\d{1,2}(?:[.,]\d+)?)h(?![\p{L}\p{N}])/iu))) {
+    const n = parseFloat(m[1].replace(",", "."));
+    if (start === null && (dur !== null || n > 4)) start = hm(adj(Math.floor(n)), Math.round((n % 1) * 60));
+    else if (dur === null) dur = n;
+  }
+  const key = ky(target);
+  if (!per) { const pw = w.match(WB(PER)); if (pw) per = pw[0].toLowerCase(); }
+  if (start === null) {
+    const dm = { sáng: "07:00", trưa: "12:00", chiều: "15:00", tối: "19:00", đêm: "21:00" };
+    const lastEv = (S.ev[key] || []).filter(e => e.s).pop();
+    start = per ? dm[per] : lastEv ? tt(lastEv.s, lastEv.h) : "07:00";
+  }
+  if (dur === null) dur = 2;
 
-  // 4. Lọc bỏ các từ khóa ngày/giờ để lấy tên hoạt động sạch
-  let cleanTitle = raw
-    .replace(/(?:hôm nay|ngày mai|sáng mai|tối mai|mai|mốt|ngày mốt|ngày kia)/gi, "")
-    .replace(/(?:thứ|t)\s*(?:[2-7]|hai|ba|tư|bốn|năm|sáu|bảy|cn|chủ nhật)/gi, "")
-    .replace(/(?:\d{1,2}h\d{0,2}|\d{1,2}:\d{2}|\d{1,2}\s*(?:sáng|trưa|chiều|tối))/gi, "")
-    .replace(/(?:\d+(?:\.\d+)?\s*(?:tiếng|giờ|h)|\d+\s*(?:phút|p))/gi, "")
-    .replace(/[,\-–]/g, " ")
-    .trim();
-
-  if (!cleanTitle) cleanTitle = "Hoạt động mới";
-
-  // 5. Dự đoán tác động nạp ▲ / tiêu ▼ và loại vốn
-  const hasDrain = ["họp", "meeting", "ot", "deadline", "công việc", "xử lý", "làm việc", "áp lực", "stress", "tăng ca"].some(k => lower.includes(k));
-  const mode = hasDrain ? "d" : "u";
-  const capKey = guess(cleanTitle);
-
-  return {
-    raw,
-    title: cleanTitle,
-    targetDate,
-    dateDesc,
-    startTime,
-    duration,
-    capKey,
-    mode
-  };
+  // 3. Tên hoạt động, tác động, loại vốn
+  let title = w.replace(/(?<![\p{L}\p{N}])(?:lúc|từ|vào|at|@)(?![\p{L}\p{N}])/giu, " ").replace(/[,;]+/g, " ").replace(/\s+/g, " ").trim();
+  if (!title) title = "Hoạt động mới";
+  const mode = WB("họp|meeting|deadline|ot|tăng ca|làm việc|công việc|xử lý|áp lực|stress").test(title) ? "d" : "u";
+  const c = chkEvent(key, start, dur, -1);
+  return { raw, title, targetDate: key, dateDesc: dateDesc + " (" + key.slice(5) + ")", startTime: start, duration: dur, capKey: guess(title), mode, err: c.err, hit: c.hit };
 }
 
 function handleNLPInput(val) {
   parsedNLP = parseNLPText(val);
   const p = $("nlpPreview");
-  if (!parsedNLP) {
-    p.style.display = "none";
-    return;
-  }
-  const cap = CM(parsedNLP.capKey);
+  if (!parsedNLP) { p.style.display = "none"; return; }
+  const r = parsedNLP, cap = CM(r.capKey);
   p.style.display = "flex";
   p.innerHTML = `
-    <span class="pill pill-cyan">📅 ${parsedNLP.dateDesc}</span>
-    <span class="pill pill-neutral">⏰ ${parsedNLP.startTime} (${parsedNLP.duration}h)</span>
-    <span class="pill ${parsedNLP.mode === 'u' ? 'pill-ok' : 'pill-bad'}">${parsedNLP.mode === 'u' ? '▲ Nạp' : '▼ Tiêu'}</span>
+    <span class="pill pill-cyan">📅 ${esc(r.dateDesc)}</span>
+    <span class="pill pill-neutral">⏰ ${r.startTime} – ${tt(r.startTime, r.duration)} (${r1(r.duration)}h)</span>
+    <span class="pill ${r.mode === "u" ? "pill-ok" : "pill-bad"}">${r.mode === "u" ? "▲ Nạp" : "▼ Tiêu"}</span>
     <span class="pill" style="background:${cap.c}; color:#fff;">🏷️ ${esc(cap.n)}</span>
-    <span style="font-weight:600; color:var(--tx); margin-left:4px;">"${esc(parsedNLP.title)}"</span>
-  `;
+    <span style="font-weight:600; color:var(--tx); margin-left:4px;">"${esc(r.title)}"</span>
+    ${r.err ? `<span class="pill pill-bad">⚠ ${esc(r.err)}</span>` : r.hit ? `<span class="pill pill-bad">⚠ Trùng giờ với "${esc(r.hit.t)}"</span>` : ""}`;
 }
 
 function executeNLP() {
   const input = $("nlpInput");
-  const res = parseNLPText(input.value);
-  if (!res) {
-    showToast("Vui lòng nhập nội dung!", "bad");
-    return;
-  }
-
-  const o = {
-    t: res.title,
-    c: res.capKey,
-    m: res.mode,
-    h: res.duration,
-    s: res.startTime
-  };
-
-  const L = S.ev[res.targetDate] = S.ev[res.targetDate] || [];
-  L.push(o);
+  const r = parseNLPText(input.value);
+  if (!r) { showToast("Vui lòng nhập nội dung!", "bad"); return; }
+  if (r.err) { showToast(r.err, "bad"); return; }
+  if (r.hit && !confirm(`Trùng giờ với "${r.hit.t}" (${r.hit.s}). Vẫn thêm?`)) return;
+  const L = S.ev[r.targetDate] = S.ev[r.targetDate] || [];
+  L.push({ t: r.title, c: r.capKey, m: r.mode, h: r.duration, s: r.startTime });
   sortL(L);
-
-  S.mem = S.mem || {};
-  S.mem[res.title.normalize("NFC").toLowerCase()] = { c: res.capKey };
-
+  S.mem[r.title.normalize("NFC").toLowerCase()] = { c: r.capKey };
   save();
   input.value = "";
   handleNLPInput("");
   draw();
-  showToast(`Đã thêm: "${res.title}" vào ${res.dateDesc}`, "ok");
+  showToast(`Đã thêm: "${r.title}" vào ${r.dateDesc}`, "ok");
 }
 
 /* ==========================================================================
@@ -1383,8 +1408,8 @@ function renderRadarChartSVG(weekIdx) {
 
   const dataPoints = caps.map((c, i) => {
     const w = wk(weekIdx, c.k);
-    const target = c.tg || 6;
-    const ratio = Math.min(1.2, Math.max(0.1, w.u / target));
+    const target = c.tg;
+    const ratio = target > 0 ? Math.min(1.2, Math.max(0.1, w.u / target)) : 0.1;
     const a = angles[i];
     return {
       x: cx + r * ratio * Math.cos(a),
@@ -1415,7 +1440,7 @@ function renderRadarChartSVG(weekIdx) {
 
   return `
     <div class="radar-box">
-      <svg class="radar-svg" viewBox="0 0 340 300">
+      <svg class="radar-svg" viewBox="-60 0 460 300">
         ${levelPolygons}
         ${axisLines}
         <polygon points="${polyStr}" fill="rgba(224, 163, 187, 0.35)" stroke="var(--ac)" stroke-width="2.5" />
@@ -1444,6 +1469,7 @@ function openWeeklyReviewModal(wIdx = sel) {
   });
   const totalAlloc = al(wIdx);
   const netEnergy = totalU - totalD;
+  const noData = evs(wIdx).length === 0;
 
   const capStats = S.caps.map(c => {
     const w = wk(wIdx, c.k);
@@ -1477,9 +1503,9 @@ function openWeeklyReviewModal(wIdx = sel) {
         <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
           <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Đánh giá pin tuần</div>
           <div style="font:700 20px Georgia, serif; margin-top:4px; color:${netEnergy >= 0 ? 'var(--ok)' : 'var(--bad)'}">
-            ${netEnergy >= 0 ? '🔋 Nạp pin tốt' : '🪫 Thâm hụt pin'}
+            ${noData ? '— Chưa có dữ liệu' : netEnergy >= 0 ? '🔋 Nạp pin tốt' : '🪫 Thâm hụt pin'}
           </div>
-          <small style="color:var(--tx-sec)">${netEnergy >= 0 ? 'Tuần tái tạo năng lượng hiệu quả' : 'Cần bù đắp nghỉ ngơi tuần sau'}</small>
+          <small style="color:var(--tx-sec)">${noData ? 'Hãy ghi hoạt động để có đánh giá' : netEnergy >= 0 ? 'Tuần tái tạo năng lượng hiệu quả' : 'Cần bù đắp nghỉ ngơi tuần sau'}</small>
         </div>
       </div>
 
@@ -1550,7 +1576,7 @@ const TABS = [
 
 function renderNav() {
   $("nav").innerHTML = TABS.map(t =>
-    `<button class="${t.id === cur ? "active" : ""}" onclick="switchTab('${t.id}')">
+    `<button class="${t.id === cur ? "active" : ""}" aria-current="${t.id === cur ? "page" : "false"}" onclick="switchTab('${t.id}')">
       <span>${t.icon}</span> <span>${t.label}</span>
     </button>`
   ).join("");
@@ -1558,7 +1584,7 @@ function renderNav() {
 
 function switchTab(tabId) {
   cur = tabId;
-  draw();
+  draw(true);
 }
 
 function toggleTheme() {
@@ -1566,7 +1592,7 @@ function toggleTheme() {
   const current = root.getAttribute("data-theme") || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
   const next = current === "dark" ? "light" : "dark";
   root.setAttribute("data-theme", next);
-  localStorage.setItem("lc_theme", next);
+  try { localStorage.setItem("lc_theme", next); } catch (e) {}
   updateThemeButton();
 }
 
@@ -1609,14 +1635,14 @@ const V = {
             <label style="font-weight:600; font-size:14px;">
               Tuần W${sel + 1} <span style="font-weight:400; color:var(--mu);">(${dateRangeStr})</span>
             </label>
-            <button class="btn btn-sm" onclick="sel=Math.min(52, sel+1); draw()" title="Tuần sau">▶</button>
-            ${sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=CW; draw()">Về tuần này (W${CW+1})</button>` : `<span class="pill pill-ok">Tuần hiện tại</span>`}
+            <button class="btn btn-sm" onclick="sel=Math.min(W.length - 1, sel + 1); draw()" title="Tuần sau">▶</button>
+            ${CW >= 0 && sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=Math.max(0, CW); draw()">Về tuần này (W${CW+1})</button>` : `<span class="pill pill-ok">Tuần hiện tại</span>`}
           </div>
           <div class="row">
             <div class="segmented-control">
               <button class="${calSubView === 'focus' ? 'active' : ''}" onclick="calSubView='focus'; draw()">Tuần chi tiết</button>
               <button class="${calSubView === 'timeline' ? 'active' : ''}" onclick="calSubView='timeline'; draw()">Dòng thời gian 24h</button>
-              <button class="${calSubView === 'year' ? 'active' : ''}" onclick="calSubView='year'; draw()">Lưới 53 tuần</button>
+              <button class="${calSubView === 'year' ? 'active' : ''}" onclick="calSubView='year'; draw(true)">Lưới 53 tuần</button>
             </div>
           </div>
         </div>
@@ -1759,17 +1785,17 @@ const V = {
 
     // 3. Chế độ LƯỚI 53 TUẦN (SỬA LỖI HOÀN CHỈNH)
     const pm = S.pm || "0";
-    const st = pm === "all" ? 0 : pm === "4" ? Math.max(0, CW - 4) : CW;
+    const st = pm === "all" ? 0 : pm === "4" ? Math.max(0, (CW >= 0 ? CW : 0) - 4) : (CW >= 0 ? CW : 0);
 
     const filterBar = `
       <div class="row" style="margin-bottom:12px; gap:8px;">
         <span style="font-size:12px; color:var(--mu);">Hiển thị:</span>
         <div class="segmented-control">
-          ${[["0", "Từ tuần này"], ["4", "+ 4 tuần gần nhất"], ["all", "Tất cả 53 tuần"]].map(o =>
+          ${[["0", "Từ tuần này"], ["4", "+ 4 tuần gần nhất"], ["all", "Tất cả " + W.length + " tuần"]].map(o =>
             `<button class="${pm === o[0] ? 'active' : ''}" onclick="S.pm='${o[0]}'; save(); draw(); scrollToCurrentWeek();">${o[1]}</button>`
           ).join("")}
         </div>
-        <button class="btn btn-sm btn-ghost" onclick="scrollToCurrentWeek()">⟲ Về tuần hiện tại (W${CW+1})</button>
+        <button class="btn btn-sm btn-ghost" onclick="scrollToCurrentWeek()">⟲ Về tuần hiện tại (W${CW >= 0 ? CW+1 : 1})</button>
       </div>
     `;
 
@@ -1784,14 +1810,14 @@ const V = {
       </thead>
       <tbody>`;
 
-    for (let i = st; i < 53; i++) {
+    for (let i = st; i < W.length; i++) {
       const m = W[i];
       let u = 0, d = 0;
       evs(i).forEach(e => e.m === "u" ? u += e.h : d += e.h);
       const isCurWeek = i === CW;
 
-      tbl += `<tr class="${isCurWeek ? 'current-week' : i < CW ? 'past-week' : ''}" id="${isCurWeek ? 'cw' : ''}">
-        <td>2026</td>
+      tbl += `<tr class="${isCurWeek ? 'current-week' : (CW >= 0 && i < CW) ? 'past-week' : ''}" id="${isCurWeek ? 'cw' : ''}">
+        <td>${m.getFullYear()}</td>
         <td><b>W${i + 1}</b></td>`;
 
       for (let j = 0; j < 7; j++) {
@@ -1879,8 +1905,8 @@ const V = {
             <select onchange="sel=+this.value; draw()" style="font-weight:600">
               ${W.map((m, i) => `<option value="${i}" ${i === sel ? 'selected' : ''}>Tuần W${i + 1} (${m.toLocaleDateString("vi-VN", { month: "numeric", day: "numeric" })})${i === CW ? ' - Hiện tại' : ''}</option>`).join("")}
             </select>
-            <button class="btn btn-sm" onclick="sel=Math.min(52, sel+1); draw()">▶</button>
-            ${sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=CW; draw()">Về tuần này</button>` : ""}
+            <button class="btn btn-sm" onclick="sel=Math.min(W.length - 1, sel + 1); draw()">▶</button>
+            ${CW >= 0 && sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=Math.max(0, CW); draw()">Về tuần này</button>` : ""}
           </div>
           <div class="row">
             <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(${sel})">🏆 Báo cáo tổng kết W${sel+1}</button>
@@ -1933,7 +1959,7 @@ const V = {
         <div class="card-header">
           <div>
             <h2 class="card-title">Bánh Xe Cuộc Đời (Wheel of Life)</h2>
-            <div class="card-sub">Trực quan hóa mức độ tròn trịa và cân bằng giữa 5 loại vốn trong tuần W${sel + 1}.</div>
+            <div class="card-sub">Trực quan hóa mức độ tròn trịa và cân bằng giữa ${S.caps.length} loại vốn trong tuần W${sel + 1}.</div>
           </div>
         </div>
         ${renderRadarChartSVG(sel)}
@@ -2075,6 +2101,7 @@ const V = {
     return `
       <div class="card">
         <h2 class="card-title">Sao Lưu & Khôi Phục Dữ Liệu</h2>
+        <div class="card-sub" style="color:${S.lb ? 'var(--tx-sec)' : 'var(--bad)'}">${S.lb ? "Sao lưu gần nhất: " + new Date(S.lb).toLocaleString("vi-VN") : "Bạn chưa sao lưu lần nào."}</div>
         <div class="card-sub">Dữ liệu hiện tại bao gồm <b>${totalEvents} hoạt động</b> được lưu an toàn trong trình duyệt của bạn.</div>
 
         <div style="margin:16px 0; display:flex; gap:10px; flex-wrap:wrap;">
@@ -2238,38 +2265,27 @@ function editEvent(idx) {
 }
 
 function saveEventFromForm() {
-  const title = $("inpTitle").value.trim();
-  const hours = +$("inpHours").value;
-  const start = $("inpStart").value;
-
-  if (!title) {
-    showToast("Vui lòng nhập tên hoạt động!", "bad");
-    $("inpTitle").focus();
-    return;
-  }
-  if (!(hours > 0 && hours <= 24)) {
-    showToast("Số giờ phải từ 0.5 đến 24!", "bad");
-    return;
-  }
-
-  const o = {
-    t: title,
-    c: $("inpCap").value,
-    m: $("inpMode").value,
-    h: hours,
-    s: start
-  };
-
+  const title = $("inpTitle").value.trim(), hours = +$("inpHours").value, start = $("inpStart").value;
+  if (!title) { showToast("Vui lòng nhập tên hoạt động!", "bad"); $("inpTitle").focus(); return; }
+  const c = chkEvent(ed, start, hours, ei);
+  if (c.err) { showToast(c.err, "bad"); return; }
+  const o = { t: title, c: $("inpCap").value, m: $("inpMode").value, h: hours, s: start };
   const L = S.ev[ed] = S.ev[ed] || [];
+  const ser = $("inpSeries"), applySeries = ei != null && L[ei] && L[ei].r && ser && ser.checked;
+  if (c.hit && !applySeries && !confirm(`Trùng giờ với "${c.hit.t}" (${c.hit.s}). Vẫn lưu?`)) return;
+  S.mem[title.normalize("NFC").toLowerCase()] = { c: o.c };
   if (ei != null) {
-    Object.assign(L[ei], o);
+    if (applySeries) {
+      const r0 = L[ei].r;
+      Object.keys(S.ev).forEach(k => { if (k >= ed) { S.ev[k].forEach(e => { if (e.r === r0) Object.assign(e, o); }); sortL(S.ev[k]); } });
+      showToast("Đã cập nhật cả chuỗi", "ok");
+    } else { Object.assign(L[ei], o); showToast("Đã cập nhật hoạt động", "ok"); }
     ei = null;
-    showToast("Đã cập nhật hoạt động", "ok");
   } else {
-    L.push(o);
-    showToast("Đã thêm hoạt động", "ok");
+    const rp = $("inpRepeat") ? $("inpRepeat").value : "";
+    if (rp) { const n = rep(ed, o, rp, $("inpRepeatEnd").value); if (!n) { if (!L.length) delete S.ev[ed]; return; } showToast(`Đã tạo chuỗi ${n} hoạt động`, "ok"); }
+    else { L.push(o); showToast("Đã thêm hoạt động", "ok"); }
   }
-
   sortL(L);
   save();
   renderEditorSheet();
@@ -2339,6 +2355,7 @@ function deleteCap(k) {
     showToast("Phải giữ lại ít nhất một loại vốn!", "bad");
     return;
   }
+  if (Object.values(S.ev).flat().some(e => e.c === k)) { showToast("Loại vốn này đang có hoạt động trong lịch. Hãy xóa hoặc đổi các hoạt động đó trước.", "bad"); return; }
   if (!confirm("Bạn có chắc muốn xóa loại vốn này?")) return;
   S.caps = S.caps.filter(c => c.k !== k);
   delete S.bl[k];
@@ -2347,46 +2364,52 @@ function deleteCap(k) {
   showToast("Đã xóa loại vốn", "ok");
 }
 
-function exportData(type) {
-  const todayStr = new Date().toISOString().slice(0, 10);
-  let content, filename, mime;
 
+const SAFE_K = /^(?!__proto__$)[\w-]{1,24}$/;
+function cleanCap(c) { return c && SAFE_K.test(c.k) ? { k: c.k, n: String(c.n || "Vốn").slice(0, 60), c: /^#[0-9a-f]{6}$/i.test(c.c) ? c.c : "#888888", tg: Math.max(0, +c.tg || 0) } : null; }
+function cleanEv(e) { return e && typeof e.t === "string" && +e.h > 0 && +e.h <= 24 && SAFE_K.test(e.c || "") ? { t: e.t.slice(0, 120), c: e.c, m: e.m === "d" ? "d" : "u", h: +e.h, s: /^\d\d:\d\d$/.test(e.s || "") ? e.s : "", ...(SAFE_K.test(e.r || "") ? { r: e.r } : {}) } : null; }
+// Chuẩn hóa mọi dữ liệu đọc từ localStorage hoặc tệp sao lưu (khóa an toàn, giá trị hợp lệ, bù trường thiếu)
+function cleanState(d) {
+  if (!d || typeof d !== "object" || !d.ev || typeof d.ev !== "object" || !Array.isArray(d.caps)) return null;
+  let caps = d.caps.map(cleanCap).filter(Boolean);
+  if (!caps.length) caps = DCAP.map(c => ({ k: c[0], n: c[1], c: c[2], tg: c[3] }));
+  const ev = {}, bl = {}, mem = {};
+  Object.keys(d.ev).forEach(k => { if (/^\d{4}-\d\d-\d\d$/.test(k) && Array.isArray(d.ev[k])) { const l = d.ev[k].map(cleanEv).filter(Boolean); if (l.length) ev[k] = l; } });
+  Object.keys(d.bl || {}).forEach(k => { if (SAFE_K.test(k) && d.bl[k]) bl[k] = { u: Math.max(0, +d.bl[k].u || 0), d: Math.max(0, +d.bl[k].d || 0) }; });
+  Object.keys(d.mem || {}).forEach(k => { if (k !== "__proto__" && d.mem[k] && SAFE_K.test(d.mem[k].c || "")) mem[k.slice(0, 120)] = { c: d.mem[k].c }; });
+  return { ev, caps, bl, mem, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
+}
+
+async function saveFile(filename, content, mime) {
+  try {
+    const DL = window.claude && window.claude.use ? await window.claude.use("downloads") : null;
+    if (DL) { await DL.save({ filename, data: content }); return true; }
+  } catch (e) { if (e && e.code === "declined") return false; }
+  const url = URL.createObjectURL(new Blob([content], { type: mime }));
+  const a = document.createElement("a");
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  return true;
+}
+
+async function exportData(type) {
+  const todayStr = ky(new Date());
+  let content, filename, mime;
   if (type === "json") {
     content = JSON.stringify({ app: "life-capital", v: 1, at: new Date().toISOString(), data: S }, null, 2);
-    filename = `life-capital-backup-${todayStr}.json`;
-    mime = "application/json";
+    filename = `life-capital-backup-${todayStr}.json`; mime = "application/json";
   } else {
-    const q = v => '"' + String(v).replace(/"/g, '""') + '"';
+    const q = v => { v = String(v); if (/^[=+\-@\t\r]/.test(v)) v = "'" + v; return '"' + v.replace(/"/g, '""') + '"'; };
     const rows = [["Ngày", "Bắt đầu", "Kết thúc", "Hoạt động", "Loại vốn", "Tác động", "Số giờ", "Lặp lại"]];
-    Object.keys(S.ev).sort().forEach(dt => {
-      S.ev[dt].forEach(e => {
-        rows.push([
-          dt,
-          e.s || "",
-          e.s ? tt(e.s, e.h) : "",
-          e.t,
-          CM(e.c).n,
-          e.m === "u" ? "Nạp" : "Tiêu",
-          e.h,
-          e.r ? "Có" : "Không"
-        ]);
-      });
-    });
+    Object.keys(S.ev).sort().forEach(dt => S.ev[dt].forEach(e => rows.push([dt, e.s || "", e.s ? tt(e.s, e.h) : "", e.t, CM(e.c).n, e.m === "u" ? "Nạp" : "Tiêu", e.h, e.r ? "Có" : "Không"])));
     content = "\ufeff" + rows.map(r => r.map(q).join(",")).join("\n");
-    filename = `life-capital-schedule-${todayStr}.csv`;
-    mime = "text/csv;charset=utf-8;";
+    filename = `life-capital-schedule-${todayStr}.csv`; mime = "text/csv;charset=utf-8;";
   }
-
-  const blob = new Blob([content], { type: mime });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  showToast(`Đã xuất tệp ${filename}`, "ok");
+  if (await saveFile(filename, content, mime)) {
+    if (type === "json") { S.lb = Date.now(); save(); draw(); }
+    showToast(`Đã xuất tệp ${filename}`, "ok");
+  }
 }
 
 function importData(inputEl) {
@@ -2396,18 +2419,27 @@ function importData(inputEl) {
   reader.onload = () => {
     try {
       const parsed = JSON.parse(reader.result);
-      const d = parsed && parsed.data;
-      if (!parsed || parsed.app !== "life-capital" || !d || !Array.isArray(d.caps)) {
-        throw new Error("Tệp không đúng định dạng Life Capital");
+      if (!parsed || parsed.app !== "life-capital") throw new Error("Tệp không đúng định dạng Life Capital");
+      const d = cleanState(parsed.data);
+      if (!d) throw new Error("Thiếu dữ liệu hoạt động hoặc loại vốn");
+      const n = Object.values(d.ev).flat().length;
+      const mode = ($("importModeSelect") || {}).value || "merge";
+      if (mode === "replace") {
+        if (!confirm(`Thay thế TOÀN BỘ dữ liệu hiện tại bằng tệp này (${n} hoạt động)? Nên xuất sao lưu hiện tại trước.`)) return;
+        d.lb = S.lb || 0; S = d;
+      } else {
+        if (!confirm(`Gộp ${n} hoạt động từ tệp vào dữ liệu hiện tại?`)) return;
+        d.caps.forEach(c => { if (!S.caps.some(x => x.k === c.k)) S.caps.push(c); });
+        Object.keys(d.bl).forEach(k => { if (!S.bl[k]) S.bl[k] = d.bl[k]; });
+        S.mem = Object.assign({}, d.mem, S.mem);
+        const sg = e => [e.t, e.s, e.c, e.m, e.h, e.r].join("|");
+        Object.keys(d.ev).forEach(k => { const L = S.ev[k] = S.ev[k] || []; d.ev[k].forEach(e => { if (!L.some(y => sg(y) === sg(e))) L.push(e); }); sortL(L); });
       }
-      S = d;
-      save();
-      draw();
+      save(); draw(true);
       showToast("Khôi phục dữ liệu thành công!", "ok");
     } catch (err) {
-      alert("Tệp sao lưu không hợp lệ: " + err.message);
-    }
-    inputEl.value = "";
+      showToast("Tệp sao lưu không hợp lệ: " + err.message, "bad");
+    } finally { inputEl.value = ""; }
   };
   reader.readAsText(file);
 }
@@ -2415,18 +2447,34 @@ function importData(inputEl) {
 /* ==========================================================================
    11. RENDER & KHỞI CHẠY
    ========================================================================== */
-function draw() {
+function draw(jump) {
   const headerWk = $("headerWeekNum");
   if (headerWk) headerWk.textContent = sel + 1;
+  const badge = $("brandYearBadge");
+  if (badge) badge.textContent = activeYear;
+  document.title = `Life Capital · Quản trị Năng lượng & Thời gian ${activeYear}`;
   renderNav();
   $("v").innerHTML = V[cur]();
   updateThemeButton();
 
-  // Tự động cuộn đến tuần hiện tại nếu đang mở chế độ lưới 53 tuần
-  if (cur === "ca" && calSubView === "year") {
+  // Tự động cuộn đến tuần hiện tại nếu đang mở chế độ lưới năm
+  if (jump && cur === "ca" && calSubView === "year") {
     scrollToCurrentWeek();
   }
 }
+
+// Tự động chuyển tuần khi sang thứ Hai mới
+function tick() {
+  if (ed) return;
+  const oldCW = CW, oldDay = lt, w = wkNow();
+  if (w !== oldCW) { if (sel === oldCW) sel = w >= 0 ? w : sel; CW = w; lt = tk; draw(true); }
+  else if (tk !== oldDay) { lt = tk; draw(); }
+}
+setInterval(tick, 60000);
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) tick();
+});
+window.addEventListener("focus", tick);
 
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") {
@@ -2435,12 +2483,114 @@ document.addEventListener("keydown", e => {
   }
 });
 
-const savedTheme = localStorage.getItem("lc_theme");
+let savedTheme = null;
+try { savedTheme = localStorage.getItem("lc_theme"); } catch (e) {}
 if (savedTheme) {
   document.documentElement.setAttribute("data-theme", savedTheme);
 }
 
-draw();
+/* ==========================================================================
+   12. MỞ RỘNG: CHUỖI LẶP, MẪU NHANH, NHẬN ĐỊNH, ĐÁNH DẤU SỐ ĐỔI, TRUY CẬP
+   ========================================================================== */
+let TPL = [], LF = null;
+function tpls() {
+  const m = {};
+  Object.values(S.ev).forEach(l => l.forEach(e => { const n = e.t.trim().toLowerCase(), x = m[n] = m[n] || { n: 0, e }; x.n++; x.e = e; }));
+  return Object.values(m).sort((a, b) => b.n - a.n).slice(0, 6).map(x => x.e);
+}
+function fillTpl(i) { const p = TPL[i]; if (!p) return; $("inpTitle").value = p.t; $("inpCap").value = p.c; $("inpMode").value = p.m; $("inpHours").value = p.h; }
+function rep(date, o, rp, end) {
+  const r = "r" + Date.now().toString(36), a = new Date(date + "T00:00"), z = new Date((end || activeYear + "-12-31") + "T00:00"), days = [];
+  for (let d = a; d <= z && days.length < 400; d = ad(d, 1)) { const g = d.getDay(); if (rp === "d" || (rp === "wd" && g > 0 && g < 6) || (rp === "w" && g === a.getDay())) days.push(ky(d)); }
+  if (!days.length) { showToast("Không tạo được chuỗi lặp: kiểm tra ngày kết thúc.", "bad"); return 0; }
+  const bad = o.s ? days.filter(k => chkEvent(k, o.s, o.h, -1).hit).length : 0;
+  if (bad && !confirm(`${bad} ngày trong chuỗi bị trùng giờ với hoạt động khác. Vẫn tạo chuỗi?`)) return 0;
+  days.forEach(k => { (S.ev[k] = S.ev[k] || []).push({ ...o, r }); sortL(S.ev[k]); });
+  return days.length;
+}
+function delSeries(i) {
+  const r = S.ev[ed][i].r;
+  if (!r || !confirm("Xóa tất cả hoạt động của chuỗi này từ ngày này trở đi?")) return;
+  Object.keys(S.ev).forEach(k => { if (k >= ed) { S.ev[k] = S.ev[k].filter(e => e.r !== r); if (!S.ev[k].length) delete S.ev[k]; } });
+  ei = null; save(); renderEditorSheet(); draw(); showToast("Đã xóa chuỗi hoạt động", "ok");
+}
+function decorateEditor() {
+  const body = $("sheetBody"); if (!body || !ed) return;
+  const L = S.ev[ed] || [], X = ei != null ? L[ei] : null;
+  body.querySelectorAll('button[onclick^="deleteEvent("]').forEach(b => { const i = +b.getAttribute("onclick").match(/\d+/)[0]; if (L[i] && L[i].r) b.insertAdjacentHTML("afterend", `<button class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="delSeries(${i})">Xóa chuỗi</button>`); });
+  const g = $("inpTitle") && $("inpTitle").closest(".form-group");
+  if (g && !X) { TPL = tpls(); if (TPL.length) g.insertAdjacentHTML("beforebegin", `<div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center"><span style="font-size:12px;color:var(--mu)">Hay dùng:</span>${TPL.map((p, i) => `<button class="btn btn-sm" style="border-color:${CM(p.c).c}" onclick="fillTpl(${i})">${esc(p.t)}</button>`).join("")}</div>`); }
+  const sb = [...body.querySelectorAll("button")].find(b => (b.getAttribute("onclick") || "").includes("saveEventFromForm"));
+  if (sb) sb.parentElement.insertAdjacentHTML("beforebegin", X ? (X.r ? `<label style="font-size:13px"><input type="checkbox" id="inpSeries"> Áp dụng cho cả chuỗi từ ngày này</label>` : "") :
+    `<div class="form-row"><div class="form-group"><label class="form-label" for="inpRepeat">Lặp lại</label><select id="inpRepeat"><option value="">Không lặp</option><option value="w">Hằng tuần, cùng thứ</option><option value="wd">Thứ 2 – Thứ 6</option><option value="d">Mọi ngày</option></select></div><div class="form-group"><label class="form-label" for="inpRepeatEnd">Đến ngày</label><input id="inpRepeatEnd" type="date" value="${activeYear}-12-31"></div></div>`);
+}
+const _res = renderEditorSheet; renderEditorSheet = function () { _res(); decorateEditor(); };
+const _oe = openEditor; openEditor = function (d, i) { LF = document.activeElement; _oe(d, i); };
+const _ce = closeEditor; closeEditor = function () { _ce(); if (LF && LF.focus) LF.focus(); };
+
+// Nhận định (trạng thái Đạt / Gần đạt / Thiếu) cho tab Tổng quan
+function conclCard() {
+  const nn0 = Math.max(0, W.findIndex((_, i) => evs(i).length)), from = N === 0 ? Math.min(nn0, sel) : Math.max(0, sel - N + 1), nn = sel - from + 1;
+  const D = S.caps.map(c => { let u = 0, d = 0; for (let i = from; i <= sel; i++) { const w = wk(i, c.k); u += w.u; d += w.d; } u /= nn; d /= nn; return { c, u, d, p: c.tg ? u / c.tg : null }; });
+  const T = D.filter(x => x.p != null), ok = T.filter(x => x.p >= 1).length, worst = T.filter(x => x.p < 1).sort((a, b) => (b.c.tg - b.u) - (a.c.tg - a.u))[0], drain = D.filter(x => x.d > 0 && x.d > x.u);
+  const chip = x => x.p == null ? "–" : x.p >= 1 ? '<span class="pill pill-ok">Đạt</span>' : x.p >= .6 ? '<span class="pill">Gần đạt</span>' : '<span class="pill pill-bad">Thiếu</span>';
+  return `<div class="card"><h2 class="card-title">Nhận định</h2>
+    <p>${T.length ? `<b>${ok}/${T.length}</b> vốn đạt mục tiêu (TB ${nn} tuần đến W${sel + 1}).` : "Chưa đặt mục tiêu cho vốn nào. Vào tab Cài đặt để đặt mục tiêu ▲/tuần."}${CW >= 0 && sel > CW ? " Đây là kế hoạch, chưa phải thực tế." : ""}</p>
+    ${worst ? `<p>Thiếu nhiều nhất: <b>${esc(worst.c.n)}</b>, TB ${r1(worst.u)}h so với mục tiêu ${r1(worst.c.tg)}h (thiếu ${r1(worst.c.tg - worst.u)}h/tuần).</p>` : ""}
+    ${drain.length ? `<p>Đang tiêu nhiều hơn nạp: <b>${drain.map(x => esc(x.c.n)).join(", ")}</b>.</p>` : ""}
+    <div style="display:flex;flex-wrap:wrap;gap:8px 18px">${D.map(x => `<span><span class="dot" style="background:${x.c.c}"></span> ${esc(x.c.n)} ${chip(x)}</span>`).join("")}</div></div>`;
+}
+const _su = V.su;
+V.su = function () {
+  let h = _su.call(V);
+  const card = conclCard(), re = /<div class="card">\s*<div class="card-header">\s*<div>\s*<h2 class="card-title">Bánh Xe/;
+  h = re.test(h) ? h.replace(re, m => card + m) : card + h;
+  let n = 0;
+  return h.replace(/(<[^>]*>)|(\d+(?:\.\d+)?[h%])/g, (m, t, v) => t ? t : `<span data-k="n${n++}">${v}</span>`);
+};
+const vals = () => { const o = {}, t = document.createElement("div"); t.innerHTML = V.su(); t.querySelectorAll("[data-k]").forEach(e => { o[e.dataset.k] = e.textContent; }); return o; };
+const mark = () => document.querySelectorAll("[data-k]").forEach(e => e.classList.toggle("chg", CH.has(e.dataset.k)));
+function layoutTimeline() {
+  const it = [...document.querySelectorAll(".timeline-event-block")].map(b => ({ b, t: parseFloat(b.style.top), h: parseFloat(b.style.height) })).sort((a, b) => a.t - b.t);
+  let cl = [], end = -1;
+  it.forEach(x => { if (x.t >= end) { cl.push([]); end = -1; } cl[cl.length - 1].push(x); end = Math.max(end, x.t + x.h); });
+  cl.forEach(g => { const lanes = []; g.forEach(x => { let l = lanes.findIndex(e => e <= x.t); if (l < 0) { l = lanes.length; lanes.push(0); } lanes[l] = x.t + x.h; x.l = l; }); g.forEach(x => { x.b.style.right = "auto"; x.b.style.left = `calc(${x.l * 100 / lanes.length}% + 2px)`; x.b.style.width = `calc(${100 / lanes.length}% - 4px)`; }); });
+}
+document.addEventListener("keydown", e => { TABDIR = e.key === "Tab" ? (e.shiftKey ? -1 : 1) : 0; }, true);
+const _draw = draw;
+draw = function (jump) {
+  const y = window.scrollY, tw = document.querySelector(".table-wrapper"), st = tw ? [tw.scrollTop, tw.scrollLeft] : null;
+  const fo = [...document.querySelectorAll("#v input,#v select")], ai = fo.indexOf(document.activeElement), td = TABDIR;
+  _draw(jump);
+  window.scrollTo(0, y);
+  const t2 = document.querySelector(".table-wrapper"); if (st && t2 && !jump) { t2.scrollTop = st[0]; t2.scrollLeft = st[1]; }
+  const nv = vals();
+  if (dirty) { const c = new Set(Object.keys(nv).filter(k => k in PV && PV[k] !== nv[k])); if (c.size) CH = c; dirty = false; }
+  PV = nv;
+  const v = $("v");
+  if (cur === "su" && CH.size) v.insertAdjacentHTML("afterbegin", '<div style="margin-bottom:10px;font-size:12.5px;color:var(--mu)">Số <b class="chg">in đậm có nền</b> là số vừa thay đổi sau chỉnh sửa gần nhất. <button class="btn btn-sm btn-ghost" onclick="CH=new Set();draw()">Bỏ đánh dấu</button></div>');
+  if (cur === "ca" && calSubView === "timeline") {
+    const k = ky(ad(W[sel], timelineDayIdx)), hid = (S.ev[k] || []).filter(e => !e.s || +e.s.slice(0, 2) < 6).length;
+    if (hid) v.insertAdjacentHTML("beforeend", `<p style="font-size:12.5px;color:var(--mu)">⚠ ${hid} hoạt động không hiển thị trên dòng thời gian (chưa có giờ bắt đầu hoặc trước 06:00). Xem ở chế độ "Tuần chi tiết".</p>`);
+    layoutTimeline();
+  }
+  mark(); TABDIR = 0;
+  if (ai >= 0) setTimeout(() => { const f = [...document.querySelectorAll("#v input,#v select")][ai + td]; if (f) { f.focus(); if (f.tagName === "INPUT" && f.type !== "color") f.select(); } }, 0);
+};
+document.addEventListener("keydown", e => {
+  if (e.key === "Tab") {
+    const ov = document.querySelector(".modal-overlay.open .modal-sheet");
+    if (ov) {
+      const f = [...ov.querySelectorAll('button,input,select,textarea,[tabindex]:not([tabindex="-1"])')].filter(x => !x.disabled && x.offsetParent !== null);
+      if (f.length) { const a = f[0], z = f[f.length - 1];
+        if (!ov.contains(document.activeElement) || (e.shiftKey && document.activeElement === a)) { e.preventDefault(); (e.shiftKey ? z : a).focus(); }
+        else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); } }
+    }
+  }
+  if ((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("cal-day-cell")) { e.preventDefault(); e.target.click(); }
+});
+
+draw(true);
 </script>
 </body>
 </html>
