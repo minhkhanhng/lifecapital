@@ -1153,40 +1153,57 @@ function changeYear(delta) {
   showToast(`Đã chuyển sang năm ${activeYear}`, "ok");
 }
 
-const sd = (m, d, t, c, h) => [ky(new Date(2026, m - 1, d)), { t, c, m: "u", h }];
-const SEED = [
-  [9, 9, "Đánh cầu", "sk", 2],
-  [9, 10, "Spa", "sk", 2],
-  [9, 11, "Đánh cầu", "sk", 2],
-  [9, 13, "Đi xem cầu lông", "tn", 2],
-  [9, 16, "Đánh cầu", "sk", 2],
-  [9, 18, "Dinner w chị em GM", "qh", 2.5],
-  [9, 25, "Đánh cầu", "sk", 2],
-  [9, 28, "Đánh cầu", "sk", 2],
-  [10, 2, "Dinner w bạn anh Tín", "qh", 2.5],
-  [10, 5, "Đánh cầu", "sk", 2],
-  [10, 7, "Đánh cầu", "sk", 2],
-  [10, 8, "Dinner w LHương", "qh", 2.5],
-  [10, 9, "Sinh nhật", "qh", 3],
-  [10, 12, "Đánh cầu", "sk", 2],
-  [10, 14, "Đánh cầu", "sk", 2],
-  [10, 18, "Đám cưới bạn anh", "qh", 4]
+// Dữ liệu mẫu ẩn danh, đặt theo tuần đang xem: [thứ (0 = T2), giờ, tiêu đề, vốn, Nạp/Tiêu, số giờ]
+const DEMO = [
+  [0, "06:30", "Chạy bộ", "sk", "u", 1],
+  [0, "09:00", "Làm việc dự án", "tc", "d", 8],
+  [1, "09:00", "Họp nhóm", "tc", "d", 2],
+  [1, "21:00", "Đọc sách", "kn", "u", 1],
+  [2, "18:30", "Gym", "sk", "u", 1.5],
+  [3, "09:00", "Làm việc dự án", "tc", "d", 8],
+  [3, "19:00", "Ăn tối cùng gia đình", "qh", "u", 1.5],
+  [4, "20:00", "Học tiếng Anh", "kn", "u", 1],
+  [5, "08:00", "Đánh cầu lông", "sk", "u", 2],
+  [5, "19:30", "Xem phim", "tn", "u", 2.5],
+  [6, "10:00", "Cà phê với bạn bè", "qh", "u", 2]
 ];
 
 function defState() {
-  const ev = {};
-  SEED.forEach(a => {
-    const [k, e] = sd(...a);
-    (ev[k] = ev[k] || []).push(e);
-  });
   return {
-    ev,
+    ev: {},
     caps: DCAP.map(c => ({ k: c[0], n: c[1], c: c[2], tg: c[3], kw: [...c[4]] })),
     bl: {},
     mem: {},
+    gdel: [],
     pm: "0",
     cfg: { defDuration: 2, burnoutHours: 6 }
   };
+}
+
+const hasDemo = () => Object.values(S.ev).some(l => l.some(e => e.demo));
+
+function loadDemo() {
+  const w = W[sel >= 0 ? sel : 0];
+  DEMO.forEach(([d, s, t, c, m, h]) => {
+    if (!S.caps.some(x => x.k === c)) return; // vốn mặc định đã bị xóa
+    const k = ky(ad(w, d));
+    const L = S.ev[k] = S.ev[k] || [];
+    L.push({ t, c, m, h, s, demo: 1 });
+    sortL(L);
+  });
+  save();
+  draw();
+  showToast("Đã thêm dữ liệu mẫu vào tuần đang xem", "ok");
+}
+
+function clearDemo() {
+  Object.keys(S.ev).forEach(k => {
+    S.ev[k] = S.ev[k].filter(e => !e.demo);
+    if (!S.ev[k].length) delete S.ev[k];
+  });
+  save();
+  draw();
+  showToast("Đã xóa dữ liệu mẫu", "ok");
 }
 
 const SAFE_K = /^(?!__proto__$)[\w-]{1,24}$/;
@@ -2398,6 +2415,30 @@ function renderSettingsModal() {
 /* ==========================================================================
    8. MAIN VIEWS
    ========================================================================== */
+// Thông báo đầu tab Lịch biểu: bắt đầu sử dụng, dữ liệu mẫu
+function calendarNotices() {
+  if (!Object.keys(S.ev).length) {
+    return `
+      <div class="review-prompt-banner">
+        <div>
+          <b>👋 Bắt đầu với Life Capital</b>
+          <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Gõ vào thanh ghi nhanh phía trên, ví dụ <i>"Mai 18h đánh cầu lông 2 tiếng"</i>, hoặc bấm "+ Thêm" ở một ngày bất kỳ.</div>
+        </div>
+        <button type="button" class="btn btn-sm" onclick="loadDemo()">Thử với dữ liệu mẫu</button>
+      </div>`;
+  }
+  if (hasDemo()) {
+    return `
+      <div class="review-prompt-banner">
+        <div>
+          <b>🧪 Đang dùng dữ liệu mẫu</b>
+          <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Dữ liệu mẫu không được đẩy lên Google Calendar. Hoạt động mẫu bạn đã sửa sẽ được giữ lại như dữ liệu thật.</div>
+        </div>
+        <button type="button" class="btn btn-sm btn-danger" onclick="clearDemo()">Xóa dữ liệu mẫu</button>
+      </div>`;
+  }
+  return "";
+}
 const V = {
   // --- TAB 1: LỊCH BIỂU (CALENDAR) ---
   ca() {
@@ -2419,6 +2460,7 @@ const V = {
     ` : '';
 
     const headerBar = `
+      ${calendarNotices()}
       ${reviewPrompt}
       <div class="card" style="margin-bottom:12px; padding:12px 16px;">
         <div class="card-header" style="margin-bottom:0">
