@@ -1015,7 +1015,7 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
     </div>
     <div class="header-actions">
       <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(sel)" title="Xem tổng kết thành tích theo tuần">
-        🏆 Tổng kết tuần W<span id="headerWeekNum"></span>
+        🏆 Tổng kết tuần
       </button>
       <button class="btn btn-sm btn-primary" onclick="openEditor(tk)">
         + Thêm hôm nay
@@ -1536,6 +1536,17 @@ function renderRadarChartSVG(weekIdx) {
 /* ==========================================================================
    6. TÍNH NĂNG 8: SUNDAY WEEKLY REVIEW MODAL (TỔNG KẾT TUẦN)
    ========================================================================== */
+function closeReviewModal() {
+  $("reviewModalOverlay").classList.remove("open");
+  if (LF && LF.focus) {
+    try { LF.focus(); } catch (e) {}
+  }
+}
+
+function handleReviewBackdropClick(e) {
+  if (e.target.id === "reviewModalOverlay") closeReviewModal();
+}
+
 function openWeeklyReviewModal(wIdx = sel) {
   wIdx = Math.max(0, Math.min(W.length - 1, wIdx));
   const wStart = W[wIdx];
@@ -1551,18 +1562,61 @@ function openWeeklyReviewModal(wIdx = sel) {
     totalD += w.d;
   });
   const totalAlloc = al(wIdx);
+  const freeTime = Math.max(0, 168 - totalAlloc);
   const netEnergy = totalU - totalD;
   const noData = evs(wIdx).length === 0;
 
+  // Thống kê chi tiết từng vốn
   const capStats = S.caps.map(c => {
     const w = wk(wIdx, c.k);
     const target = c.tg || 0;
-    const ratio = target > 0 ? (w.u / target) : 1;
+    const ratio = target > 0 ? (w.u / target) : (w.u > 0 ? 1 : 0);
     return { c, u: w.u, d: w.d, target, ratio, diff: w.u - target };
   });
 
-  const starCap = [...capStats].sort((a, b) => b.ratio - a.ratio)[0];
+  // Phân tích áp lực hàng ngày trong tuần
+  const dailyBreakdown = [];
+  for (let di = 0; di < 7; di++) {
+    const dDate = ad(wStart, di);
+    const dStr = ky(dDate);
+    const dayEvs = S.ev[dStr] || [];
+    let du = 0, dd = 0;
+    dayEvs.forEach(e => { if (e.m === "u") du += e.h; else dd += e.h; });
+    dailyBreakdown.push({ dayName: DN_VI[di], dStr, dd, du });
+  }
+  const peakDrain = [...dailyBreakdown].sort((a, b) => b.dd - a.dd)[0];
+  const peakRecharge = [...dailyBreakdown].sort((a, b) => b.du - a.du)[0];
+
+  const starCap = [...capStats].filter(x => x.u > 0).sort((a, b) => (b.ratio || 0) - (a.ratio || 0))[0];
   const laggingCap = [...capStats].filter(x => x.target > 0).sort((a, b) => a.diff - b.diff)[0];
+  const neglectedCaps = capStats.filter(x => x.u === 0 && x.d === 0);
+  const drainExceedingCaps = capStats.filter(x => x.d > 0 && x.d > x.u);
+
+  // Nhận định Cán cân năng lượng
+  let energyInsight = "";
+  if (noData) {
+    energyInsight = "Chưa có hoạt động nào được ghi nhận trong tuần này. Hãy ghi lại các thói quen hàng ngày để ứng dụng đo lường và đưa ra nhận định chính xác.";
+  } else if (netEnergy >= 4) {
+    energyInsight = `<b>Tái tạo năng lượng xuất sắc (Thặng dư +${r1(netEnergy)}h):</b> Tổng nạp (${r1(totalU)}h) vượt trội hoàn toàn so với tiêu hao (${r1(totalD)}h). Bạn đang có mức tích lũy pin sinh học dồi dào, tâm lý tích cực và thể lực vững vàng.`;
+  } else if (netEnergy >= 0) {
+    energyInsight = `<b>Cán cân năng lượng cân bằng lành mạnh (+${r1(netEnergy)}h):</b> Hoạt động tái tạo (${r1(totalU)}h) vừa đủ bù đắp năng lượng tiêu hao (${r1(totalD)}h). Cơ thể ở trạng thái ổn định, không có tích tụ kiệt sức.`;
+  } else if (netEnergy >= -4) {
+    energyInsight = `<b>Thâm hụt năng lượng nhẹ (${r1(netEnergy)}h):</b> Tiêu hao (${r1(totalD)}h) bắt đầu vượt lượng nạp (${r1(totalU)}h). Hãy chủ động tăng thời lượng ngủ và thư giãn để tránh mệt mỏi tích lũy.`;
+  } else {
+    energyInsight = `<b>Cảnh báo mức độ kiệt sức cao (-${r1(Math.abs(netEnergy))}h):</b> Áp lực và năng lượng tiêu hao (${r1(totalD)}h) quá nặng nề so với phục hồi (${r1(totalU)}h). Nguy cơ kiệt sức sinh học (burnout) rất cao nếu tiếp tục duy trì nhịp độ này.`;
+  }
+
+  // Nhận định Quỹ 168 giờ
+  let timeInsight = "";
+  if (noData) {
+    timeInsight = "Quỹ 168 giờ hoàn toàn trống.";
+  } else if (totalAlloc > 168) {
+    timeInsight = `<b>Quá tải quỹ thời gian (+${r1(totalAlloc - 168)}h):</b> Bạn đã phân bổ ${r1(totalAlloc)}h / 168h (${Math.round(totalAlloc/168*100)}%). Lịch trình đang bị dồn ép quá mức, lấn chiếm vào thời gian nghỉ ngơi và sinh hoạt cơ bản.`;
+  } else if (totalAlloc >= 110) {
+    timeInsight = `<b>Kiểm soát quỹ thời gian tối ưu (${r1(totalAlloc)}h / 168h):</b> Lịch trình được tổ chức chặt chẽ (${Math.round(totalAlloc/168*100)}%), đồng thời vẫn giữ được ${r1(freeTime)}h vùng đệm tự do cho sinh hoạt cá nhân.`;
+  } else {
+    timeInsight = `<b>Quỹ thời gian rất thông thoáng (${r1(totalAlloc)}h / 168h):</b> Bạn còn ${r1(freeTime)}h chưa phân bổ (${Math.round(freeTime/168*100)}%). Bạn hoàn toàn có thể chủ động thêm các mục tiêu phát triển chuyên môn hoặc rèn luyện thể chất.`;
+  }
 
   const html = `
     <div style="display:flex; flex-direction:column; gap:14px;">
@@ -1588,10 +1642,10 @@ function openWeeklyReviewModal(wIdx = sel) {
         </div>
       </div>
 
-      <!-- CÁC THẺ CHỈ SỐ -->
+      <!-- 3 THẺ CHỈ SỐ CỐT LÕI -->
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
         <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
-          <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Tổng Nạp / Rút</div>
+          <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Tổng Nạp / Tiêu</div>
           <div style="font:700 20px Georgia, serif; margin-top:4px;">
             <span style="color:var(--ok)">▲${r1(totalU)}h</span> · <span style="color:var(--bad)">▼${r1(totalD)}h</span>
           </div>
@@ -1603,18 +1657,19 @@ function openWeeklyReviewModal(wIdx = sel) {
             ${r1(totalAlloc)}h <span style="font-size:13px; font-weight:400; color:var(--mu);">(${Math.round(totalAlloc/168*100)}%)</span>
           </div>
           <small style="color:${totalAlloc > 168 ? 'var(--bad)' : 'var(--ok)'}">
-            ${totalAlloc > 168 ? 'Vượt giới hạn 168h!' : `Còn ${r1(168 - totalAlloc)}h chưa phân bổ`}
+            ${totalAlloc > 168 ? 'Vượt giới hạn 168h!' : `Còn ${r1(freeTime)}h tự do`}
           </small>
         </div>
         <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
           <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Đánh giá pin tuần</div>
           <div style="font:700 20px Georgia, serif; margin-top:4px; color:${netEnergy >= 0 ? 'var(--ok)' : 'var(--bad)'}">
-            ${noData ? '— Chưa có dữ liệu' : netEnergy >= 0 ? '🔋 Nạp pin tốt' : '🪫 Thâm hụt pin'}
+            ${noData ? '— Chưa có dữ liệu' : netEnergy >= 4 ? '🔋 Nạp pin xuất sắc' : netEnergy >= 0 ? '🔋 Pin ổn định' : '🪫 Thâm hụt pin'}
           </div>
-          <small style="color:var(--tx-sec)">${noData ? 'Hãy ghi hoạt động để có đánh giá' : netEnergy >= 0 ? 'Tuần tái tạo năng lượng hiệu quả' : 'Cần bù đắp nghỉ ngơi tuần sau'}</small>
+          <small style="color:var(--tx-sec)">${noData ? 'Ghi hoạt động để đánh giá' : netEnergy >= 0 ? 'Cân bằng phục hồi tốt' : 'Cần bù đắp nghỉ ngơi tuần tới'}</small>
         </div>
       </div>
 
+      <!-- BÁNH XE CUỘC ĐỜI CỦA TUẦN ĐÓ -->
       <div style="border:1px solid var(--bd); border-radius:var(--radius-md); padding:12px; background:var(--card);">
         <div style="font-weight:600; font-size:14px; margin-bottom:4px; text-align:center;">
           Bánh Xe Cuộc Đời · Tuần W${wIdx + 1}
@@ -1622,21 +1677,61 @@ function openWeeklyReviewModal(wIdx = sel) {
         ${renderRadarChartSVG(wIdx)}
       </div>
 
-      <div style="display:flex; flex-direction:column; gap:8px; font-size:13.5px;">
-        ${starCap ? `
-          <div style="padding:10px 14px; background:var(--ok-soft); border-radius:var(--radius-md); border-left:4px solid var(--ok);">
-            ⭐ <b>Điểm sáng của tuần:</b> Vốn <b>${esc(starCap.c.n)}</b> đạt <b>${r1(starCap.u)}h</b> (đạt ${Math.round(starCap.ratio*100)}% mục tiêu).
+      <!-- PHÂN TÍCH CHUYÊN SÂU & INSIGHTS ĐA CHIỀU -->
+      <div style="display:flex; flex-direction:column; gap:10px; font-size:13px;">
+        <!-- Insight 1: Cán cân năng lượng -->
+        <div style="padding:12px 14px; background:var(--card-subtle); border-radius:var(--radius-md); border:1px solid var(--bd); border-left:4px solid ${netEnergy >= 0 ? 'var(--ok)' : 'var(--bad)'};">
+          <div style="font-weight:600; font-size:13.5px; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+            <span>${netEnergy >= 0 ? '🔋' : '⚡'} Cán Cân Sinh Học & Nguy Cơ Kiệt Sức</span>
           </div>
-        ` : ''}
-        ${laggingCap && laggingCap.diff < 0 ? `
-          <div style="padding:10px 14px; background:var(--bad-soft); border-radius:var(--radius-md); border-left:4px solid var(--bad);">
-            ⚠️ <b>Cần bổ sung gấp:</b> Vốn <b>${esc(laggingCap.c.n)}</b> chỉ đạt ${r1(laggingCap.u)}h / ${r1(laggingCap.target)}h (thiếu hụt <b>${r1(Math.abs(laggingCap.diff))}h</b>).
+          <div style="color:var(--tx); line-height:1.5;">${energyInsight}</div>
+          ${peakDrain && peakDrain.dd > 2 ? `<div style="font-size:12px; color:var(--mu); margin-top:6px;">• Ngày chịu áp lực lớn nhất: <b>${peakDrain.dayName}</b> (tiêu hao ${r1(peakDrain.dd)}h).</div>` : ''}
+          ${peakRecharge && peakRecharge.du > 2 ? `<div style="font-size:12px; color:var(--mu); margin-top:2px;">• Ngày tái tạo năng lượng tốt nhất: <b>${peakRecharge.dayName}</b> (nạp +${r1(peakRecharge.du)}h).</div>` : ''}
+        </div>
+
+        <!-- Insight 2: Quỹ 168h -->
+        <div style="padding:12px 14px; background:var(--card-subtle); border-radius:var(--radius-md); border:1px solid var(--bd); border-left:4px solid var(--c-cyan);">
+          <div style="font-weight:600; font-size:13.5px; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+            <span>⏳ Quản Trị Quỹ 168 Giờ</span>
           </div>
-        ` : ''}
+          <div style="color:var(--tx); line-height:1.5;">${timeInsight}</div>
+        </div>
+
+        <!-- Insight 3: Đánh giá từng nguồn vốn -->
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          ${starCap ? `
+            <div style="padding:10px 14px; background:var(--ok-soft); border-radius:var(--radius-md); border-left:4px solid var(--ok);">
+              ⭐ <b>Điểm sáng của tuần:</b> Vốn <b>${esc(starCap.c.n)}</b> đạt <b>${r1(starCap.u)}h</b>${starCap.target ? ' (hoàn thành ' + Math.round(starCap.ratio*100) + '% mục tiêu)' : ''} — là nguồn cảm hứng bồi đắp lớn nhất tuần này.
+            </div>
+          ` : ''}
+          ${laggingCap && laggingCap.diff < 0 ? `
+            <div style="padding:10px 14px; background:var(--bad-soft); border-radius:var(--radius-md); border-left:4px solid var(--bad);">
+              ⚠️ <b>Cần tiếp sức khẩn cấp:</b> Vốn <b>${esc(laggingCap.c.n)}</b> chỉ đạt <b>${r1(laggingCap.u)}h</b> / ${r1(laggingCap.target)}h (thiếu hụt <b>${r1(Math.abs(laggingCap.diff))}h</b>). Trục này đang làm bánh xe cuộc đời bị lệch.
+            </div>
+          ` : ''}
+          ${drainExceedingCaps.length ? `
+            <div style="padding:10px 14px; background:var(--wa-soft); border-radius:var(--radius-md); border-left:4px solid var(--wa);">
+              ⚡ <b>Vốn chịu tải cao (Tiêu > Nạp):</b> <b>${drainExceedingCaps.map(x => esc(x.c.n) + ' (tiêu ' + r1(x.d) + 'h > nạp ' + r1(x.u) + 'h)').join(', ')}</b>.
+            </div>
+          ` : ''}
+          ${neglectedCaps.length ? `
+            <div style="padding:8px 12px; background:var(--card-subtle); border-radius:var(--radius-md); border:1px solid var(--bd); font-size:12.5px; color:var(--mu);">
+              💤 <b>Chưa phân bổ thời gian:</b> Tuần này bạn chưa dành thời lượng cho <b>${neglectedCaps.map(x => esc(x.c.n)).join(', ')}</b>.
+            </div>
+          ` : ''}
+        </div>
       </div>
 
-      <div style="padding:12px; background:var(--c-blush); border-radius:var(--radius-md); font-size:13px; color:var(--on-blush);">
-        💡 <b>Đề xuất kế hoạch tuần tới:</b> Hãy ưu tiên lên lịch ngay cho <b>${laggingCap ? esc(laggingCap.c.n) : 'các sở thích cá nhân'}</b> vào Thứ 2 hoặc Thứ 4 tới để cân bằng bánh xe cuộc sống.
+      <!-- Insight 4: Kế hoạch hành động cụ thể cho tuần tới -->
+      <div style="padding:14px; background:var(--c-blush); border-radius:var(--radius-md); font-size:13px; color:var(--on-blush); border:1px solid var(--ac);">
+        <div style="font-weight:700; font-size:13.5px; margin-bottom:6px; display:flex; align-items:center; gap:6px;">
+          <span>🎯 Kế Hoạch Hành Động Tuần Tới</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:4px; line-height:1.5;">
+          <div>1. <b>Ưu tiên nguồn vốn yếu:</b> Lên lịch ngay 1–2 buổi cho <b>${laggingCap ? esc(laggingCap.c.n) : 'hoạt động phục hồi'}</b> vào Thứ 3 hoặc Thứ 5.</div>
+          <div>2. <b>Bảo vệ năng lượng:</b> ${peakDrain && peakDrain.dd > 3 ? `Nếu <b>${peakDrain.dayName}</b> tiếp tục là ngày bận rộn, hãy chủ động nghỉ ngơi sớm vào tối hôm đó.` : 'Giữ thói quen ngủ đủ giấc để duy trì pin năng lượng dương.'}</div>
+          <div>3. <b>Giữ vững đà tăng trưởng:</b> Tiếp tục phát huy thế mạnh ở vốn <b>${starCap ? esc(starCap.c.n) : 'chủ lực'}</b>.</div>
+        </div>
       </div>
 
       <div style="display:flex; justify-content:flex-end; gap:8px;">
@@ -2173,7 +2268,7 @@ const V = {
             ${CW >= 0 && sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=Math.max(0, CW); draw()">Về tuần này</button>` : ""}
           </div>
           <div class="row">
-            <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(${sel})">🏆 Báo cáo tổng kết W${sel+1}</button>
+            <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(${sel})">🏆 Báo cáo tổng kết tuần</button>
             <select onchange="N=+this.value; draw()">
               <option value="4" ${N === 4 ? 'selected' : ''}>TB 4 tuần</option>
               <option value="8" ${N === 8 ? 'selected' : ''}>TB 8 tuần</option>
@@ -2432,25 +2527,17 @@ function handleBackdropClick(e) {
   if (e.target.id === "modalOverlay") closeEditor();
 }
 
-function editEvent(idx) {
-  ei = idx;
-  renderEditorSheet();
-  setTimeout(() => {
-    const inp = $("inpTitle");
-    if (inp) {
-      inp.focus();
-      inp.select();
-    }
-  }, 50);
-}
-
-function cancelEdit() {
+function deleteCurrentEvent() {
+  if (ei == null || !ed || !S.ev[ed] || !S.ev[ed][ei]) return;
+  if (!confirm("Bạn có chắc chắn muốn xóa hoạt động này?")) return;
+  const delTitle = S.ev[ed][ei].t;
+  S.ev[ed].splice(ei, 1);
+  if (!S.ev[ed].length) delete S.ev[ed];
   ei = null;
-  renderEditorSheet();
-  setTimeout(() => {
-    const inp = $("inpTitle");
-    if (inp) inp.focus();
-  }, 50);
+  save();
+  draw();
+  closeEditor();
+  showToast(`Đã xóa "${delTitle}"`, "ok");
 }
 
 function tpls() {
@@ -2514,8 +2601,8 @@ function delSeries(i) {
   });
   ei = null;
   save();
-  renderEditorSheet();
   draw();
+  closeEditor();
   showToast("Đã xóa chuỗi hoạt động định kỳ", "ok");
 }
 
@@ -2548,79 +2635,23 @@ function renderEditorSheet() {
   const L = S.ev[ed] || [];
   const X = ei != null ? L[ei] : null;
   const last = L.filter(y => y.s).pop();
+  const defaultDuration = (S && S.cfg && S.cfg.defDuration) ? S.cfg.defDuration : 2;
   const defaultStartTime = X ? (X.s || "") : last ? tt(last.s, last.h) : "07:00";
 
   const dateObj = new Date(ed + "T00:00");
   const dateFormatted = dateObj.toLocaleDateString("vi-VN", { weekday: "long", day: "numeric", month: "numeric", year: "numeric" });
-  $("sheetTitle").innerHTML = `<span>📅 ${dateFormatted}</span>`;
+  $("sheetTitle").innerHTML = `<span>${X ? '✏️ Chỉnh sửa hoạt động' : '+ Thêm hoạt động mới'} · ${dateFormatted}</span>`;
 
-  let html = "";
-
-  // 1. Danh sách hoạt động hiện có trong ngày
-  if (L.length > 0) {
-    html += `
-      <div class="form-group" style="margin-bottom:6px;">
-        <div class="form-label" style="display:flex; justify-content:space-between; align-items:center;">
-          <span>Các hoạt động trong ngày (${L.length})</span>
-          ${ei != null ? `<span style="color:var(--ac); font-weight:600; font-size:11.5px;">Đang chọn sửa mục #${ei + 1}</span>` : ''}
-        </div>
-        <div style="display:flex; flex-direction:column; gap:6px; max-height:170px; overflow-y:auto; padding-right:2px;">
-          ${L.map((y, i) => {
-            const cap = CM(y.c);
-            const isEditing = i === ei;
-            return `
-              <div style="display:flex; justify-content:space-between; align-items:center; padding:7px 10px; background:${isEditing ? 'var(--ac-soft)' : 'var(--card-subtle)'}; border-radius:var(--radius-md); border-left:4px solid ${cap.c}; border:${isEditing ? '1.5px solid var(--ac)' : '1px solid var(--bd)'};">
-                <div style="flex:1; min-width:0; margin-right:8px;">
-                  <div style="font-weight:600; font-size:13px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">
-                    ${y.r ? '<span title="Chuỗi lặp lại">↻ </span>' : ''}${y.m === 'u' ? '▲ Nạp' : '▼ Tiêu'} ${esc(y.t)}
-                  </div>
-                  <div style="font-size:11.5px; color:var(--mu); margin-top:2px;">
-                    ${y.s ? y.s + ' – ' + tt(y.s, y.h) + ' · ' : ''}${r1(y.h)}h · <span style="color:${cap.c}; font-weight:600;">${esc(cap.n)}</span>
-                  </div>
-                </div>
-                <div class="row" style="gap:4px; flex-shrink:0;">
-                  <button type="button" class="btn btn-sm ${isEditing ? 'btn-primary' : 'btn-ghost'}" onclick="editEvent(${i})" style="padding:3px 8px; font-size:11.5px;">
-                    ${isEditing ? 'Đang sửa' : 'Sửa'}
-                  </button>
-                  <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad); padding:3px 8px; font-size:11.5px;" onclick="deleteEvent(${i})" title="Xóa hoạt động này">
-                    Xóa
-                  </button>
-                  ${y.r ? `
-                    <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad); padding:3px 8px; font-size:11px;" onclick="delSeries(${i})" title="Xóa toàn bộ chuỗi lặp">
-                      Xóa chuỗi
-                    </button>
-                  ` : ''}
-                </div>
-              </div>
-            `;
-          }).join("")}
-        </div>
-      </div>
-    `;
-  }
-
-  // 2. Biểu mẫu thêm / chỉnh sửa
   const quickTpls = !X ? tpls() : [];
 
-  html += `
-    <div style="border-top:1px solid var(--bd); padding-top:12px; display:flex; flex-direction:column; gap:11px;">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div style="font-weight:600; font-size:14px; color:var(--tx); display:flex; align-items:center; gap:6px;">
-          ${X ? '✏️ Chỉnh sửa hoạt động' : '+ Thêm hoạt động mới'}
-        </div>
-        ${X ? `
-          <button type="button" class="btn btn-sm btn-ghost" onclick="cancelEdit()" style="font-size:12px; color:var(--ac);">
-            ← Hủy sửa, thêm mới
-          </button>
-        ` : ''}
-      </div>
-
+  let html = `
+    <div style="display:flex; flex-direction:column; gap:12px;">
       ${!X && quickTpls.length > 0 ? `
-        <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center; padding:6px 8px; background:var(--card-subtle); border-radius:var(--radius-sm); border:1px solid var(--bd);">
-          <span style="font-size:11.5px; color:var(--mu); font-weight:600;">Hay dùng:</span>
+        <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center; padding:6px 10px; background:var(--card-subtle); border-radius:var(--radius-sm); border:1px solid var(--bd);">
+          <span style="font-size:11.5px; color:var(--mu); font-weight:600;">Gợi ý nhanh:</span>
           ${quickTpls.map((p, idx) => `
             <button type="button" class="btn btn-sm btn-ghost"
-                    style="border:1px solid var(--bd); padding:2px 7px; font-size:11.5px; background:var(--card);"
+                    style="border:1px solid var(--bd); padding:2px 8px; font-size:11.5px; background:var(--card);"
                     onclick='fillTpl(${JSON.stringify(p).replace(/'/g, "&#39;")})'>
               <span class="dot" style="background:${CM(p.c).c}; width:6px; height:6px;"></span> ${esc(p.t)}
             </button>
@@ -2663,7 +2694,7 @@ function renderEditorSheet() {
           <label class="form-label" for="inpHours">Thời lượng (giờ)</label>
           <div style="display:flex; align-items:center; gap:6px;">
             <button type="button" class="btn btn-sm" onclick="adjustHours(-0.5)" style="padding:5px 8px;">-0.5</button>
-            <input id="inpHours" type="number" step="0.5" min="0.5" max="24" value="${X ? X.h : 2}" style="flex:1; text-align:center;">
+            <input id="inpHours" type="number" step="0.5" min="0.5" max="24" value="${X ? X.h : defaultDuration}" style="flex:1; text-align:center;">
             <button type="button" class="btn btn-sm" onclick="adjustHours(0.5)" style="padding:5px 8px;">+0.5</button>
           </div>
         </div>
@@ -2673,7 +2704,7 @@ function renderEditorSheet() {
         <div style="padding:6px 10px; background:var(--card-subtle); border-radius:var(--radius-sm); border:1px solid var(--bd);">
           <label style="font-size:12.5px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
             <input type="checkbox" id="inpSeries">
-            <b>Áp dụng cho cả chuỗi</b> từ ngày này trở đi
+            <b>Áp dụng thay đổi cho cả chuỗi</b> từ ngày này trở đi
           </label>
         </div>
       ` : '') : `
@@ -2694,28 +2725,37 @@ function renderEditorSheet() {
         </div>
       `}
 
-      <div style="display:flex; gap:8px; margin-top:8px; justify-content:flex-end; align-items:center; flex-wrap:wrap;">
-        ${X ? `
-          <button type="button" class="btn" onclick="cancelEdit()">Hủy sửa</button>
-          <button type="button" class="btn btn-primary" onclick="saveEventFromForm(true)">
-            Lưu thay đổi
-          </button>
-        ` : `
-          <button type="button" class="btn btn-ghost" onclick="saveEventFromForm(false)" title="Lưu hoạt động này và tiếp tục nhập hoạt động khác">
-            + Lưu & Thêm tiếp
-          </button>
-          <button type="button" class="btn btn-primary" onclick="saveEventFromForm(true)">
-            Thêm vào lịch
-          </button>
-        `}
-      </div>
+      <!-- NÚT HÀNH ĐỘNG TINH GỌN -->
+      ${X ? `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; gap:8px; flex-wrap:wrap;">
+          <div class="row" style="gap:6px;">
+            <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="deleteCurrentEvent()">
+              🗑️ Xóa hoạt động
+            </button>
+            ${X.r ? `
+              <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="delSeries(${ei})">
+                Xóa cả chuỗi
+              </button>
+            ` : ''}
+          </div>
+          <div class="row" style="gap:8px;">
+            <button type="button" class="btn btn-ghost" onclick="closeEditor()">Hủy</button>
+            <button type="button" class="btn btn-primary" onclick="saveEventFromForm()">Lưu thay đổi</button>
+          </div>
+        </div>
+      ` : `
+        <div style="display:flex; justify-content:flex-end; align-items:center; margin-top:10px; gap:8px;">
+          <button type="button" class="btn btn-ghost" onclick="closeEditor()">Hủy</button>
+          <button type="button" class="btn btn-primary" onclick="saveEventFromForm()">Lưu</button>
+        </div>
+      `}
     </div>
   `;
 
   $("sheetBody").innerHTML = html;
 }
 
-function saveEventFromForm(andClose = true) {
+function saveEventFromForm() {
   const title = $("inpTitle").value.trim(), hours = +$("inpHours").value, start = $("inpStart").value;
   if (!title) { showToast("Vui lòng nhập tên hoạt động!", "bad"); $("inpTitle").focus(); return; }
   const c = chkEvent(ed, start, hours, ei);
@@ -2742,7 +2782,6 @@ function saveEventFromForm(andClose = true) {
       Object.assign(L[ei], o);
       showToast(`Đã cập nhật "${title}"`, "ok");
     }
-    ei = null;
   } else {
     const rp = $("inpRepeat") ? $("inpRepeat").value : "";
     if (rp) {
@@ -2751,36 +2790,14 @@ function saveEventFromForm(andClose = true) {
       showToast(`Đã tạo chuỗi ${n} hoạt động "${title}"`, "ok");
     } else {
       L.push(o);
-      showToast(`Đã thêm "${title}"`, "ok");
+      showToast(`Đã thêm "${title}" vào lịch`, "ok");
     }
   }
 
   sortL(L);
   save();
   draw();
-
-  if (andClose) {
-    closeEditor();
-  } else {
-    ei = null;
-    renderEditorSheet();
-    setTimeout(() => {
-      const inp = $("inpTitle");
-      if (inp) inp.focus();
-    }, 60);
-  }
-}
-
-function deleteEvent(idx) {
-  if (!confirm("Bạn có chắc muốn xóa hoạt động này?")) return;
-  const deletedTitle = S.ev[ed][idx].t;
-  S.ev[ed].splice(idx, 1);
-  if (!S.ev[ed].length) delete S.ev[ed];
-  ei = null;
-  save();
-  renderEditorSheet();
-  draw();
-  showToast(`Đã xóa "${deletedTitle}"`, "ok");
+  closeEditor();
 }
 
 function handleTimelineGridClick(event, dateStr) {
@@ -2929,7 +2946,7 @@ function importData(inputEl) {
    ========================================================================== */
 function draw(jump) {
   const headerWk = $("headerWeekNum");
-  if (headerWk) headerWk.textContent = sel + 1;
+  if (headerWk) headerWk.textContent = "";
   const badge = $("brandYearBadge");
   if (badge) badge.textContent = activeYear;
   document.title = `Life Capital · Quản trị Năng lượng & Thời gian ${activeYear}`;
