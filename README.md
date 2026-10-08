@@ -1,0 +1,3157 @@
+[Uploading README.md…]()
+# Life Capital · Quản trị Năng lượng & Thời gian
+
+Ứng dụng web cá nhân hoá giúp quản trị năng lượng, tối ưu hoá quỹ 168 giờ và cân bằng 5 loại vốn cuộc sống (Health, Relationship, Experience, Skill, Finance & Career).
+
+---
+
+## 1. Triết lý & Mô hình Cốt lõi
+
+- **5 Loại Vốn Cuộc Sống (The 5 Life Capitals)**:
+  1. 🌿 **Sức khỏe (Health)** `#97A13B` - Thể lực, giấc ngủ, rèn luyện, dinh dưỡng, tái tạo năng lượng thể chất.
+  2. 🌸 **Quan hệ (Relationship)** `#E0A3BB` - Gia đình, bạn bè, người thương, kết nối xã hội sâu sắc.
+  3. 🔮 **Trải nghiệm (Experience)** `#8b6da9` - Khám phá, du lịch, nghệ thuật, niềm vui sống, mở rộng góc nhìn.
+  4. 🌊 **Kỹ năng (Skill)** `#4a859c` - Học hỏi, đọc sách, tích luỹ tri thức, rèn luyện chuyên môn.
+  5. 🪙 **Tài chính / Công việc (Finance & Career)** `#b88628` - Sự nghiệp, tạo ra giá trị, quản lý tài sản.
+
+- **Cơ chế Nạp ▲ (Recharge) vs Tiêu ▼ (Drain)**:
+  - **Nạp (▲)**: Hoạt động bồi đắp, tích luỹ và phục hồi vốn sống.
+  - **Tiêu (▼)**: Hoạt động tiêu hao, sử dụng năng lượng hoặc tạo áp lực (họp hành, deadline, làm việc căng thẳng).
+
+- **Khung 168 Giờ (The 168-Hour Framework)**:
+  - 1 tuần = 24h × 7 ngày = 168 giờ.
+  - Mọi người đều có 168 giờ bình đẳng như nhau. Ứng dụng giúp bạn nhìn rõ số giờ đã phân bổ, số giờ còn trống cho sinh hoạt cá nhân và cảnh báo khi ghi chép vượt quá 168h.
+
+- **Chỉ số Pin Năng Lượng (Daily Battery & Burnout Warning)**:
+  - Cán cân mỗi ngày: Net = Tổng Nạp (▲) - Tổng Tiêu (▼).
+  - Pin xanh khi nạp dương, pin đỏ khi tiêu hao nhiều hơn nạp.
+  - Cảnh báo **⚡ Kiệt sức** tự động kích hoạt nếu ngày đó có từ 6h tiêu hao hoặc thâm hụt ≥ 4h mà không được nghỉ ngơi bù đắp (có thể tùy chỉnh ngưỡng trong Cài đặt).
+
+- **Bánh xe cuộc đời (Wheel of Life Radar Chart)**:
+  - Biểu đồ radar 5 trục SVG chuẩn công thái học thể hiện độ tròn trịa và cân bằng giữa các nguồn vốn mỗi tuần.
+  - Tích hợp vòng đo 33% - 66% - 100% mục tiêu, tính toán tự động Điểm cân bằng bánh xe (Balance Score).
+
+---
+
+## 2. Bảng Màu & Hệ thống Thiết kế (Design System)
+
+- **Màu chủ đạo (Primary)**: `#E0A3BB` (Mauve Rose)
+- **4 Màu bổ trợ (Supporting)**:
+  - `#F4DFE6` (Blush Soft) - Nền thanh tiến trình, hover state, card phụ
+  - `#D6E6E7` (Mist Cyan) - Nhãn thời gian, trạng thái pin cân bằng
+  - `#C5CC82` (Sage Olive) - Trạng thái nạp nhẹ, nhãn đạt chuẩn
+  - `#97A13B` (Deep Olive Green) - Chỉ báo Nạp ▲, pin sạc dương
+- **Nền web**: Pha thêm 5% màu trắng (`#fdfcfd` / `color-mix(in srgb, #faf7f8 95%, #ffffff 5%)`) mang lại cảm giác sáng sủa, thanh lịch và trong trẻo.
+- **Hỗ trợ giao diện Sáng / Tối (Light & Dark Mode) chuẩn công thái học**:
+  - Hỗ trợ chuyển đổi thủ công hoặc tự động theo hệ điều hành (`color-scheme: dark`).
+  - Nền tối sâu trầm ấm `#151113`, thẻ `#1f191c`, chữ tương phản cao, chống lóa mắt vào ban đêm.
+
+---
+
+## 3. Các Tính năng Nổi bật & Tối ưu Hoàn thiện
+
+1. ⚡ **Command Bar Ghi nhanh bằng ngôn ngữ tự nhiên**:
+   - Nhập: *"Mai 18h đánh cầu lông 2 tiếng"* hoặc *"Hôm nay 20h đọc sách 1h"*.
+   - Tự động nhận diện ngày, giờ bắt đầu, thời lượng, loại vốn và tác động Nạp/Tiêu theo thời gian thực.
+2. 📅 **3 Chế độ Xem Lịch Biểu**:
+   - **Tuần chi tiết**: 7 thẻ ngày responsive kèm Pin năng lượng và nút thêm nhanh.
+   - **Dòng thời gian 24h (Timeline)**: Trục thời gian dọc từ 06:00 đến 24:00, trực quan hoá các khối sự kiện. Tích hợp thuật toán **chia làn song song (Lane Splitting)** khi các sự kiện bị trùng khung giờ.
+   - **Lưới 53 tuần**: Toàn cảnh cả năm có thanh cuộn và tự động định vị tuần hiện tại.
+3. ⚙️ **Trung Tâm Cài Đặt & Dữ Liệu Tinh Gọn (Settings Modal)**:
+   - Nút `⚙️` trên header tập trung toàn bộ cấu hình: Chuyển theme (Sáng/Tối/Theo máy), Sao lưu JSON/CSV, Khôi phục, Đặt thời lượng mặc định và Ngưỡng báo kiệt sức.
+   - Thanh điều hướng chính tinh gọn thành 3 tab cốt lõi: **Lịch biểu**, **Tổng quan & 168h**, **Danh mục vốn**.
+4. 🏆 **Bản Tin Tổng Kết Tuần Linh Hoạt (Weekly Review with Week Selector)**:
+   - Cho phép chọn xem báo cáo tổng kết của **bất kỳ tuần nào** trong năm (từ W1 đến W52/53) qua bộ chuyển tuần `[ ◀ | ▶ ]` và menu thả xuống ngay trong popup.
+   - Đánh giá Điểm sáng của tuần, Vốn cần cứu trợ, Bánh xe cuộc đời và gợi ý kế hoạch tuần mới.
+5. 🛠️ **Popup Thêm / Sửa Hoạt Động Thông Minh**:
+   - Tự động đóng popup khi bấm Lưu để xác nhận hoàn tất; tuỳ chọn bấm `+ Lưu & Thêm tiếp` để nhập liên tục.
+   - Chống lưu ngang khi gõ tiếng Việt: Phím Enter trong ô tên hoạt động tự động chuyển tiêu điểm sang ô giờ bắt đầu, không lưu khi chưa bấm nút.
+   - Phân định rõ ràng giữa chế độ Thêm mới và Sửa, có nút `Hủy sửa` tiện lợi.
+6. 🎡 **Bánh Xe Cuộc Đời (Radar Chart) Chuẩn Hoá**:
+   - Khung hình mở rộng chống cắt chữ trên mọi kích thước màn hình.
+   - Xử lý hoàn hảo các loại vốn chưa đặt mục tiêu hoặc đạt 0 giờ.
+   - Tích hợp chỉ số Điểm cân bằng bánh xe (Balance Score) trực quan.
+7. 🌐 **Động cơ Đa năm tự động (Multi-Year Engine)**:
+   - Tự động nhận diện và tính toán 52/53 tuần theo chuẩn quốc tế **ISO 8601**.
+   - Tự chuyển sang năm 2027, 2028 khi qua năm mới; có nút `[ ◀ | ▶ ]` chuyển năm linh hoạt.
+8. 💾 **Bảo mật & Toàn vẹn Dữ liệu (Security & Data Integrity)**:
+   - Bộ lọc `cleanState` khử mã độc và chống Prototype Pollution khi nhập sao lưu JSON.
+   - Phòng chống CSV Injection tự động khi xuất dữ liệu bảng tính.
+   - Tải tệp sao lưu `.json` và lịch trình `.csv` trực tiếp qua Native Blob Download.
+   - Lưu trữ `localStorage` bền bỉ lên đến 30 - 40 năm.
+9. 📱 **Chuẩn Progressive Web App (PWA)**:
+   - Tích hợp `manifest.json` và `icon.svg` 5 cánh hoa độc quyền.
+   - Cài đặt lên màn hình chính iPhone/Android, chạy toàn màn hình như Native App.
+
+---
+
+## 4. Hướng dẫn Triển khai & Sử dụng
+
+### Cách 1: Sử dụng Offline trên máy tính
+Chỉ cần nhấp đúp vào tệp `index.html` để mở trực tiếp trên trình duyệt (Chrome, Safari, Edge, Brave).
+
+### Cách 2: Đưa lên Hosting miễn phí (Vercel / Netlify / GitHub Pages)
+- **Qua Netlify Drop (30 giây)**: Kéo cả thư mục `life-capital` thả vào [app.netlify.com/drop](https://app.netlify.com/drop).
+- **Qua GitHub + Vercel**: Đẩy 3 tệp (`index.html`, `manifest.json`, `icon.svg`) lên kho GitHub rồi kết nối với Vercel để nhận đường link HTTPS miễn phí vĩnh viễn (vd: `https://lifecapital.vercel.app`).
+
+### Cài đặt thành App trên iPhone:
+1. Mở link trên **Safari**.
+2. Nhấn nút **Chia sẻ** (biểu tượng hình vuông có mũi tên lên).
+3. Chọn **Thêm vào Màn hình chính** (Add to Home Screen).
+
+---
+
+## 5. Toàn bộ Mã nguồn Hoàn chỉnh (`index.html`)
+
+Dưới đây là mã nguồn độc lập đầy đủ (Full Standalone Source Code) của tệp `index.html`:
+
+```html
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Life Capital · Quản trị Năng lượng & Thời gian 2026</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Life Capital">
+<meta name="theme-color" content="#E0A3BB">
+<style>
+/* ==========================================================================
+   BẢNG MÀU CHỦ ĐẠO & BỔ TRỢ:
+   - Màu chủ đạo: #E0A3BB (Mauve Rose)
+   - Màu bổ trợ:
+     * #F4DFE6 (Blush Soft)
+     * #D6E6E7 (Mist Cyan)
+     * #C5CC82 (Sage Light Olive)
+     * #97A13B (Deep Olive Green)
+   - Nền web pha thêm 5% màu trắng để sáng và thông thoáng hơn
+   ========================================================================== */
+:root {
+  color-scheme: light;
+  --ac: #E0A3BB;               /* Màu chủ đạo: Mauve Rose */
+  --ac-hover: #d28faa;
+  --ac-soft: rgba(224, 163, 187, 0.22);
+  --ac-dark: #642841;          /* Chữ tương phản cao */
+
+  /* Màu bổ trợ */
+  --c-blush: #F4DFE6;          /* Bổ trợ 1: Hồng phấn nhạt */
+  --c-cyan: #D6E6E7;           /* Bổ trợ 2: Xanh ngọc mây nhạt */
+  --c-sage: #C5CC82;           /* Bổ trợ 3: Xanh xám oliu sáng */
+  --c-olive: #97A13B;          /* Bổ trợ 4: Xanh oliu đậm */
+
+  /* Nền web pha thêm 5% màu trắng */
+  --bg: #fdfcfd;
+  --bg-color-mixed: color-mix(in srgb, #faf7f8 95%, #ffffff 5%);
+  --card: #ffffff;
+  --card-subtle: #fcf8fa;
+  --tx: #251d21;
+  --tx-sec: #594d53;
+  --mu: #85767d;
+  --bd: #ebdde2;
+  --bd-focus: #E0A3BB;
+  --bar: #F4DFE6;              /* Thanh tiến trình / track nền */
+
+  --ok: #97A13B;               /* Nạp năng lượng ▲ (Olive đậm) */
+  --ok-soft: rgba(197, 204, 130, 0.28);
+  --bad: #c24d5b;              /* Rút năng lượng ▼ */
+  --bad-soft: rgba(224, 163, 187, 0.25);
+  --wa: #b87b1e;
+  --wa-soft: rgba(184, 123, 30, 0.15);
+  --hd: #642841;               /* Header bảng */
+
+  --shadow-sm: 0 1px 3px rgba(100, 40, 65, 0.04);
+  --shadow-md: 0 4px 14px rgba(100, 40, 65, 0.07);
+  --shadow-lg: 0 12px 32px rgba(100, 40, 65, 0.14);
+
+  --on-ac: #421629;            /* Chữ trên nền hồng phấn --ac: luôn tối để rõ nét */
+  --on-olive: #ffffff;         /* Chữ trên nền xanh oliu đậm --c-olive */
+  --on-cyan: #1a4245;          /* Chữ trên nền xanh mây --c-cyan */
+  --on-blush: #642841;         /* Chữ trên nền blush --c-blush */
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+  box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #151113;
+    --bg-color-mixed: #151113;
+    --card: #1f191c;
+    --card-subtle: #292125;
+    --tx: #f8eff3;
+    --tx-sec: #b9abb2;
+    --mu: #94858d;
+    --ac: #E0A3BB;
+    --ac-hover: #ebbcd0;
+    --ac-soft: rgba(224, 163, 187, 0.2);
+    --ac-dark: #642841;
+
+    --c-blush: #34262c;
+    --c-cyan: #1d2f31;
+    --c-sage: #383e22;
+    --c-olive: #C5CC82;
+
+    --bd: #3d2f36;
+    --bd-focus: #E0A3BB;
+    --bar: #2b2226;
+    --ok: #C5CC82;
+    --ok-soft: rgba(197, 204, 130, 0.2);
+    --bad: #ea6b77;
+    --bad-soft: rgba(234, 107, 119, 0.2);
+    --wa: #e5a13c;
+    --wa-soft: rgba(229, 161, 60, 0.2);
+    --hd: #381624;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 14px rgba(0,0,0,0.4);
+    --shadow-lg: 0 12px 32px rgba(0,0,0,0.6);
+
+    --on-ac: #381220;          /* Chữ trên nền hồng phấn --ac: luôn tối để rõ nét */
+    --on-olive: #242c09;       /* Chữ trên nền xanh oliu sáng #C5CC82 */
+    --on-cyan: #a3e8ee;        /* Chữ sáng trên nền cyan tối */
+    --on-blush: #fcebf2;       /* Chữ sáng trên nền blush tối */
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #151113;
+  --bg-color-mixed: #151113;
+  --card: #1f191c;
+  --card-subtle: #292125;
+  --tx: #f8eff3;
+  --tx-sec: #b9abb2;
+  --mu: #94858d;
+  --ac: #E0A3BB;
+  --ac-hover: #ebbcd0;
+  --ac-soft: rgba(224, 163, 187, 0.2);
+  --ac-dark: #642841;
+
+  --c-blush: #34262c;
+  --c-cyan: #1d2f31;
+  --c-sage: #383e22;
+  --c-olive: #C5CC82;
+
+  --bd: #3d2f36;
+  --bd-focus: #E0A3BB;
+  --bar: #2b2226;
+  --ok: #C5CC82;
+  --ok-soft: rgba(197, 204, 130, 0.2);
+  --bad: #ea6b77;
+  --bad-soft: rgba(234, 107, 119, 0.2);
+  --wa: #e5a13c;
+  --wa-soft: rgba(229, 161, 60, 0.2);
+  --hd: #381624;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 14px rgba(0,0,0,0.4);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.6);
+
+  --on-ac: #381220;          /* Chữ trên nền hồng phấn --ac: luôn tối để rõ nét */
+  --on-olive: #242c09;       /* Chữ trên nền xanh oliu sáng #C5CC82 */
+  --on-cyan: #a3e8ee;        /* Chữ sáng trên nền cyan tối */
+  --on-blush: #fcebf2;       /* Chữ sáng trên nền blush tối */
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  background: var(--bg-color-mixed, var(--bg));
+  color: var(--tx);
+  font: 14px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-variant-numeric: tabular-nums;
+  padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
+  min-height: 100vh;
+}
+
+/* App Shell */
+.app-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 16px 14px;
+}
+
+/* Header */
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--bd);
+}
+.brand-area {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.brand-title {
+  font: 700 24px/1.2 Georgia, "Times New Roman", serif;
+  margin: 0;
+  color: var(--tx);
+  letter-spacing: -0.5px;
+}
+.brand-badge {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: var(--ac-soft);
+  color: var(--ac);
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Command Bar (Tính năng 4: Natural Language Quick Input) */
+.quick-capture-box {
+  background: var(--card);
+  border: 1.5px solid var(--ac);
+  border-radius: var(--radius-lg);
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 10px var(--ac-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.quick-capture-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.quick-capture-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  color: var(--tx);
+  outline: none;
+  padding: 4px 0;
+}
+.quick-capture-input::placeholder {
+  color: var(--mu);
+}
+.quick-preview-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--bd);
+}
+
+/* Primary Tabs Nav */
+nav.main-nav {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 2px 12px 2px;
+  position: sticky;
+  top: 0;
+  background: var(--bg-color-mixed, var(--bg));
+  z-index: 20;
+  backdrop-filter: blur(8px);
+  -webkit-overflow-scrolling: touch;
+}
+nav.main-nav::-webkit-scrollbar { display: none; }
+nav.main-nav button {
+  border: 1px solid var(--bd);
+  background: var(--card);
+  color: var(--tx-sec);
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  font-size: 13.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+  box-shadow: var(--shadow-sm);
+}
+nav.main-nav button:hover {
+  background: var(--c-blush);
+  color: var(--tx);
+  border-color: var(--ac);
+}
+nav.main-nav button.active {
+  background: var(--ac);
+  color: var(--on-ac);
+  border-color: var(--ac);
+  font-weight: 600;
+  box-shadow: 0 2px 8px var(--ac-soft);
+}
+
+/* Card & Buttons */
+.card {
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.card-title {
+  margin: 0;
+  font: 600 17px/1.3 Georgia, serif;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-sub {
+  color: var(--mu);
+  font-size: 13px;
+  margin-top: 3px;
+}
+.row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.btn {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--bd);
+  background: var(--card);
+  color: var(--tx);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+.btn:hover {
+  background: var(--c-blush);
+  border-color: var(--ac);
+}
+.btn.btn-primary {
+  background: var(--ac);
+  color: var(--on-ac);
+  border-color: var(--ac);
+  font-weight: 600;
+}
+.btn.btn-primary:hover {
+  background: var(--ac-hover);
+  box-shadow: 0 2px 8px var(--ac-soft);
+}
+.btn.btn-accent-olive {
+  background: var(--c-olive);
+  color: var(--on-olive);
+  border-color: var(--c-olive);
+}
+.btn.btn-sm {
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: var(--radius-sm);
+}
+.btn.btn-ghost {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+.btn.btn-ghost:hover {
+  background: var(--c-blush);
+}
+.btn.btn-danger {
+  color: var(--bad);
+  border-color: var(--bad-soft);
+}
+.btn.btn-danger:hover {
+  background: var(--bad-soft);
+}
+
+input, select, textarea {
+  font: inherit;
+  font-size: 13.5px;
+  padding: 8px 12px;
+  border: 1px solid var(--bd);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  color: var(--tx);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--bd-focus);
+  box-shadow: 0 0 0 3px var(--ac-soft);
+}
+input[type="number"] { width: 80px; }
+input[type="time"] { min-width: 105px; }
+
+/* Status Badges */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 500;
+}
+.pill.pill-ok { background: var(--ok-soft); color: var(--ok); }
+.pill.pill-bad { background: var(--bad-soft); color: var(--bad); }
+.pill.pill-cyan { background: var(--c-cyan); color: var(--on-cyan); }
+.pill.pill-blush { background: var(--c-blush); color: var(--on-blush); }
+.pill.pill-neutral { background: var(--bar); color: var(--tx-sec); }
+
+.dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* View Switcher */
+.segmented-control {
+  display: inline-flex;
+  background: var(--bar);
+  padding: 3px;
+  border-radius: var(--radius-md);
+  gap: 2px;
+}
+.segmented-control button {
+  border: none;
+  background: transparent;
+  color: var(--tx-sec);
+  padding: 6px 12px;
+  font-size: 12.5px;
+  font-weight: 500;
+  border-radius: calc(var(--radius-md) - 2px);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.segmented-control button.active {
+  background: var(--card);
+  color: var(--tx);
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Pin năng lượng (Daily Battery Widget) */
+.battery-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+  font-size: 11.5px;
+  font-weight: 600;
+}
+.battery-badge.positive {
+  background: var(--ok-soft);
+  color: var(--ok);
+}
+.battery-badge.negative {
+  background: var(--bad-soft);
+  color: var(--bad);
+}
+.battery-badge.balanced {
+  background: var(--c-cyan);
+  color: var(--on-cyan);
+}
+.battery-badge.idle {
+  background: var(--bar);
+  color: var(--mu);
+}
+.battery-icon {
+  width: 18px;
+  height: 10px;
+  border: 1.5px solid currentColor;
+  border-radius: 2.5px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 1px;
+}
+.battery-icon::after {
+  content: "";
+  position: absolute;
+  right: -3.5px;
+  top: 2px;
+  bottom: 2px;
+  width: 2px;
+  background: currentColor;
+  border-radius: 0 1px 1px 0;
+}
+.battery-fill {
+  height: 100%;
+  background: currentColor;
+  border-radius: 1px;
+  transition: width 0.3s;
+}
+
+/* Calendar Week Cards (Tuần chi tiết) */
+.week-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+}
+@media (max-width: 992px) {
+  .week-cards-grid { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 640px) {
+  .week-cards-grid { grid-template-columns: 1fr; }
+}
+
+.day-card {
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+  overflow: hidden;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.day-card:hover {
+  border-color: var(--ac);
+  box-shadow: var(--shadow-sm);
+}
+.day-card.today {
+  border: 2px solid var(--ac);
+  background: color-mix(in srgb, var(--ac) 5%, var(--card));
+}
+.day-card-header {
+  padding: 8px 10px;
+  background: var(--card-subtle);
+  border-bottom: 1px solid var(--bd);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.day-card.today .day-card-header {
+  background: var(--ac);
+  color: var(--on-ac);
+}
+.day-card.today .day-card-header .day-name,
+.day-card.today .day-card-header .day-date {
+  color: var(--on-ac);
+}
+.day-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--tx);
+}
+.day-date {
+  font-size: 12px;
+  color: var(--mu);
+}
+.day-battery-row {
+  padding: 5px 10px;
+  background: color-mix(in srgb, var(--bar) 50%, var(--card));
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--bd);
+}
+.day-events-list {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+.day-card-add-btn {
+  margin: 6px 8px 8px 8px;
+  padding: 6px;
+  border: 1px dashed var(--bd);
+  background: transparent;
+  color: var(--mu);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: all 0.15s ease;
+}
+.day-card-add-btn:hover {
+  border-color: var(--ac);
+  color: var(--ac-dark);
+  background: var(--ac-soft);
+}
+
+/* Event Item */
+.event-item {
+  border-radius: var(--radius-sm);
+  padding: 5px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  border-left: 3.5px solid transparent;
+  background: var(--card-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}
+.event-item:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+.event-item-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+}
+.event-title {
+  font-weight: 600;
+  color: var(--tx);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.event-meta {
+  font-size: 11px;
+  color: var(--mu);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.event-mode-up { color: var(--ok); font-weight: 700; }
+.event-mode-down { color: var(--bad); font-weight: 700; }
+
+/* Dòng thời gian 24h */
+.timeline-container {
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.timeline-days-nav {
+  display: flex;
+  gap: 6px;
+  padding: 10px;
+  background: var(--card-subtle);
+  border-bottom: 1px solid var(--bd);
+  overflow-x: auto;
+}
+.timeline-grid {
+  position: relative;
+  height: 864px; /* 18h từ 06:00 đến 24:00, mỗi giờ 48px */
+  overflow-y: auto;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 47px,
+    var(--bd) 48px
+  );
+}
+.timeline-hour-mark {
+  position: absolute;
+  left: 10px;
+  font-size: 11px;
+  color: var(--mu);
+  transform: translateY(-50%);
+  user-select: none;
+}
+.timeline-content-area {
+  position: absolute;
+  left: 60px;
+  right: 14px;
+  top: 0;
+  bottom: 0;
+}
+.timeline-event-block {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  font-size: 12px;
+  color: #fff;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+.timeline-event-block:hover {
+  transform: scale(1.01);
+  z-index: 5;
+}
+
+/* ==========================================================================
+   CSS CHO LƯỚI 53 TUẦN (SỬA LỖI HIỂN THỊ)
+   ========================================================================== */
+.table-wrapper {
+  overflow: auto;
+  border: 1px solid var(--bd);
+  border-radius: var(--radius-md);
+  background: var(--card);
+  max-height: 72vh;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  -webkit-overflow-scrolling: touch;
+}
+table.calendar-table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 940px;
+}
+table.calendar-table th {
+  background: var(--hd);
+  color: #ffffff;
+  padding: 10px 8px;
+  position: sticky;
+  top: 0;
+  font-weight: 600;
+  font-size: 13px;
+  z-index: 10;
+  text-align: center;
+  border-bottom: 2px solid var(--bd);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+table.calendar-table td {
+  padding: 6px;
+  border-top: 1px solid var(--bd);
+  vertical-align: top;
+  text-align: center;
+  font-size: 12.5px;
+}
+td.cal-day-cell {
+  cursor: pointer;
+  min-width: 110px;
+  height: 74px;
+  transition: background 0.15s ease;
+  position: relative;
+}
+td.cal-day-cell:hover {
+  background: var(--c-blush);
+}
+td.cal-day-cell.is-today {
+  background: color-mix(in srgb, var(--ac) 15%, var(--card));
+  outline: 2px solid var(--ac);
+  outline-offset: -2px;
+}
+td.cal-day-cell small {
+  color: var(--mu);
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+tr.current-week td {
+  background: color-mix(in srgb, var(--ac) 8%, var(--card));
+}
+tr.current-week td:first-child, tr.current-week td:nth-child(2) {
+  font-weight: 700;
+  color: var(--ac);
+}
+tr.past-week td {
+  opacity: 0.85;
+}
+
+/* Bánh xe cuộc đời Radar Chart */
+.radar-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+.radar-svg {
+  width: 100%;
+  max-width: 380px;
+  height: auto;
+  overflow: visible;
+}
+
+/* 168h Bar */
+.progress-168-bar {
+  display: flex;
+  height: 24px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  background: var(--bar);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+  margin: 14px 0 10px;
+}
+.progress-168-seg {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+.progress-168-seg:hover { filter: brightness(1.1); }
+
+/* Bảng tóm tắt */
+table.sum-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+table.sum-table th {
+  padding: 10px 8px;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--tx-sec);
+  border-bottom: 2px solid var(--bd);
+  text-align: center;
+}
+table.sum-table th:first-child { text-align: left; }
+table.sum-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--bd);
+  text-align: center;
+  font-size: 13px;
+}
+table.sum-table td:first-child { text-align: left; }
+table.sum-table tr:hover td { background: var(--card-subtle); }
+
+/* Sparkline columns */
+.sparkline-wrapper {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 28px;
+  vertical-align: middle;
+  padding: 0 4px;
+}
+.sparkline-bar {
+  width: 7px;
+  border-radius: 2px 2px 0 0;
+  transition: height 0.2s ease, opacity 0.2s ease;
+  cursor: pointer;
+}
+.sparkline-bar:hover {
+  transform: scaleY(1.1);
+  opacity: 1 !important;
+}
+
+/* Modal Bottom Sheet */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 10, 13, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 999;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.modal-sheet {
+  background: var(--card);
+  width: 100%;
+  max-width: 680px;
+  max-height: 85vh;
+  border-radius: 20px 20px 0 0;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: translateY(100%);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border-top: 4px solid var(--ac);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (min-width: 768px) {
+  .modal-overlay {
+    align-items: center;
+    padding: 20px;
+  }
+  .modal-sheet {
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--bd);
+    border-top: 4px solid var(--ac);
+    transform: scale(0.95) translateY(10px);
+    max-height: 80vh;
+  }
+  .modal-overlay.open .modal-sheet {
+    transform: scale(1) translateY(0);
+  }
+}
+.modal-overlay.open .modal-sheet {
+  transform: translateY(0);
+}
+.modal-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--bd);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--card);
+}
+.modal-title {
+  font: 600 17px Georgia, serif;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.modal-body {
+  padding: 18px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Event Editor Form */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.form-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--tx-sec);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+@media (max-width: 500px) {
+  .form-row { grid-template-columns: 1fr; }
+}
+
+/* Toast */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+.toast {
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  background: var(--card);
+  color: var(--tx);
+  border: 1px solid var(--bd);
+  box-shadow: var(--shadow-md);
+  font-size: 13.5px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: auto;
+  animation: toastIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.toast.toast-ok { border-left: 4px solid var(--c-olive); }
+.toast.toast-bad { border-left: 4px solid var(--bad); }
+
+/* Banner Thông báo tổng kết tuần */
+.review-prompt-banner {
+  background: linear-gradient(135deg, var(--c-blush), var(--card));
+  border: 1.5px solid var(--ac);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  margin-bottom: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+:focus-visible { outline: 2px solid var(--ac); outline-offset: 2px; }
+.chg { font-weight: 700; background: var(--ac-soft); border-radius: 4px; padding: 0 3px; box-shadow: 0 0 0 1px var(--ac); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+</style>
+<script>
+  try {
+    const t = localStorage.getItem("lc_theme");
+    if (t) document.documentElement.setAttribute("data-theme", t);
+  } catch(e) {}
+</script>
+</head>
+<body>
+
+<div class="app-container">
+  <!-- Header -->
+  <header class="app-header">
+    <div class="brand-area">
+      <h1 class="brand-title">Life Capital</h1>
+      <div class="row" style="gap:4px; align-items:center;">
+        <span class="brand-badge" id="brandYearBadge">2026</span>
+        <button class="btn btn-sm btn-ghost" onclick="changeYear(-1)" title="Xem năm trước" style="padding:2px 6px; font-size:11px;">◀</button>
+        <button class="btn btn-sm btn-ghost" onclick="changeYear(1)" title="Xem năm sau" style="padding:2px 6px; font-size:11px;">▶</button>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(sel)" title="Xem tổng kết thành tích theo tuần">
+        🏆 Tổng kết tuần W<span id="headerWeekNum"></span>
+      </button>
+      <button class="btn btn-sm btn-primary" onclick="openEditor(tk)">
+        + Thêm hôm nay
+      </button>
+      <button class="btn btn-sm btn-ghost" id="settingsBtn" onclick="openSettingsModal()" title="Cài đặt & Dữ liệu" style="font-size:15px; padding:6px 10px;">
+        ⚙️
+      </button>
+    </div>
+  </header>
+
+  <!-- Tính năng 4: Natural Language Quick Command Bar -->
+  <div class="quick-capture-box">
+    <div class="quick-capture-row">
+      <span style="font-size:16px;">⚡</span>
+      <input id="nlpInput" class="quick-capture-input"
+             placeholder="Ghi nhanh: vd 'Mai 18h đánh cầu lông 2 tiếng' hoặc 'Hôm nay 20h đọc sách 1.5h'..."
+             oninput="handleNLPInput(this.value)"
+             onkeydown="if(event.key==='Enter') executeNLP()">
+      <button class="btn btn-sm btn-primary" onclick="executeNLP()">Ghi ngay</button>
+    </div>
+    <div class="quick-preview-bar" id="nlpPreview" style="display:none;"></div>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <nav class="main-nav" id="nav"></nav>
+
+  <!-- Main View Area -->
+  <main id="v"></main>
+</div>
+
+<!-- Modal Editor Sheet -->
+<div class="modal-overlay" id="modalOverlay" onclick="handleBackdropClick(event)">
+  <div class="modal-sheet" id="modalSheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="modal-header">
+      <h3 class="modal-title" id="sheetTitle">Chi tiết ngày</h3>
+      <button class="btn btn-sm btn-ghost" onclick="closeEditor()" title="Đóng (ESC)">✕</button>
+    </div>
+    <div class="modal-body" id="sheetBody"></div>
+  </div>
+</div>
+
+<!-- Modal Tổng kết tuần -->
+<div class="modal-overlay" id="reviewModalOverlay" onclick="handleReviewBackdropClick(event)">
+  <div class="modal-sheet" id="reviewModalSheet" style="max-width:720px;" role="dialog" aria-modal="true" aria-labelledby="reviewSheetTitle">
+    <div class="modal-header">
+      <h3 class="modal-title" id="reviewSheetTitle">🏆 Tổng kết Tuần</h3>
+      <button class="btn btn-sm btn-ghost" onclick="closeReviewModal()" title="Đóng (ESC)">✕</button>
+    </div>
+    <div class="modal-body" id="reviewSheetBody"></div>
+  </div>
+</div>
+
+<!-- Modal Cài đặt hệ thống & Dữ liệu -->
+<div class="modal-overlay" id="settingsModalOverlay" onclick="handleSettingsBackdropClick(event)">
+  <div class="modal-sheet" id="settingsModalSheet" style="max-width:640px;" role="dialog" aria-modal="true" aria-labelledby="settingsSheetTitle">
+    <div class="modal-header">
+      <h3 class="modal-title" id="settingsSheetTitle">⚙️ Cài Đặt & Dữ Liệu</h3>
+      <button type="button" class="btn btn-sm btn-ghost" onclick="closeSettingsModal()" title="Đóng (ESC)">✕</button>
+    </div>
+    <div class="modal-body" id="settingsSheetBody"></div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+<script>
+/* ==========================================================================
+   1. DỮ LIỆU CỐT LÕI (5 LOẠI VỐN VỚI BẢNG MÀU YÊU CẦU)
+   ========================================================================== */
+const DCAP = [
+  ["sk", "Sức khỏe", "#97A13B", 6],
+  ["qh", "Quan hệ", "#E0A3BB", 5],
+  ["tn", "Trải nghiệm", "#8b6da9", 3],
+  ["kn", "Kỹ năng", "#4a859c", 4],
+  ["tc", "Tài chính / công việc", "#b88628", 0]
+];
+const DN_VI = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ Nhật"];
+const DN_SHORT = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
+const PALETTE = ["#E0A3BB", "#97A13B", "#4a859c", "#8b6da9", "#b88628", "#c24d5b", "#642841"];
+
+const ad = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+const ky = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+function getWeek1Monday(year) {
+  const jan4 = new Date(year, 0, 4);
+  const day = jan4.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  return new Date(year, 0, 4 + diff);
+}
+
+function getWeeksOfYear(year) {
+  const w0 = getWeek1Monday(year);
+  const wNext0 = getWeek1Monday(year + 1);
+  const count = Math.round((wNext0 - w0) / (7 * 864e5));
+  return {
+    w0,
+    count,
+    weeks: [...Array(count)].map((_, i) => ad(w0, i * 7))
+  };
+}
+
+const isoYear = d => new Date(d.getFullYear(), d.getMonth(), d.getDate() + 3 - ((d.getDay() + 6) % 7)).getFullYear();
+let activeYear = isoYear(new Date());
+let yearData = getWeeksOfYear(activeYear);
+let W0 = yearData.w0;
+let W = yearData.weeks;
+
+function changeYear(delta) {
+  activeYear += delta;
+  yearData = getWeeksOfYear(activeYear);
+  W0 = yearData.w0;
+  W = yearData.weeks;
+  CW = wkNow();
+  sel = CW >= 0 ? CW : 0;
+  draw(true);
+  showToast(`Đã chuyển sang năm ${activeYear}`, "ok");
+}
+
+const sd = (m, d, t, c, h) => [ky(new Date(2026, m - 1, d)), { t, c, m: "u", h }];
+const SEED = [
+  [9, 9, "Đánh cầu", "sk", 2],
+  [9, 10, "Spa", "sk", 2],
+  [9, 11, "Đánh cầu", "sk", 2],
+  [9, 13, "Đi xem cầu lông", "tn", 2],
+  [9, 16, "Đánh cầu", "sk", 2],
+  [9, 18, "Dinner w chị em GM", "qh", 2.5],
+  [9, 25, "Đánh cầu", "sk", 2],
+  [9, 28, "Đánh cầu", "sk", 2],
+  [10, 2, "Dinner w bạn anh Tín", "qh", 2.5],
+  [10, 5, "Đánh cầu", "sk", 2],
+  [10, 7, "Đánh cầu", "sk", 2],
+  [10, 8, "Dinner w LHương", "qh", 2.5],
+  [10, 9, "Sinh nhật", "qh", 3],
+  [10, 12, "Đánh cầu", "sk", 2],
+  [10, 14, "Đánh cầu", "sk", 2],
+  [10, 18, "Đám cưới bạn anh", "qh", 4]
+];
+
+function defState() {
+  const ev = {};
+  SEED.forEach(a => {
+    const [k, e] = sd(...a);
+    (ev[k] = ev[k] || []).push(e);
+  });
+  return {
+    ev,
+    caps: DCAP.map(c => ({ k: c[0], n: c[1], c: c[2], tg: c[3] })),
+    bl: {},
+    mem: {},
+    pm: "0",
+    cfg: { defDuration: 2, burnoutHours: 6 }
+  };
+}
+
+let S;
+try {
+  S = cleanState(JSON.parse(localStorage.getItem("lc2") || "null")) || defState();
+} catch (e) {
+  S = defState();
+}
+
+if (!S.caps) S.caps = DCAP.map(c => ({ k: c[0], n: c[1], c: c[2], tg: (S.tg || {})[c[0]] ?? c[3] }));
+if (!S.cfg) S.cfg = { defDuration: 2, burnoutHours: 6 };
+S.bl = S.bl || {};
+S.mem = S.mem || {};
+
+const cmp = (a, b) => (a.s || "99:99").localeCompare(b.s || "99:99");
+const sortL = l => l.sort(cmp);
+Object.values(S.ev).forEach(sortL);
+
+const CM = k => S.caps.find(c => c.k === k) || { n: "(đã xóa)", c: "#888888", tg: 0 };
+const BL = k => S.bl[k] = S.bl[k] || { u: 0, d: 0 };
+const esc = s => String(s == null ? "" : s).replace(/[&<>"'`]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;", "`": "&#96;" }[c]));
+const $ = i => document.getElementById(i);
+const r1 = n => (Math.round((n || 0) * 10) / 10).toString();
+const pad = n => String(n).padStart(2, "0");
+const tt = (s, h) => {
+  if (!s) return "";
+  const [a, b] = s.split(":").map(Number);
+  const m = Math.min(1439, a * 60 + b + Math.round((h || 0) * 60));
+  return pad(m / 60 | 0) + ":" + pad(m % 60);
+};
+
+let CH = new Set(), PV = {}, dirty = false, TABDIR = 0;
+const save = () => {
+  dirty = true;
+  try {
+    localStorage.setItem("lc2", JSON.stringify(S));
+  } catch (e) {
+    showToast("Không thể lưu vào localStorage!", "bad");
+  }
+};
+
+/* ==========================================================================
+   2. TÍNH TOÁN TUẦN & LOGIC PIN NĂNG LƯỢNG
+   ========================================================================== */
+let T0, tk;
+const wkNow = () => {
+  const n = new Date();
+  T0 = new Date(n.getFullYear(), n.getMonth(), n.getDate());
+  tk = ky(T0);
+  const i = Math.floor(Math.round((T0 - W0) / 864e5) / 7);
+  return i >= 0 && i < W.length ? i : -1;
+};
+let CW = wkNow(), lt = tk, sel = CW;
+let cur = "ca"; // Tabs: "ca" (Lịch tuần), "su" (Hiệu suất 168h), "set" (Cài đặt vốn), "bak" (Sao lưu)
+let calSubView = "focus"; // "focus" (Tuần chi tiết), "timeline" (Dòng thời gian 24h), "year" (Lưới 53 tuần)
+let timelineDayIdx = 0; // 0 = T2 .. 6 = CN
+let N = 4;
+let ed = null, ei = null;
+
+const evs = i => [0, 1, 2, 3, 4, 5, 6].flatMap(j => S.ev[ky(ad(W[i], j))] || []);
+function wk(i, c) {
+  const b = BL(c);
+  let u = b.u, d = b.d;
+  evs(i).forEach(e => {
+    if (e.c === c) {
+      if (e.m === "u") u += e.h;
+      else d += e.h;
+    }
+  });
+  return { u, d };
+}
+const al = i => S.caps.reduce((a, c) => {
+  const w = wk(i, c.k);
+  return a + w.u + w.d;
+}, 0);
+
+// Tính toán Pin năng lượng trong ngày
+function getDayBattery(dateStr) {
+  const events = S.ev[dateStr] || [];
+  let u = 0, d = 0;
+  events.forEach(e => {
+    if (e.m === "u") u += e.h;
+    else d += e.h;
+  });
+  const net = u - d;
+  const burnoutH = (S && S.cfg && S.cfg.burnoutHours) ? S.cfg.burnoutHours : 6;
+  const isBurnout = d >= burnoutH || (d - u >= 4);
+  let fillPercent = 50;
+  let statusClass = "idle";
+  let label = "0h";
+
+  if (events.length === 0) {
+    fillPercent = 0;
+    statusClass = "idle";
+    label = "Chưa ghi";
+  } else if (net > 0) {
+    fillPercent = Math.min(100, 50 + net * 12);
+    statusClass = "positive";
+    label = `+${r1(net)}h Nạp`;
+  } else if (net < 0) {
+    fillPercent = Math.max(10, 50 + net * 10);
+    statusClass = "negative";
+    label = `${r1(net)}h Rút`;
+  } else {
+    fillPercent = 50;
+    statusClass = "balanced";
+    label = "Cân bằng";
+  }
+
+  return { u, d, net, fillPercent, statusClass, label, isBurnout };
+}
+
+function guess(t) {
+  t = (t || "").normalize("NFC");
+  const m = S.mem && S.mem[t.trim().toLowerCase()];
+  if (m && S.caps.some(c => c.k === m.c)) return m.c;
+  const w = " " + t.toLowerCase().split(/[^\p{L}\p{N}]+/u).join(" ") + " ";
+  const has = a => a.some(k => w.includes(" " + k + " "));
+  if (has(["học", "đọc", "course", "study", "khóa", "sách", "tiếng anh", "code", "nghiên cứu"])) return "kn";
+  if (has(["họp", "làm", "work", "meeting", "deep", "dự án", "khách", "bán", "deal", "code"])) return "tc";
+  if (has(["xem", "du lịch", "trip", "phim", "workshop", "thử", "concert", "cafe", "chill", "ăn uống"])) return "tn";
+  if (has(["dinner", "sinh nhật", "cưới", "gia đình", "bạn", "date", "chị", "em", "anh", "bố", "mẹ", "thăm"])) return "qh";
+  return "sk";
+}
+
+/* ==========================================================================
+   3. TOAST NOTIFICATIONS
+   ========================================================================== */
+function showToast(msg, type = "ok") {
+  const c = $("toastContainer");
+  if (!c) return;
+  const t = document.createElement("div");
+  t.className = `toast toast-${type}`;
+  t.innerHTML = `${type === "ok" ? "✓" : "⚠"} <span>${esc(msg)}</span>`;
+  c.appendChild(t);
+  setTimeout(() => {
+    t.style.opacity = "0";
+    t.style.transform = "translateY(10px)";
+    t.style.transition = "all 0.2s ease";
+    setTimeout(() => t.remove(), 200);
+  }, 2600);
+}
+
+/* ==========================================================================
+   4. TÍNH NĂNG 4: NATURAL LANGUAGE QUICK PARSER (GHI NHANH)
+   ========================================================================== */
+let parsedNLP = null;
+
+const toMin = s => { const [a, b] = s.split(":").map(Number); return a * 60 + b; };
+const WB = p => new RegExp("(?<![\\p{L}\\p{N}])(?:" + p + ")(?![\\p{L}\\p{N}])", "iu");
+const PER = "sáng|trưa|chiều|tối|đêm";
+
+// Kiểm tra giờ/thời lượng/trùng giờ — dùng chung cho modal, ghi nhanh và chuỗi lặp
+function chkEvent(date, s, h, skip) {
+  if (!(h > 0 && h <= 24)) return { err: "Số giờ phải lớn hơn 0 và tối đa 24." };
+  if (!s) return {};
+  const mn = toMin(s);
+  if (mn + h * 60 > 1440) return { err: "Hoạt động vượt quá nửa đêm. Hãy tách thành hai hoạt động." };
+  const hit = (S.ev[date] || []).find((y, i) => i !== skip && y.s && toMin(y.s) < mn + h * 60 && mn < toMin(y.s) + y.h * 60);
+  return { hit };
+}
+
+function parseNLPText(str) {
+  if (!str || !str.trim()) return null;
+  const raw = str.trim().normalize("NFC");
+  let w = " " + raw + " ";
+  const cut = re => { const m = w.match(re); if (m) w = w.replace(re, " "); return m; };
+  const base = new Date(); base.setHours(0, 0, 0, 0);
+  let target = base, dateDesc = "Hôm nay", per = null, m;
+  const setPer = x => { if (x) per = x.toLowerCase(); };
+  const wkBase = W[CW >= 0 ? CW : Math.min(Math.max(sel, 0), W.length - 1)];
+
+  // 1. Ngày (khớp theo từ nguyên vẹn; "Mai" viết hoa được hiểu là tên người)
+  if ((m = cut(/(?<![\p{L}\p{N}])(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?(?![\p{L}\p{N}])/u))) {
+    const y = m[3] ? (+m[3] < 100 ? 2000 + +m[3] : +m[3]) : base.getFullYear(), d = new Date(y, +m[2] - 1, +m[1]);
+    if (d.getMonth() === +m[2] - 1) { target = d; dateDesc = DN_VI[(d.getDay() + 6) % 7] + " " + m[1] + "/" + m[2]; }
+  } else if (cut(/(?<![\p{L}\p{N}])(?:ngày\s+)?(?:mốt|kia)(?![\p{L}\p{N}])/iu)) {
+    target = ad(base, 2); dateDesc = "Ngày kia";
+  } else if ((m = cut(new RegExp("(?<![\\p{L}\\p{N}])(?:(" + PER + ")\\s+|ngày\\s+)mai(?![\\p{L}\\p{N}])", "iu"))) || (m = cut(/(?<![\p{L}\p{N}])mai(?![\p{L}\p{N}])/u))) {
+    setPer(m[1]); target = ad(base, 1); dateDesc = "Ngày mai";
+  } else if ((m = cut(new RegExp("(?<![\\p{L}\\p{N}])(?:(" + PER + ")\\s+)?(?:hôm\\s+)?nay(?![\\p{L}\\p{N}])", "iu")))) {
+    setPer(m[1]);
+  } else {
+    let idx = null;
+    if ((m = cut(/(?<![\p{L}\p{N}])(?:thứ|thu|t)\s*([2-7])(?![\p{L}\p{N}])/iu))) idx = +m[1] - 2;
+    else if ((m = cut(/(?<![\p{L}\p{N}])thứ\s+(hai|ba|tư|bốn|năm|sáu|bảy)(?![\p{L}\p{N}])/iu))) idx = { hai: 0, ba: 1, tư: 2, bốn: 2, năm: 3, sáu: 4, bảy: 5 }[m[1].toLowerCase()];
+    else if (cut(WB("chủ nhật|cn"))) idx = 6;
+    if (idx !== null) { let d = ad(wkBase, idx); if (CW >= 0 && d < base) d = ad(d, 7); target = d; dateDesc = DN_VI[idx]; }
+  }
+
+  // 2. Giờ bắt đầu & thời lượng ("2h" đứng một mình = thời lượng; dùng "lúc 18h", "18h30", "18:00", "7pm" để chỉ giờ bắt đầu)
+  let start = null, dur = null;
+  const hm = (a, b) => pad(Math.min(23, +a)) + ":" + pad(b ? +b : 0);
+  const adj = (hr, p) => { p = p || per; if ((p === "chiều" || p === "tối") && hr < 12) return hr + 12; if (p === "trưa" && hr >= 1 && hr <= 5) return hr + 12; if (p === "đêm" && hr >= 6 && hr < 12) return hr + 12; return hr; };
+  const ampm = (hr, ap) => /pm/i.test(ap) ? (hr < 12 ? hr + 12 : hr) : (hr === 12 ? 0 : hr);
+  if ((m = cut(/(?<![\p{L}\p{N}])(\d{1,2})(?:h|:|g)(\d{2})?\s*[-–]\s*(\d{1,2})(?:h|:|g)?(\d{2})?(?![\p{L}\p{N}])/iu))) {
+    const a = adj(+m[1]) * 60 + (+m[2] || 0), b = adj(+m[3]) * 60 + (+m[4] || 0);
+    if (b > a) { start = hm(a / 60 | 0, a % 60); dur = (b - a) / 60; }
+  }
+  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2}):(\d{2})(?![\p{L}\p{N}])/u))) start = hm(adj(+m[1]), m[2]);
+  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2})[hg](\d{2})(?![\p{L}\p{N}])/iu))) start = hm(adj(+m[1]), m[2]);
+  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(?:lúc|từ|vào|at|@)\s*(\d{1,2})(?:\s*(?:h|giờ|g))?(?:\s*(am|pm))?(?![\p{L}\p{N}])/iu))) start = hm(m[2] ? ampm(+m[1], m[2]) : adj(+m[1]), 0);
+  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2})\s*(?:h|giờ|g)?\s*(am|pm)(?![\p{L}\p{N}])/iu))) start = hm(ampm(+m[1], m[2]), 0);
+  if (start === null && (m = cut(new RegExp("(?<![\\p{L}\\p{N}])(\\d{1,2})\\s*(?:h|giờ|g)?\\s*(" + PER + ")(?![\\p{L}\\p{N}])", "iu")))) { start = hm(adj(+m[1], m[2].toLowerCase()), 0); setPer(m[2]); }
+  if (dur === null) {
+    if (cut(/(?<![\p{L}\p{N}])(?:nửa|1\/2)\s*(?:tiếng|giờ)(?![\p{L}\p{N}])/iu)) dur = 0.5;
+    else if ((m = cut(/(?<![\p{L}\p{N}])(\d+(?:[.,]\d+)?)\s*(?:tiếng|giờ|gio|hrs?|hours?)(\s*rưỡi)?(?![\p{L}\p{N}])/iu))) dur = parseFloat(m[1].replace(",", ".")) + (m[2] ? 0.5 : 0);
+    else if ((m = cut(/(?<![\p{L}\p{N}])(\d+)\s*(?:phút|phut|min|p)(?![\p{L}\p{N}])/iu))) dur = Math.round(+m[1] / 60 * 100) / 100;
+  }
+  if ((m = cut(/(?<![\p{L}\p{N}])(\d{1,2}(?:[.,]\d+)?)h(?![\p{L}\p{N}])/iu))) {
+    const n = parseFloat(m[1].replace(",", "."));
+    if (start === null && (dur !== null || n > 4)) start = hm(adj(Math.floor(n)), Math.round((n % 1) * 60));
+    else if (dur === null) dur = n;
+  }
+  const key = ky(target);
+  if (!per) { const pw = w.match(WB(PER)); if (pw) per = pw[0].toLowerCase(); }
+  if (start === null) {
+    const dm = { sáng: "07:00", trưa: "12:00", chiều: "15:00", tối: "19:00", đêm: "21:00" };
+    const lastEv = (S.ev[key] || []).filter(e => e.s).pop();
+    start = per ? dm[per] : lastEv ? tt(lastEv.s, lastEv.h) : "07:00";
+  }
+  if (dur === null) dur = 2;
+
+  // 3. Tên hoạt động, tác động, loại vốn
+  let title = w.replace(/(?<![\p{L}\p{N}])(?:lúc|từ|vào|at|@)(?![\p{L}\p{N}])/giu, " ").replace(/[,;]+/g, " ").replace(/\s+/g, " ").trim();
+  if (!title) title = "Hoạt động mới";
+  const mode = WB("họp|meeting|deadline|ot|tăng ca|làm việc|công việc|xử lý|áp lực|stress").test(title) ? "d" : "u";
+  const c = chkEvent(key, start, dur, -1);
+  return { raw, title, targetDate: key, dateDesc: dateDesc + " (" + key.slice(5) + ")", startTime: start, duration: dur, capKey: guess(title), mode, err: c.err, hit: c.hit };
+}
+
+function handleNLPInput(val) {
+  parsedNLP = parseNLPText(val);
+  const p = $("nlpPreview");
+  if (!parsedNLP) { p.style.display = "none"; return; }
+  const r = parsedNLP, cap = CM(r.capKey);
+  p.style.display = "flex";
+  p.innerHTML = `
+    <span class="pill pill-cyan">📅 ${esc(r.dateDesc)}</span>
+    <span class="pill pill-neutral">⏰ ${r.startTime} – ${tt(r.startTime, r.duration)} (${r1(r.duration)}h)</span>
+    <span class="pill ${r.mode === "u" ? "pill-ok" : "pill-bad"}">${r.mode === "u" ? "▲ Nạp" : "▼ Tiêu"}</span>
+    <span class="pill" style="background:${cap.c}; color:#fff;">🏷️ ${esc(cap.n)}</span>
+    <span style="font-weight:600; color:var(--tx); margin-left:4px;">"${esc(r.title)}"</span>
+    ${r.err ? `<span class="pill pill-bad">⚠ ${esc(r.err)}</span>` : r.hit ? `<span class="pill pill-bad">⚠ Trùng giờ với "${esc(r.hit.t)}"</span>` : ""}`;
+}
+
+function executeNLP() {
+  const input = $("nlpInput");
+  const r = parseNLPText(input.value);
+  if (!r) { showToast("Vui lòng nhập nội dung!", "bad"); return; }
+  if (r.err) { showToast(r.err, "bad"); return; }
+  if (r.hit && !confirm(`Trùng giờ với "${r.hit.t}" (${r.hit.s}). Vẫn thêm?`)) return;
+  const L = S.ev[r.targetDate] = S.ev[r.targetDate] || [];
+  L.push({ t: r.title, c: r.capKey, m: r.mode, h: r.duration, s: r.startTime });
+  sortL(L);
+  S.mem[r.title.normalize("NFC").toLowerCase()] = { c: r.capKey };
+  save();
+  input.value = "";
+  handleNLPInput("");
+  draw();
+  showToast(`Đã thêm: "${r.title}" vào ${r.dateDesc}`, "ok");
+}
+
+/* ==========================================================================
+   5. TÍNH NĂNG 1: BÁNH XE CUỘC ĐỜI (WHEEL OF LIFE RADAR CHART SVG)
+   ========================================================================== */
+function renderRadarChartSVG(weekIdx) {
+  const caps = S.caps;
+  const numCaps = caps.length;
+  if (numCaps < 3) return `<p style="color:var(--mu); text-align:center; padding:20px;">Cần ít nhất 3 loại vốn để vẽ biểu đồ radar.</p>`;
+
+  // Tọa độ trung tâm và bán kính tối ưu (không bị cắt chữ)
+  const cx = 250, cy = 160, r = 95;
+  const angles = caps.map((_, i) => -Math.PI / 2 + (i * 2 * Math.PI / numCaps));
+
+  // Vòng cấp độ: 33%, 66%, 100% mục tiêu
+  const levels = [0.33, 0.66, 1.0];
+  let levelPolygons = levels.map(lvl => {
+    const pts = angles.map(a => `${(cx + r * lvl * Math.cos(a)).toFixed(1)},${(cy + r * lvl * Math.sin(a)).toFixed(1)}`).join(" ");
+    const isTarget = lvl === 1.0;
+    return `<polygon points="${pts}" fill="none" stroke="${isTarget ? 'var(--ac)' : 'var(--bd)'}" stroke-width="${isTarget ? '1.5' : '1'}" stroke-dasharray="${isTarget ? '' : '3,3'}" opacity="${isTarget ? '0.9' : '0.6'}" />`;
+  }).join("");
+
+  // Trục nan hoa
+  let axisLines = angles.map(a => {
+    const x2 = (cx + r * Math.cos(a)).toFixed(1);
+    const y2 = (cy + r * Math.sin(a)).toFixed(1);
+    return `<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="var(--bd)" stroke-width="1" opacity="0.7" />`;
+  }).join("");
+
+  // Nhãn tỷ lệ trên trục dọc
+  const levelLabels = `
+    <text x="${cx + 4}" y="${(cy - r * 0.33).toFixed(1)}" font-size="9" fill="var(--mu)" opacity="0.8">33%</text>
+    <text x="${cx + 4}" y="${(cy - r * 0.66).toFixed(1)}" font-size="9" fill="var(--mu)" opacity="0.8">66%</text>
+    <text x="${cx + 4}" y="${(cy - r * 1.0).toFixed(1)}" font-size="9" font-weight="600" fill="var(--ac)">100%</text>
+  `;
+
+  // Điểm dữ liệu (xử lý an toàn khi c.tg = 0 hoặc w.u = 0)
+  const dataPoints = caps.map((c, i) => {
+    const w = wk(weekIdx, c.k);
+    const target = c.tg || 0;
+    const benchmark = target > 0 ? target : Math.max(8, w.u);
+    const ratio = benchmark > 0 ? Math.min(1.25, Math.max(0, w.u / benchmark)) : 0;
+    const a = angles[i];
+    return {
+      x: cx + r * ratio * Math.cos(a),
+      y: cy + r * ratio * Math.sin(a),
+      val: w.u,
+      target,
+      ratio,
+      cap: c
+    };
+  });
+
+  const polyStr = dataPoints.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+
+  // Nhãn tên vốn và số giờ (tính toán offset chống tràn khung)
+  let labels = caps.map((c, i) => {
+    const a = angles[i];
+    const cos = Math.cos(a), sin = Math.sin(a);
+    const offset = r + 30;
+    const lx = cx + offset * cos;
+    const ly = cy + offset * sin;
+    const anchor = Math.abs(cos) < 0.25 ? "middle" : cos > 0 ? "start" : "end";
+    const w = wk(weekIdx, c.k);
+    const pct = c.tg > 0 ? Math.round(w.u / c.tg * 100) : null;
+    const statusColor = pct == null ? "var(--mu)" : pct >= 100 ? "var(--ok)" : pct >= 60 ? "var(--wa)" : "var(--bad)";
+
+    return `
+      <g>
+        <text x="${lx.toFixed(1)}" y="${(ly - 2).toFixed(1)}" text-anchor="${anchor}" font-size="11.5" font-weight="600" fill="var(--tx)">
+          ${esc(c.n)}
+        </text>
+        <text x="${lx.toFixed(1)}" y="${(ly + 12).toFixed(1)}" text-anchor="${anchor}" font-size="10" fill="${statusColor}">
+          ${r1(w.u)}h ${c.tg ? '/ ' + r1(c.tg) + 'h (' + pct + '%)' : '(chưa đặt MT)'}
+        </text>
+      </g>
+    `;
+  }).join("");
+
+  // Tính điểm cân đối của bánh xe cuộc đời
+  const ratios = dataPoints.map(p => p.target > 0 ? Math.min(1, p.val / p.target) : Math.min(1, p.val / 8));
+  const avgR = ratios.reduce((a, b) => a + b, 0) / (ratios.length || 1);
+  const minR = Math.min(...ratios);
+  const balanceScore = Math.round((avgR * 0.6 + minR * 0.4) * 100);
+  const balanceLabel = balanceScore >= 80 ? "Bánh xe rất tròn và cân đối" : balanceScore >= 50 ? "Khá cân đối, cần nạp thêm vốn lõm" : "Bánh xe bị méo, cần tái cân bằng";
+
+  return `
+    <div class="radar-box" style="flex-direction:column; gap:12px;">
+      <svg class="radar-svg" viewBox="0 0 500 330" style="max-width:440px; overflow:visible;">
+        ${levelPolygons}
+        ${axisLines}
+        ${levelLabels}
+        <polygon points="${polyStr}" fill="rgba(224, 163, 187, 0.28)" stroke="var(--ac)" stroke-width="2.5" />
+        ${dataPoints.map(p => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4.5" fill="${p.cap.c}" stroke="var(--card)" stroke-width="1.5" />`).join("")}
+        ${labels}
+      </svg>
+      <div style="display:flex; justify-content:center; align-items:center; gap:12px; font-size:12.5px; margin-top:6px; flex-wrap:wrap; text-align:center;">
+        <span class="pill pill-blush">🎯 Điểm cân bằng bánh xe: <b>${balanceScore}%</b></span>
+        <span style="color:var(--mu); font-size:12px;">${balanceLabel}</span>
+      </div>
+    </div>
+  `;
+}
+
+/* ==========================================================================
+   6. TÍNH NĂNG 8: SUNDAY WEEKLY REVIEW MODAL (TỔNG KẾT TUẦN)
+   ========================================================================== */
+function openWeeklyReviewModal(wIdx = sel) {
+  wIdx = Math.max(0, Math.min(W.length - 1, wIdx));
+  const wStart = W[wIdx];
+  const wEnd = ad(wStart, 6);
+  const rangeStr = `Tuần W${wIdx + 1} (${wStart.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" })} – ${wEnd.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric", year: "numeric" })})`;
+
+  $("reviewSheetTitle").innerHTML = `<span>🏆 Báo Cáo Tổng Kết Tuần W${wIdx + 1}</span>`;
+
+  let totalU = 0, totalD = 0;
+  S.caps.forEach(c => {
+    const w = wk(wIdx, c.k);
+    totalU += w.u;
+    totalD += w.d;
+  });
+  const totalAlloc = al(wIdx);
+  const netEnergy = totalU - totalD;
+  const noData = evs(wIdx).length === 0;
+
+  const capStats = S.caps.map(c => {
+    const w = wk(wIdx, c.k);
+    const target = c.tg || 0;
+    const ratio = target > 0 ? (w.u / target) : 1;
+    return { c, u: w.u, d: w.d, target, ratio, diff: w.u - target };
+  });
+
+  const starCap = [...capStats].sort((a, b) => b.ratio - a.ratio)[0];
+  const laggingCap = [...capStats].filter(x => x.target > 0).sort((a, b) => a.diff - b.diff)[0];
+
+  const html = `
+    <div style="display:flex; flex-direction:column; gap:14px;">
+      <!-- BỘ CHỌN TUẦN TỔNG KẾT LINH HOẠT -->
+      <div style="display:flex; justify-content:space-between; align-items:center; background:var(--card-subtle); padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--bd); flex-wrap:wrap; gap:8px;">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <button type="button" class="btn btn-sm" onclick="openWeeklyReviewModal(Math.max(0, ${wIdx} - 1))" title="Xem tuần trước">◀</button>
+          <select onchange="openWeeklyReviewModal(+this.value)" style="font-weight:600; padding:5px 10px; font-size:13px; border-radius:var(--radius-sm); border:1px solid var(--bd); background:var(--card); color:var(--tx); cursor:pointer;">
+            ${W.map((m, i) => {
+              const mEnd = ad(m, 6);
+              const rStr = `${m.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" })} – ${mEnd.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" })}`;
+              return `<option value="${i}" ${i === wIdx ? 'selected' : ''}>Tuần W${i + 1} (${rStr})${i === CW ? ' · Tuần này' : ''}</option>`;
+            }).join("")}
+          </select>
+          <button type="button" class="btn btn-sm" onclick="openWeeklyReviewModal(Math.min(W.length - 1, ${wIdx} + 1))" title="Xem tuần sau">▶</button>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          ${CW >= 0 && wIdx !== CW ? `
+            <button type="button" class="btn btn-sm btn-ghost" onclick="openWeeklyReviewModal(CW)" style="color:var(--ac); font-weight:600; font-size:12px;">
+              Về tuần hiện tại (W${CW + 1})
+            </button>
+          ` : `<span class="pill pill-ok" style="font-size:11px;">Tuần hiện tại</span>`}
+        </div>
+      </div>
+
+      <!-- CÁC THẺ CHỈ SỐ -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
+        <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
+          <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Tổng Nạp / Rút</div>
+          <div style="font:700 20px Georgia, serif; margin-top:4px;">
+            <span style="color:var(--ok)">▲${r1(totalU)}h</span> · <span style="color:var(--bad)">▼${r1(totalD)}h</span>
+          </div>
+          <small style="color:var(--tx-sec)">Cán cân: <b>${netEnergy >= 0 ? '+' : ''}${r1(netEnergy)}h</b></small>
+        </div>
+        <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
+          <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Quỹ 168 Giờ</div>
+          <div style="font:700 20px Georgia, serif; margin-top:4px;">
+            ${r1(totalAlloc)}h <span style="font-size:13px; font-weight:400; color:var(--mu);">(${Math.round(totalAlloc/168*100)}%)</span>
+          </div>
+          <small style="color:${totalAlloc > 168 ? 'var(--bad)' : 'var(--ok)'}">
+            ${totalAlloc > 168 ? 'Vượt giới hạn 168h!' : `Còn ${r1(168 - totalAlloc)}h chưa phân bổ`}
+          </small>
+        </div>
+        <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
+          <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Đánh giá pin tuần</div>
+          <div style="font:700 20px Georgia, serif; margin-top:4px; color:${netEnergy >= 0 ? 'var(--ok)' : 'var(--bad)'}">
+            ${noData ? '— Chưa có dữ liệu' : netEnergy >= 0 ? '🔋 Nạp pin tốt' : '🪫 Thâm hụt pin'}
+          </div>
+          <small style="color:var(--tx-sec)">${noData ? 'Hãy ghi hoạt động để có đánh giá' : netEnergy >= 0 ? 'Tuần tái tạo năng lượng hiệu quả' : 'Cần bù đắp nghỉ ngơi tuần sau'}</small>
+        </div>
+      </div>
+
+      <div style="border:1px solid var(--bd); border-radius:var(--radius-md); padding:12px; background:var(--card);">
+        <div style="font-weight:600; font-size:14px; margin-bottom:4px; text-align:center;">
+          Bánh Xe Cuộc Đời · Tuần W${wIdx + 1}
+        </div>
+        ${renderRadarChartSVG(wIdx)}
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:8px; font-size:13.5px;">
+        ${starCap ? `
+          <div style="padding:10px 14px; background:var(--ok-soft); border-radius:var(--radius-md); border-left:4px solid var(--ok);">
+            ⭐ <b>Điểm sáng của tuần:</b> Vốn <b>${esc(starCap.c.n)}</b> đạt <b>${r1(starCap.u)}h</b> (đạt ${Math.round(starCap.ratio*100)}% mục tiêu).
+          </div>
+        ` : ''}
+        ${laggingCap && laggingCap.diff < 0 ? `
+          <div style="padding:10px 14px; background:var(--bad-soft); border-radius:var(--radius-md); border-left:4px solid var(--bad);">
+            ⚠️ <b>Cần bổ sung gấp:</b> Vốn <b>${esc(laggingCap.c.n)}</b> chỉ đạt ${r1(laggingCap.u)}h / ${r1(laggingCap.target)}h (thiếu hụt <b>${r1(Math.abs(laggingCap.diff))}h</b>).
+          </div>
+        ` : ''}
+      </div>
+
+      <div style="padding:12px; background:var(--c-blush); border-radius:var(--radius-md); font-size:13px; color:var(--on-blush);">
+        💡 <b>Đề xuất kế hoạch tuần tới:</b> Hãy ưu tiên lên lịch ngay cho <b>${laggingCap ? esc(laggingCap.c.n) : 'các sở thích cá nhân'}</b> vào Thứ 2 hoặc Thứ 4 tới để cân bằng bánh xe cuộc sống.
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button type="button" class="btn" onclick="copyReviewToClipboard(${wIdx})">📋 Sao chép tóm tắt</button>
+        <button type="button" class="btn btn-primary" onclick="closeReviewModal()">Đóng</button>
+      </div>
+    </div>
+  `;
+
+  $("reviewSheetBody").innerHTML = html;
+  $("reviewModalOverlay").classList.add("open");
+}
+
+function copyReviewToClipboard(wIdx) {
+  let totalU = 0, totalD = 0;
+  S.caps.forEach(c => {
+    const w = wk(wIdx, c.k);
+    totalU += w.u;
+    totalD += w.d;
+  });
+  const text = `🏆 [Life Capital] Tổng kết Tuần W${wIdx + 1}: Nạp ▲${r1(totalU)}h | Tiêu ▼${r1(totalD)}h | Cán cân: ${totalU - totalD >= 0 ? '+' : ''}${r1(totalU - totalD)}h. Quỹ 168h: ${r1(al(wIdx))}h.`;
+  navigator.clipboard.writeText(text).then(() => {
+    showToast("Đã sao chép tóm tắt vào bộ nhớ tạm!", "ok");
+  });
+}
+
+/* ==========================================================================
+   7. NAVIGATION
+   ========================================================================== */
+const TABS = [
+  { id: "ca", label: "Lịch biểu", icon: "📅" },
+  { id: "su", label: "Tổng quan & 168h", icon: "📊" },
+  { id: "set", label: "Danh mục vốn", icon: "🏷️" }
+];
+
+function renderNav() {
+  $("nav").innerHTML = TABS.map(t =>
+    `<button class="${t.id === cur ? "active" : ""}" aria-current="${t.id === cur ? "page" : "false"}" onclick="switchTab('${t.id}')">
+      <span>${t.icon}</span> <span>${t.label}</span>
+    </button>`
+  ).join("");
+}
+
+function switchTab(tabId) {
+  cur = tabId;
+  draw(true);
+}
+
+function getThemePreference() {
+  return localStorage.getItem("lc_theme") || "auto";
+}
+
+function setThemePreference(mode) {
+  const root = document.documentElement;
+  if (mode === "auto") {
+    root.removeAttribute("data-theme");
+    localStorage.setItem("lc_theme", "auto");
+  } else {
+    root.setAttribute("data-theme", mode);
+    localStorage.setItem("lc_theme", mode);
+  }
+  updateThemeButton();
+  renderSettingsModal();
+}
+
+function toggleTheme() {
+  const cur = getThemePreference();
+  const isDarkNow = document.documentElement.getAttribute("data-theme") === "dark" ||
+    (!document.documentElement.getAttribute("data-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  setThemePreference(isDarkNow ? "light" : "dark");
+}
+
+function updateThemeButton() {
+  // Theme indicator in settings or elsewhere
+}
+
+function openSettingsModal() {
+  LF = document.activeElement;
+  renderSettingsModal();
+  $("settingsModalOverlay").classList.add("open");
+}
+
+function closeSettingsModal() {
+  $("settingsModalOverlay").classList.remove("open");
+  if (LF && LF.focus) {
+    try { LF.focus(); } catch (e) {}
+  }
+}
+
+function handleSettingsBackdropClick(e) {
+  if (e.target.id === "settingsModalOverlay") closeSettingsModal();
+}
+
+function setDefaultDuration(val) {
+  S.cfg = S.cfg || {};
+  S.cfg.defDuration = Math.max(0.5, Math.min(24, val));
+  save();
+  showToast(`Đã lưu thời lượng mặc định: ${val}h`, "ok");
+}
+
+function setBurnoutThreshold(val) {
+  S.cfg = S.cfg || {};
+  S.cfg.burnoutHours = Math.max(1, Math.min(24, val));
+  save();
+  draw();
+  showToast(`Đã lưu ngưỡng cảnh báo kiệt sức: ${val}h`, "ok");
+}
+
+function resetToDefaultData() {
+  if (!confirm("⚠️ CẢNH BÁO NGUY HIỂM:\nBạn có chắc chắn muốn xóa TOÀN BỘ dữ liệu đã ghi và đưa ứng dụng về trạng thái ban đầu?\n\nKhuyến nghị: Hãy nhấn 'Xuất tệp sao lưu (.json)' trước khi xóa!")) return;
+  if (!confirm("Xác nhận lần cuối: Mọi hoạt động ghi chép sẽ bị xóa vĩnh viễn trên thiết bị này. Tiếp tục?")) return;
+  S = defState();
+  save();
+  draw(true);
+  closeSettingsModal();
+  showToast("Đã đưa dữ liệu về trạng thái ban đầu!", "ok");
+}
+
+function renderSettingsModal() {
+  const curTheme = getThemePreference();
+  const totalEvents = Object.values(S.ev).flat().length;
+  const storageKB = (JSON.stringify(localStorage).length / 1024).toFixed(1);
+  const defDur = (S.cfg && S.cfg.defDuration) ? S.cfg.defDuration : 2;
+  const burnH = (S.cfg && S.cfg.burnoutHours) ? S.cfg.burnoutHours : 6;
+
+  const html = `
+    <div style="display:flex; flex-direction:column; gap:18px;">
+      <!-- NHÓM 1: GIAO DIỆN -->
+      <div style="background:var(--card-subtle); padding:14px; border-radius:var(--radius-md); border:1px solid var(--bd);">
+        <div style="font-weight:600; font-size:14px; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+          <span>🎨 Giao Diện & Hiển Thị</span>
+        </div>
+        <div style="font-size:12.5px; color:var(--mu); margin-bottom:12px;">
+          Chọn phong cách hiển thị phù hợp với thị giác của bạn.
+        </div>
+        <div class="row" style="gap:8px;">
+          <button type="button" class="btn btn-sm ${curTheme === 'light' ? 'btn-primary' : 'btn-ghost'}" onclick="setThemePreference('light')">
+            ☀️ Sáng
+          </button>
+          <button type="button" class="btn btn-sm ${curTheme === 'dark' ? 'btn-primary' : 'btn-ghost'}" onclick="setThemePreference('dark')">
+            🌙 Tối
+          </button>
+          <button type="button" class="btn btn-sm ${curTheme === 'auto' ? 'btn-primary' : 'btn-ghost'}" onclick="setThemePreference('auto')">
+            🌓 Theo hệ thống
+          </button>
+        </div>
+      </div>
+
+      <!-- NHÓM 2: DỮ LIỆU & SAO LƯU -->
+      <div style="background:var(--card-subtle); padding:14px; border-radius:var(--radius-md); border:1px solid var(--bd);">
+        <div style="font-weight:600; font-size:14px; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+          <span>💾 Quản Trị Dữ Liệu & Sao Lưu</span>
+        </div>
+        <div style="font-size:12.5px; color:var(--mu); margin-bottom:12px;">
+          Dữ liệu lưu an toàn trên trình duyệt: <b>${totalEvents} hoạt động</b> (${storageKB} KB).
+          ${S.lb ? `<br>Lần sao lưu gần nhất: <b>${new Date(S.lb).toLocaleString("vi-VN")}</b>` : '<br><span style="color:var(--bad);">Bạn chưa sao lưu lần nào. Hãy xuất file .json định kỳ!</span>'}
+        </div>
+
+        <div class="row" style="gap:8px; margin-bottom:14px;">
+          <button type="button" class="btn btn-primary" onclick="exportData('json')">📥 Xuất sao lưu (.json)</button>
+          <button type="button" class="btn" onclick="exportData('csv')">📊 Xuất lịch trình (.csv)</button>
+        </div>
+
+        <div style="padding-top:12px; border-top:1px dashed var(--bd);">
+          <div style="font-size:12.5px; font-weight:600; margin-bottom:8px;">Khôi phục dữ liệu từ tệp tin:</div>
+          <div class="row" style="gap:8px; align-items:center;">
+            <input type="file" accept=".json,application/json" onchange="importData(this)" style="font-size:12.5px; flex:1;">
+            <select id="importModeSelect" style="font-size:12.5px;">
+              <option value="merge">Gộp thêm vào lịch</option>
+              <option value="replace">Ghi đè toàn bộ</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- NHÓM 3: QUY TẮC LỊCH BIỂU -->
+      <div style="background:var(--card-subtle); padding:14px; border-radius:var(--radius-md); border:1px solid var(--bd);">
+        <div style="font-weight:600; font-size:14px; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+          <span>⏱️ Quy Tắc Lịch & Cảnh Báo Kiệt Sức</span>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:10px;">
+          <div class="form-group">
+            <label class="form-label" style="font-size:11px;">Thời lượng mặc định khi tạo:</label>
+            <select onchange="setDefaultDuration(+this.value)" style="font-size:13px;">
+              <option value="0.5" ${defDur === 0.5 ? 'selected' : ''}>0.5 giờ (30 phút)</option>
+              <option value="1" ${defDur === 1 ? 'selected' : ''}>1.0 giờ</option>
+              <option value="1.5" ${defDur === 1.5 ? 'selected' : ''}>1.5 giờ</option>
+              <option value="2" ${defDur === 2 ? 'selected' : ''}>2.0 giờ (chuẩn)</option>
+              <option value="3" ${defDur === 3 ? 'selected' : ''}>3.0 giờ</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="font-size:11px;">Ngưỡng báo kiệt sức / ngày:</label>
+            <select onchange="setBurnoutThreshold(+this.value)" style="font-size:13px;">
+              <option value="5" ${burnH === 5 ? 'selected' : ''}>≥ 5 giờ tiêu hao</option>
+              <option value="6" ${burnH === 6 ? 'selected' : ''}>≥ 6 giờ tiêu hao (chuẩn)</option>
+              <option value="7" ${burnH === 7 ? 'selected' : ''}>≥ 7 giờ tiêu hao</option>
+              <option value="8" ${burnH === 8 ? 'selected' : ''}>≥ 8 giờ tiêu hao</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- NHÓM 4: THÔNG TIN & CÀI APP -->
+      <div style="background:var(--card-subtle); padding:14px; border-radius:var(--radius-md); border:1px solid var(--bd);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <span style="font-weight:600; font-size:13.5px;">📱 Cài Đặt Làm App Trên Điện Thoại (PWA)</span>
+          <span class="pill pill-ok" style="font-size:10px;">v2.1</span>
+        </div>
+        <div style="font-size:12.5px; color:var(--tx-sec); line-height:1.5;">
+          • <b>iPhone / iPad:</b> Mở trên Safari → bấm nút <b>Chia sẻ</b> (biểu tượng ⎋) → chọn <b>Thêm vào MH chính (Add to Home Screen)</b>.<br>
+          • <b>Android / Máy tính:</b> Nhấn biểu tượng Cài đặt trên thanh địa chỉ hoặc menu ba chấm (⋮).
+        </div>
+        <div style="margin-top:14px; padding-top:10px; border-top:1px dashed var(--bd); display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:12px; color:var(--mu);">Làm mới lại toàn bộ ứng dụng:</span>
+          <button type="button" class="btn btn-sm btn-danger" onclick="resetToDefaultData()">
+            ⚠️ Đặt lại dữ liệu ban đầu
+          </button>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end;">
+        <button type="button" class="btn btn-primary" onclick="closeSettingsModal()">Hoàn tất</button>
+      </div>
+    </div>
+  `;
+
+  $("settingsSheetBody").innerHTML = html;
+}
+
+/* ==========================================================================
+   8. MAIN VIEWS
+   ========================================================================== */
+const V = {
+  // --- TAB 1: LỊCH BIỂU (CALENDAR) ---
+  ca() {
+    const selWeekStart = W[sel];
+    const selWeekEnd = ad(selWeekStart, 6);
+    const dateRangeStr = `${selWeekStart.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" })} – ${selWeekEnd.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric", year: "numeric" })}`;
+
+    const dayOfWeek = new Date().getDay();
+    const showReviewPrompt = (dayOfWeek === 0 || dayOfWeek === 1) && sel === CW;
+
+    const reviewPrompt = showReviewPrompt ? `
+      <div class="review-prompt-banner">
+        <div>
+          <b>🌟 Đã đến lúc tổng kết tuần!</b>
+          <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Xem lại cán cân năng lượng và bánh xe cuộc đời tuần này.</div>
+        </div>
+        <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(${sel})">Xem tổng kết ngay</button>
+      </div>
+    ` : '';
+
+    const headerBar = `
+      ${reviewPrompt}
+      <div class="card" style="margin-bottom:12px; padding:12px 16px;">
+        <div class="card-header" style="margin-bottom:0">
+          <div class="row">
+            <button class="btn btn-sm" onclick="sel=Math.max(0, sel-1); draw()" title="Tuần trước">◀</button>
+            <label style="font-weight:600; font-size:14px;">
+              Tuần W${sel + 1} <span style="font-weight:400; color:var(--mu);">(${dateRangeStr})</span>
+            </label>
+            <button class="btn btn-sm" onclick="sel=Math.min(W.length - 1, sel + 1); draw()" title="Tuần sau">▶</button>
+            ${CW >= 0 && sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=Math.max(0, CW); draw()">Về tuần này (W${CW+1})</button>` : `<span class="pill pill-ok">Tuần hiện tại</span>`}
+          </div>
+          <div class="row">
+            <div class="segmented-control">
+              <button class="${calSubView === 'focus' ? 'active' : ''}" onclick="calSubView='focus'; draw()">Tuần chi tiết</button>
+              <button class="${calSubView === 'timeline' ? 'active' : ''}" onclick="calSubView='timeline'; draw()">Dòng thời gian 24h</button>
+              <button class="${calSubView === 'year' ? 'active' : ''}" onclick="calSubView='year'; draw(true)">Lưới 53 tuần</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // 1. Chế độ TUẦN CHI TIẾT
+    if (calSubView === "focus") {
+      let cards = '<div class="week-cards-grid">';
+      for (let j = 0; j < 7; j++) {
+        const dt = ad(selWeekStart, j);
+        const k = ky(dt);
+        const isToday = k === tk;
+        const es = S.ev[k] || [];
+        const bat = getDayBattery(k);
+
+        cards += `
+          <div class="day-card ${isToday ? 'today' : ''}">
+            <div class="day-card-header">
+              <span class="day-name">${DN_VI[j]}</span>
+              <span class="day-date">${dt.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" })}</span>
+            </div>
+            <div class="day-battery-row">
+              <span class="battery-badge ${bat.statusClass}">
+                <span class="battery-icon"><span class="battery-fill" style="width:${bat.fillPercent}%"></span></span>
+                ${bat.label}
+              </span>
+              ${bat.isBurnout ? `<span class="pill pill-bad" style="font-size:10px; padding:1px 5px;" title="Cảnh báo kiệt sức năng lượng!">Kiệt sức</span>` : ''}
+            </div>
+            <div class="day-events-list">
+              ${es.length === 0 ? `<div style="color:var(--mu); font-size:12px; text-align:center; margin:auto 0; padding:12px 0;">Chưa có hoạt động</div>` : ""}
+              ${es.map((e, idx) => {
+                const cap = CM(e.c);
+                return `
+                  <div class="event-item" style="border-left-color: ${cap.c}" onclick="openEditor('${k}', ${idx})">
+                    <div class="event-item-top">
+                      <span class="event-title" title="${esc(e.t)}">${esc(e.t)}</span>
+                      <span class="${e.m === 'u' ? 'event-mode-up' : 'event-mode-down'}">${e.m === 'u' ? '▲' : '▼'}</span>
+                    </div>
+                    <div class="event-meta">
+                      <span>${e.s ? e.s + ' · ' : ''}${r1(e.h)}h</span>
+                      <span style="color:${cap.c}; font-weight:500;">${esc(cap.n)}</span>
+                    </div>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+            <button class="day-card-add-btn" onclick="openEditor('${k}')">
+              + Thêm
+            </button>
+          </div>
+        `;
+      }
+      cards += '</div>';
+      return headerBar + cards;
+    }
+
+    // 2. Chế độ DÒNG THỜI GIAN 24H
+    if (calSubView === "timeline") {
+      const activeDate = ky(ad(selWeekStart, timelineDayIdx));
+      const activeEvents = S.ev[activeDate] || [];
+      const bat = getDayBattery(activeDate);
+      const isViewingToday = activeDate === tk;
+
+      const dayNav = `
+        <div class="timeline-days-nav">
+          ${[0, 1, 2, 3, 4, 5, 6].map(idx => {
+            const d = ad(selWeekStart, idx);
+            const dkStr = ky(d);
+            const isSelected = idx === timelineDayIdx;
+            const isToday = dkStr === tk;
+            return `
+              <button class="btn btn-sm ${isSelected ? 'btn-primary' : 'btn-ghost'}" onclick="timelineDayIdx=${idx}; draw();">
+                ${DN_SHORT[idx]} ${d.getDate()}/${d.getMonth()+1} ${isToday ? '•' : ''}
+              </button>
+            `;
+          }).join("")}
+        </div>
+      `;
+
+      let hourMarkers = "";
+      for (let h = 6; h <= 23; h++) {
+        const topPx = (h - 6) * 48;
+        hourMarkers += `<div class="timeline-hour-mark" style="top:${topPx}px;">${pad(h)}:00</div>`;
+      }
+
+      let eventBlocks = activeEvents.map((e, idx) => {
+        if (!e.s) return "";
+        const [hh, mm] = e.s.split(":").map(Number);
+        const startFrom6 = (hh - 6) + (mm / 60);
+        if (startFrom6 < 0 || startFrom6 > 18) return "";
+
+        const topPx = startFrom6 * 48;
+        const heightPx = Math.max(26, (e.h || 1) * 48);
+        const cap = CM(e.c);
+
+        return `
+          <div class="timeline-event-block"
+               style="top:${topPx}px; height:${heightPx}px; background:${cap.c};"
+               onclick="openEditor('${activeDate}', ${idx})">
+            <b>${e.s} – ${tt(e.s, e.h)}</b> · ${e.m === 'u' ? '▲' : '▼'} ${esc(e.t)} (${r1(e.h)}h)
+          </div>
+        `;
+      }).join("");
+
+      // Chỉ báo thời gian thực nếu đang xem ngày hôm nay
+      let timeNowIndicator = "";
+      if (isViewingToday) {
+        const now = new Date();
+        const curHr = now.getHours() + (now.getMinutes() / 60);
+        if (curHr >= 6 && curHr <= 24) {
+          const topNow = (curHr - 6) * 48;
+          timeNowIndicator = `<div style="position:absolute; left:0; right:0; top:${topNow}px; height:2px; background:var(--bad); z-index:4; pointer-events:none;"><span style="position:absolute; right:4px; top:-9px; font-size:10px; font-weight:700; background:var(--bad); color:#fff; padding:1px 4px; border-radius:3px;">${pad(now.getHours())}:${pad(now.getMinutes())}</span></div>`;
+        }
+      }
+
+      return headerBar + `
+        <div class="timeline-container">
+          ${dayNav}
+          <div style="padding:10px 14px; background:var(--card); display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--bd);">
+            <div>
+              <b style="font-size:15px;">${DN_VI[timelineDayIdx]}, ${ad(selWeekStart, timelineDayIdx).toLocaleDateString("vi-VN")}</b>
+              <span class="battery-badge ${bat.statusClass}" style="margin-left:8px;">
+                <span class="battery-icon"><span class="battery-fill" style="width:${bat.fillPercent}%"></span></span>
+                ${bat.label}
+              </span>
+            </div>
+            <button class="btn btn-sm btn-primary" onclick="openEditor('${activeDate}')">+ Thêm hoạt động</button>
+          </div>
+          <div class="timeline-grid" onclick="handleTimelineGridClick(event, '${activeDate}')">
+            ${hourMarkers}
+            <div class="timeline-content-area">
+              ${timeNowIndicator}
+              ${eventBlocks}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // 3. Chế độ LƯỚI 53 TUẦN (SỬA LỖI HOÀN CHỈNH)
+    const pm = S.pm || "0";
+    const st = pm === "all" ? 0 : pm === "4" ? Math.max(0, (CW >= 0 ? CW : 0) - 4) : (CW >= 0 ? CW : 0);
+
+    const filterBar = `
+      <div class="row" style="margin-bottom:12px; gap:8px;">
+        <span style="font-size:12px; color:var(--mu);">Hiển thị:</span>
+        <div class="segmented-control">
+          ${[["0", "Từ tuần này"], ["4", "+ 4 tuần gần nhất"], ["all", "Tất cả " + W.length + " tuần"]].map(o =>
+            `<button class="${pm === o[0] ? 'active' : ''}" onclick="S.pm='${o[0]}'; save(); draw(); scrollToCurrentWeek();">${o[1]}</button>`
+          ).join("")}
+        </div>
+        <button class="btn btn-sm btn-ghost" onclick="scrollToCurrentWeek()">⟲ Về tuần hiện tại (W${CW >= 0 ? CW+1 : 1})</button>
+      </div>
+    `;
+
+    let tbl = `<div class="table-wrapper" id="yearTableWrapper"><table class="calendar-table">
+      <thead>
+        <tr>
+          <th style="width:50px">Năm</th>
+          <th style="width:55px">Tuần</th>
+          ${DN_SHORT.map(d => `<th>${d}</th>`).join("")}
+          <th style="width:130px">▲ / ▼ · Tổng</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+    for (let i = st; i < W.length; i++) {
+      const m = W[i];
+      let u = 0, d = 0;
+      evs(i).forEach(e => e.m === "u" ? u += e.h : d += e.h);
+      const isCurWeek = i === CW;
+
+      tbl += `<tr class="${isCurWeek ? 'current-week' : (CW >= 0 && i < CW) ? 'past-week' : ''}" id="${isCurWeek ? 'cw' : ''}">
+        <td>${m.getFullYear()}</td>
+        <td><b>W${i + 1}</b></td>`;
+
+      for (let j = 0; j < 7; j++) {
+        const dt = ad(m, j);
+        const k = ky(dt);
+        const es = S.ev[k] || [];
+        const isToday = k === tk;
+
+        tbl += `<td class="cal-day-cell ${isToday ? 'is-today' : ''}" tabindex="0" onclick="openEditor('${k}')">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <small>${dt.toLocaleDateString("vi-VN", { month: "numeric", day: "numeric" })}</small>
+            ${isToday ? '<span class="pill pill-ok" style="font-size:9px; padding:0 4px;">Nay</span>' : ''}
+          </div>
+          ${es.map((e, idx) => `
+            <div onclick="event.stopPropagation(); openEditor('${k}', ${idx})"
+                 style="background:${CM(e.c).c}; color:#fff; border-radius:4px; padding:2px 5px; margin-top:2px; font-size:11px; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer;"
+                 title="${esc(e.t)} (${e.s || ''} ${r1(e.h)}h)">
+              ${e.s ? e.s + ' ' : ''}${e.m === 'u' ? '▲' : '▼'} ${esc(e.t)} · ${r1(e.h)}h
+            </div>
+          `).join("")}
+        </td>`;
+      }
+
+      const tot = al(i);
+      tbl += `<td style="font-size:12px;">
+        <span class="pill pill-ok" style="padding:1px 5px; font-size:11px">▲${r1(u)}</span>
+        <span class="pill pill-bad" style="padding:1px 5px; font-size:11px">▼${r1(d)}</span><br>
+        <span style="font-weight:600; color:${tot > 168 ? 'var(--bad)' : 'var(--tx-sec)'}; margin-top:3px; display:inline-block;">
+          Σ ${r1(tot)}/168h
+        </span>
+      </td></tr>`;
+    }
+
+    tbl += `</tbody></table></div>`;
+    return headerBar + filterBar + tbl;
+  },
+
+  // --- TAB 2: HIỆU SUẤT & 168 GIỜ & BÁNH XE CUỘC ĐỜI ---
+  su() {
+    const nn0 = Math.max(0, W.findIndex((_, i) => evs(i).length));
+    const from = N === 0 ? Math.min(nn0, sel) : Math.max(0, sel - N + 1);
+    const nn = sel - from + 1;
+    const pf = from - nn;
+
+    const avg = (k, a, b) => {
+      let u = 0, d = 0;
+      for (let i = a; i <= b; i++) {
+        const w = wk(i, k);
+        u += w.u;
+        d += w.d;
+      }
+      const n = b - a + 1;
+      return [u / n, d / n];
+    };
+
+    const D = S.caps.map(c => {
+      const k = c.k;
+      const s = wk(sel, k);
+      const [au, ad_] = avg(k, from, sel);
+      const pa = N && pf >= 0 ? avg(k, pf, from - 1)[0] : null;
+      return {
+        c,
+        s,
+        au,
+        ad: ad_,
+        pa,
+        p: c.tg ? au / c.tg : null,
+        sp: [...Array(8)].map((_, j) => sel - 7 + j).filter(i => i >= 0).map(i => [i, wk(i, k).u])
+      };
+    });
+
+    const A = al(sel);
+    const den = Math.max(168, A);
+    const free = Math.max(0, 168 - A);
+    const sg = S.caps.map(c => {
+      const w = wk(sel, c.k);
+      return { c, h: w.u + w.d };
+    }).filter(x => x.h > 0);
+
+    const selectorBar = `
+      <div class="card" style="margin-bottom:12px; padding:12px 16px;">
+        <div class="card-header" style="margin-bottom:0">
+          <div class="row">
+            <button class="btn btn-sm" onclick="sel=Math.max(0, sel-1); draw()">◀</button>
+            <select onchange="sel=+this.value; draw()" style="font-weight:600">
+              ${W.map((m, i) => `<option value="${i}" ${i === sel ? 'selected' : ''}>Tuần W${i + 1} (${m.toLocaleDateString("vi-VN", { month: "numeric", day: "numeric" })})${i === CW ? ' - Hiện tại' : ''}</option>`).join("")}
+            </select>
+            <button class="btn btn-sm" onclick="sel=Math.min(W.length - 1, sel + 1); draw()">▶</button>
+            ${CW >= 0 && sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=Math.max(0, CW); draw()">Về tuần này</button>` : ""}
+          </div>
+          <div class="row">
+            <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(${sel})">🏆 Báo cáo tổng kết W${sel+1}</button>
+            <select onchange="N=+this.value; draw()">
+              <option value="4" ${N === 4 ? 'selected' : ''}>TB 4 tuần</option>
+              <option value="8" ${N === 8 ? 'selected' : ''}>TB 8 tuần</option>
+              <option value="0" ${N === 0 ? 'selected' : ''}>Tất cả tuần</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Nhận định thông minh (Native Insight Card)
+    const T = D.filter(x => x.p != null);
+    const okCount = T.filter(x => x.p >= 1).length;
+    const worst = T.filter(x => x.p < 1).sort((a, b) => (b.c.tg - b.au) - (a.c.tg - a.au))[0];
+    const drain = D.filter(x => x.ad > 0 && x.ad > x.au);
+    const chip = x => x.p == null ? '<span class="pill pill-neutral">Chưa đặt</span>' : x.p >= 1 ? '<span class="pill pill-ok">Đạt</span>' : x.p >= .6 ? '<span class="pill pill-cyan">Gần đạt</span>' : '<span class="pill pill-bad">Thiếu</span>';
+
+    const insightCard = `
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">💡 Nhận Định & Tình Trạng Các Loại Vốn</h2>
+        </div>
+        <p style="margin:4px 0 10px; font-size:13.5px; color:var(--tx-sec);">
+          ${T.length ? `Đã có <b>${okCount}/${T.length}</b> nguồn vốn đạt mục tiêu tuần (trung bình ${nn} tuần gần nhất đến W${sel + 1}).` : "Chưa đặt mục tiêu cho vốn nào. Bạn có thể vào tab <b>Danh mục vốn</b> để đặt mục tiêu."}
+          ${CW >= 0 && sel > CW ? " <i>(Đang xem kế hoạch tuần tương lai).</i>" : ""}
+        </p>
+        <div style="display:flex; flex-direction:column; gap:6px; font-size:13px;">
+          ${worst ? `
+            <div style="padding:8px 12px; background:var(--bad-soft); border-radius:var(--radius-sm); border-left:3.5px solid var(--bad);">
+              ⚠️ <b>Cần bổ sung nhiều nhất:</b> Vốn <b>${esc(worst.c.n)}</b> chỉ đạt trung bình ${r1(worst.au)}h / ${r1(worst.c.tg)}h (thiếu <b>${r1(worst.c.tg - worst.au)}h/tuần</b>).
+            </div>
+          ` : ''}
+          ${drain.length ? `
+            <div style="padding:8px 12px; background:var(--wa-soft); border-radius:var(--radius-sm); border-left:3.5px solid var(--wa);">
+              ⚡ <b>Đang tiêu hao nhiều hơn nạp:</b> ${drain.map(x => `<b>${esc(x.c.n)}</b> (tiêu ${r1(x.ad)}h > nạp ${r1(x.au)}h)`).join(", ")}.
+            </div>
+          ` : ''}
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:12px; padding-top:10px; border-top:1px dashed var(--bd); font-size:12.5px;">
+          ${D.map(x => `<span class="row" style="gap:4px;"><span class="dot" style="background:${x.c.c}"></span> <b>${esc(x.c.n)}</b>: ${chip(x)}</span>`).join("")}
+        </div>
+      </div>
+    `;
+
+    const wheelCard = `
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">Bánh Xe Cuộc Đời (Wheel of Life)</h2>
+            <div class="card-sub">Trực quan hóa mức độ tròn trịa và cân bằng giữa ${S.caps.length} loại vốn trong tuần W${sel + 1}.</div>
+          </div>
+        </div>
+        ${renderRadarChartSVG(sel)}
+      </div>
+    `;
+
+    const pc = h => Math.round(h / 168 * 100);
+    const f168 = `
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">Khung 168 Giờ · Tuần W${sel + 1}</h2>
+            <div class="card-sub">Tổng quỹ chuẩn: 168h (24 giờ × 7 ngày)</div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:10px; margin-bottom:12px;">
+          <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
+            <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Đã phân bổ</div>
+            <div style="font:700 22px Georgia, serif; margin-top:2px;">${r1(A)}h <span style="font-size:13px; font-weight:400; color:var(--mu);">(${pc(A)}%)</span></div>
+          </div>
+          <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
+            <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">${A > 168 ? 'Quá tải (Vượt)' : 'Chưa phân bổ'}</div>
+            <div style="font:700 22px Georgia, serif; margin-top:2px; color:${A > 168 ? 'var(--bad)' : 'var(--ok)'}">
+              ${A > 168 ? '+' + r1(A - 168) + 'h' : r1(free) + 'h'}
+              <span style="font-size:13px; font-weight:400; color:var(--mu);">${A > 168 ? '(vượt mức)' : `(${pc(free)}%)`}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-168-bar">
+          ${sg.map(x => `<div class="progress-168-seg" style="width:${x.h / den * 100}%; background:${x.c.c};" title="${esc(x.c.n)}: ${r1(x.h)}h (${pc(x.h)}%)"></div>`).join("")}
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:10px 14px; font-size:12.5px;">
+          ${sg.map(x => `<span class="row" style="gap:4px;"><span class="dot" style="background:${x.c.c}"></span><b>${esc(x.c.n)}</b>: ${r1(x.h)}h</span>`).join("")}
+          <span class="row" style="gap:4px; color:var(--mu);"><span class="dot" style="background:var(--bar); border:1px solid var(--bd)"></span>Chưa phân bổ: ${r1(free)}h</span>
+        </div>
+      </div>
+    `;
+
+    let tableRows = "", totU = 0, totD = 0;
+    D.forEach(x => {
+      totU += x.s.u;
+      totD += x.s.d;
+      const c = x.c;
+      const mx = Math.max(1, c.tg, ...x.sp.map(a => a[1]));
+
+      tableRows += `
+        <tr>
+          <td>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="dot" style="background:${c.c}"></span>
+              <b>${esc(c.n)}</b>
+            </div>
+          </td>
+          <td>
+            <span class="pill pill-ok" style="font-size:11px">▲ ${r1(x.s.u)}h</span>
+            <span class="pill pill-bad" style="font-size:11px">▼ ${r1(x.s.d)}h</span>
+          </td>
+          <td>
+            <div>▲ ${r1(x.au)}h · ▼ ${r1(x.ad)}h</div>
+            <small style="color:var(--mu)">Ròng: ${x.au - x.ad >= 0 ? '+' : ''}${r1(x.au - x.ad)}h</small>
+          </td>
+          <td><b>${c.tg ? r1(c.tg) + "h" : "–"}</b></td>
+          <td>
+            <div class="sparkline-wrapper">
+              ${x.sp.map(a => `
+                <div class="sparkline-bar"
+                     title="W${a[0] + 1}: ${r1(a[1])}h"
+                     style="height:${Math.max(3, a[1] / mx * 26)}px; background:${c.c}; opacity:${a[0] === sel ? 1 : 0.4}">
+                </div>
+              `).join("")}
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+
+    const reportTable = `
+      <div class="card">
+        <h2 class="card-title">Báo Cáo Giờ Theo Loại Vốn</h2>
+        <div style="overflow-x:auto; margin-top:12px;">
+          <table class="sum-table">
+            <thead>
+              <tr>
+                <th>Loại vốn</th>
+                <th>Tuần W${sel + 1}</th>
+                <th>Trung bình ${nn} tuần</th>
+                <th>Mục tiêu ▲</th>
+                <th>Xu hướng 8 tuần</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${tableRows}
+              <tr style="font-weight:600; background:var(--card-subtle);">
+                <td>Tổng cộng</td>
+                <td>
+                  <span class="pill pill-ok">▲ ${r1(totU)}h</span>
+                  <span class="pill pill-bad">▼ ${r1(totD)}h</span>
+                </td>
+                <td colspan="3"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+
+    return selectorBar + insightCard + wheelCard + f168 + reportTable;
+  },
+  // --- TAB 3: CÀI ĐẶT LOẠI VỐN (SETTINGS) ---
+  set() {
+    const list = S.caps.map((c) => {
+      const b = BL(c.k);
+      return `
+        <tr>
+          <td>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <input type="color" value="${c.c}" onchange="updateCap('${c.k}', 'c', this.value)" style="width:28px; height:28px; padding:0; border:none; cursor:pointer; border-radius:4px; background:none;">
+              <input type="text" value="${esc(c.n)}" onchange="updateCap('${c.k}', 'n', this.value)" style="width:160px; font-weight:500;">
+            </div>
+          </td>
+          <td>
+            <input type="number" step="0.5" min="0" value="${c.tg}" onchange="updateCap('${c.k}', 'tg', Math.max(0, +this.value || 0))">
+          </td>
+          <td>
+            <input type="number" step="0.5" min="0" value="${b.u}" onchange="BL('${c.k}').u=Math.max(0, +this.value || 0); save(); draw();">
+          </td>
+          <td>
+            <input type="number" step="0.5" min="0" value="${b.d}" onchange="BL('${c.k}').d=Math.max(0, +this.value || 0); save(); draw();">
+          </td>
+          <td>
+            <button class="btn btn-sm btn-danger" onclick="deleteCap('${c.k}')">Xóa</button>
+          </td>
+        </tr>
+      `;
+    }).join("");
+
+    return `
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">Cài Đặt Loại Vốn & Giờ Cố Định</h2>
+            <div class="card-sub">Tùy biến tên, màu sắc, mục tiêu nạp và giờ cố định lặp mỗi tuần (Baseline).</div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="addCap()">+ Thêm loại vốn</button>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="sum-table">
+            <thead>
+              <tr>
+                <th style="text-align:left">Tên vốn & Màu sắc</th>
+                <th>Mục tiêu nạp ▲<br><small style="color:var(--mu); font-weight:400;">giờ/tuần</small></th>
+                <th>Cố định nạp ▲<br><small style="color:var(--mu); font-weight:400;">(vd: thể thao 6h)</small></th>
+                <th>Cố định tiêu ▼<br><small style="color:var(--mu); font-weight:400;">(vd: làm việc 40h)</small></th>
+                <th style="width:60px"></th>
+              </tr>
+            </thead>
+            <tbody>
+              ${list}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  },
+
+  // --- TAB 4: SAO LƯU (ĐÃ GOM VÀO CÀI ĐẶT) ---
+  bak() {
+    setTimeout(openSettingsModal, 50);
+    return V.ca();
+  }
+};
+
+/* ==========================================================================
+   9. MODAL EDITOR (THÊM / SỬA HOẠT ĐỘNG TRONG NGÀY)
+   ========================================================================== */
+let LF = null; // Ghi nhớ element được focus trước khi mở modal
+
+function openEditor(dateStr, editIndex = null) {
+  LF = document.activeElement;
+  ed = dateStr;
+  ei = editIndex;
+  renderEditorSheet();
+  $("modalOverlay").classList.add("open");
+  setTimeout(() => {
+    const inp = $("inpTitle");
+    if (inp) {
+      inp.focus();
+      if (ei != null) inp.select();
+    }
+  }, 100);
+}
+
+function closeEditor() {
+  $("modalOverlay").classList.remove("open");
+  ed = null;
+  ei = null;
+  if (LF && LF.focus) {
+    try { LF.focus(); } catch (e) {}
+  }
+}
+
+function handleBackdropClick(e) {
+  if (e.target.id === "modalOverlay") closeEditor();
+}
+
+function editEvent(idx) {
+  ei = idx;
+  renderEditorSheet();
+  setTimeout(() => {
+    const inp = $("inpTitle");
+    if (inp) {
+      inp.focus();
+      inp.select();
+    }
+  }, 50);
+}
+
+function cancelEdit() {
+  ei = null;
+  renderEditorSheet();
+  setTimeout(() => {
+    const inp = $("inpTitle");
+    if (inp) inp.focus();
+  }, 50);
+}
+
+function tpls() {
+  const m = {};
+  Object.values(S.ev).forEach(l => l.forEach(e => {
+    const n = e.t.trim().toLowerCase();
+    const x = m[n] = m[n] || { n: 0, e };
+    x.n++;
+    x.e = e;
+  }));
+  return Object.values(m).sort((a, b) => b.n - a.n).slice(0, 6).map(x => x.e);
+}
+
+function fillTpl(item) {
+  if (!item) return;
+  const tInp = $("inpTitle");
+  const cInp = $("inpCap");
+  const mInp = $("inpMode");
+  const hInp = $("inpHours");
+  if (tInp) tInp.value = item.t;
+  if (cInp) cInp.value = item.c;
+  if (mInp) mInp.value = item.m;
+  if (hInp) hInp.value = item.h;
+  if (tInp) tInp.focus();
+}
+
+function rep(date, o, rp, end) {
+  const r = "r" + Date.now().toString(36);
+  const a = new Date(date + "T00:00");
+  const z = new Date((end || activeYear + "-12-31") + "T00:00");
+  const days = [];
+  for (let d = a; d <= z && days.length < 400; d = ad(d, 1)) {
+    const g = d.getDay();
+    if (rp === "d" || (rp === "wd" && g > 0 && g < 6) || (rp === "w" && g === a.getDay())) {
+      days.push(ky(d));
+    }
+  }
+  if (!days.length) {
+    showToast("Không tạo được chuỗi lặp: hãy kiểm tra ngày kết thúc.", "bad");
+    return 0;
+  }
+  const bad = o.s ? days.filter(k => chkEvent(k, o.s, o.h, -1).hit).length : 0;
+  if (bad && !confirm(`${bad} ngày trong chuỗi bị trùng giờ với hoạt động khác. Vẫn tạo chuỗi?`)) return 0;
+  days.forEach(k => {
+    S.ev[k] = S.ev[k] || [];
+    S.ev[k].push({ ...o, r });
+    sortL(S.ev[k]);
+  });
+  return days.length;
+}
+
+function delSeries(i) {
+  if (!ed || !S.ev[ed] || !S.ev[ed][i]) return;
+  const r = S.ev[ed][i].r;
+  if (!r || !confirm("Xóa tất cả hoạt động của chuỗi này từ ngày này trở đi?")) return;
+  Object.keys(S.ev).forEach(k => {
+    if (k >= ed) {
+      S.ev[k] = S.ev[k].filter(e => e.r !== r);
+      if (!S.ev[k].length) delete S.ev[k];
+    }
+  });
+  ei = null;
+  save();
+  renderEditorSheet();
+  draw();
+  showToast("Đã xóa chuỗi hoạt động định kỳ", "ok");
+}
+
+function handleTitleKeydown(e) {
+  if (e.isComposing) return;
+  if (e.key === "Enter") {
+    e.preventDefault();
+    const startInp = $("inpStart");
+    if (startInp) startInp.focus();
+  }
+}
+
+function handleTitleInput(val) {
+  const guessedCap = guess(val);
+  const select = $("inpCap");
+  if (select && S.caps.some(c => c.k === guessedCap)) {
+    select.value = guessedCap;
+  }
+}
+
+function adjustHours(delta) {
+  const inp = $("inpHours");
+  if (!inp) return;
+  const current = parseFloat(inp.value) || 2;
+  inp.value = Math.max(0.5, Math.min(24, Math.round((current + delta) * 10) / 10));
+}
+
+function renderEditorSheet() {
+  if (!ed) return;
+  const L = S.ev[ed] || [];
+  const X = ei != null ? L[ei] : null;
+  const last = L.filter(y => y.s).pop();
+  const defaultStartTime = X ? (X.s || "") : last ? tt(last.s, last.h) : "07:00";
+
+  const dateObj = new Date(ed + "T00:00");
+  const dateFormatted = dateObj.toLocaleDateString("vi-VN", { weekday: "long", day: "numeric", month: "numeric", year: "numeric" });
+  $("sheetTitle").innerHTML = `<span>📅 ${dateFormatted}</span>`;
+
+  let html = "";
+
+  // 1. Danh sách hoạt động hiện có trong ngày
+  if (L.length > 0) {
+    html += `
+      <div class="form-group" style="margin-bottom:6px;">
+        <div class="form-label" style="display:flex; justify-content:space-between; align-items:center;">
+          <span>Các hoạt động trong ngày (${L.length})</span>
+          ${ei != null ? `<span style="color:var(--ac); font-weight:600; font-size:11.5px;">Đang chọn sửa mục #${ei + 1}</span>` : ''}
+        </div>
+        <div style="display:flex; flex-direction:column; gap:6px; max-height:170px; overflow-y:auto; padding-right:2px;">
+          ${L.map((y, i) => {
+            const cap = CM(y.c);
+            const isEditing = i === ei;
+            return `
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:7px 10px; background:${isEditing ? 'var(--ac-soft)' : 'var(--card-subtle)'}; border-radius:var(--radius-md); border-left:4px solid ${cap.c}; border:${isEditing ? '1.5px solid var(--ac)' : '1px solid var(--bd)'};">
+                <div style="flex:1; min-width:0; margin-right:8px;">
+                  <div style="font-weight:600; font-size:13px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">
+                    ${y.r ? '<span title="Chuỗi lặp lại">↻ </span>' : ''}${y.m === 'u' ? '▲ Nạp' : '▼ Tiêu'} ${esc(y.t)}
+                  </div>
+                  <div style="font-size:11.5px; color:var(--mu); margin-top:2px;">
+                    ${y.s ? y.s + ' – ' + tt(y.s, y.h) + ' · ' : ''}${r1(y.h)}h · <span style="color:${cap.c}; font-weight:600;">${esc(cap.n)}</span>
+                  </div>
+                </div>
+                <div class="row" style="gap:4px; flex-shrink:0;">
+                  <button type="button" class="btn btn-sm ${isEditing ? 'btn-primary' : 'btn-ghost'}" onclick="editEvent(${i})" style="padding:3px 8px; font-size:11.5px;">
+                    ${isEditing ? 'Đang sửa' : 'Sửa'}
+                  </button>
+                  <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad); padding:3px 8px; font-size:11.5px;" onclick="deleteEvent(${i})" title="Xóa hoạt động này">
+                    Xóa
+                  </button>
+                  ${y.r ? `
+                    <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad); padding:3px 8px; font-size:11px;" onclick="delSeries(${i})" title="Xóa toàn bộ chuỗi lặp">
+                      Xóa chuỗi
+                    </button>
+                  ` : ''}
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      </div>
+    `;
+  }
+
+  // 2. Biểu mẫu thêm / chỉnh sửa
+  const quickTpls = !X ? tpls() : [];
+
+  html += `
+    <div style="border-top:1px solid var(--bd); padding-top:12px; display:flex; flex-direction:column; gap:11px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-weight:600; font-size:14px; color:var(--tx); display:flex; align-items:center; gap:6px;">
+          ${X ? '✏️ Chỉnh sửa hoạt động' : '+ Thêm hoạt động mới'}
+        </div>
+        ${X ? `
+          <button type="button" class="btn btn-sm btn-ghost" onclick="cancelEdit()" style="font-size:12px; color:var(--ac);">
+            ← Hủy sửa, thêm mới
+          </button>
+        ` : ''}
+      </div>
+
+      ${!X && quickTpls.length > 0 ? `
+        <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center; padding:6px 8px; background:var(--card-subtle); border-radius:var(--radius-sm); border:1px solid var(--bd);">
+          <span style="font-size:11.5px; color:var(--mu); font-weight:600;">Hay dùng:</span>
+          ${quickTpls.map((p, idx) => `
+            <button type="button" class="btn btn-sm btn-ghost"
+                    style="border:1px solid var(--bd); padding:2px 7px; font-size:11.5px; background:var(--card);"
+                    onclick='fillTpl(${JSON.stringify(p).replace(/'/g, "&#39;")})'>
+              <span class="dot" style="background:${CM(p.c).c}; width:6px; height:6px;"></span> ${esc(p.t)}
+            </button>
+          `).join("")}
+        </div>
+      ` : ''}
+
+      <div class="form-group">
+        <label class="form-label" for="inpTitle">Tên hoạt động <span style="color:var(--bad)">*</span></label>
+        <input id="inpTitle" placeholder="Ví dụ: Đánh cầu lông, Đọc sách, Họp nhóm, Chạy bộ..."
+               value="${X ? esc(X.t) : ''}"
+               oninput="handleTitleInput(this.value)"
+               onkeydown="handleTitleKeydown(event)">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="inpCap">Loại vốn</label>
+          <select id="inpCap">
+            ${S.caps.map(c => `<option value="${c.k}" ${X && X.c === c.k ? 'selected' : ''}>${esc(c.n)}</option>`).join("")}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="inpMode">Tác động năng lượng</label>
+          <select id="inpMode">
+            <option value="u" ${!X || X.m === 'u' ? 'selected' : ''}>▲ Nạp / Tái tạo vốn</option>
+            <option value="d" ${X && X.m === 'd' ? 'selected' : ''}>▼ Tiêu / Rút vốn</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="inpStart">Giờ bắt đầu</label>
+          <input id="inpStart" type="time" value="${defaultStartTime}">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="inpHours">Thời lượng (giờ)</label>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <button type="button" class="btn btn-sm" onclick="adjustHours(-0.5)" style="padding:5px 8px;">-0.5</button>
+            <input id="inpHours" type="number" step="0.5" min="0.5" max="24" value="${X ? X.h : 2}" style="flex:1; text-align:center;">
+            <button type="button" class="btn btn-sm" onclick="adjustHours(0.5)" style="padding:5px 8px;">+0.5</button>
+          </div>
+        </div>
+      </div>
+
+      ${X ? (X.r ? `
+        <div style="padding:6px 10px; background:var(--card-subtle); border-radius:var(--radius-sm); border:1px solid var(--bd);">
+          <label style="font-size:12.5px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
+            <input type="checkbox" id="inpSeries">
+            <b>Áp dụng cho cả chuỗi</b> từ ngày này trở đi
+          </label>
+        </div>
+      ` : '') : `
+        <div class="form-row" style="background:var(--card-subtle); padding:8px 10px; border-radius:var(--radius-sm); border:1px solid var(--bd);">
+          <div class="form-group">
+            <label class="form-label" for="inpRepeat">Lặp lại định kỳ</label>
+            <select id="inpRepeat">
+              <option value="">Không lặp (Một lần)</option>
+              <option value="w">Hằng tuần (cùng thứ)</option>
+              <option value="wd">Thứ 2 – Thứ 6 (Ngày làm việc)</option>
+              <option value="d">Hằng ngày (Mọi ngày)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="inpRepeatEnd">Đến hết ngày</label>
+            <input id="inpRepeatEnd" type="date" value="${activeYear}-12-31">
+          </div>
+        </div>
+      `}
+
+      <div style="display:flex; gap:8px; margin-top:8px; justify-content:flex-end; align-items:center; flex-wrap:wrap;">
+        ${X ? `
+          <button type="button" class="btn" onclick="cancelEdit()">Hủy sửa</button>
+          <button type="button" class="btn btn-primary" onclick="saveEventFromForm(true)">
+            Lưu thay đổi
+          </button>
+        ` : `
+          <button type="button" class="btn btn-ghost" onclick="saveEventFromForm(false)" title="Lưu hoạt động này và tiếp tục nhập hoạt động khác">
+            + Lưu & Thêm tiếp
+          </button>
+          <button type="button" class="btn btn-primary" onclick="saveEventFromForm(true)">
+            Thêm vào lịch
+          </button>
+        `}
+      </div>
+    </div>
+  `;
+
+  $("sheetBody").innerHTML = html;
+}
+
+function saveEventFromForm(andClose = true) {
+  const title = $("inpTitle").value.trim(), hours = +$("inpHours").value, start = $("inpStart").value;
+  if (!title) { showToast("Vui lòng nhập tên hoạt động!", "bad"); $("inpTitle").focus(); return; }
+  const c = chkEvent(ed, start, hours, ei);
+  if (c.err) { showToast(c.err, "bad"); return; }
+  const o = { t: title, c: $("inpCap").value, m: $("inpMode").value, h: hours, s: start };
+  const L = S.ev[ed] = S.ev[ed] || [];
+  const ser = $("inpSeries"), applySeries = ei != null && L[ei] && L[ei].r && ser && ser.checked;
+  if (c.hit && !applySeries && !confirm(`Trùng giờ với "${c.hit.t}" (${c.hit.s}). Vẫn lưu?`)) return;
+
+  S.mem[title.normalize("NFC").toLowerCase()] = { c: o.c };
+  const wasEdit = ei != null;
+
+  if (wasEdit) {
+    if (applySeries) {
+      const r0 = L[ei].r;
+      Object.keys(S.ev).forEach(k => {
+        if (k >= ed) {
+          S.ev[k].forEach(e => { if (e.r === r0) Object.assign(e, o); });
+          sortL(S.ev[k]);
+        }
+      });
+      showToast(`Đã cập nhật cả chuỗi "${title}"`, "ok");
+    } else {
+      Object.assign(L[ei], o);
+      showToast(`Đã cập nhật "${title}"`, "ok");
+    }
+    ei = null;
+  } else {
+    const rp = $("inpRepeat") ? $("inpRepeat").value : "";
+    if (rp) {
+      const n = rep(ed, o, rp, $("inpRepeatEnd").value);
+      if (!n) { if (!L.length) delete S.ev[ed]; return; }
+      showToast(`Đã tạo chuỗi ${n} hoạt động "${title}"`, "ok");
+    } else {
+      L.push(o);
+      showToast(`Đã thêm "${title}"`, "ok");
+    }
+  }
+
+  sortL(L);
+  save();
+  draw();
+
+  if (andClose) {
+    closeEditor();
+  } else {
+    ei = null;
+    renderEditorSheet();
+    setTimeout(() => {
+      const inp = $("inpTitle");
+      if (inp) inp.focus();
+    }, 60);
+  }
+}
+
+function deleteEvent(idx) {
+  if (!confirm("Bạn có chắc muốn xóa hoạt động này?")) return;
+  const deletedTitle = S.ev[ed][idx].t;
+  S.ev[ed].splice(idx, 1);
+  if (!S.ev[ed].length) delete S.ev[ed];
+  ei = null;
+  save();
+  renderEditorSheet();
+  draw();
+  showToast(`Đã xóa "${deletedTitle}"`, "ok");
+}
+
+function handleTimelineGridClick(event, dateStr) {
+  if (event.target.closest(".timeline-event-block")) return;
+  const rect = event.currentTarget.getBoundingClientRect();
+  const y = event.clientY - rect.top;
+  const hour = Math.min(23, Math.max(6, Math.floor(y / 48) + 6));
+  openEditor(dateStr);
+  setTimeout(() => {
+    const inp = $("inpStart");
+    if (inp) inp.value = pad(hour) + ":00";
+  }, 120);
+}
+
+function scrollToCurrentWeek() {
+  setTimeout(() => {
+    const row = $("cw");
+    const wrapper = $("yearTableWrapper");
+    if (row && wrapper) {
+      const rowTop = row.offsetTop;
+      const targetScroll = Math.max(0, rowTop - wrapper.clientHeight / 2 + row.clientHeight / 2);
+      wrapper.scrollTo({ top: targetScroll, behavior: "smooth" });
+    }
+  }, 150);
+}
+/* ==========================================================================
+   10. QUẢN LÝ DỮ LIỆU & LOẠI VỐN
+   ========================================================================== */
+function updateCap(k, field, val) {
+  if (field === "n" && !String(val).trim()) val = "Vốn";
+  CM(k)[field] = val;
+  save();
+  draw();
+  showToast("Đã cập nhật loại vốn", "ok");
+}
+
+function addCap() {
+  const newKey = "c" + Date.now().toString(36);
+  S.caps.push({
+    k: newKey,
+    n: "Vốn mới",
+    c: PALETTE[S.caps.length % PALETTE.length],
+    tg: 0
+  });
+  save();
+  draw();
+  showToast("Đã thêm loại vốn mới", "ok");
+}
+
+function deleteCap(k) {
+  if (S.caps.length <= 1) {
+    showToast("Phải giữ lại ít nhất một loại vốn!", "bad");
+    return;
+  }
+  if (Object.values(S.ev).flat().some(e => e.c === k)) { showToast("Loại vốn này đang có hoạt động trong lịch. Hãy xóa hoặc đổi các hoạt động đó trước.", "bad"); return; }
+  if (!confirm("Bạn có chắc muốn xóa loại vốn này?")) return;
+  S.caps = S.caps.filter(c => c.k !== k);
+  delete S.bl[k];
+  save();
+  draw();
+  showToast("Đã xóa loại vốn", "ok");
+}
+
+
+const SAFE_K = /^(?!__proto__$)[\w-]{1,24}$/;
+function cleanCap(c) { return c && SAFE_K.test(c.k) ? { k: c.k, n: String(c.n || "Vốn").slice(0, 60), c: /^#[0-9a-f]{6}$/i.test(c.c) ? c.c : "#888888", tg: Math.max(0, +c.tg || 0) } : null; }
+function cleanEv(e) { return e && typeof e.t === "string" && +e.h > 0 && +e.h <= 24 && SAFE_K.test(e.c || "") ? { t: e.t.slice(0, 120), c: e.c, m: e.m === "d" ? "d" : "u", h: +e.h, s: /^\d\d:\d\d$/.test(e.s || "") ? e.s : "", ...(SAFE_K.test(e.r || "") ? { r: e.r } : {}) } : null; }
+// Chuẩn hóa mọi dữ liệu đọc từ localStorage hoặc tệp sao lưu (khóa an toàn, giá trị hợp lệ, bù trường thiếu)
+function cleanState(d) {
+  if (!d || typeof d !== "object" || !d.ev || typeof d.ev !== "object" || !Array.isArray(d.caps)) return null;
+  let caps = d.caps.map(cleanCap).filter(Boolean);
+  if (!caps.length) caps = DCAP.map(c => ({ k: c[0], n: c[1], c: c[2], tg: c[3] }));
+  const ev = {}, bl = {}, mem = {};
+  Object.keys(d.ev).forEach(k => { if (/^\d{4}-\d\d-\d\d$/.test(k) && Array.isArray(d.ev[k])) { const l = d.ev[k].map(cleanEv).filter(Boolean); if (l.length) ev[k] = l; } });
+  Object.keys(d.bl || {}).forEach(k => { if (SAFE_K.test(k) && d.bl[k]) bl[k] = { u: Math.max(0, +d.bl[k].u || 0), d: Math.max(0, +d.bl[k].d || 0) }; });
+  Object.keys(d.mem || {}).forEach(k => { if (k !== "__proto__" && d.mem[k] && SAFE_K.test(d.mem[k].c || "")) mem[k.slice(0, 120)] = { c: d.mem[k].c }; });
+  return { ev, caps, bl, mem, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
+}
+
+async function saveFile(filename, content, mime) {
+  try {
+    const DL = window.claude && window.claude.use ? await window.claude.use("downloads") : null;
+    if (DL) { await DL.save({ filename, data: content }); return true; }
+  } catch (e) { if (e && e.code === "declined") return false; }
+  const url = URL.createObjectURL(new Blob([content], { type: mime }));
+  const a = document.createElement("a");
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  return true;
+}
+
+async function exportData(type) {
+  const todayStr = ky(new Date());
+  let content, filename, mime;
+  if (type === "json") {
+    content = JSON.stringify({ app: "life-capital", v: 1, at: new Date().toISOString(), data: S }, null, 2);
+    filename = `life-capital-backup-${todayStr}.json`; mime = "application/json";
+  } else {
+    const q = v => { v = String(v); if (/^[=+\-@\t\r]/.test(v)) v = "'" + v; return '"' + v.replace(/"/g, '""') + '"'; };
+    const rows = [["Ngày", "Bắt đầu", "Kết thúc", "Hoạt động", "Loại vốn", "Tác động", "Số giờ", "Lặp lại"]];
+    Object.keys(S.ev).sort().forEach(dt => S.ev[dt].forEach(e => rows.push([dt, e.s || "", e.s ? tt(e.s, e.h) : "", e.t, CM(e.c).n, e.m === "u" ? "Nạp" : "Tiêu", e.h, e.r ? "Có" : "Không"])));
+    content = "\ufeff" + rows.map(r => r.map(q).join(",")).join("\n");
+    filename = `life-capital-schedule-${todayStr}.csv`; mime = "text/csv;charset=utf-8;";
+  }
+  if (await saveFile(filename, content, mime)) {
+    if (type === "json") { S.lb = Date.now(); save(); draw(); }
+    showToast(`Đã xuất tệp ${filename}`, "ok");
+  }
+}
+
+function importData(inputEl) {
+  const file = inputEl.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const parsed = JSON.parse(reader.result);
+      if (!parsed || parsed.app !== "life-capital") throw new Error("Tệp không đúng định dạng Life Capital");
+      const d = cleanState(parsed.data);
+      if (!d) throw new Error("Thiếu dữ liệu hoạt động hoặc loại vốn");
+      const n = Object.values(d.ev).flat().length;
+      const mode = ($("importModeSelect") || {}).value || "merge";
+      if (mode === "replace") {
+        if (!confirm(`Thay thế TOÀN BỘ dữ liệu hiện tại bằng tệp này (${n} hoạt động)? Nên xuất sao lưu hiện tại trước.`)) return;
+        d.lb = S.lb || 0; S = d;
+      } else {
+        if (!confirm(`Gộp ${n} hoạt động từ tệp vào dữ liệu hiện tại?`)) return;
+        d.caps.forEach(c => { if (!S.caps.some(x => x.k === c.k)) S.caps.push(c); });
+        Object.keys(d.bl).forEach(k => { if (!S.bl[k]) S.bl[k] = d.bl[k]; });
+        S.mem = Object.assign({}, d.mem, S.mem);
+        const sg = e => [e.t, e.s, e.c, e.m, e.h, e.r].join("|");
+        Object.keys(d.ev).forEach(k => { const L = S.ev[k] = S.ev[k] || []; d.ev[k].forEach(e => { if (!L.some(y => sg(y) === sg(e))) L.push(e); }); sortL(L); });
+      }
+      save(); draw(true);
+      showToast("Khôi phục dữ liệu thành công!", "ok");
+    } catch (err) {
+      showToast("Tệp sao lưu không hợp lệ: " + err.message, "bad");
+    } finally { inputEl.value = ""; }
+  };
+  reader.readAsText(file);
+}
+
+/* ==========================================================================
+   11. RENDER & KHỞI CHẠY
+   ========================================================================== */
+function draw(jump) {
+  const headerWk = $("headerWeekNum");
+  if (headerWk) headerWk.textContent = sel + 1;
+  const badge = $("brandYearBadge");
+  if (badge) badge.textContent = activeYear;
+  document.title = `Life Capital · Quản trị Năng lượng & Thời gian ${activeYear}`;
+  renderNav();
+
+  const y = window.scrollY;
+  const tw = document.querySelector(".table-wrapper");
+  const st = tw ? [tw.scrollTop, tw.scrollLeft] : null;
+
+  $("v").innerHTML = V[cur]();
+  updateThemeButton();
+
+  window.scrollTo(0, y);
+  const t2 = document.querySelector(".table-wrapper");
+  if (st && t2 && !jump) {
+    t2.scrollTop = st[0];
+    t2.scrollLeft = st[1];
+  }
+
+  // Tự động cuộn đến tuần hiện tại nếu đang mở chế độ lưới năm
+  if (jump && cur === "ca" && calSubView === "year") {
+    scrollToCurrentWeek();
+  }
+
+  // Chia làn hiển thị nếu ở dòng thời gian 24h
+  if (cur === "ca" && calSubView === "timeline") {
+    const k = ky(ad(W[sel], timelineDayIdx));
+    const hid = (S.ev[k] || []).filter(e => !e.s || +e.s.slice(0, 2) < 6).length;
+    if (hid) $("v").insertAdjacentHTML("beforeend", `<p style="font-size:12.5px; color:var(--mu); margin-top:8px;">⚠ ${hid} hoạt động không hiển thị trên dòng thời gian (chưa có giờ bắt đầu hoặc trước 06:00). Xem ở chế độ "Tuần chi tiết".</p>`);
+    layoutTimeline();
+  }
+}
+
+// Tự động chuyển tuần khi sang thứ Hai mới
+function tick() {
+  if (ed) return;
+  const oldCW = CW, oldDay = lt, w = wkNow();
+  if (w !== oldCW) { if (sel === oldCW) sel = w >= 0 ? w : sel; CW = w; lt = tk; draw(true); }
+  else if (tk !== oldDay) { lt = tk; draw(); }
+}
+setInterval(tick, 60000);
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) tick();
+});
+window.addEventListener("focus", tick);
+
+// Xử lý phím tắt
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    if (ed) closeEditor();
+    closeReviewModal();
+    closeSettingsModal();
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === "Enter" && ed) {
+    e.preventDefault();
+    saveEventFromForm(true);
+  }
+  // Focus trap trong modal
+  if (e.key === "Tab") {
+    const ov = document.querySelector(".modal-overlay.open .modal-sheet");
+    if (ov) {
+      const f = [...ov.querySelectorAll('button,input,select,textarea,[tabindex]:not([tabindex="-1"])')].filter(x => !x.disabled && x.offsetParent !== null);
+      if (f.length) {
+        const a = f[0], z = f[f.length - 1];
+        if (!ov.contains(document.activeElement) || (e.shiftKey && document.activeElement === a)) {
+          e.preventDefault(); (e.shiftKey ? z : a).focus();
+        } else if (!e.shiftKey && document.activeElement === z) {
+          e.preventDefault(); a.focus();
+        }
+      }
+    }
+  }
+  if ((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("cal-day-cell")) {
+    e.preventDefault(); e.target.click();
+  }
+});
+
+/* ==========================================================================
+   12. TIỆN ÍCH DÒNG THỜI GIAN & KHỞI CHẠY
+   ========================================================================== */
+function layoutTimeline() {
+  const it = [...document.querySelectorAll(".timeline-event-block")].map(b => ({
+    b,
+    t: parseFloat(b.style.top),
+    h: parseFloat(b.style.height)
+  })).sort((a, b) => a.t - b.t);
+
+  let cl = [], end = -1;
+  it.forEach(x => {
+    if (x.t >= end) { cl.push([]); end = -1; }
+    cl[cl.length - 1].push(x);
+    end = Math.max(end, x.t + x.h);
+  });
+
+  cl.forEach(g => {
+    const lanes = [];
+    g.forEach(x => {
+      let l = lanes.findIndex(e => e <= x.t);
+      if (l < 0) { l = lanes.length; lanes.push(0); }
+      lanes[l] = x.t + x.h;
+      x.l = l;
+    });
+    g.forEach(x => {
+      x.b.style.right = "auto";
+      x.b.style.left = `calc(${x.l * 100 / lanes.length}% + 2px)`;
+      x.b.style.width = `calc(${100 / lanes.length}% - 4px)`;
+    });
+  });
+}
+
+// Khởi chạy ứng dụng
+draw(true);
+</script>
+</body>
+</html>
+
+```
