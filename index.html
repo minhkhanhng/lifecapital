@@ -1031,6 +1031,7 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
       </div>
     </div>
     <div class="header-actions">
+      <button type="button" class="btn btn-sm" id="syncBadge" hidden></button>
       <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(sel)" title="Xem tổng kết thành tích theo tuần">
         🏆 Tổng kết tuần
       </button>
@@ -1508,8 +1509,9 @@ function executeNLP() {
   L.push(newEvt);
   sortL(L);
   S.mem[r.title.normalize("NFC").toLowerCase()] = { c: r.capKey };
+  markPending(newEvt);
   save();
-  gcalCreateEvent(newEvt, r.targetDate);
+  gcalFlush();
   input.value = "";
   handleNLPInput("");
 
@@ -1972,6 +1974,18 @@ function isGCalConnected() {
   return !!getGCalToken();
 }
 
+// Đã từng kết nối (token có thể đã hết hạn). Người dùng cũ chưa có cờ này thì suy ra từ token đã lưu.
+try { if (localStorage.getItem("gcal_token") && !localStorage.getItem("gcal_linked")) localStorage.setItem("gcal_linked", "1"); } catch (e) {}
+function gcalLinked() {
+  try { return localStorage.getItem("gcal_linked") === "1"; } catch (e) { return false; }
+}
+function gcalActive() {
+  return gcalLinked() && !(S.cfg && S.cfg.gcalAutoSync === false);
+}
+function clearGCalToken() {
+  try { localStorage.removeItem("gcal_token"); localStorage.removeItem("gcal_token_exp"); } catch (e) {}
+}
+
 function initGCalTokenClient(onSuccess) {
   const clientId = (S.cfg && S.cfg.gcalClientId) || localStorage.getItem("gcal_client_id") || "";
   if (!clientId) {
@@ -1995,9 +2009,11 @@ function initGCalTokenClient(onSuccess) {
           const expTime = Date.now() + (parseInt(resp.expires_in, 10) || 3600) * 1000;
           localStorage.setItem("gcal_token", resp.access_token);
           localStorage.setItem("gcal_token_exp", String(expTime));
+          localStorage.setItem("gcal_linked", "1");
           showToast("✓ Đã kết nối Google Calendar thành công!", "ok");
           renderSettingsModal();
           if (onSuccess) onSuccess();
+          gcalFlush({ report: true });
         }
       }
     });
@@ -2018,14 +2034,19 @@ function connectGoogleCalendar() {
   }
   const ok = initGCalTokenClient();
   if (!ok) return;
-  gcalTokenClient.requestAccessToken({ prompt: "consent" });
+  // Đã cấp quyền trước đó thì không bắt đi qua màn hình xin quyền đầy đủ lần nữa
+  gcalTokenClient.requestAccessToken({ prompt: gcalLinked() ? "" : "consent" });
 }
 
 function disconnectGoogleCalendar() {
-  localStorage.removeItem("gcal_token");
-  localStorage.removeItem("gcal_token_exp");
+  let token = null;
+  try { token = localStorage.getItem("gcal_token"); } catch (e) {}
+  try { if (token && window.google && google.accounts && google.accounts.oauth2) google.accounts.oauth2.revoke(token, () => {}); } catch (e) {}
+  clearGCalToken();
+  try { localStorage.removeItem("gcal_linked"); } catch (e) {}
   showToast("Đã ngắt kết nối Google Calendar", "ok");
   renderSettingsModal();
+  updateSyncBadge();
 }
 
 function toggleGCalAutoSync(enabled) {
@@ -2033,6 +2054,8 @@ function toggleGCalAutoSync(enabled) {
   S.cfg.gcalAutoSync = enabled;
   save();
   showToast(enabled ? "Đã bật tự động đồng bộ sang Google Calendar" : "Đã tắt tự động đồng bộ", "ok");
+  updateSyncBadge();
+  if (enabled) gcalFlush();
 }
 
 function buildGCalEventPayload(eventObj, dateStr) {
@@ -2065,104 +2088,177 @@ function buildGCalEventPayload(eventObj, dateStr) {
   };
 }
 
-async function gcalCreateEvent(eventObj, dateStr) {
-  const token = getGCalToken();
-  if (!token || (S.cfg && S.cfg.gcalAutoSync === false)) return null;
+/* --- Hàng đợi đồng bộ: mọi thay đổi chỉ đánh dấu, gcalFlush() đẩy lên tuần tự ---
+   e.ds  : sự kiện cần POST (chưa có gid) hoặc PATCH (đã có gid); tăng dần mỗi lần sửa
+   S.gdel: gid đang chờ DELETE */
+let gcalFlushing = false, gcalRerun = false, gcalRetryT = null;
 
-  const payload = buildGCalEventPayload(eventObj, dateStr);
+function markPending(e) {
+  if (e && !e.demo && gcalActive()) e.ds = (e.ds || 0) + 1;
+}
+function queueDelete(gid) {
+  if (gid && gcalActive() && !S.gdel.includes(gid)) S.gdel.push(gid);
+}
+function gcalPendingCount() {
+  return S.gdel.length + Object.values(S.ev).reduce((n, l) => n + l.filter(e => e.ds).length, 0);
+}
+
+const GCAL_API = "https://www.googleapis.com/calendar/v3/calendars/primary/events";
+async function gcalFetch(method, path, token, body) {
   try {
-    const res = await fetch("https://www.googleapis.com/calendar/v3/calendars/primary/events", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
+    const res = await fetch(GCAL_API + path, {
+      method,
+      headers: { "Authorization": `Bearer ${token}`, ...(body ? { "Content-Type": "application/json" } : {}) },
+      ...(body ? { body: JSON.stringify(body) } : {})
     });
-    if (res.ok) {
-      const data = await res.json();
-      eventObj.gid = data.id;
+    const data = res.status === 204 ? null : await res.json().catch(() => null);
+    return { ok: res.ok, status: res.status, data };
+  } catch (err) {
+    console.warn("Lỗi mạng khi gọi Google Calendar:", err);
+    return { ok: false, status: 0, data: null };
+  }
+}
+
+// "ok" | "auth" (401: cần kết nối lại) | "retry" (mạng, giới hạn tần suất, lỗi máy chủ) | "fail" (Google từ chối dữ liệu)
+function gcalOutcome(r) {
+  if (r.ok) return "ok";
+  if (r.status === 401) return "auth";
+  const reason = r.data && r.data.error && r.data.error.errors && r.data.error.errors[0] && r.data.error.errors[0].reason;
+  if (r.status === 0 || r.status === 429 || r.status >= 500 || (r.status === 403 && /rateLimit|quota/i.test(reason || ""))) return "retry";
+  return "fail";
+}
+
+async function gcalCreateEvent(e, dateStr, token) {
+  const r = await gcalFetch("POST", "", token, buildGCalEventPayload(e, dateStr));
+  if (r.ok && r.data && r.data.id) e.gid = r.data.id;
+  return gcalOutcome(r);
+}
+
+async function gcalUpdateEvent(e, dateStr, token) {
+  const p = buildGCalEventPayload(e, dateStr);
+  // PATCH gộp các object con: xóa trường cũ khi đổi giữa sự kiện cả ngày và sự kiện có giờ
+  if (p.start.date) { p.start.dateTime = p.end.dateTime = p.start.timeZone = p.end.timeZone = null; }
+  else { p.start.date = p.end.date = null; p.transparency = "opaque"; }
+  const r = await gcalFetch("PATCH", "/" + encodeURIComponent(e.gid), token, p);
+  if (r.status === 404 || r.status === 410) { delete e.gid; return gcalCreateEvent(e, dateStr, token); }
+  return gcalOutcome(r);
+}
+
+async function gcalDeleteEvent(gid, token) {
+  const r = await gcalFetch("DELETE", "/" + encodeURIComponent(gid), token);
+  return r.status === 404 || r.status === 410 ? "ok" : gcalOutcome(r);
+}
+
+const evSig = e => [e.t, e.s, e.h, e.c, e.m].join("|");
+
+// Ghi nhận kết quả vào state hiện tại. S có thể đã bị thay bằng dữ liệu từ tab khác
+// trong lúc chờ mạng, khi đó tìm bản tương ứng để không tạo bản trùng ở lần sau.
+function gcalSettle(k, e, v, sig) {
+  const L = S.ev[k] || [];
+  if (L.includes(e)) { if (e.ds === v) delete e.ds; return; }
+  const twin = L.find(x => (e.gid && x.gid === e.gid) || (!x.gid && x.ds && evSig(x) === sig));
+  if (twin) {
+    if (e.gid) twin.gid = e.gid;
+    if (evSig(twin) === sig) delete twin.ds;
+  } else if (e.gid && !S.gdel.includes(e.gid)) {
+    S.gdel.push(e.gid); // sự kiện đã bị xóa trong lúc đang gửi
+    gcalRerun = true;
+  }
+}
+
+async function gcalFlush(opts = {}) {
+  if (gcalFlushing) { gcalRerun = true; return; }
+  if (!gcalLinked() || (!opts.force && !gcalActive())) { updateSyncBadge(); return; }
+  const token = getGCalToken();
+  if (!token || !gcalPendingCount()) { updateSyncBadge(); return; }
+  // Hai cửa sổ cùng mở: chỉ một cửa sổ được đẩy, tránh tạo bản trùng
+  if (navigator.locks && navigator.locks.request) {
+    return navigator.locks.request("lc-gcal-flush", { ifAvailable: true }, lock => lock ? gcalFlushRun(token, opts) : null);
+  }
+  return gcalFlushRun(token, opts);
+}
+
+async function gcalFlushRun(token, opts) {
+  gcalFlushing = true;
+  gcalRerun = false;
+  clearTimeout(gcalRetryT);
+  updateSyncBadge();
+  let ok = 0, stop = null;
+  const failed = [];
+  try {
+    for (const gid of [...S.gdel]) {
+      const o = await gcalDeleteEvent(gid, token);
+      if (o === "auth" || o === "retry") { stop = o; break; }
+      S.gdel = S.gdel.filter(g => g !== gid);
+      if (o === "ok") ok++; else failed.push("(sự kiện đã xóa)");
       save();
-      return data.id;
-    } else if (res.status === 401) {
-      localStorage.removeItem("gcal_token");
-      showToast("Phiên Google Calendar hết hạn. Vui lòng kết nối lại trong Cài đặt.", "bad");
     }
-  } catch (err) {
-    console.warn("Lỗi khi thêm sự kiện lên Google Calendar:", err);
-  }
-  return null;
-}
-
-async function gcalUpdateEvent(eventObj, dateStr) {
-  const token = getGCalToken();
-  if (!token || !eventObj.gid || (S.cfg && S.cfg.gcalAutoSync === false)) return;
-
-  const payload = buildGCalEventPayload(eventObj, dateStr);
-  try {
-    const res = await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${encodeURIComponent(eventObj.gid)}`, {
-      method: "PATCH",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    });
-    if (!res.ok) {
-      if (res.status === 404) {
-        delete eventObj.gid;
-        await gcalCreateEvent(eventObj, dateStr);
-      } else if (res.status === 401) {
-        localStorage.removeItem("gcal_token");
-        showToast("Phiên Google Calendar hết hạn. Vui lòng kết nối lại.", "bad");
+    if (!stop) {
+      const items = Object.keys(S.ev).sort().flatMap(k => S.ev[k].filter(e => e.ds).map(e => [k, e]));
+      for (const [k, e] of items) {
+        if (!e.ds) continue;
+        const v = e.ds, sig = evSig(e);
+        const o = e.gid ? await gcalUpdateEvent(e, k, token) : await gcalCreateEvent(e, k, token);
+        if (o === "auth" || o === "retry") { stop = o; break; }
+        if (o === "ok") ok++; else failed.push(e.t);
+        gcalSettle(k, e, v, sig);
+        save();
       }
     }
-  } catch (err) {
-    console.warn("Lỗi khi cập nhật Google Calendar:", err);
+  } finally {
+    gcalFlushing = false;
   }
-}
 
-async function gcalDeleteEvent(gid) {
-  const token = getGCalToken();
-  if (!token || !gid || (S.cfg && S.cfg.gcalAutoSync === false)) return;
-
-  try {
-    await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${encodeURIComponent(gid)}`, {
-      method: "DELETE",
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
-    });
-  } catch (err) {
-    console.warn("Lỗi khi xóa sự kiện trên Google Calendar:", err);
+  if (stop === "auth") {
+    clearGCalToken();
+    showToast("Phiên Google Calendar đã hết hạn. Bấm 'Kết nối lại' trên thanh tiêu đề để đẩy các thay đổi đang chờ.", "bad");
+  } else if (stop === "retry") {
+    gcalRetryT = setTimeout(() => gcalFlush(), 30000);
+    if (opts.report) showToast(`Mất mạng hoặc Google đang giới hạn tần suất. Còn ${gcalPendingCount()} thay đổi chờ, sẽ tự thử lại.`, "bad");
   }
+  if (failed.length) showToast(`Google Calendar từ chối ${failed.length} hoạt động: ${failed.slice(0, 3).join(", ")}${failed.length > 3 ? "…" : ""}`, "bad");
+  if (opts.report && !stop && !failed.length) showToast(ok ? `✓ Đã đồng bộ ${ok} thay đổi lên Google Calendar` : "✓ Google Calendar đã cập nhật", "ok");
+  updateSyncBadge();
+  if (gcalRerun && !stop) setTimeout(() => gcalFlush(opts), 0);
 }
 
 async function gcalSyncWeek(wIdx) {
-  const token = getGCalToken();
-  if (!token) {
+  if (!getGCalToken()) {
     showToast("Chưa kết nối Google Calendar!", "bad");
     return;
   }
   wIdx = (typeof wIdx === "number") ? wIdx : sel;
   const wStart = W[wIdx];
-  let count = 0;
-  showToast(`Đang đồng bộ tuần W${wIdx + 1} lên Google Calendar...`, "ok");
-
+  let n = 0;
   for (let di = 0; di < 7; di++) {
-    const dt = ad(wStart, di);
-    const dateStr = ky(dt);
-    const evsList = S.ev[dateStr] || [];
-    for (const e of evsList) {
-      if (e.gid) {
-        await gcalUpdateEvent(e, dateStr);
-      } else {
-        await gcalCreateEvent(e, dateStr);
-      }
-      count++;
-    }
+    (S.ev[ky(ad(wStart, di))] || []).forEach(e => {
+      if (!e.demo) { e.ds = (e.ds || 0) + 1; n++; }
+    });
   }
-  showToast(`✓ Đã đồng bộ ${count} hoạt động tuần W${wIdx + 1} lên Google Calendar!`, "ok");
+  if (!n) { showToast(`Tuần W${wIdx + 1} chưa có hoạt động nào để đồng bộ.`, "ok"); return; }
+  save();
+  showToast(`Đang đồng bộ ${n} hoạt động tuần W${wIdx + 1} lên Google Calendar...`, "ok");
+  await gcalFlush({ force: true, report: true });
+}
+
+// Badge trạng thái trên thanh tiêu đề (chỉ hiện khi đã liên kết và đang bật tự động đồng bộ)
+function updateSyncBadge() {
+  const b = $("syncBadge");
+  if (!b) return;
+  const active = gcalActive(), tokenOk = !!getGCalToken(), n = active ? gcalPendingCount() : 0;
+  if (!active || (tokenOk && !n)) { b.hidden = true; return; }
+  b.hidden = false;
+  if (!tokenOk) {
+    b.textContent = n ? `⚠ GCal · Kết nối lại (${n} chờ)` : "GCal · Kết nối lại";
+    b.className = n ? "btn btn-sm btn-danger" : "btn btn-sm btn-ghost";
+    b.title = "Phiên Google Calendar hết hạn sau 1 giờ. Bấm để kết nối lại và đẩy các thay đổi đang chờ.";
+    b.onclick = connectGoogleCalendar;
+  } else {
+    b.textContent = gcalFlushing ? `⏳ Đang đồng bộ ${n}…` : `⏳ ${n} chờ đồng bộ`;
+    b.className = "btn btn-sm";
+    b.title = "Bấm để đẩy ngay các thay đổi đang chờ lên Google Calendar";
+    b.onclick = () => gcalFlush({ report: true });
+  }
 }
 
 function renderSettingsModal() {
@@ -2893,11 +2989,12 @@ function deleteCurrentEvent() {
   if (!confirm("Bạn có chắc chắn muốn xóa hoạt động này?")) return;
   const delEv = S.ev[ed][ei];
   const delTitle = delEv.t;
-  if (delEv.gid) gcalDeleteEvent(delEv.gid);
+  queueDelete(delEv.gid);
   S.ev[ed].splice(ei, 1);
   if (!S.ev[ed].length) delete S.ev[ed];
   ei = null;
   save();
+  gcalFlush();
   draw();
   closeEditor();
   showToast(`Đã xóa "${delTitle}"`, "ok");
@@ -2950,7 +3047,7 @@ function rep(date, o, rp, end) {
     const item = { ...o, r };
     S.ev[k].push(item);
     sortL(S.ev[k]);
-    gcalCreateEvent(item, k);
+    markPending(item); // gcalFlush() đẩy lần lượt từng sự kiện, không bắn hàng trăm request cùng lúc
   });
   return days.length;
 }
@@ -2961,13 +3058,14 @@ function delSeries(i) {
   if (!r || !confirm("Xóa tất cả hoạt động của chuỗi này từ ngày này trở đi?")) return;
   Object.keys(S.ev).forEach(k => {
     if (k >= ed) {
-      S.ev[k].forEach(e => { if (e.r === r && e.gid) gcalDeleteEvent(e.gid); });
+      S.ev[k].forEach(e => { if (e.r === r) queueDelete(e.gid); });
       S.ev[k] = S.ev[k].filter(e => e.r !== r);
       if (!S.ev[k].length) delete S.ev[k];
     }
   });
   ei = null;
   save();
+  gcalFlush();
   draw();
   closeEditor();
   showToast("Đã xóa chuỗi hoạt động định kỳ", "ok");
@@ -3144,7 +3242,8 @@ function saveEventFromForm(keepOpen) {
           S.ev[k].forEach(e => {
             if (e.r === r0) {
               Object.assign(e, o);
-              gcalUpdateEvent(e, k);
+              delete e.demo; // đã sửa thì là dữ liệu thật
+              markPending(e);
             }
           });
           sortL(S.ev[k]);
@@ -3153,7 +3252,8 @@ function saveEventFromForm(keepOpen) {
       showToast(`Đã cập nhật cả chuỗi "${title}"`, "ok");
     } else {
       Object.assign(L[ei], o);
-      gcalUpdateEvent(L[ei], ed);
+      delete L[ei].demo;
+      markPending(L[ei]);
       showToast(`Đã cập nhật "${title}"`, "ok");
     }
   } else {
@@ -3164,13 +3264,14 @@ function saveEventFromForm(keepOpen) {
       showToast(`Đã tạo chuỗi ${n} hoạt động "${title}"`, "ok");
     } else {
       L.push(o);
-      gcalCreateEvent(o, ed);
+      markPending(o);
       showToast(`Đã thêm "${title}" vào lịch`, "ok");
     }
   }
 
   sortL(L);
   save();
+  gcalFlush();
   draw();
   if (keepOpen === true && !wasEdit) {
     renderEditorSheet();
@@ -3391,6 +3492,7 @@ function draw(jump) {
   if (badge) badge.textContent = activeYear;
   document.title = `Life Capital · Quản trị Năng lượng & Thời gian ${activeYear}`;
   renderNav();
+  updateSyncBadge();
 
   const y = window.scrollY;
   const fo = [...document.querySelectorAll("#v input,#v select")], ai = fo.indexOf(document.activeElement), td = TABDIR;
@@ -3438,6 +3540,7 @@ function draw(jump) {
 
 // Tự động chuyển tuần khi sang thứ Hai mới
 function tick() {
+  updateSyncBadge(); // token Google hết hạn sau 1 giờ
   if (ed) return;
   const oldCW = CW, oldDay = lt, w = wkNow();
   if (w !== oldCW) { if (sel === oldCW) sel = w >= 0 ? w : sel; CW = w; lt = tk; draw(true); }
@@ -3445,9 +3548,10 @@ function tick() {
 }
 setInterval(tick, 60000);
 document.addEventListener("visibilitychange", () => {
-  if (!document.hidden) tick();
+  if (!document.hidden) { tick(); gcalFlush(); }
 });
 window.addEventListener("focus", tick);
+window.addEventListener("online", () => gcalFlush());
 
 document.addEventListener("keydown", e => { TABDIR = e.key === "Tab" ? (e.shiftKey ? -1 : 1) : 0; }, true);
 
@@ -3517,6 +3621,7 @@ function layoutTimeline() {
 
 // Khởi chạy ứng dụng
 draw(true);
+gcalFlush(); // đẩy các thay đổi còn chờ từ lần mở trước
 </script>
 </body>
 </html>
