@@ -64,7 +64,7 @@
    - Đánh giá Điểm sáng của tuần, Vốn cần cứu trợ, Bánh xe cuộc đời và gợi ý kế hoạch tuần mới.
 5. 🛠️ **Popup Thêm / Sửa Hoạt Động Tinh Gọn**:
    - Giao diện form tinh gọn chỉ gồm các trường thông tin cần thiết, tự động đóng popup khi bấm Lưu.
-   - Chống lưu ngang khi gõ tiếng Việt: Phím Enter trong ô tên hoạt động tự động chuyển tiêu điểm sang ô giờ bắt đầu, không lưu khi chưa bấm nút.
+   - Chống lưu ngang khi gõ tiếng Việt: Phím Enter dùng để chốt chữ của bộ gõ (kể cả trên Safari) không bị tính là "gửi", ở cả thanh ghi nhanh lẫn ô tên hoạt động. Enter trong ô tên hoạt động chuyển tiêu điểm sang ô giờ bắt đầu.
    - Hỗ trợ tạo chuỗi lặp định kỳ (Hằng ngày, Ngày làm việc, Hằng tuần) kèm ngày kết thúc chuỗi.
 6. 🎡 **Bánh Xe Cuộc Đời (Radar Chart) Chuẩn Hoá**:
    - Khung hình mở rộng chống cắt chữ trên mọi kích thước màn hình.
@@ -72,21 +72,29 @@
    - Tích hợp chỉ số Điểm cân bằng bánh xe (Balance Score) trực quan.
 7. 🌐 **Động cơ Đa năm tự động (Multi-Year Engine)**:
    - Tự động nhận diện và tính toán 52/53 tuần theo chuẩn quốc tế **ISO 8601**.
-   - Tự chuyển sang năm 2027, 2028 khi qua năm mới; có nút `[ ◀ | ▶ ]` chuyển năm linh hoạt.
+   - Tự nhận năm ISO hiện tại mỗi khi mở app; có nút `[ ◀ | ▶ ]` chuyển năm linh hoạt.
 8. 💾 **Bảo mật & Toàn vẹn Dữ liệu (Security & Data Integrity)**:
    - Bộ lọc `cleanState` khử mã độc và chống Prototype Pollution khi nhập sao lưu JSON.
    - Phòng chống CSV Injection tự động khi xuất dữ liệu bảng tính.
    - Tải tệp sao lưu `.json` và lịch trình `.csv` trực tiếp qua Native Blob Download.
-   - Lưu trữ `localStorage` bền bỉ lên đến 30 - 40 năm.
+   - Dữ liệu lưu trong `localStorage` của trình duyệt (khoảng 300 KB mỗi năm với 10 hoạt động/ngày). App xin trình duyệt giữ dữ liệu lâu dài (`navigator.storage.persist`), nhắc sao lưu khi quá 14 ngày chưa sao lưu, và hiện cảnh báo đỏ nếu không lưu được (bộ nhớ đầy hoặc bị chặn).
+   - **Lưu ý Safari/iPhone:** Safari có thể tự xóa dữ liệu của trang web nếu bạn không mở trong 7 ngày. Hãy "Thêm vào Màn hình chính" và sao lưu `.json` định kỳ.
+   - Mở nhiều tab cùng lúc an toàn: tab này lưu thì các tab khác tự nạp lại, không ghi đè dữ liệu của nhau.
 9. 📱 **Chuẩn Progressive Web App (PWA)**:
    - Tích hợp `manifest.json` và `icon.svg` 5 cánh hoa độc quyền.
    - Cài đặt lên màn hình chính iPhone/Android, chạy toàn màn hình như Native App.
-10. 📅 **Đồng Bộ Hai Chiều Thời Gian Thực Với Google Calendar (Google Calendar API v3)**:
+10. 📅 **Đẩy Một Chiều Sang Google Calendar (Google Calendar API v3)**:
    - Tích hợp chuẩn **Google Identity Services (GIS)** OAuth 2.0 cấp quyền trực tiếp phía Client (không cần máy chủ trung gian).
-   - Tự động đồng bộ ngay lập tức khi **Thêm, Sửa, Xóa** hoạt động (hỗ trợ cả chuỗi lặp định kỳ).
+   - **Một chiều:** Life Capital → Google Calendar. Sửa hoặc xóa trực tiếp trên Google Calendar **không** cập nhật ngược về app, và có thể bị ghi đè ở lần đồng bộ sau.
+   - Tự động đẩy khi **Thêm, Sửa, Xóa** hoạt động (kể cả chuỗi lặp định kỳ). Các thay đổi được xếp hàng và gửi lần lượt từng cái, nên không bị Google giới hạn tần suất khi tạo chuỗi dài.
+   - **Không mất thay đổi:** quyền truy cập Google chỉ có hiệu lực 1 giờ. Khi hết hạn hoặc mất mạng, thay đổi được giữ ở trạng thái "chờ"; thanh tiêu đề hiện badge `⚠ GCal · Kết nối lại (N chờ)` hoặc `⏳ N chờ đồng bộ`. Bấm vào badge để kết nối lại, các thay đổi đang chờ sẽ được đẩy lên tự động.
+   - Hoạt động chưa đặt giờ được tạo thành sự kiện cả ngày trên Google Calendar. Dữ liệu mẫu không bao giờ được đẩy lên.
    - Tự động ánh xạ màu sắc Google Calendar (`colorId`) tương thích với 5 loại vốn sống (Xanh lá - Sức khỏe, Hồng - Quan hệ, Tím - Trải nghiệm, Xanh Cyan - Kỹ năng, Vàng - Tài chính).
    - Cung cấp nút đồng bộ hàng loạt `⟳ Đồng bộ tuần này` và công tắc bật/tắt tự động đồng bộ thời gian thực trong popup Cài đặt.
-11. 🏷️ **Tùy Biến Từ Khóa Nhận Diện & Trí Nhớ AI Tự Học (Keyword Auto-tagging & Self-learning)**:
+11. 🌱 **Khởi Đầu Trống & Dữ Liệu Mẫu Tùy Chọn**:
+   - Lần đầu mở app, lịch trống kèm gợi ý cách ghi nhanh và nút **"Thử với dữ liệu mẫu"**: thêm khoảng 10 hoạt động ẩn danh vào tuần đang xem.
+   - Banner "Đang dùng dữ liệu mẫu" có nút xóa toàn bộ dữ liệu mẫu bằng một chạm. Hoạt động mẫu nào bạn đã sửa sẽ được giữ lại như dữ liệu thật.
+12. 🏷️ **Tùy Biến Từ Khóa Nhận Diện & Trí Nhớ AI Tự Học (Keyword Auto-tagging & Self-learning)**:
    - Cho phép người dùng tự do thêm/bớt từ khóa nhận diện cho từng loại vốn trong tab Danh mục vốn.
    - Bộ nhớ `S.mem` tự động học các từ khóa mới sau mỗi lần thêm hoạt động qua thanh ghi nhanh.
 
@@ -96,6 +104,7 @@
 
 ### Cách 1: Sử dụng Offline trên máy tính
 Chỉ cần nhấp đúp vào tệp `index.html` để mở trực tiếp trên trình duyệt (Chrome, Safari, Edge, Brave).
+> ⚠ Khi mở trực tiếp từ tệp (`file://`), **Google Calendar không hoạt động**, vì Google chỉ chấp nhận trang chạy qua HTTPS hoặc `localhost`. Muốn dùng Google Calendar trên máy, hãy chạy `python3 -m http.server 8765` trong thư mục dự án rồi mở `http://localhost:8765`.
 
 ### Cách 2: Đưa lên Hosting miễn phí (Vercel / Netlify / GitHub Pages)
 - **Qua Netlify Drop (30 giây)**: Kéo cả thư mục `life-capital` thả vào [app.netlify.com/drop](https://app.netlify.com/drop).
@@ -105,6 +114,15 @@ Chỉ cần nhấp đúp vào tệp `index.html` để mở trực tiếp trên 
 1. Mở link trên **Safari**.
 2. Nhấn nút **Chia sẻ** (biểu tượng hình vuông có mũi tên lên).
 3. Chọn **Thêm vào Màn hình chính** (Add to Home Screen).
+
+Nên cài theo cách này thay vì dùng tab Safari thường: Safari có thể xóa dữ liệu của trang web không được mở trong 7 ngày, còn app đã thêm vào Màn hình chính thì không bị.
+
+### Cấu hình Google Calendar (tùy chọn)
+1. Vào [Google Cloud Console](https://console.cloud.google.com/) → tạo project → bật **Google Calendar API**.
+2. **OAuth consent screen**: chọn *External*, giữ chế độ **Testing**, thêm scope `https://www.googleapis.com/auth/calendar.events`.
+3. Ở mục **Test users**, thêm email Google của **từng người** sẽ dùng tính năng này (tối đa 100 người). Người không có trong danh sách sẽ gặp lỗi `access_denied`.
+4. **Credentials** → *Create OAuth client ID* → *Web application*. Ở **Authorized JavaScript origins**, thêm địa chỉ bạn deploy (vd `https://lifecapital.vercel.app`) và `http://localhost:8765` nếu chạy trên máy.
+5. Trong app: `⚙️ Cài đặt` → dán **Client ID** → **Kết nối Google Calendar**.
 
 ---
 
@@ -1104,6 +1122,8 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
   flex-wrap: wrap;
   gap: 10px;
 }
+[hidden] { display: none !important; }
+.save-alert { background: var(--bad-soft); border-color: var(--bad); color: var(--tx); }
 :focus-visible { outline: 2px solid var(--ac); outline-offset: 2px; }
 .chg { font-weight: 700; background: var(--ac-soft); border-radius: 4px; padding: 0 3px; box-shadow: 0 0 0 1px var(--ac); }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
@@ -1146,6 +1166,7 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
       </div>
     </div>
     <div class="header-actions">
+      <button type="button" class="btn btn-sm" id="syncBadge" hidden></button>
       <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(sel)" title="Xem tổng kết thành tích theo tuần">
         🏆 Tổng kết tuần
       </button>
@@ -1165,11 +1186,14 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
       <input id="nlpInput" class="quick-capture-input"
              placeholder="Ghi nhanh: vd 'Mai 18h đánh cầu lông 2 tiếng' hoặc 'Hôm nay 20h đọc sách 1.5h'..."
              oninput="handleNLPInput(this.value)"
-             onkeydown="if(event.key==='Enter') executeNLP()">
+             oncompositionend="noteCompositionEnd()"
+             onkeydown="handleNLPKeydown(event)">
       <button class="btn btn-sm btn-primary" onclick="executeNLP()">Ghi ngay</button>
     </div>
     <div class="quick-preview-bar" id="nlpPreview" style="display:none;"></div>
   </div>
+
+  <div class="review-prompt-banner save-alert" id="saveAlert" role="alert" hidden></div>
 
   <!-- Navigation Tabs -->
   <nav class="main-nav" id="nav"></nav>
@@ -1266,43 +1290,63 @@ function changeYear(delta) {
   showToast(`Đã chuyển sang năm ${activeYear}`, "ok");
 }
 
-const sd = (m, d, t, c, h) => [ky(new Date(2026, m - 1, d)), { t, c, m: "u", h }];
-const SEED = [
-  [9, 9, "Đánh cầu", "sk", 2],
-  [9, 10, "Spa", "sk", 2],
-  [9, 11, "Đánh cầu", "sk", 2],
-  [9, 13, "Đi xem cầu lông", "tn", 2],
-  [9, 16, "Đánh cầu", "sk", 2],
-  [9, 18, "Dinner w chị em GM", "qh", 2.5],
-  [9, 25, "Đánh cầu", "sk", 2],
-  [9, 28, "Đánh cầu", "sk", 2],
-  [10, 2, "Dinner w bạn anh Tín", "qh", 2.5],
-  [10, 5, "Đánh cầu", "sk", 2],
-  [10, 7, "Đánh cầu", "sk", 2],
-  [10, 8, "Dinner w LHương", "qh", 2.5],
-  [10, 9, "Sinh nhật", "qh", 3],
-  [10, 12, "Đánh cầu", "sk", 2],
-  [10, 14, "Đánh cầu", "sk", 2],
-  [10, 18, "Đám cưới bạn anh", "qh", 4]
+// Dữ liệu mẫu ẩn danh, đặt theo tuần đang xem: [thứ (0 = T2), giờ, tiêu đề, vốn, Nạp/Tiêu, số giờ]
+const DEMO = [
+  [0, "06:30", "Chạy bộ", "sk", "u", 1],
+  [0, "09:00", "Làm việc dự án", "tc", "d", 8],
+  [1, "09:00", "Họp nhóm", "tc", "d", 2],
+  [1, "21:00", "Đọc sách", "kn", "u", 1],
+  [2, "18:30", "Gym", "sk", "u", 1.5],
+  [3, "09:00", "Làm việc dự án", "tc", "d", 8],
+  [3, "19:00", "Ăn tối cùng gia đình", "qh", "u", 1.5],
+  [4, "20:00", "Học tiếng Anh", "kn", "u", 1],
+  [5, "08:00", "Đánh cầu lông", "sk", "u", 2],
+  [5, "19:30", "Xem phim", "tn", "u", 2.5],
+  [6, "10:00", "Cà phê với bạn bè", "qh", "u", 2]
 ];
 
 function defState() {
-  const ev = {};
-  SEED.forEach(a => {
-    const [k, e] = sd(...a);
-    (ev[k] = ev[k] || []).push(e);
-  });
   return {
-    ev,
+    ev: {},
     caps: DCAP.map(c => ({ k: c[0], n: c[1], c: c[2], tg: c[3], kw: [...c[4]] })),
     bl: {},
     mem: {},
+    gdel: [],
     pm: "0",
     cfg: { defDuration: 2, burnoutHours: 6 }
   };
 }
 
+const hasDemo = () => Object.values(S.ev).some(l => l.some(e => e.demo));
+
+function loadDemo() {
+  const w = W[sel >= 0 ? sel : 0];
+  DEMO.forEach(([d, s, t, c, m, h]) => {
+    if (!S.caps.some(x => x.k === c)) return; // vốn mặc định đã bị xóa
+    const k = ky(ad(w, d));
+    const L = S.ev[k] = S.ev[k] || [];
+    L.push({ t, c, m, h, s, demo: 1 });
+    sortL(L);
+  });
+  save();
+  draw();
+  showToast("Đã thêm dữ liệu mẫu vào tuần đang xem", "ok");
+}
+
+function clearDemo() {
+  Object.keys(S.ev).forEach(k => {
+    S.ev[k] = S.ev[k].filter(e => !e.demo);
+    if (!S.ev[k].length) delete S.ev[k];
+  });
+  save();
+  draw();
+  showToast("Đã xóa dữ liệu mẫu", "ok");
+}
+
 const SAFE_K = /^(?!__proto__$)[\w-]{1,24}$/;
+// gid: id sự kiện Google (base32hex; instance của chuỗi lặp có thêm "_20261008T…Z")
+const GID = /^[\w-]{5,1024}$/;
+const GCAL_CID = /^[\w.-]{5,200}\.apps\.googleusercontent\.com$/;
 let S, rawSaved = null;
 try { rawSaved = localStorage.getItem("lc2"); } catch (e) {}
 try {
@@ -1327,6 +1371,7 @@ S.caps.forEach(c => {
 if (!S.cfg) S.cfg = { defDuration: 2, burnoutHours: 6 };
 S.bl = S.bl || {};
 S.mem = S.mem || {};
+S.gdel = S.gdel || [];
 
 const cmp = (a, b) => (a.s || "99:99").localeCompare(b.s || "99:99");
 const sortL = l => l.sort(cmp);
@@ -1336,6 +1381,33 @@ const CM = k => S.caps.find(c => c.k === k) || { n: "(đã xóa)", c: "#888888",
 const BL = k => S.bl[k] = S.bl[k] || { u: 0, d: 0 };
 const esc = s => String(s == null ? "" : s).replace(/[&<>"'`]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;", "`": "&#96;" }[c]));
 const $ = i => document.getElementById(i);
+
+// Nền + chữ cho khối màu vốn, đảm bảo contrast ≥ 4.5:1 (WCAG AA) với mọi màu người dùng chọn
+const DARK_INK = "#140c10";
+const lumHex = hex => {
+  const c = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255).map(v => v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+};
+const INK = new Map();
+function capInk(hex) {
+  if (!/^#[0-9a-f]{6}$/i.test(hex || "")) hex = "#888888";
+  if (INK.has(hex)) return INK.get(hex);
+  const L = lumHex(hex), onDark = (L + 0.05) / (lumHex(DARK_INK) + 0.05), onWhite = 1.05 / (L + 0.05);
+  let out;
+  if (onDark >= 4.5 && onDark >= onWhite) out = `background:${hex}; color:${DARK_INK};`;
+  else if (onWhite >= 4.5) out = `background:${hex}; color:#fff;`;
+  else {
+    // Màu tầm trung: làm tối nền dần cho tới khi chữ trắng đạt chuẩn
+    let rgb = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16)), bg = hex;
+    while (1.05 / (lumHex(bg) + 0.05) < 4.5) {
+      rgb = rgb.map(v => Math.floor(v * 0.94));
+      bg = "#" + rgb.map(v => v.toString(16).padStart(2, "0")).join("");
+    }
+    out = `background:${bg}; color:#fff;`;
+  }
+  INK.set(hex, out);
+  return out;
+}
 const r1 = n => (Math.round((n || 0) * 10) / 10).toString();
 const pad = n => String(n).padStart(2, "0");
 const tt = (s, h) => {
@@ -1345,15 +1417,29 @@ const tt = (s, h) => {
   return pad(m / 60 | 0) + ":" + pad(m % 60);
 };
 
-let CH = new Set(), PV = {}, dirty = false, TABDIR = 0;
+let CH = new Set(), PV = {}, dirty = false, TABDIR = 0, saveFailed = false;
 const save = () => {
   dirty = true;
   try {
     localStorage.setItem("lc2", JSON.stringify(S));
+    if (saveFailed) { saveFailed = false; renderSaveAlert(); }
   } catch (e) {
-    showToast("Không thể lưu vào localStorage!", "bad");
+    // Giữ cảnh báo cố định (không chỉ toast): đóng tab lúc này là mất các thay đổi chưa lưu
+    if (!saveFailed) { saveFailed = true; renderSaveAlert(); }
   }
 };
+
+function renderSaveAlert() {
+  const el = $("saveAlert");
+  if (!el) return;
+  el.hidden = !saveFailed;
+  el.innerHTML = saveFailed ? `
+    <div>
+      <b>⚠ Không lưu được dữ liệu vào trình duyệt</b>
+      <div style="font-size:12px; margin-top:2px;">Bộ nhớ có thể đã đầy hoặc trình duyệt đang chặn lưu trữ. Các thay đổi gần đây sẽ mất nếu đóng trang. Hãy tải tệp sao lưu ngay.</div>
+    </div>
+    <button type="button" class="btn btn-sm btn-danger" onclick="exportData('json')">Sao lưu (.json)</button>` : "";
+}
 
 /* ==========================================================================
    2. TÍNH TOÁN TUẦN & LOGIC PIN NĂNG LƯỢNG
@@ -1603,9 +1689,24 @@ function handleNLPInput(val) {
     <span class="pill pill-cyan">📅 ${esc(r.dateDesc)}</span>
     <span class="pill pill-neutral">⏰ ${r.startTime} – ${tt(r.startTime, r.duration)} (${r1(r.duration)}h)</span>
     <span class="pill ${r.mode === "u" ? "pill-ok" : "pill-bad"}">${r.mode === "u" ? "▲ Nạp" : "▼ Tiêu"}</span>
-    <span class="pill" style="background:${cap.c}; color:#fff;">🏷️ ${esc(cap.n)}</span>
+    <span class="pill" style="${capInk(cap.c)}">🏷️ ${esc(cap.n)}</span>
     <span style="font-weight:600; color:var(--tx); margin-left:4px;">"${esc(r.title)}"</span>
     ${r.err ? `<span class="pill pill-bad">⚠ ${esc(r.err)}</span>` : r.hit ? `<span class="pill pill-bad">⚠ Trùng giờ với "${esc(r.hit.t)}"</span>` : ""}`;
+}
+
+// Enter dùng để chốt chữ của bộ gõ (gõ tiếng Việt có dấu) không được tính là "gửi".
+// Safari phát compositionend TRƯỚC keydown nên cần thêm cờ justComposed.
+let justComposed = false;
+function noteCompositionEnd() {
+  justComposed = true;
+  setTimeout(() => { justComposed = false; }, 0);
+}
+const isImeEnter = e => e.isComposing || e.keyCode === 229 || justComposed;
+
+function handleNLPKeydown(e) {
+  if (e.key !== "Enter" || isImeEnter(e)) return;
+  e.preventDefault();
+  executeNLP();
 }
 
 function executeNLP() {
@@ -1619,8 +1720,9 @@ function executeNLP() {
   L.push(newEvt);
   sortL(L);
   S.mem[r.title.normalize("NFC").toLowerCase()] = { c: r.capKey };
+  markPending(newEvt);
   save();
-  gcalCreateEvent(newEvt, r.targetDate);
+  gcalFlush();
   input.value = "";
   handleNLPInput("");
 
@@ -1844,7 +1946,7 @@ function openWeeklyReviewModal(wIdx = sel) {
             <button type="button" class="btn btn-sm btn-ghost" onclick="openWeeklyReviewModal(CW)" style="color:var(--ac-text); font-weight:600; font-size:12px;">
               Về tuần hiện tại (W${CW + 1})
             </button>
-          ` : `<span class="pill pill-ok" style="font-size:11px;">Tuần hiện tại</span>`}
+          ` : wIdx === CW ? `<span class="pill pill-ok" style="font-size:11px;">Tuần hiện tại</span>` : ""}
         </div>
       </div>
 
@@ -1862,13 +1964,13 @@ function openWeeklyReviewModal(wIdx = sel) {
           <div style="font:700 20px Georgia, serif; margin-top:4px;">
             ${r1(totalAlloc)}h <span style="font-size:13px; font-weight:400; color:var(--mu);">(${Math.round(totalAlloc/168*100)}%)</span>
           </div>
-          <small style="color:${totalAlloc > 168 ? 'var(--bad)' : 'var(--ok)'}">
+          <small style="color:${totalAlloc > 168 ? 'var(--bad)' : 'var(--ok-text)'}">
             ${totalAlloc > 168 ? 'Vượt giới hạn 168h!' : `Còn ${r1(freeTime)}h tự do`}
           </small>
         </div>
         <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
           <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Đánh giá pin tuần</div>
-          <div style="font:700 20px Georgia, serif; margin-top:4px; color:${netEnergy >= 0 ? 'var(--ok)' : 'var(--bad)'}">
+          <div style="font:700 20px Georgia, serif; margin-top:4px; color:${netEnergy >= 0 ? 'var(--ok-text)' : 'var(--bad)'}">
             ${noData ? '— Chưa có dữ liệu' : netEnergy >= 4 ? '🔋 Nạp pin xuất sắc' : netEnergy >= 0 ? '🔋 Pin ổn định' : '🪫 Thâm hụt pin'}
           </div>
           <small style="color:var(--tx-sec)">${noData ? 'Ghi hoạt động để đánh giá' : netEnergy >= 0 ? 'Cân bằng phục hồi tốt' : 'Cần bù đắp nghỉ ngơi tuần tới'}</small>
@@ -2038,10 +2140,14 @@ function setBurnoutThreshold(val) {
 function resetToDefaultData() {
   if (!confirm("⚠️ CẢNH BÁO NGUY HIỂM:\nBạn có chắc chắn muốn xóa TOÀN BỘ dữ liệu đã ghi và đưa ứng dụng về trạng thái ban đầu?\n\nKhuyến nghị: Hãy nhấn 'Xuất tệp sao lưu (.json)' trước khi xóa!")) return;
   if (!confirm("Xác nhận lần cuối: Mọi hoạt động ghi chép sẽ bị xóa vĩnh viễn trên thiết bị này. Tiếp tục?")) return;
-  const keepLb = S.lb;
+  const keepLb = S.lb, keepGdel = S.gdel || [], oldCfg = S.cfg || {};
   S = defState();
   S.ev = {};
   S.lb = keepLb;
+  // Giữ liên kết Google Calendar và các lệnh xóa đang chờ
+  S.gdel = keepGdel;
+  S.cfg.gcalAutoSync = oldCfg.gcalAutoSync !== false;
+  if (oldCfg.gcalClientId) S.cfg.gcalClientId = oldCfg.gcalClientId;
   save();
   draw(true);
   closeSettingsModal();
@@ -2079,6 +2185,18 @@ function isGCalConnected() {
   return !!getGCalToken();
 }
 
+// Đã từng kết nối (token có thể đã hết hạn). Người dùng cũ chưa có cờ này thì suy ra từ token đã lưu.
+try { if (localStorage.getItem("gcal_token") && !localStorage.getItem("gcal_linked")) localStorage.setItem("gcal_linked", "1"); } catch (e) {}
+function gcalLinked() {
+  try { return localStorage.getItem("gcal_linked") === "1"; } catch (e) { return false; }
+}
+function gcalActive() {
+  return gcalLinked() && !(S.cfg && S.cfg.gcalAutoSync === false);
+}
+function clearGCalToken() {
+  try { localStorage.removeItem("gcal_token"); localStorage.removeItem("gcal_token_exp"); } catch (e) {}
+}
+
 function initGCalTokenClient(onSuccess) {
   const clientId = (S.cfg && S.cfg.gcalClientId) || localStorage.getItem("gcal_client_id") || "";
   if (!clientId) {
@@ -2102,9 +2220,11 @@ function initGCalTokenClient(onSuccess) {
           const expTime = Date.now() + (parseInt(resp.expires_in, 10) || 3600) * 1000;
           localStorage.setItem("gcal_token", resp.access_token);
           localStorage.setItem("gcal_token_exp", String(expTime));
+          localStorage.setItem("gcal_linked", "1");
           showToast("✓ Đã kết nối Google Calendar thành công!", "ok");
           renderSettingsModal();
           if (onSuccess) onSuccess();
+          gcalFlush({ report: true });
         }
       }
     });
@@ -2125,14 +2245,19 @@ function connectGoogleCalendar() {
   }
   const ok = initGCalTokenClient();
   if (!ok) return;
-  gcalTokenClient.requestAccessToken({ prompt: "consent" });
+  // Đã cấp quyền trước đó thì không bắt đi qua màn hình xin quyền đầy đủ lần nữa
+  gcalTokenClient.requestAccessToken({ prompt: gcalLinked() ? "" : "consent" });
 }
 
 function disconnectGoogleCalendar() {
-  localStorage.removeItem("gcal_token");
-  localStorage.removeItem("gcal_token_exp");
+  let token = null;
+  try { token = localStorage.getItem("gcal_token"); } catch (e) {}
+  try { if (token && window.google && google.accounts && google.accounts.oauth2) google.accounts.oauth2.revoke(token, () => {}); } catch (e) {}
+  clearGCalToken();
+  try { localStorage.removeItem("gcal_linked"); } catch (e) {}
   showToast("Đã ngắt kết nối Google Calendar", "ok");
   renderSettingsModal();
+  updateSyncBadge();
 }
 
 function toggleGCalAutoSync(enabled) {
@@ -2140,135 +2265,211 @@ function toggleGCalAutoSync(enabled) {
   S.cfg.gcalAutoSync = enabled;
   save();
   showToast(enabled ? "Đã bật tự động đồng bộ sang Google Calendar" : "Đã tắt tự động đồng bộ", "ok");
+  updateSyncBadge();
+  if (enabled) gcalFlush();
 }
 
 function buildGCalEventPayload(eventObj, dateStr) {
-  const startTime = eventObj.s || "07:00";
-  const [sh, sm] = startTime.split(":").map(Number);
   const dur = eventObj.h || 1;
-  const endMin = (sh || 0) * 60 + (sm || 0) + Math.round(dur * 60);
-  const eh = Math.min(23, Math.floor(endMin / 60));
-  const em = endMin % 60;
-  const endTime = pad(eh) + ":" + pad(em);
-
   const cap = CM(eventObj.c);
   const capName = cap ? cap.n : "Khác";
   const modeText = eventObj.m === "u" ? "▲ Nạp vốn" : "▼ Tiêu vốn";
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Ho_Chi_Minh";
-
-  return {
+  const base = {
     summary: `${eventObj.m === 'u' ? '▲' : '▼'} ${eventObj.t}`,
     description: `Life Capital · Loại vốn: [${capName}] · Tác động: ${modeText} (${r1(dur)}h)`,
-    start: {
-      dateTime: `${dateStr}T${startTime}:00`,
-      timeZone: tz
-    },
-    end: {
-      dateTime: `${dateStr}T${endTime}:00`,
-      timeZone: tz
-    },
     colorId: GCAL_COLOR_MAP[eventObj.c] || "1"
+  };
+  const day = new Date(dateStr + "T00:00");
+
+  // Chưa xếp giờ → sự kiện cả ngày, không chiếm lịch bận
+  if (!eventObj.s) {
+    return { ...base, start: { date: dateStr }, end: { date: ky(ad(day, 1)) }, transparency: "transparent" };
+  }
+
+  // Tính bằng Date để 22:00 + 2h → 00:00 hôm sau (không cắt về 23:00)
+  const [sh, sm] = eventObj.s.split(":").map(Number);
+  const startD = new Date(day.getFullYear(), day.getMonth(), day.getDate(), sh, sm);
+  const endD = new Date(day.getFullYear(), day.getMonth(), day.getDate(), sh, sm + Math.round(dur * 60));
+  const fmt = d => `${ky(d)}T${pad(d.getHours())}:${pad(d.getMinutes())}:00`;
+  return {
+    ...base,
+    start: { dateTime: fmt(startD), timeZone: tz },
+    end: { dateTime: fmt(endD), timeZone: tz }
   };
 }
 
-async function gcalCreateEvent(eventObj, dateStr) {
-  const token = getGCalToken();
-  if (!token || (S.cfg && S.cfg.gcalAutoSync === false)) return null;
+/* --- Hàng đợi đồng bộ: mọi thay đổi chỉ đánh dấu, gcalFlush() đẩy lên tuần tự ---
+   e.ds  : sự kiện cần POST (chưa có gid) hoặc PATCH (đã có gid); tăng dần mỗi lần sửa
+   S.gdel: gid đang chờ DELETE */
+let gcalFlushing = false, gcalRerun = false, gcalRetryT = null;
 
-  const payload = buildGCalEventPayload(eventObj, dateStr);
+function markPending(e) {
+  if (e && !e.demo && gcalActive()) e.ds = (e.ds || 0) + 1;
+}
+function queueDelete(gid) {
+  if (gid && gcalActive() && !S.gdel.includes(gid)) S.gdel.push(gid);
+}
+function gcalPendingCount() {
+  return S.gdel.length + Object.values(S.ev).reduce((n, l) => n + l.filter(e => e.ds).length, 0);
+}
+
+const GCAL_API = "https://www.googleapis.com/calendar/v3/calendars/primary/events";
+async function gcalFetch(method, path, token, body) {
   try {
-    const res = await fetch("https://www.googleapis.com/calendar/v3/calendars/primary/events", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
+    const res = await fetch(GCAL_API + path, {
+      method,
+      headers: { "Authorization": `Bearer ${token}`, ...(body ? { "Content-Type": "application/json" } : {}) },
+      ...(body ? { body: JSON.stringify(body) } : {})
     });
-    if (res.ok) {
-      const data = await res.json();
-      eventObj.gid = data.id;
+    const data = res.status === 204 ? null : await res.json().catch(() => null);
+    return { ok: res.ok, status: res.status, data };
+  } catch (err) {
+    console.warn("Lỗi mạng khi gọi Google Calendar:", err);
+    return { ok: false, status: 0, data: null };
+  }
+}
+
+// "ok" | "auth" (401: cần kết nối lại) | "retry" (mạng, giới hạn tần suất, lỗi máy chủ) | "fail" (Google từ chối dữ liệu)
+function gcalOutcome(r) {
+  if (r.ok) return "ok";
+  if (r.status === 401) return "auth";
+  const reason = r.data && r.data.error && r.data.error.errors && r.data.error.errors[0] && r.data.error.errors[0].reason;
+  if (r.status === 0 || r.status === 429 || r.status >= 500 || (r.status === 403 && /rateLimit|quota/i.test(reason || ""))) return "retry";
+  return "fail";
+}
+
+async function gcalCreateEvent(e, dateStr, token) {
+  const r = await gcalFetch("POST", "", token, buildGCalEventPayload(e, dateStr));
+  if (r.ok && r.data && r.data.id) e.gid = r.data.id;
+  return gcalOutcome(r);
+}
+
+async function gcalUpdateEvent(e, dateStr, token) {
+  const p = buildGCalEventPayload(e, dateStr);
+  // PATCH gộp các object con: xóa trường cũ khi đổi giữa sự kiện cả ngày và sự kiện có giờ
+  if (p.start.date) { p.start.dateTime = p.end.dateTime = p.start.timeZone = p.end.timeZone = null; }
+  else { p.start.date = p.end.date = null; p.transparency = "opaque"; }
+  const r = await gcalFetch("PATCH", "/" + encodeURIComponent(e.gid), token, p);
+  if (r.status === 404 || r.status === 410) { delete e.gid; return gcalCreateEvent(e, dateStr, token); }
+  return gcalOutcome(r);
+}
+
+async function gcalDeleteEvent(gid, token) {
+  const r = await gcalFetch("DELETE", "/" + encodeURIComponent(gid), token);
+  return r.status === 404 || r.status === 410 ? "ok" : gcalOutcome(r);
+}
+
+const evSig = e => [e.t, e.s, e.h, e.c, e.m].join("|");
+
+// Ghi nhận kết quả vào state hiện tại. S có thể đã bị thay bằng dữ liệu từ tab khác
+// trong lúc chờ mạng, khi đó tìm bản tương ứng để không tạo bản trùng ở lần sau.
+function gcalSettle(k, e, v, sig) {
+  const L = S.ev[k] || [];
+  if (L.includes(e)) { if (e.ds === v) delete e.ds; return; }
+  const twin = L.find(x => (e.gid && x.gid === e.gid) || (!x.gid && x.ds && evSig(x) === sig));
+  if (twin) {
+    if (e.gid) twin.gid = e.gid;
+    if (evSig(twin) === sig) delete twin.ds;
+  } else if (e.gid && !S.gdel.includes(e.gid)) {
+    S.gdel.push(e.gid); // sự kiện đã bị xóa trong lúc đang gửi
+    gcalRerun = true;
+  }
+}
+
+async function gcalFlush(opts = {}) {
+  if (gcalFlushing) { gcalRerun = true; return; }
+  if (!gcalLinked() || (!opts.force && !gcalActive())) { updateSyncBadge(); return; }
+  const token = getGCalToken();
+  if (!token || !gcalPendingCount()) { updateSyncBadge(); return; }
+  // Hai cửa sổ cùng mở: chỉ một cửa sổ được đẩy, tránh tạo bản trùng
+  if (navigator.locks && navigator.locks.request) {
+    return navigator.locks.request("lc-gcal-flush", { ifAvailable: true }, lock => lock ? gcalFlushRun(token, opts) : null);
+  }
+  return gcalFlushRun(token, opts);
+}
+
+async function gcalFlushRun(token, opts) {
+  gcalFlushing = true;
+  gcalRerun = false;
+  clearTimeout(gcalRetryT);
+  updateSyncBadge();
+  let ok = 0, stop = null;
+  const failed = [];
+  try {
+    for (const gid of [...S.gdel]) {
+      const o = await gcalDeleteEvent(gid, token);
+      if (o === "auth" || o === "retry") { stop = o; break; }
+      S.gdel = S.gdel.filter(g => g !== gid);
+      if (o === "ok") ok++; else failed.push("(sự kiện đã xóa)");
       save();
-      return data.id;
-    } else if (res.status === 401) {
-      localStorage.removeItem("gcal_token");
-      showToast("Phiên Google Calendar hết hạn. Vui lòng kết nối lại trong Cài đặt.", "bad");
     }
-  } catch (err) {
-    console.warn("Lỗi khi thêm sự kiện lên Google Calendar:", err);
-  }
-  return null;
-}
-
-async function gcalUpdateEvent(eventObj, dateStr) {
-  const token = getGCalToken();
-  if (!token || !eventObj.gid || (S.cfg && S.cfg.gcalAutoSync === false)) return;
-
-  const payload = buildGCalEventPayload(eventObj, dateStr);
-  try {
-    const res = await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${encodeURIComponent(eventObj.gid)}`, {
-      method: "PATCH",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    });
-    if (!res.ok) {
-      if (res.status === 404) {
-        delete eventObj.gid;
-        await gcalCreateEvent(eventObj, dateStr);
-      } else if (res.status === 401) {
-        localStorage.removeItem("gcal_token");
-        showToast("Phiên Google Calendar hết hạn. Vui lòng kết nối lại.", "bad");
+    if (!stop) {
+      const items = Object.keys(S.ev).sort().flatMap(k => S.ev[k].filter(e => e.ds).map(e => [k, e]));
+      for (const [k, e] of items) {
+        if (!e.ds) continue;
+        const v = e.ds, sig = evSig(e);
+        const o = e.gid ? await gcalUpdateEvent(e, k, token) : await gcalCreateEvent(e, k, token);
+        if (o === "auth" || o === "retry") { stop = o; break; }
+        if (o === "ok") ok++; else failed.push(e.t);
+        gcalSettle(k, e, v, sig);
+        save();
       }
     }
-  } catch (err) {
-    console.warn("Lỗi khi cập nhật Google Calendar:", err);
+  } finally {
+    gcalFlushing = false;
   }
-}
 
-async function gcalDeleteEvent(gid) {
-  const token = getGCalToken();
-  if (!token || !gid || (S.cfg && S.cfg.gcalAutoSync === false)) return;
-
-  try {
-    await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${encodeURIComponent(gid)}`, {
-      method: "DELETE",
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
-    });
-  } catch (err) {
-    console.warn("Lỗi khi xóa sự kiện trên Google Calendar:", err);
+  if (stop === "auth") {
+    clearGCalToken();
+    showToast("Phiên Google Calendar đã hết hạn. Bấm 'Kết nối lại' trên thanh tiêu đề để đẩy các thay đổi đang chờ.", "bad");
+  } else if (stop === "retry") {
+    gcalRetryT = setTimeout(() => gcalFlush(), 30000);
+    if (opts.report) showToast(`Mất mạng hoặc Google đang giới hạn tần suất. Còn ${gcalPendingCount()} thay đổi chờ, sẽ tự thử lại.`, "bad");
   }
+  if (failed.length) showToast(`Google Calendar từ chối ${failed.length} hoạt động: ${failed.slice(0, 3).join(", ")}${failed.length > 3 ? "…" : ""}`, "bad");
+  if (opts.report && !stop && !failed.length) showToast(ok ? `✓ Đã đồng bộ ${ok} thay đổi lên Google Calendar` : "✓ Google Calendar đã cập nhật", "ok");
+  updateSyncBadge();
+  if (gcalRerun && !stop) setTimeout(() => gcalFlush(opts), 0);
 }
 
 async function gcalSyncWeek(wIdx) {
-  const token = getGCalToken();
-  if (!token) {
+  if (!getGCalToken()) {
     showToast("Chưa kết nối Google Calendar!", "bad");
     return;
   }
   wIdx = (typeof wIdx === "number") ? wIdx : sel;
   const wStart = W[wIdx];
-  let count = 0;
-  showToast(`Đang đồng bộ tuần W${wIdx + 1} lên Google Calendar...`, "ok");
-
+  let n = 0;
   for (let di = 0; di < 7; di++) {
-    const dt = ad(wStart, di);
-    const dateStr = ky(dt);
-    const evsList = S.ev[dateStr] || [];
-    for (const e of evsList) {
-      if (e.gid) {
-        await gcalUpdateEvent(e, dateStr);
-      } else {
-        await gcalCreateEvent(e, dateStr);
-      }
-      count++;
-    }
+    (S.ev[ky(ad(wStart, di))] || []).forEach(e => {
+      if (!e.demo) { e.ds = (e.ds || 0) + 1; n++; }
+    });
   }
-  showToast(`✓ Đã đồng bộ ${count} hoạt động tuần W${wIdx + 1} lên Google Calendar!`, "ok");
+  if (!n) { showToast(`Tuần W${wIdx + 1} chưa có hoạt động nào để đồng bộ.`, "ok"); return; }
+  save();
+  showToast(`Đang đồng bộ ${n} hoạt động tuần W${wIdx + 1} lên Google Calendar...`, "ok");
+  await gcalFlush({ force: true, report: true });
+}
+
+// Badge trạng thái trên thanh tiêu đề (chỉ hiện khi đã liên kết và đang bật tự động đồng bộ)
+function updateSyncBadge() {
+  const b = $("syncBadge");
+  if (!b) return;
+  const active = gcalActive(), tokenOk = !!getGCalToken(), n = active ? gcalPendingCount() : 0;
+  if (!active || (tokenOk && !n)) { b.hidden = true; return; }
+  b.hidden = false;
+  if (!tokenOk) {
+    b.textContent = n ? `⚠ GCal · Kết nối lại (${n} chờ)` : "GCal · Kết nối lại";
+    b.className = n ? "btn btn-sm btn-danger" : "btn btn-sm btn-ghost";
+    b.title = "Phiên Google Calendar hết hạn sau 1 giờ. Bấm để kết nối lại và đẩy các thay đổi đang chờ.";
+    b.onclick = connectGoogleCalendar;
+  } else {
+    b.textContent = gcalFlushing ? `⏳ Đang đồng bộ ${n}…` : `⏳ ${n} chờ đồng bộ`;
+    b.className = "btn btn-sm";
+    b.title = "Bấm để đẩy ngay các thay đổi đang chờ lên Google Calendar";
+    b.onclick = () => gcalFlush({ report: true });
+  }
 }
 
 function renderSettingsModal() {
@@ -2392,6 +2593,58 @@ function renderSettingsModal() {
 /* ==========================================================================
    8. MAIN VIEWS
    ========================================================================== */
+// Thông báo đầu tab Lịch biểu: bắt đầu sử dụng, dữ liệu mẫu, nhắc sao lưu
+function calendarNotices() {
+  return startOrDemoNotice() + backupNotice();
+}
+
+function backupNotice() {
+  const real = Object.values(S.ev).reduce((n, l) => n + l.filter(e => !e.demo).length, 0);
+  let snooze = 0;
+  try { snooze = +localStorage.getItem("lc_bk_snooze") || 0; } catch (e) {}
+  const days = S.lb ? Math.floor((Date.now() - S.lb) / 864e5) : null;
+  if (real < 10 || (days !== null && days < 14) || Date.now() < snooze) return "";
+  return `
+    <div class="review-prompt-banner">
+      <div>
+        <b>💾 ${days === null ? "Bạn chưa sao lưu dữ liệu lần nào" : `Đã ${days} ngày chưa sao lưu`}</b>
+        <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Dữ liệu chỉ nằm trong trình duyệt này. Safari có thể tự xóa dữ liệu của trang web nếu bạn không mở trong 7 ngày (trừ khi đã "Thêm vào Màn hình chính").</div>
+      </div>
+      <div class="row" style="gap:6px;">
+        <button type="button" class="btn btn-sm btn-ghost" onclick="snoozeBackup()">Để sau</button>
+        <button type="button" class="btn btn-sm btn-primary" onclick="exportData('json')">Sao lưu ngay</button>
+      </div>
+    </div>`;
+}
+
+function snoozeBackup() {
+  try { localStorage.setItem("lc_bk_snooze", String(Date.now() + 7 * 864e5)); } catch (e) {}
+  draw();
+}
+
+function startOrDemoNotice() {
+  if (!Object.keys(S.ev).length) {
+    return `
+      <div class="review-prompt-banner">
+        <div>
+          <b>👋 Bắt đầu với Life Capital</b>
+          <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Gõ vào thanh ghi nhanh phía trên, ví dụ <i>"Mai 18h đánh cầu lông 2 tiếng"</i>, hoặc bấm "+ Thêm" ở một ngày bất kỳ.</div>
+        </div>
+        <button type="button" class="btn btn-sm" onclick="loadDemo()">Thử với dữ liệu mẫu</button>
+      </div>`;
+  }
+  if (hasDemo()) {
+    return `
+      <div class="review-prompt-banner">
+        <div>
+          <b>🧪 Đang dùng dữ liệu mẫu</b>
+          <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Dữ liệu mẫu không được đẩy lên Google Calendar. Hoạt động mẫu bạn đã sửa sẽ được giữ lại như dữ liệu thật.</div>
+        </div>
+        <button type="button" class="btn btn-sm btn-danger" onclick="clearDemo()">Xóa dữ liệu mẫu</button>
+      </div>`;
+  }
+  return "";
+}
 const V = {
   // --- TAB 1: LỊCH BIỂU (CALENDAR) ---
   ca() {
@@ -2413,6 +2666,7 @@ const V = {
     ` : '';
 
     const headerBar = `
+      ${calendarNotices()}
       ${reviewPrompt}
       <div class="card" style="margin-bottom:12px; padding:12px 16px;">
         <div class="card-header" style="margin-bottom:0">
@@ -2422,7 +2676,7 @@ const V = {
               Tuần W${sel + 1} <span style="font-weight:400; color:var(--mu);">(${dateRangeStr})</span>
             </label>
             <button class="btn btn-sm" onclick="sel=Math.min(W.length - 1, sel + 1); draw()" title="Tuần sau">▶</button>
-            ${CW >= 0 && sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=Math.max(0, CW); draw()">Về tuần này (W${CW+1})</button>` : `<span class="pill pill-ok">Tuần hiện tại</span>`}
+            ${CW >= 0 && sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=Math.max(0, CW); draw()">Về tuần này (W${CW+1})</button>` : sel === CW ? `<span class="pill pill-ok">Tuần hiện tại</span>` : ""}
           </div>
           <div class="row">
             <div class="segmented-control">
@@ -2527,7 +2781,7 @@ const V = {
 
         return `
           <div class="timeline-event-block"
-               style="top:${topPx}px; height:${heightPx}px; background:${cap.c};"
+               style="top:${topPx}px; height:${heightPx}px; ${capInk(cap.c)}"
                onclick="openEditor('${activeDate}', ${idx})">
             <b>${e.s} – ${tt(e.s, e.h)}</b> · ${e.m === 'u' ? '▲' : '▼'} ${esc(e.t)} (${r1(e.h)}h)
           </div>
@@ -2541,7 +2795,7 @@ const V = {
         const curHr = now.getHours() + (now.getMinutes() / 60);
         if (curHr >= 6 && curHr <= 24) {
           const topNow = (curHr - 6) * 48;
-          timeNowIndicator = `<div style="position:absolute; left:0; right:0; top:${topNow}px; height:2px; background:var(--bad); z-index:4; pointer-events:none;"><span style="position:absolute; right:4px; top:-9px; font-size:10px; font-weight:700; background:var(--bad); color:#fff; padding:1px 4px; border-radius:3px;">${pad(now.getHours())}:${pad(now.getMinutes())}</span></div>`;
+          timeNowIndicator = `<div style="position:absolute; left:0; right:0; top:${topNow}px; height:2px; background:var(--bad); z-index:4; pointer-events:none;"><span style="position:absolute; right:4px; top:-9px; font-size:10px; font-weight:700; background:var(--bad); color:var(--card); padding:1px 4px; border-radius:3px;">${pad(now.getHours())}:${pad(now.getMinutes())}</span></div>`;
         }
       }
 
@@ -2581,7 +2835,7 @@ const V = {
             `<button class="${pm === o[0] ? 'active' : ''}" onclick="S.pm='${o[0]}'; save(); draw(); scrollToCurrentWeek();">${o[1]}</button>`
           ).join("")}
         </div>
-        <button class="btn btn-sm btn-ghost" onclick="scrollToCurrentWeek()">⟲ Về tuần hiện tại (W${CW >= 0 ? CW+1 : 1})</button>
+        ${CW >= 0 ? `<button class="btn btn-sm btn-ghost" onclick="scrollToCurrentWeek()">⟲ Về tuần hiện tại (W${CW + 1})</button>` : ""}
       </div>
     `;
 
@@ -2619,7 +2873,7 @@ const V = {
           </div>
           ${es.map((e, idx) => `
             <div onclick="event.stopPropagation(); openEditor('${k}', ${idx})"
-                 style="background:${CM(e.c).c}; color:#fff; border-radius:4px; padding:2px 5px; margin-top:2px; font-size:11px; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer;"
+                 style="${capInk(CM(e.c).c)} border-radius:4px; padding:2px 5px; margin-top:2px; font-size:11px; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer;"
                  title="${esc(e.t)} (${e.s || ''} ${r1(e.h)}h)">
               ${e.s ? e.s + ' ' : ''}${e.m === 'u' ? '▲' : '▼'} ${esc(e.t)} · ${r1(e.h)}h
             </div>
@@ -2769,7 +3023,7 @@ const V = {
           </div>
           <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
             <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">${A > 168 ? 'Quá tải (Vượt)' : 'Chưa phân bổ'}</div>
-            <div style="font:700 22px Georgia, serif; margin-top:2px; color:${A > 168 ? 'var(--bad)' : 'var(--ok)'}">
+            <div style="font:700 22px Georgia, serif; margin-top:2px; color:${A > 168 ? 'var(--bad)' : 'var(--ok-text)'}">
               ${A > 168 ? '+' + r1(A - 168) + 'h' : r1(free) + 'h'}
               <span style="font-size:13px; font-weight:400; color:var(--mu);">${A > 168 ? '(vượt mức)' : `(${pc(free)}%)`}</span>
             </div>
@@ -2999,11 +3253,12 @@ function deleteCurrentEvent() {
   if (!confirm("Bạn có chắc chắn muốn xóa hoạt động này?")) return;
   const delEv = S.ev[ed][ei];
   const delTitle = delEv.t;
-  if (delEv.gid) gcalDeleteEvent(delEv.gid);
+  queueDelete(delEv.gid);
   S.ev[ed].splice(ei, 1);
   if (!S.ev[ed].length) delete S.ev[ed];
   ei = null;
   save();
+  gcalFlush();
   draw();
   closeEditor();
   showToast(`Đã xóa "${delTitle}"`, "ok");
@@ -3056,7 +3311,7 @@ function rep(date, o, rp, end) {
     const item = { ...o, r };
     S.ev[k].push(item);
     sortL(S.ev[k]);
-    gcalCreateEvent(item, k);
+    markPending(item); // gcalFlush() đẩy lần lượt từng sự kiện, không bắn hàng trăm request cùng lúc
   });
   return days.length;
 }
@@ -3067,20 +3322,21 @@ function delSeries(i) {
   if (!r || !confirm("Xóa tất cả hoạt động của chuỗi này từ ngày này trở đi?")) return;
   Object.keys(S.ev).forEach(k => {
     if (k >= ed) {
-      S.ev[k].forEach(e => { if (e.r === r && e.gid) gcalDeleteEvent(e.gid); });
+      S.ev[k].forEach(e => { if (e.r === r) queueDelete(e.gid); });
       S.ev[k] = S.ev[k].filter(e => e.r !== r);
       if (!S.ev[k].length) delete S.ev[k];
     }
   });
   ei = null;
   save();
+  gcalFlush();
   draw();
   closeEditor();
   showToast("Đã xóa chuỗi hoạt động định kỳ", "ok");
 }
 
 function handleTitleKeydown(e) {
-  if (e.isComposing) return;
+  if (isImeEnter(e)) return;
   if (e.key === "Enter") {
     e.preventDefault();
     const startInp = $("inpStart");
@@ -3138,6 +3394,7 @@ function renderEditorSheet() {
         <input id="inpTitle" placeholder="Ví dụ: Đánh cầu lông, Đọc sách, Họp nhóm, Chạy bộ..."
                value="${X ? esc(X.t) : ''}"
                oninput="handleTitleInput(this.value)"
+               oncompositionend="noteCompositionEnd()"
                onkeydown="handleTitleKeydown(event)">
       </div>
 
@@ -3250,7 +3507,8 @@ function saveEventFromForm(keepOpen) {
           S.ev[k].forEach(e => {
             if (e.r === r0) {
               Object.assign(e, o);
-              gcalUpdateEvent(e, k);
+              delete e.demo; // đã sửa thì là dữ liệu thật
+              markPending(e);
             }
           });
           sortL(S.ev[k]);
@@ -3259,7 +3517,8 @@ function saveEventFromForm(keepOpen) {
       showToast(`Đã cập nhật cả chuỗi "${title}"`, "ok");
     } else {
       Object.assign(L[ei], o);
-      gcalUpdateEvent(L[ei], ed);
+      delete L[ei].demo;
+      markPending(L[ei]);
       showToast(`Đã cập nhật "${title}"`, "ok");
     }
   } else {
@@ -3270,13 +3529,14 @@ function saveEventFromForm(keepOpen) {
       showToast(`Đã tạo chuỗi ${n} hoạt động "${title}"`, "ok");
     } else {
       L.push(o);
-      gcalCreateEvent(o, ed);
+      markPending(o);
       showToast(`Đã thêm "${title}" vào lịch`, "ok");
     }
   }
 
   sortL(L);
   save();
+  gcalFlush();
   draw();
   if (keepOpen === true && !wasEdit) {
     renderEditorSheet();
@@ -3381,7 +3641,17 @@ function cleanCap(c) {
     kw
   };
 }
-function cleanEv(e) { return e && typeof e.t === "string" && +e.h > 0 && +e.h <= 24 && SAFE_K.test(e.c || "") ? { t: e.t.slice(0, 120), c: e.c, m: e.m === "d" ? "d" : "u", h: +e.h, s: /^\d\d:\d\d$/.test(e.s || "") ? e.s : "", ...(SAFE_K.test(e.r || "") ? { r: e.r } : {}) } : null; }
+function cleanEv(e) {
+  if (!e || typeof e.t !== "string" || !(+e.h > 0 && +e.h <= 24) || !SAFE_K.test(e.c || "")) return null;
+  return {
+    t: e.t.slice(0, 120), c: e.c, m: e.m === "d" ? "d" : "u", h: +e.h,
+    s: /^([01]\d|2[0-3]):[0-5]\d$/.test(e.s || "") ? e.s : "",
+    ...(SAFE_K.test(e.r || "") ? { r: e.r } : {}),
+    ...(typeof e.gid === "string" && GID.test(e.gid) ? { gid: e.gid } : {}),
+    ...(e.ds ? { ds: 1 } : {}),     // đang chờ đẩy lên Google Calendar
+    ...(e.demo ? { demo: 1 } : {})  // dữ liệu mẫu, không đẩy lên Google Calendar
+  };
+}
 // Chuẩn hóa mọi dữ liệu đọc từ localStorage hoặc tệp sao lưu (khóa an toàn, giá trị hợp lệ, bù trường thiếu)
 function cleanState(d) {
   if (!d || typeof d !== "object" || !d.ev || typeof d.ev !== "object" || !Array.isArray(d.caps)) return null;
@@ -3392,8 +3662,15 @@ function cleanState(d) {
   Object.keys(d.bl || {}).forEach(k => { if (SAFE_K.test(k) && d.bl[k]) bl[k] = { u: Math.max(0, +d.bl[k].u || 0), d: Math.max(0, +d.bl[k].d || 0) }; });
   Object.keys(d.mem || {}).forEach(k => { if (k !== "__proto__" && d.mem[k] && SAFE_K.test(d.mem[k].c || "")) mem[k.slice(0, 120)] = { c: d.mem[k].c }; });
   const cl = (v, lo, hi, def) => { v = +v; return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : def; };
-  const cfg = { defDuration: cl(d.cfg && d.cfg.defDuration, 0.5, 24, 2), burnoutHours: cl(d.cfg && d.cfg.burnoutHours, 1, 24, 6) };
-  return { ev, caps, bl, mem, cfg, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
+  const dc = d.cfg || {};
+  const cfg = {
+    defDuration: cl(dc.defDuration, 0.5, 24, 2),
+    burnoutHours: cl(dc.burnoutHours, 1, 24, 6),
+    gcalAutoSync: dc.gcalAutoSync !== false,
+    ...(GCAL_CID.test(dc.gcalClientId || "") ? { gcalClientId: dc.gcalClientId } : {})
+  };
+  const gdel = Array.isArray(d.gdel) ? [...new Set(d.gdel.filter(g => typeof g === "string" && GID.test(g)))].slice(-500) : [];
+  return { ev, caps, bl, mem, cfg, gdel, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
 }
 
 async function saveFile(filename, content, mime) {
@@ -3480,6 +3757,7 @@ function draw(jump) {
   if (badge) badge.textContent = activeYear;
   document.title = `Life Capital · Quản trị Năng lượng & Thời gian ${activeYear}`;
   renderNav();
+  updateSyncBadge();
 
   const y = window.scrollY;
   const fo = [...document.querySelectorAll("#v input,#v select")], ai = fo.indexOf(document.activeElement), td = TABDIR;
@@ -3527,6 +3805,7 @@ function draw(jump) {
 
 // Tự động chuyển tuần khi sang thứ Hai mới
 function tick() {
+  updateSyncBadge(); // token Google hết hạn sau 1 giờ
   if (ed) return;
   const oldCW = CW, oldDay = lt, w = wkNow();
   if (w !== oldCW) { if (sel === oldCW) sel = w >= 0 ? w : sel; CW = w; lt = tk; draw(true); }
@@ -3534,9 +3813,32 @@ function tick() {
 }
 setInterval(tick, 60000);
 document.addEventListener("visibilitychange", () => {
-  if (!document.hidden) tick();
+  if (!document.hidden) { tick(); gcalFlush(); }
 });
 window.addEventListener("focus", tick);
+window.addEventListener("online", () => gcalFlush());
+
+// Tab khác vừa lưu: nạp lại để không ghi đè dữ liệu của tab đó bằng bản cũ trong bộ nhớ
+window.addEventListener("storage", e => {
+  if (e.key === "lc_theme") {
+    const root = document.documentElement;
+    if (e.newValue && e.newValue !== "auto") root.setAttribute("data-theme", e.newValue);
+    else root.removeAttribute("data-theme");
+    return;
+  }
+  if (e.key !== "lc2" || !e.newValue) return;
+  let d = null;
+  try { d = cleanState(JSON.parse(e.newValue)); } catch (err) {}
+  if (!d) return;
+  S = d;
+  Object.values(S.ev).forEach(sortL);
+  if (ed) { closeEditor(); showToast("Dữ liệu vừa thay đổi ở tab khác, đã tải lại.", "bad"); }
+  if ($("settingsModalOverlay").classList.contains("open")) renderSettingsModal();
+  draw();
+});
+
+// Xin trình duyệt giữ dữ liệu lâu dài (giảm nguy cơ bị tự dọn khi thiếu dung lượng)
+try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {}); } catch (e) {}
 
 document.addEventListener("keydown", e => { TABDIR = e.key === "Tab" ? (e.shiftKey ? -1 : 1) : 0; }, true);
 
@@ -3606,8 +3908,8 @@ function layoutTimeline() {
 
 // Khởi chạy ứng dụng
 draw(true);
+gcalFlush(); // đẩy các thay đổi còn chờ từ lần mở trước
 </script>
 </body>
 </html>
-
 ```
