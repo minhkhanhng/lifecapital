@@ -1,0 +1,17 @@
+{
+  "name": "Life Capital · Schedule 2026",
+  "short_name": "Life Capital",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#fdfcfd",
+  "theme_color": "#E0A3BB",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
