@@ -64,11 +64,13 @@
    - Đánh giá Điểm sáng của tuần, Vốn cần cứu trợ, Bánh xe cuộc đời và gợi ý kế hoạch tuần mới.
 5. 🛠️ **Popup Thêm / Sửa Hoạt Động Tinh Gọn**:
    - Giao diện form tinh gọn chỉ gồm các trường thông tin cần thiết, tự động đóng popup khi bấm Lưu.
-   - Chống lưu ngang khi gõ tiếng Việt: Phím Enter dùng để chốt chữ của bộ gõ (kể cả trên Safari) không bị tính là "gửi", ở cả thanh ghi nhanh lẫn ô tên hoạt động. Enter trong ô tên hoạt động chuyển tiêu điểm sang ô giờ bắt đầu.
+   - Nhập bằng bàn phím: trong popup, mỗi lần nhấn Enter chuyển sang ô kế tiếp (Tên → Loại vốn → Tác động → Giờ bắt đầu → Thời lượng → Lặp lại → Đến hết ngày); Enter ở ô cuối cùng thì lưu. Khi đang gõ có dấu, một lần Enter vừa chốt chữ vừa chuyển ô. `Cmd/Ctrl + Enter` lưu ngay từ bất kỳ ô nào.
+   - Thanh ghi nhanh: phím Enter dùng để chốt chữ của bộ gõ (kể cả trên Safari) không bị tính là "gửi"; nhấn Enter lần nữa để ghi.
    - Hỗ trợ tạo chuỗi lặp định kỳ (Hằng ngày, Ngày làm việc, Hằng tuần) kèm ngày kết thúc chuỗi.
 6. 🎡 **Bánh Xe Cuộc Đời (Radar Chart) Chuẩn Hoá**:
    - Khung hình mở rộng chống cắt chữ trên mọi kích thước màn hình.
-   - Xử lý hoàn hảo các loại vốn chưa đặt mục tiêu hoặc đạt 0 giờ.
+   - Người mới bắt đầu với mục tiêu tuần bằng 0 cho mọi loại vốn; bánh xe và bản tổng kết hiện nút **"Đặt mục tiêu"** dẫn tới tab Danh mục vốn, không chấm điểm hay đưa khuyến nghị dựa trên số giả định.
+   - Tuần chưa có hoạt động nào: bản tổng kết hiện trạng thái trống kèm nút "Ghi hoạt động" thay vì đưa ra nhận định.
    - Tích hợp chỉ số Điểm cân bằng bánh xe (Balance Score) trực quan.
 7. 🌐 **Động cơ Đa năm tự động (Multi-Year Engine)**:
    - Tự động nhận diện và tính toán 52/53 tuần theo chuẩn quốc tế **ISO 8601**.
@@ -1241,11 +1243,12 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
 /* ==========================================================================
    1. DỮ LIỆU CỐT LÕI (5 LOẠI VỐN VỚI BẢNG MÀU YÊU CẦU)
    ========================================================================== */
+// [khóa, tên, màu, mục tiêu nạp/tuần, từ khóa]. Mục tiêu mặc định = 0: người dùng tự đặt, app không phán xét theo số giả định.
 const DCAP = [
-  ["sk", "Sức khỏe", "#97A13B", 6, ["gym", "bơi", "chạy bộ", "cầu lông", "đá bóng", "spa", "ngủ", "thể thao", "fitness", "yoga", "đi bộ", "sức khỏe", "massage", "nạp năng lượng"]],
-  ["qh", "Quan hệ", "#E0A3BB", 5, ["dinner", "sinh nhật", "cưới", "gia đình", "bạn", "date", "chị", "em", "anh", "bố", "mẹ", "thăm", "ăn tối", "gặp mặt", "trò chuyện", "hẹn hò", "liên hoan"]],
-  ["tn", "Trải nghiệm", "#8b6da9", 3, ["xem", "du lịch", "trip", "phim", "workshop", "thử", "concert", "cafe", "cà phê", "chill", "ăn uống", "dạo phố", "triển lãm", "bảo tàng", "khám phá"]],
-  ["kn", "Kỹ năng", "#4a859c", 4, ["học", "đọc", "course", "study", "khóa", "sách", "tiếng anh", "code", "nghiên cứu", "luyện", "đàn", "viết", "podcast", "kỹ năng", "vẽ"]],
+  ["sk", "Sức khỏe", "#97A13B", 0, ["gym", "bơi", "chạy bộ", "cầu lông", "đá bóng", "spa", "ngủ", "thể thao", "fitness", "yoga", "đi bộ", "sức khỏe", "massage", "nạp năng lượng"]],
+  ["qh", "Quan hệ", "#E0A3BB", 0, ["dinner", "sinh nhật", "cưới", "gia đình", "bạn", "date", "chị", "em", "anh", "bố", "mẹ", "thăm", "ăn tối", "gặp mặt", "trò chuyện", "hẹn hò", "liên hoan"]],
+  ["tn", "Trải nghiệm", "#8b6da9", 0, ["xem", "du lịch", "trip", "phim", "workshop", "thử", "concert", "cafe", "cà phê", "chill", "ăn uống", "dạo phố", "triển lãm", "bảo tàng", "khám phá"]],
+  ["kn", "Kỹ năng", "#4a859c", 0, ["học", "đọc", "course", "study", "khóa", "sách", "tiếng anh", "code", "nghiên cứu", "luyện", "đàn", "viết", "podcast", "kỹ năng", "vẽ"]],
   ["tc", "Tài chính / công việc", "#b88628", 0, ["họp", "làm", "work", "meeting", "deep", "dự án", "khách", "bán", "deal", "deadline", "báo cáo", "ot", "tăng ca", "công ty", "văn phòng", "khách hàng", "tài chính", "tiền"]]
 ];
 const DN_VI = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ Nhật"];
@@ -1699,6 +1702,12 @@ let justComposed = false;
 function noteCompositionEnd() {
   justComposed = true;
   setTimeout(() => { justComposed = false; }, 0);
+  // Enter đã nhấn trong popup lúc đang gõ dở: chữ đã chốt xong, giờ mới chuyển ô
+  if (enterAfterCompose) {
+    const el = enterAfterCompose;
+    enterAfterCompose = null;
+    setTimeout(() => editorEnter(el), 0);
+  }
 }
 // Không có thuộc tính oncompositionend trong HTML nên phải gắn bằng addEventListener
 document.addEventListener("compositionend", noteCompositionEnd, true);
@@ -1810,8 +1819,13 @@ function renderRadarChartSVG(weekIdx) {
   const tg = stats.filter(s => s.has);
   let balanceHtml;
   if (!tg.length) {
-    balanceHtml = `<span class="pill pill-blush">🎯 Chưa tính điểm cân bằng</span>
-      <span style="color:var(--mu); font-size:12px;">Hãy đặt mục tiêu ▲/tuần ở tab Danh mục vốn.</span>`;
+    balanceHtml = `<span class="pill pill-blush">🎯 Chưa đặt mục tiêu tuần</span>
+      <span style="color:var(--mu); font-size:12px;">Đặt số giờ ▲ Nạp mong muốn mỗi tuần cho từng loại vốn để bánh xe tính được điểm cân bằng.</span>
+      <button type="button" class="btn btn-sm btn-primary" onclick="goToTargets()">Đặt mục tiêu</button>`;
+  } else if (stats.every(s => s.u === 0)) {
+    // Chưa có giờ Nạp nào: chấm 0% và kết luận "bánh xe bị méo" là sai
+    balanceHtml = `<span class="pill pill-blush">🎯 Chưa có dữ liệu để tính điểm</span>
+      <span style="color:var(--mu); font-size:12px;">Tuần này chưa ghi giờ ▲ Nạp nào.</span>`;
   } else {
     const ratios = tg.map(s => Math.min(1, s.u / s.c.tg));
     const avgR = ratios.reduce((a, b) => a + b, 0) / ratios.length, minR = Math.min(...ratios);
@@ -1971,7 +1985,7 @@ function openWeeklyReviewModal(wIdx = sel) {
         </div>
         <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
           <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Đánh giá pin tuần</div>
-          <div style="font:700 20px Georgia, serif; margin-top:4px; color:${netEnergy >= 0 ? 'var(--ok-text)' : 'var(--bad)'}">
+          <div style="font:700 20px Georgia, serif; margin-top:4px; color:${noData ? 'var(--mu)' : netEnergy >= 0 ? 'var(--ok-text)' : 'var(--bad)'}">
             ${noData ? '— Chưa có dữ liệu' : netEnergy >= 4 ? '🔋 Nạp pin xuất sắc' : netEnergy >= 0 ? '🔋 Pin ổn định' : '🪫 Thâm hụt pin'}
           </div>
           <small style="color:var(--tx-sec)">${noData ? 'Ghi hoạt động để đánh giá' : netEnergy >= 0 ? 'Cân bằng phục hồi tốt' : 'Cần bù đắp nghỉ ngơi tuần tới'}</small>
@@ -1986,6 +2000,14 @@ function openWeeklyReviewModal(wIdx = sel) {
         ${renderRadarChartSVG(wIdx)}
       </div>
 
+      ${noData ? `
+      <!-- Tuần chưa có hoạt động: không đưa nhận định hay khuyến nghị dựa trên dữ liệu rỗng -->
+      <div style="padding:16px; background:var(--card-subtle); border-radius:var(--radius-md); border:1px dashed var(--bd); display:flex; flex-direction:column; gap:8px; align-items:flex-start;">
+        <b style="font-size:14px;">📭 Tuần W${wIdx + 1} chưa có hoạt động nào</b>
+        <span style="font-size:13px; color:var(--tx-sec); line-height:1.5;">Ghi lại các hoạt động trong tuần bằng thanh ghi nhanh hoặc nút “+ Thêm” để nhận nhận định về cán cân năng lượng, quỹ 168 giờ và kế hoạch cho tuần tới.</span>
+        <button type="button" class="btn btn-sm btn-primary" onclick="goToQuickCapture()">Ghi hoạt động</button>
+      </div>
+      ` : `
       <!-- PHÂN TÍCH CHUYÊN SÂU & INSIGHTS ĐA CHIỀU -->
       <div style="display:flex; flex-direction:column; gap:10px; font-size:13px;">
         <!-- Insight 1: Cán cân năng lượng -->
@@ -2042,6 +2064,7 @@ function openWeeklyReviewModal(wIdx = sel) {
           <div>3. <b>Giữ vững đà tăng trưởng:</b> Tiếp tục phát huy thế mạnh ở vốn <b>${starCap ? esc(starCap.c.n) : 'chủ lực'}</b>.</div>
         </div>
       </div>
+      `}
 
       <div style="display:flex; justify-content:flex-end; gap:8px;">
         <button type="button" class="btn" onclick="copyReviewToClipboard(${wIdx})">📋 Sao chép tóm tắt</button>
@@ -2087,6 +2110,23 @@ function renderNav() {
 function switchTab(tabId) {
   cur = tabId;
   draw(true);
+}
+
+// Từ bánh xe / bản tổng kết: mở tab Danh mục vốn và đặt con trỏ vào ô mục tiêu đầu tiên
+function goToTargets() {
+  closeReviewModal();
+  switchTab("set");
+  window.scrollTo(0, 0);
+  const inp = document.querySelector('#v input[data-target-input]');
+  if (inp) { inp.focus(); inp.select(); }
+}
+
+// Từ bản tổng kết tuần trống: đóng popup và đưa con trỏ về thanh ghi nhanh
+function goToQuickCapture() {
+  closeReviewModal();
+  const inp = $("nlpInput");
+  window.scrollTo(0, 0);
+  if (inp) inp.focus();
 }
 
 function getThemePreference() {
@@ -2974,7 +3014,7 @@ const V = {
           <h2 class="card-title">💡 Nhận Định & Tình Trạng Các Loại Vốn</h2>
         </div>
         <p style="margin:4px 0 10px; font-size:13.5px; color:var(--tx-sec);">
-          ${T.length ? `Đã có <b>${okCount}/${T.length}</b> nguồn vốn đạt mục tiêu tuần (trung bình ${nn} tuần gần nhất đến W${sel + 1}).` : "Chưa đặt mục tiêu cho vốn nào. Bạn có thể vào tab <b>Danh mục vốn</b> để đặt mục tiêu."}
+          ${T.length ? `Đã có <b>${okCount}/${T.length}</b> nguồn vốn đạt mục tiêu tuần (trung bình ${nn} tuần gần nhất đến W${sel + 1}).` : `Chưa đặt mục tiêu tuần cho loại vốn nào, nên chưa đánh giá được mức đạt. <button type="button" class="btn btn-sm btn-primary" onclick="goToTargets()">Đặt mục tiêu</button>`}
           ${CW >= 0 && sel > CW ? " <i>(Đang xem kế hoạch tuần tương lai).</i>" : ""}
         </p>
         <div style="display:flex; flex-direction:column; gap:6px; font-size:13px;">
@@ -3124,7 +3164,7 @@ const V = {
             </div>
           </td>
           <td>
-            <input type="number" step="0.5" min="0" value="${c.tg}" onchange="updateCap('${c.k}', 'tg', Math.max(0, +this.value || 0))">
+            <input type="number" step="0.5" min="0" value="${c.tg}" data-target-input aria-label="Mục tiêu nạp mỗi tuần của ${esc(c.n)}" onchange="updateCap('${c.k}', 'tg', Math.max(0, +this.value || 0))">
           </td>
           <td>
             <input type="number" step="0.5" min="0" value="${b.u}" onchange="BL('${c.k}').u=Math.max(0, +this.value || 0); save(); draw();">
@@ -3336,14 +3376,33 @@ function delSeries(i) {
   showToast("Đã xóa chuỗi hoạt động định kỳ", "ok");
 }
 
-function handleTitleKeydown(e) {
-  if (isImeEnter(e)) return;
-  if (e.key === "Enter") {
-    e.preventDefault();
-    const startInp = $("inpStart");
-    if (startInp) startInp.focus();
-  }
+// Popup thêm/sửa: Enter chuyển lần lượt qua từng ô, Enter ở ô cuối cùng thì lưu.
+// Đang gõ có dấu thì một lần Enter vừa chốt chữ vừa chuyển ô: chờ bộ gõ chốt xong (compositionend) rồi mới chuyển.
+let enterAfterCompose = null;
+
+function editorFields() {
+  return [...$("sheetBody").querySelectorAll("input, select")].filter(el => !el.disabled && el.offsetParent !== null);
 }
+
+function editorEnter(from) {
+  const f = editorFields(), i = f.indexOf(from);
+  if (i < 0 || !ed) return;
+  if (i === f.length - 1) { saveEventFromForm(); return; }
+  const next = f[i + 1];
+  next.focus();
+  if (next.tagName === "INPUT" && (next.type === "text" || next.type === "number")) next.select();
+}
+
+function handleSheetKeydown(e) {
+  if (e.key !== "Enter" || e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+  const el = e.target;
+  if (!el.matches || !el.matches("input, select")) return;
+  // Chrome: Enter chốt chữ đến TRƯỚC compositionend, không chặn để bộ gõ chốt chữ bình thường
+  if (e.isComposing || e.keyCode === 229) { enterAfterCompose = el; return; }
+  e.preventDefault();
+  editorEnter(el);
+}
+$("sheetBody").addEventListener("keydown", handleSheetKeydown);
 
 function handleTitleInput(val) {
   const guessedCap = guess(val);
@@ -3394,8 +3453,7 @@ function renderEditorSheet() {
         <label class="form-label" for="inpTitle">Tên hoạt động <span style="color:var(--bad)">*</span></label>
         <input id="inpTitle" placeholder="Ví dụ: Đánh cầu lông, Đọc sách, Họp nhóm, Chạy bộ..."
                value="${X ? esc(X.t) : ''}"
-               oninput="handleTitleInput(this.value)"
-               onkeydown="handleTitleKeydown(event)">
+               oninput="handleTitleInput(this.value)">
       </div>
 
       <div class="form-row">
