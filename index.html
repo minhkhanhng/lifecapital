@@ -1053,7 +1053,6 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
       <input id="nlpInput" class="quick-capture-input"
              placeholder="Ghi nhanh: vd 'Mai 18h đánh cầu lông 2 tiếng' hoặc 'Hôm nay 20h đọc sách 1.5h'..."
              oninput="handleNLPInput(this.value)"
-             oncompositionend="noteCompositionEnd()"
              onkeydown="handleNLPKeydown(event)">
       <button class="btn btn-sm btn-primary" onclick="executeNLP()">Ghi ngay</button>
     </div>
@@ -1568,6 +1567,8 @@ function noteCompositionEnd() {
   justComposed = true;
   setTimeout(() => { justComposed = false; }, 0);
 }
+// Không có thuộc tính oncompositionend trong HTML nên phải gắn bằng addEventListener
+document.addEventListener("compositionend", noteCompositionEnd, true);
 const isImeEnter = e => e.isComposing || e.keyCode === 229 || justComposed;
 
 function handleNLPKeydown(e) {
@@ -3261,7 +3262,6 @@ function renderEditorSheet() {
         <input id="inpTitle" placeholder="Ví dụ: Đánh cầu lông, Đọc sách, Họp nhóm, Chạy bộ..."
                value="${X ? esc(X.t) : ''}"
                oninput="handleTitleInput(this.value)"
-               oncompositionend="noteCompositionEnd()"
                onkeydown="handleTitleKeydown(event)">
       </div>
 
