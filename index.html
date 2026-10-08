@@ -1051,7 +1051,8 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
       <input id="nlpInput" class="quick-capture-input"
              placeholder="Ghi nhanh: vd 'Mai 18h đánh cầu lông 2 tiếng' hoặc 'Hôm nay 20h đọc sách 1.5h'..."
              oninput="handleNLPInput(this.value)"
-             onkeydown="if(event.key==='Enter') executeNLP()">
+             oncompositionend="noteCompositionEnd()"
+             onkeydown="handleNLPKeydown(event)">
       <button class="btn btn-sm btn-primary" onclick="executeNLP()">Ghi ngay</button>
     </div>
     <div class="quick-preview-bar" id="nlpPreview" style="display:none;"></div>
@@ -1496,6 +1497,21 @@ function handleNLPInput(val) {
     <span class="pill" style="background:${cap.c}; color:#fff;">🏷️ ${esc(cap.n)}</span>
     <span style="font-weight:600; color:var(--tx); margin-left:4px;">"${esc(r.title)}"</span>
     ${r.err ? `<span class="pill pill-bad">⚠ ${esc(r.err)}</span>` : r.hit ? `<span class="pill pill-bad">⚠ Trùng giờ với "${esc(r.hit.t)}"</span>` : ""}`;
+}
+
+// Enter dùng để chốt chữ của bộ gõ (gõ tiếng Việt có dấu) không được tính là "gửi".
+// Safari phát compositionend TRƯỚC keydown nên cần thêm cờ justComposed.
+let justComposed = false;
+function noteCompositionEnd() {
+  justComposed = true;
+  setTimeout(() => { justComposed = false; }, 0);
+}
+const isImeEnter = e => e.isComposing || e.keyCode === 229 || justComposed;
+
+function handleNLPKeydown(e) {
+  if (e.key !== "Enter" || isImeEnter(e)) return;
+  e.preventDefault();
+  executeNLP();
 }
 
 function executeNLP() {
@@ -3072,7 +3088,7 @@ function delSeries(i) {
 }
 
 function handleTitleKeydown(e) {
-  if (e.isComposing) return;
+  if (isImeEnter(e)) return;
   if (e.key === "Enter") {
     e.preventDefault();
     const startInp = $("inpStart");
@@ -3130,6 +3146,7 @@ function renderEditorSheet() {
         <input id="inpTitle" placeholder="Ví dụ: Đánh cầu lông, Đọc sách, Họp nhóm, Chạy bộ..."
                value="${X ? esc(X.t) : ''}"
                oninput="handleTitleInput(this.value)"
+               oncompositionend="noteCompositionEnd()"
                onkeydown="handleTitleKeydown(event)">
       </div>
 
