@@ -1786,7 +1786,7 @@ function openWeeklyReviewModal(wIdx = sel) {
             <button type="button" class="btn btn-sm btn-ghost" onclick="openWeeklyReviewModal(CW)" style="color:var(--ac-text); font-weight:600; font-size:12px;">
               Về tuần hiện tại (W${CW + 1})
             </button>
-          ` : `<span class="pill pill-ok" style="font-size:11px;">Tuần hiện tại</span>`}
+          ` : wIdx === CW ? `<span class="pill pill-ok" style="font-size:11px;">Tuần hiện tại</span>` : ""}
         </div>
       </div>
 
@@ -2516,7 +2516,7 @@ const V = {
               Tuần W${sel + 1} <span style="font-weight:400; color:var(--mu);">(${dateRangeStr})</span>
             </label>
             <button class="btn btn-sm" onclick="sel=Math.min(W.length - 1, sel + 1); draw()" title="Tuần sau">▶</button>
-            ${CW >= 0 && sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=Math.max(0, CW); draw()">Về tuần này (W${CW+1})</button>` : `<span class="pill pill-ok">Tuần hiện tại</span>`}
+            ${CW >= 0 && sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=Math.max(0, CW); draw()">Về tuần này (W${CW+1})</button>` : sel === CW ? `<span class="pill pill-ok">Tuần hiện tại</span>` : ""}
           </div>
           <div class="row">
             <div class="segmented-control">
@@ -2675,7 +2675,7 @@ const V = {
             `<button class="${pm === o[0] ? 'active' : ''}" onclick="S.pm='${o[0]}'; save(); draw(); scrollToCurrentWeek();">${o[1]}</button>`
           ).join("")}
         </div>
-        <button class="btn btn-sm btn-ghost" onclick="scrollToCurrentWeek()">⟲ Về tuần hiện tại (W${CW >= 0 ? CW+1 : 1})</button>
+        ${CW >= 0 ? `<button class="btn btn-sm btn-ghost" onclick="scrollToCurrentWeek()">⟲ Về tuần hiện tại (W${CW + 1})</button>` : ""}
       </div>
     `;
 
