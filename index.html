@@ -1103,11 +1103,11 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
    1. DỮ LIỆU CỐT LÕI (5 LOẠI VỐN VỚI BẢNG MÀU YÊU CẦU)
    ========================================================================== */
 const DCAP = [
-  ["sk", "Sức khỏe", "#97A13B", 6],
-  ["qh", "Quan hệ", "#E0A3BB", 5],
-  ["tn", "Trải nghiệm", "#8b6da9", 3],
-  ["kn", "Kỹ năng", "#4a859c", 4],
-  ["tc", "Tài chính / công việc", "#b88628", 0]
+  ["sk", "Sức khỏe", "#97A13B", 6, ["gym", "bơi", "chạy bộ", "cầu lông", "đá bóng", "spa", "ngủ", "thể thao", "fitness", "yoga", "đi bộ", "sức khỏe", "massage", "nạp năng lượng"]],
+  ["qh", "Quan hệ", "#E0A3BB", 5, ["dinner", "sinh nhật", "cưới", "gia đình", "bạn", "date", "chị", "em", "anh", "bố", "mẹ", "thăm", "ăn tối", "gặp mặt", "trò chuyện", "hẹn hò", "liên hoan"]],
+  ["tn", "Trải nghiệm", "#8b6da9", 3, ["xem", "du lịch", "trip", "phim", "workshop", "thử", "concert", "cafe", "cà phê", "chill", "ăn uống", "dạo phố", "triển lãm", "bảo tàng", "khám phá"]],
+  ["kn", "Kỹ năng", "#4a859c", 4, ["học", "đọc", "course", "study", "khóa", "sách", "tiếng anh", "code", "nghiên cứu", "luyện", "đàn", "viết", "podcast", "kỹ năng", "vẽ"]],
+  ["tc", "Tài chính / công việc", "#b88628", 0, ["họp", "làm", "work", "meeting", "deep", "dự án", "khách", "bán", "deal", "deadline", "báo cáo", "ot", "tăng ca", "công ty", "văn phòng", "khách hàng", "tài chính", "tiền"]]
 ];
 const DN_VI = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ Nhật"];
 const DN_SHORT = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
@@ -1178,7 +1178,7 @@ function defState() {
   });
   return {
     ev,
-    caps: DCAP.map(c => ({ k: c[0], n: c[1], c: c[2], tg: c[3] })),
+    caps: DCAP.map(c => ({ k: c[0], n: c[1], c: c[2], tg: c[3], kw: [...c[4]] })),
     bl: {},
     mem: {},
     pm: "0",
@@ -1201,7 +1201,13 @@ if (!S) {
   S = defState();
 }
 
-if (!S.caps) S.caps = DCAP.map(c => ({ k: c[0], n: c[1], c: c[2], tg: (S.tg || {})[c[0]] ?? c[3] }));
+if (!S.caps) S.caps = DCAP.map(c => ({ k: c[0], n: c[1], c: c[2], tg: (S.tg || {})[c[0]] ?? c[3], kw: [...c[4]] }));
+S.caps.forEach(c => {
+  if (!c.kw || !Array.isArray(c.kw) || !c.kw.length) {
+    const def = DCAP.find(d => d[0] === c.k);
+    if (def && def[4]) c.kw = [...def[4]];
+  }
+});
 if (!S.cfg) S.cfg = { defDuration: 2, burnoutHours: 6 };
 S.bl = S.bl || {};
 S.mem = S.mem || {};
@@ -1306,15 +1312,21 @@ function getDayBattery(dateStr) {
 
 function guess(t) {
   t = (t || "").normalize("NFC");
-  const m = S.mem && S.mem[t.trim().toLowerCase()];
+  const normTitle = t.trim().toLowerCase();
+  const m = S.mem && S.mem[normTitle];
   if (m && S.caps.some(c => c.k === m.c)) return m.c;
-  const w = " " + t.toLowerCase().split(/[^\p{L}\p{N}]+/u).join(" ") + " ";
-  const has = a => a.some(k => w.includes(" " + k + " "));
-  if (has(["học", "đọc", "course", "study", "khóa", "sách", "tiếng anh", "code", "nghiên cứu"])) return "kn";
-  if (has(["họp", "làm", "work", "meeting", "deep", "dự án", "khách", "bán", "deal", "code"])) return "tc";
-  if (has(["xem", "du lịch", "trip", "phim", "workshop", "thử", "concert", "cafe", "chill", "ăn uống"])) return "tn";
-  if (has(["dinner", "sinh nhật", "cưới", "gia đình", "bạn", "date", "chị", "em", "anh", "bố", "mẹ", "thăm"])) return "qh";
-  return "sk";
+
+  const w = " " + normTitle.split(/[^\p{L}\p{N}]+/u).join(" ") + " ";
+
+  // Kiểm tra từ khóa tùy chỉnh của từng loại vốn do người dùng cài đặt
+  for (const c of S.caps) {
+    const kws = (c.kw && c.kw.length) ? c.kw : (DCAP.find(d => d[0] === c.k) ? DCAP.find(d => d[0] === c.k)[4] : []);
+    if (kws.some(k => k && w.includes(" " + k.toLowerCase().trim() + " "))) {
+      return c.k;
+    }
+  }
+
+  return S.caps[0] ? S.caps[0].k : "sk";
 }
 
 /* ==========================================================================
@@ -1364,50 +1376,89 @@ function parseNLPText(str) {
   const setPer = x => { if (x) per = x.toLowerCase(); };
   const wkBase = W[CW >= 0 ? CW : Math.min(Math.max(sel, 0), W.length - 1)];
 
-  // 1. Ngày (khớp theo từ nguyên vẹn; "Mai" viết hoa được hiểu là tên người)
+  // 1. Phân tích Ngày
   if ((m = cut(/(?<![\p{L}\p{N}])(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?(?![\p{L}\p{N}])/u))) {
     const y = m[3] ? (+m[3] < 100 ? 2000 + +m[3] : +m[3]) : base.getFullYear(), d = new Date(y, +m[2] - 1, +m[1]);
     if (d.getMonth() === +m[2] - 1) { target = d; dateDesc = DN_VI[(d.getDay() + 6) % 7] + " " + m[1] + "/" + m[2]; }
   } else if (cut(/(?<![\p{L}\p{N}])(?:ngày\s+)?(?:mốt|kia)(?![\p{L}\p{N}])/iu)) {
     target = ad(base, 2); dateDesc = "Ngày kia";
-  } else if ((m = cut(new RegExp("(?<![\\p{L}\\p{N}])(?:(" + PER + ")\\s+|ngày\\s+)mai(?![\\p{L}\\p{N}])", "iu"))) || (m = cut(/(?<![\p{L}\p{N}])mai(?![\p{L}\p{N}])/u))) {
+  } else if ((m = cut(/(?<![\p{L}\p{N}])(?:(sáng|trưa|chiều|tối|đêm)\s+|ngày\s+)mai(?![\p{L}\p{N}])/iu))) {
     setPer(m[1]); target = ad(base, 1); dateDesc = "Ngày mai";
-  } else if ((m = cut(new RegExp("(?<![\\p{L}\\p{N}])(?:(" + PER + ")\\s+)?(?:hôm\\s+)?nay(?![\\p{L}\\p{N}])", "iu")))) {
-    setPer(m[1]);
+  } else if ((m = cut(/(?<!(?:gặp|với|cùng|bạn|chị|em|anh|thăm|nhà|đón)\s+)(?<![\p{L}\p{N}])mai(?![\p{L}\p{N}])/iu))) {
+    target = ad(base, 1); dateDesc = "Ngày mai";
+  } else if ((m = cut(/(?<![\p{L}\p{N}])(?:(sáng|trưa|chiều|tối|đêm)\s+)?(?:hôm\s+)?nay(?![\p{L}\p{N}])/iu))) {
+    setPer(m[1]); dateDesc = "Hôm nay";
   } else {
     let idx = null;
     if ((m = cut(/(?<![\p{L}\p{N}])(?:thứ|thu|t)\s*([2-7])(?![\p{L}\p{N}])/iu))) idx = +m[1] - 2;
     else if ((m = cut(/(?<![\p{L}\p{N}])thứ\s+(hai|ba|tư|bốn|năm|sáu|bảy)(?![\p{L}\p{N}])/iu))) idx = { hai: 0, ba: 1, tư: 2, bốn: 2, năm: 3, sáu: 4, bảy: 5 }[m[1].toLowerCase()];
     else if (cut(WB("chủ nhật|cn"))) idx = 6;
-    if (idx !== null) { let d = ad(wkBase, idx); if (CW >= 0 && d < base) d = ad(d, 7); target = d; dateDesc = DN_VI[idx]; }
+    if (idx !== null) {
+      let d = ad(wkBase, idx);
+      if (CW >= 0 && d < base) d = ad(d, 7);
+      target = d;
+      dateDesc = DN_VI[idx];
+    }
   }
 
-  // 2. Giờ bắt đầu & thời lượng ("2h" đứng một mình = thời lượng; dùng "lúc 18h", "18h30", "18:00", "7pm" để chỉ giờ bắt đầu)
+  // Bóc từ chỉ buổi nếu đứng riêng (trừ 'ăn tối', 'ăn trưa', 'ăn sáng')
+  if (!per && (m = cut(/(?<!(?:ăn|bữa)\s+)(?<![\p{L}\p{N}])(sáng|trưa|chiều|tối|đêm)(?![\p{L}\p{N}])/iu))) {
+    setPer(m[1]);
+  }
+
+  // 2. Phân tích Giờ bắt đầu & Thời lượng
   let start = null, dur = null;
   const hm = (a, b) => pad(Math.min(23, +a)) + ":" + pad(b ? +b : 0);
-  const adj = (hr, p) => { p = p || per; if ((p === "chiều" || p === "tối") && hr < 12) return hr + 12; if (p === "trưa" && hr >= 1 && hr <= 5) return hr + 12; if (p === "đêm" && hr >= 6 && hr < 12) return hr + 12; return hr; };
+  const adj = (hr, p) => {
+    p = p || per;
+    if ((p === "chiều" || p === "tối") && hr < 12) return hr + 12;
+    if (p === "trưa" && hr >= 1 && hr <= 5) return hr + 12;
+    if (p === "đêm" && hr >= 6 && hr < 12) return hr + 12;
+    return hr;
+  };
   const ampm = (hr, ap) => /pm/i.test(ap) ? (hr < 12 ? hr + 12 : hr) : (hr === 12 ? 0 : hr);
+
+  // Khoảng giờ: 14h-16h, 14:00 - 16:00
   if ((m = cut(/(?<![\p{L}\p{N}])(\d{1,2})(?:h|:|g)(\d{2})?\s*[-–]\s*(\d{1,2})(?:h|:|g)?(\d{2})?(?![\p{L}\p{N}])/iu))) {
     const a = adj(+m[1]) * 60 + (+m[2] || 0), b = adj(+m[3]) * 60 + (+m[4] || 0);
     if (b > a) { start = hm(a / 60 | 0, a % 60); dur = (b - a) / 60; }
   }
+
+  // Bóc tách thời lượng rõ ràng trước
+  if (dur === null) {
+    if (cut(/(?<![\p{L}\p{N}])(?:nửa|1\/2)\s*(?:tiếng|giờ|h)(?![\p{L}\p{N}])/iu)) dur = 0.5;
+    else if ((m = cut(/(?<![\p{L}\p{N}])(\d+(?:[.,]\d+)?)\s*(?:tiếng|giờ|gio|hrs?|hours?)(\s*rưỡi)?(?![\p{L}\p{N}])/iu))) dur = parseFloat(m[1].replace(",", ".")) + (m[2] ? 0.5 : 0);
+    else if ((m = cut(/(?<![\p{L}\p{N}])(\d+(?:[.,]\d+)?)\s*h\s*rưỡi(?![\p{L}\p{N}])/iu))) dur = parseFloat(m[1].replace(",", ".")) + 0.5;
+    else if ((m = cut(/(?<![\p{L}\p{N}])(\d+)\s*(?:phút|phut|min|p)(?![\p{L}\p{N}])/iu))) dur = Math.round(+m[1] / 60 * 100) / 100;
+    else if ((m = cut(/(?<![\p{L}\p{N}])(?:trong\s*)(\d+(?:[.,]\d+)?)\s*h(?![\p{L}\p{N}])/iu))) dur = parseFloat(m[1].replace(",", "."));
+  }
+
+  // Giờ bắt đầu có mốc cụ thể
   if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2}):(\d{2})(?![\p{L}\p{N}])/u))) start = hm(adj(+m[1]), m[2]);
   if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2})[hg](\d{2})(?![\p{L}\p{N}])/iu))) start = hm(adj(+m[1]), m[2]);
-  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(?:lúc|từ|vào|at|@)\s*(\d{1,2})(?:\s*(?:h|giờ|g))?(?:\s*(am|pm))?(?![\p{L}\p{N}])/iu))) start = hm(m[2] ? ampm(+m[1], m[2]) : adj(+m[1]), 0);
+  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(?:lúc|từ|vào|at|@)\s*(\d{1,2})(?:\s*(?:h|giờ|g))?(?:\s*(sáng|trưa|chiều|tối|đêm|am|pm))?(?![\p{L}\p{N}])/iu))) {
+    const p = m[2];
+    if (p && /^(am|pm)$/i.test(p)) start = hm(ampm(+m[1], p), 0);
+    else { setPer(p); start = hm(adj(+m[1]), 0); }
+  }
   if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2})\s*(?:h|giờ|g)?\s*(am|pm)(?![\p{L}\p{N}])/iu))) start = hm(ampm(+m[1], m[2]), 0);
-  if (start === null && (m = cut(new RegExp("(?<![\\p{L}\\p{N}])(\\d{1,2})\\s*(?:h|giờ|g)?\\s*(" + PER + ")(?![\\p{L}\\p{N}])", "iu")))) { start = hm(adj(+m[1], m[2].toLowerCase()), 0); setPer(m[2]); }
-  if (dur === null) {
-    if (cut(/(?<![\p{L}\p{N}])(?:nửa|1\/2)\s*(?:tiếng|giờ)(?![\p{L}\p{N}])/iu)) dur = 0.5;
-    else if ((m = cut(/(?<![\p{L}\p{N}])(\d+(?:[.,]\d+)?)\s*(?:tiếng|giờ|gio|hrs?|hours?)(\s*rưỡi)?(?![\p{L}\p{N}])/iu))) dur = parseFloat(m[1].replace(",", ".")) + (m[2] ? 0.5 : 0);
-    else if ((m = cut(/(?<![\p{L}\p{N}])(\d+)\s*(?:phút|phut|min|p)(?![\p{L}\p{N}])/iu))) dur = Math.round(+m[1] / 60 * 100) / 100;
+  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2})\s*(?:h|giờ|g)?\s*(sáng|trưa|chiều|tối|đêm)(?![\p{L}\p{N}])/iu))) {
+    setPer(m[2]); start = hm(adj(+m[1]), 0);
   }
-  if ((m = cut(/(?<![\p{L}\p{N}])(\d{1,2}(?:[.,]\d+)?)h(?![\p{L}\p{N}])/iu))) {
-    const n = parseFloat(m[1].replace(",", "."));
-    if (start === null && (dur !== null || n > 4)) start = hm(adj(Math.floor(n)), Math.round((n % 1) * 60));
-    else if (dur === null) dur = n;
+
+  // Quét các chữ "Xh" hoặc "X.Xh" còn lại trong chuỗi
+  while ((m = cut(/(?<![\p{L}\p{N}])(\d{1,2}(?:[.,]\d+)?)\s*h(?![\p{L}\p{N}])/iu))) {
+    const val = parseFloat(m[1].replace(",", "."));
+    if (start === null && (val >= 6 || dur !== null)) {
+      start = hm(adj(Math.floor(val)), Math.round((val % 1) * 60));
+    } else if (dur === null) {
+      dur = val;
+    } else if (start === null) {
+      start = hm(adj(Math.floor(val)), Math.round((val % 1) * 60));
+    }
   }
+
   const key = ky(target);
-  if (!per) { const pw = w.match(WB(PER)); if (pw) per = pw[0].toLowerCase(); }
   if (start === null) {
     const dm = { sáng: "07:00", trưa: "12:00", chiều: "15:00", tối: "19:00", đêm: "21:00" };
     const lastEv = (S.ev[key] || []).filter(e => e.s).pop();
@@ -1416,9 +1467,12 @@ function parseNLPText(str) {
   if (dur === null) dur = (S.cfg && S.cfg.defDuration) || 2;
 
   // 3. Tên hoạt động, tác động, loại vốn
-  let title = w.replace(/(?<![\p{L}\p{N}])(?:lúc|từ|vào|at|@)(?![\p{L}\p{N}])/giu, " ").replace(/[,;]+/g, " ").replace(/\s+/g, " ").trim();
+  let title = w.replace(/(?<![\p{L}\p{N}])(?:lúc|từ|vào|at|@|trong)(?![\p{L}\p{N}])/giu, " ")
+               .replace(/[,;]+/g, " ")
+               .replace(/\s+/g, " ")
+               .trim();
   if (!title) title = "Hoạt động mới";
-  const mode = WB("họp|meeting|deadline|ot|tăng ca|làm việc|công việc|xử lý|áp lực|stress").test(title) ? "d" : "u";
+  const mode = WB("họp|meeting|deadline|ot|tăng ca|làm việc|công việc|xử lý|áp lực|stress|báo cáo").test(title) ? "d" : "u";
   const c = chkEvent(key, start, dur, -1);
   return { raw, title, targetDate: key, dateDesc: dateDesc + " (" + key.slice(5) + ")", startTime: start, duration: dur, capKey: guess(title), mode, err: c.err, hit: c.hit };
 }
@@ -1451,6 +1505,26 @@ function executeNLP() {
   save();
   input.value = "";
   handleNLPInput("");
+
+  // Tự động chuyển năm nếu hoạt động thuộc năm khác
+  const evtYear = parseInt(r.targetDate.slice(0, 4));
+  if (evtYear && evtYear !== activeYear) {
+    activeYear = evtYear;
+    yearData = getWeeksOfYear(activeYear);
+    W0 = yearData.w0;
+    W = yearData.weeks;
+    CW = wkNow();
+  }
+
+  // Tự động đồng bộ tuần và ngày để hiển thị ngay hoạt động vừa tạo
+  const targetWk = W.findIndex(m => {
+    const e = ad(m, 6);
+    return ky(m) <= r.targetDate && r.targetDate <= ky(e);
+  });
+  if (targetWk >= 0) sel = targetWk;
+  const dObj = new Date(r.targetDate + "T00:00");
+  timelineDayIdx = (dObj.getDay() + 6) % 7;
+
   draw();
   showToast(`Đã thêm: "${r.title}" vào ${r.dateDesc}`, "ok");
 }
@@ -2417,6 +2491,38 @@ const V = {
       `;
     }).join("");
 
+    const keywordCards = `
+      <div class="card" style="margin-top:16px;">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">🏷️ Từ Khóa Nhận Diện Tự Động (Auto-tagging Keywords)</h2>
+            <div class="card-sub">Khi bạn nhập trên thanh ghi nhanh (ví dụ: 'Mai 18h đá bóng 2 tiếng'), ứng dụng sẽ tìm các từ khóa này để tự động gán đúng loại vốn. Phân tách các từ bằng dấu phẩy.</div>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          ${S.caps.map(c => `
+            <div style="background:var(--card-subtle); padding:12px 14px; border-radius:var(--radius-md); border:1px solid var(--bd); border-left:4px solid ${c.c};">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span class="dot" style="background:${c.c}"></span>
+                  <b style="font-size:13.5px;">${esc(c.n)}</b>
+                  <span class="pill pill-cyan" style="font-size:11px;">${(c.kw || []).length} từ khóa</span>
+                </div>
+                <button type="button" class="btn btn-sm btn-ghost" onclick="resetCapKeywords('${c.k}')" style="font-size:11.5px; color:var(--tx-sec);">
+                  ⟲ Khôi phục mặc định
+                </button>
+              </div>
+              <input type="text"
+                     value="${esc((c.kw || []).join(', '))}"
+                     onchange="updateCapKeywords('${c.k}', this.value)"
+                     placeholder="Nhập các từ khóa phân cách bằng dấu phẩy (vd: gym, bơi, chạy bộ...)"
+                     style="width:100%; font-size:13px; background:var(--card);">
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+
     return `
       <div class="card">
         <div class="card-header">
@@ -2444,6 +2550,7 @@ const V = {
           </table>
         </div>
       </div>
+      ${keywordCards}
     `;
   },
 
@@ -2715,7 +2822,6 @@ function renderEditorSheet() {
       ` : `
         <div style="display:flex; justify-content:flex-end; align-items:center; margin-top:10px; gap:8px;">
           <button type="button" class="btn btn-ghost" onclick="closeEditor()">Hủy</button>
-          <button type="button" class="btn" onclick="saveEventFromForm(true)" title="Ctrl + Enter">Lưu &amp; thêm tiếp</button>
           <button type="button" class="btn btn-primary" onclick="saveEventFromForm()">Lưu</button>
         </div>
       `}
@@ -2807,13 +2913,33 @@ function updateCap(k, field, val) {
   showToast("Đã cập nhật loại vốn", "ok");
 }
 
+function updateCapKeywords(k, val) {
+  const cap = CM(k);
+  if (!cap) return;
+  cap.kw = String(val || "").split(/[,;\n]+/).map(s => s.trim().toLowerCase()).filter(Boolean);
+  save();
+  draw();
+  showToast(`Đã lưu ${cap.kw.length} từ khóa cho "${cap.n}"`, "ok");
+}
+
+function resetCapKeywords(k) {
+  const cap = CM(k);
+  if (!cap) return;
+  const def = DCAP.find(d => d[0] === k);
+  cap.kw = def && def[4] ? [...def[4]] : [];
+  save();
+  draw();
+  showToast(`Đã khôi phục từ khóa mặc định cho "${cap.n}"`, "ok");
+}
+
 function addCap() {
   const newKey = "c" + Date.now().toString(36);
   S.caps.push({
     k: newKey,
     n: "Vốn mới",
     c: PALETTE[S.caps.length % PALETTE.length],
-    tg: 0
+    tg: 0,
+    kw: []
   });
   save();
   draw();
@@ -2835,13 +2961,27 @@ function deleteCap(k) {
 }
 
 
-function cleanCap(c) { return c && SAFE_K.test(c.k) ? { k: c.k, n: String(c.n || "Vốn").slice(0, 60), c: /^#[0-9a-f]{6}$/i.test(c.c) ? c.c : "#888888", tg: Math.max(0, +c.tg || 0) } : null; }
+function cleanCap(c) {
+  if (!c || !SAFE_K.test(c.k)) return null;
+  const def = DCAP.find(d => d[0] === c.k);
+  const defKw = def && def[4] ? def[4] : [];
+  let kw = Array.isArray(c.kw)
+    ? c.kw.map(x => String(x).trim().toLowerCase()).filter(Boolean)
+    : (typeof c.kw === "string" ? c.kw.split(/[,;\n]+/).map(x => x.trim().toLowerCase()).filter(Boolean) : [...defKw]);
+  return {
+    k: c.k,
+    n: String(c.n || "Vốn").slice(0, 60),
+    c: /^#[0-9a-f]{6}$/i.test(c.c) ? c.c : "#888888",
+    tg: Math.max(0, +c.tg || 0),
+    kw
+  };
+}
 function cleanEv(e) { return e && typeof e.t === "string" && +e.h > 0 && +e.h <= 24 && SAFE_K.test(e.c || "") ? { t: e.t.slice(0, 120), c: e.c, m: e.m === "d" ? "d" : "u", h: +e.h, s: /^\d\d:\d\d$/.test(e.s || "") ? e.s : "", ...(SAFE_K.test(e.r || "") ? { r: e.r } : {}) } : null; }
 // Chuẩn hóa mọi dữ liệu đọc từ localStorage hoặc tệp sao lưu (khóa an toàn, giá trị hợp lệ, bù trường thiếu)
 function cleanState(d) {
   if (!d || typeof d !== "object" || !d.ev || typeof d.ev !== "object" || !Array.isArray(d.caps)) return null;
   let caps = d.caps.map(cleanCap).filter(Boolean);
-  if (!caps.length) caps = DCAP.map(c => ({ k: c[0], n: c[1], c: c[2], tg: c[3] }));
+  if (!caps.length) caps = DCAP.map(c => ({ k: c[0], n: c[1], c: c[2], tg: c[3], kw: [...c[4]] }));
   const ev = {}, bl = {}, mem = {};
   Object.keys(d.ev).forEach(k => { if (/^\d{4}-\d\d-\d\d$/.test(k) && Array.isArray(d.ev[k])) { const l = d.ev[k].map(cleanEv).filter(Boolean); if (l.length) ev[k] = l; } });
   Object.keys(d.bl || {}).forEach(k => { if (SAFE_K.test(k) && d.bl[k]) bl[k] = { u: Math.max(0, +d.bl[k].u || 0), d: Math.max(0, +d.bl[k].d || 0) }; });
@@ -2918,26 +3058,10 @@ function importData(inputEl) {
 /* ==========================================================================
    11. RENDER & KHỞI CHẠY
    ========================================================================== */
-/* Nhận định, đánh dấu số vừa thay đổi (khôi phục) */
-function conclCard() {
-  const nn0 = Math.max(0, W.findIndex((_, i) => evs(i).length));
-  const from = N === 0 ? Math.min(nn0, sel) : Math.max(0, sel - N + 1), nn = sel - from + 1;
-  const D = S.caps.map(c => { let u = 0, d = 0; for (let i = from; i <= sel; i++) { const w = wk(i, c.k); u += w.u; d += w.d; } u /= nn; d /= nn; return { c, u, d, p: c.tg ? u / c.tg : null }; });
-  const T = D.filter(x => x.p != null), ok = T.filter(x => x.p >= 1).length;
-  const worst = T.filter(x => x.p < 1).sort((a, b) => (b.c.tg - b.u) - (a.c.tg - a.u))[0];
-  const drain = D.filter(x => x.d > 0 && x.d > x.u);
-  const chip = x => x.p == null ? "–" : x.p >= 1 ? '<span class="pill pill-ok">Đạt</span>' : x.p >= .6 ? '<span class="pill">Gần đạt</span>' : '<span class="pill pill-bad">Thiếu</span>';
-  return `<div class="card"><div class="card-header"><div><h2 class="card-title">Nhận định</h2></div></div>
-    <p>${T.length ? `<b>${ok}/${T.length}</b> vốn đạt mục tiêu (trung bình ${nn} tuần đến W${sel + 1}).` : "Chưa đặt mục tiêu cho vốn nào. Vào tab Danh mục vốn để đặt mục tiêu ▲/tuần."}${CW >= 0 && sel > CW ? " Đây là kế hoạch, chưa phải thực tế." : ""}</p>
-    ${worst ? `<p>Thiếu nhiều nhất: <b>${esc(worst.c.n)}</b>, trung bình ${r1(worst.u)}h so với mục tiêu ${r1(worst.c.tg)}h (thiếu ${r1(worst.c.tg - worst.u)}h/tuần).</p>` : ""}
-    ${drain.length ? `<p>Đang tiêu nhiều hơn nạp: <b>${drain.map(x => esc(x.c.n)).join(", ")}</b>.</p>` : ""}
-    <div style="display:flex;flex-wrap:wrap;gap:8px 18px">${D.map(x => `<span><span class="dot" style="background:${x.c.c}"></span> ${esc(x.c.n)} ${chip(x)}</span>`).join("")}</div></div>`;
-}
+/* Đánh dấu số vừa thay đổi */
 const _su = V.su;
 V.su = function () {
-  let h = _su.call(V);
-  const card = conclCard(), re = /<div class="card">\s*<div class="card-header">\s*<div>\s*<h2 class="card-title">Bánh Xe Cuộc Đời/;
-  h = re.test(h) ? h.replace(re, m => card + m) : card + h;
+  const h = _su.call(V);
   // Không gắn thẻ <span> bên trong <svg>: parser HTML sẽ phá vỡ cây SVG (bánh xe bị vỡ)
   let n = 0;
   return h.split(/(<svg[\s\S]*?<\/svg>)/).map(part => part.startsWith("<svg") ? part :
@@ -3020,7 +3144,7 @@ document.addEventListener("keydown", e => {
   }
   if ((e.ctrlKey || e.metaKey) && e.key === "Enter" && ed) {
     e.preventDefault();
-    saveEventFromForm(true);
+    saveEventFromForm();
   }
   // Focus trap trong modal
   if (e.key === "Tab") {
