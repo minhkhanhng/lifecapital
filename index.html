@@ -42,7 +42,7 @@
   --card-subtle: #fcf8fa;
   --tx: #251d21;
   --tx-sec: #594d53;
-  --mu: #85767d;
+  --mu: #796b71;
   --bd: #ebdde2;
   --bd-focus: #E0A3BB;
   --bar: #F4DFE6;              /* Thanh tiến trình / track nền */
@@ -59,8 +59,8 @@
   --shadow-md: 0 4px 14px rgba(100, 40, 65, 0.07);
   --shadow-lg: 0 12px 32px rgba(100, 40, 65, 0.14);
 
-  --on-ac: #421629;            /* Chữ trên nền hồng phấn --ac: luôn tối để rõ nét */
-  --on-olive: #ffffff;         /* Chữ trên nền xanh oliu đậm --c-olive */
+  --on-ac: #421629; --ac-text: #8a3f5f; --ok-text: #6c732a; --wa-text: #906525;            /* Chữ trên nền hồng phấn --ac: luôn tối để rõ nét */
+  --on-olive: #1f2608;         /* Chữ trên nền xanh oliu đậm --c-olive */
   --on-cyan: #1a4245;          /* Chữ trên nền xanh mây --c-cyan */
   --on-blush: #642841;         /* Chữ trên nền blush --c-blush */
 
@@ -105,7 +105,7 @@
     --shadow-md: 0 4px 14px rgba(0,0,0,0.4);
     --shadow-lg: 0 12px 32px rgba(0,0,0,0.6);
 
-    --on-ac: #381220;          /* Chữ trên nền hồng phấn --ac: luôn tối để rõ nét */
+    --on-ac: #381220; --ac-text: #E0A3BB; --ok-text: #C5CC82; --wa-text: #e5a13c;          /* Chữ trên nền hồng phấn --ac: luôn tối để rõ nét */
     --on-olive: #242c09;       /* Chữ trên nền xanh oliu sáng #C5CC82 */
     --on-cyan: #a3e8ee;        /* Chữ sáng trên nền cyan tối */
     --on-blush: #fcebf2;       /* Chữ sáng trên nền blush tối */
@@ -145,7 +145,7 @@
   --shadow-md: 0 4px 14px rgba(0,0,0,0.4);
   --shadow-lg: 0 12px 32px rgba(0,0,0,0.6);
 
-  --on-ac: #381220;          /* Chữ trên nền hồng phấn --ac: luôn tối để rõ nét */
+  --on-ac: #381220; --ac-text: #E0A3BB; --ok-text: #C5CC82; --wa-text: #e5a13c;          /* Chữ trên nền hồng phấn --ac: luôn tối để rõ nét */
   --on-olive: #242c09;       /* Chữ trên nền xanh oliu sáng #C5CC82 */
   --on-cyan: #a3e8ee;        /* Chữ sáng trên nền cyan tối */
   --on-blush: #fcebf2;       /* Chữ sáng trên nền blush tối */
@@ -201,7 +201,7 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   background: var(--ac-soft);
-  color: var(--ac);
+  color: var(--ac-text);
   padding: 3px 8px;
   border-radius: var(--radius-full);
 }
@@ -414,7 +414,7 @@ input[type="time"] { min-width: 105px; }
   font-size: 12px;
   font-weight: 500;
 }
-.pill.pill-ok { background: var(--ok-soft); color: var(--ok); }
+.pill.pill-ok { background: var(--ok-soft); color: var(--ok-text); }
 .pill.pill-bad { background: var(--bad-soft); color: var(--bad); }
 .pill.pill-cyan { background: var(--c-cyan); color: var(--on-cyan); }
 .pill.pill-blush { background: var(--c-blush); color: var(--on-blush); }
@@ -466,7 +466,7 @@ input[type="time"] { min-width: 105px; }
 }
 .battery-badge.positive {
   background: var(--ok-soft);
-  color: var(--ok);
+  color: var(--ok-text);
 }
 .battery-badge.negative {
   background: var(--bad-soft);
@@ -637,7 +637,7 @@ input[type="time"] { min-width: 105px; }
   justify-content: space-between;
   align-items: center;
 }
-.event-mode-up { color: var(--ok); font-weight: 700; }
+.event-mode-up { color: var(--ok-text); font-weight: 700; }
 .event-mode-down { color: var(--bad); font-weight: 700; }
 
 /* Dòng thời gian 24h */
@@ -766,7 +766,7 @@ tr.current-week td {
 }
 tr.current-week td:first-child, tr.current-week td:nth-child(2) {
   font-weight: 700;
-  color: var(--ac);
+  color: var(--ac-text);
 }
 tr.past-week td {
   opacity: 0.85;
@@ -992,6 +992,22 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
 :focus-visible { outline: 2px solid var(--ac); outline-offset: 2px; }
 .chg { font-weight: 700; background: var(--ac-soft); border-radius: 4px; padding: 0 3px; box-shadow: 0 0 0 1px var(--ac); }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+.chg { font-weight: 700; background: color-mix(in srgb, var(--ac) 22%, transparent); border-radius: 4px; padding: 0 3px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ac) 45%, transparent); }
+.set-sec { padding: 14px 0; border-bottom: 1px solid var(--bd); }
+.set-sec:first-child { padding-top: 0; }
+.set-sec:last-child { border-bottom: none; padding-bottom: 0; }
+.set-h { margin: 0 0 6px; font-size: 11.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--mu); }
+.set-danger .set-h { color: var(--bad); }
+.set-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 6px 0; }
+.set-lbl { display: flex; flex-direction: column; gap: 2px; font-size: 13.5px; color: var(--tx); }
+.set-lbl small { font-size: 12px; font-weight: 400; color: var(--mu); }
+.set-note { margin: 0 0 10px; font-size: 12.5px; color: var(--mu); }
+.set-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+.set-inline { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+.set-row select { min-width: 0; width: auto; }
+.set-seg { display: inline-flex; border: 1px solid var(--bd); border-radius: var(--radius-full); overflow: hidden; }
+.set-seg button { border: 0; background: transparent; color: var(--tx); padding: 6px 12px; font: inherit; font-size: 13px; cursor: pointer; }
+.set-seg button.on { background: var(--ac); color: var(--on-ac); font-weight: 600; }
 </style>
 <script>
   try {
@@ -1072,8 +1088,8 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
 <div class="modal-overlay" id="settingsModalOverlay" onclick="handleSettingsBackdropClick(event)">
   <div class="modal-sheet" id="settingsModalSheet" style="max-width:640px;" role="dialog" aria-modal="true" aria-labelledby="settingsSheetTitle">
     <div class="modal-header">
-      <h3 class="modal-title" id="settingsSheetTitle">⚙️ Cài Đặt & Dữ Liệu</h3>
-      <button type="button" class="btn btn-sm btn-ghost" onclick="closeSettingsModal()" title="Đóng (ESC)">✕</button>
+      <h3 class="modal-title" id="settingsSheetTitle">Cài đặt</h3>
+      <button type="button" class="btn btn-sm btn-ghost" onclick="closeSettingsModal()" title="Đóng (ESC)" aria-label="Đóng">✕</button>
     </div>
     <div class="modal-body" id="settingsSheetBody"></div>
   </div>
@@ -1170,10 +1186,18 @@ function defState() {
   };
 }
 
-let S;
+const SAFE_K = /^(?!__proto__$)[\w-]{1,24}$/;
+let S, rawSaved = null;
+try { rawSaved = localStorage.getItem("lc2"); } catch (e) {}
 try {
-  S = cleanState(JSON.parse(localStorage.getItem("lc2") || "null")) || defState();
+  S = rawSaved ? cleanState(JSON.parse(rawSaved)) : null;
 } catch (e) {
+  console.error("Không đọc được dữ liệu đã lưu:", e);
+  S = null;
+}
+if (!S) {
+  // Dữ liệu có nhưng không đọc được: giữ lại bản gốc để có thể cứu, rồi mới dùng dữ liệu mặc định
+  if (rawSaved) { try { localStorage.setItem("lc2_unreadable", rawSaved); } catch (e) {} }
   S = defState();
 }
 
@@ -1389,7 +1413,7 @@ function parseNLPText(str) {
     const lastEv = (S.ev[key] || []).filter(e => e.s).pop();
     start = per ? dm[per] : lastEv ? tt(lastEv.s, lastEv.h) : "07:00";
   }
-  if (dur === null) dur = 2;
+  if (dur === null) dur = (S.cfg && S.cfg.defDuration) || 2;
 
   // 3. Tên hoạt động, tác động, loại vốn
   let title = w.replace(/(?<![\p{L}\p{N}])(?:lúc|từ|vào|at|@)(?![\p{L}\p{N}])/giu, " ").replace(/[,;]+/g, " ").replace(/\s+/g, " ").trim();
@@ -1439,95 +1463,84 @@ function renderRadarChartSVG(weekIdx) {
   const numCaps = caps.length;
   if (numCaps < 3) return `<p style="color:var(--mu); text-align:center; padding:20px;">Cần ít nhất 3 loại vốn để vẽ biểu đồ radar.</p>`;
 
-  // Tọa độ trung tâm và bán kính tối ưu (không bị cắt chữ)
-  const cx = 250, cy = 160, r = 95;
+  const VB = 560, cx = 280, cy = 160, r = 95;
   const angles = caps.map((_, i) => -Math.PI / 2 + (i * 2 * Math.PI / numCaps));
 
   // Vòng cấp độ: 33%, 66%, 100% mục tiêu
-  const levels = [0.33, 0.66, 1.0];
-  let levelPolygons = levels.map(lvl => {
+  const levelPolygons = [0.33, 0.66, 1.0].map(lvl => {
     const pts = angles.map(a => `${(cx + r * lvl * Math.cos(a)).toFixed(1)},${(cy + r * lvl * Math.sin(a)).toFixed(1)}`).join(" ");
     const isTarget = lvl === 1.0;
-    return `<polygon points="${pts}" fill="none" stroke="${isTarget ? 'var(--ac)' : 'var(--bd)'}" stroke-width="${isTarget ? '1.5' : '1'}" stroke-dasharray="${isTarget ? '' : '3,3'}" opacity="${isTarget ? '0.9' : '0.6'}" />`;
+    return `<polygon points="${pts}" fill="none" stroke="${isTarget ? 'var(--ac)' : 'var(--bd)'}" stroke-width="${isTarget ? '1.5' : '1'}" stroke-dasharray="${isTarget ? '' : '3,3'}" opacity="${isTarget ? '0.9' : '0.8'}" />`;
   }).join("");
 
-  // Trục nan hoa
-  let axisLines = angles.map(a => {
-    const x2 = (cx + r * Math.cos(a)).toFixed(1);
-    const y2 = (cy + r * Math.sin(a)).toFixed(1);
-    return `<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="var(--bd)" stroke-width="1" opacity="0.7" />`;
-  }).join("");
+  const axisLines = angles.map(a => `<line x1="${cx}" y1="${cy}" x2="${(cx + r * Math.cos(a)).toFixed(1)}" y2="${(cy + r * Math.sin(a)).toFixed(1)}" stroke="var(--bd)" stroke-width="1" opacity="0.7" />`).join("");
 
-  // Nhãn tỷ lệ trên trục dọc
   const levelLabels = `
-    <text x="${cx + 4}" y="${(cy - r * 0.33).toFixed(1)}" font-size="9" fill="var(--mu)" opacity="0.8">33%</text>
-    <text x="${cx + 4}" y="${(cy - r * 0.66).toFixed(1)}" font-size="9" fill="var(--mu)" opacity="0.8">66%</text>
-    <text x="${cx + 4}" y="${(cy - r * 1.0).toFixed(1)}" font-size="9" font-weight="600" fill="var(--ac)">100%</text>
-  `;
+    <text x="${cx + 13}" y="${(cy - r * 0.33).toFixed(1)}" font-size="10" fill="var(--mu)">33%</text>
+    <text x="${cx + 13}" y="${(cy - r * 0.66).toFixed(1)}" font-size="10" fill="var(--mu)">66%</text>
+    <text x="${cx + 13}" y="${(cy - r).toFixed(1)}" font-size="10" font-weight="600" fill="var(--ac-text)">100%</text>`;
 
-  // Điểm dữ liệu (xử lý an toàn khi c.tg = 0 hoặc w.u = 0)
-  const dataPoints = caps.map((c, i) => {
+  // Số liệu từng vốn. Vốn chưa đặt mục tiêu KHÔNG được so với mốc tùy ý: đặt ở tâm (marker rỗng) và không tính vào điểm cân bằng.
+  const stats = caps.map(c => {
     const w = wk(weekIdx, c.k);
-    const target = c.tg || 0;
-    const benchmark = target > 0 ? target : Math.max(8, w.u);
-    const ratio = benchmark > 0 ? Math.min(1.25, Math.max(0, w.u / benchmark)) : 0;
-    const a = angles[i];
-    return {
-      x: cx + r * ratio * Math.cos(a),
-      y: cy + r * ratio * Math.sin(a),
-      val: w.u,
-      target,
-      ratio,
-      cap: c
-    };
+    const has = c.tg > 0;
+    return { c, u: w.u, has, pct: has ? Math.round(w.u / c.tg * 100) : null, ratio: has ? Math.min(1, Math.max(0, w.u / c.tg)) : 0 };
   });
-
-  const polyStr = dataPoints.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
-
-  // Nhãn tên vốn và số giờ (tính toán offset chống tràn khung)
-  let labels = caps.map((c, i) => {
-    const a = angles[i];
-    const cos = Math.cos(a), sin = Math.sin(a);
-    const offset = r + 30;
-    const lx = cx + offset * cos;
-    const ly = cy + offset * sin;
-    const anchor = Math.abs(cos) < 0.25 ? "middle" : cos > 0 ? "start" : "end";
-    const w = wk(weekIdx, c.k);
-    const pct = c.tg > 0 ? Math.round(w.u / c.tg * 100) : null;
-    const statusColor = pct == null ? "var(--mu)" : pct >= 100 ? "var(--ok)" : pct >= 60 ? "var(--wa)" : "var(--bad)";
-
-    return `
-      <g>
-        <text x="${lx.toFixed(1)}" y="${(ly - 2).toFixed(1)}" text-anchor="${anchor}" font-size="11.5" font-weight="600" fill="var(--tx)">
-          ${esc(c.n)}
-        </text>
-        <text x="${lx.toFixed(1)}" y="${(ly + 12).toFixed(1)}" text-anchor="${anchor}" font-size="10" fill="${statusColor}">
-          ${r1(w.u)}h ${c.tg ? '/ ' + r1(c.tg) + 'h (' + pct + '%)' : '(chưa đặt MT)'}
-        </text>
-      </g>
-    `;
+  const pts = stats.map((s, i) => ({ s, x: cx + r * s.ratio * Math.cos(angles[i]), y: cy + r * s.ratio * Math.sin(angles[i]) }));
+  const polyStr = pts.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+  const dots = pts.map(p => {
+    const s = p.s, x = p.x.toFixed(1), y = p.y.toFixed(1);
+    if (!s.has) return `<circle cx="${x}" cy="${y}" r="4.5" fill="var(--card)" stroke="${s.c.c}" stroke-width="2" />`;
+    const ring = s.pct >= 100 ? `<circle cx="${x}" cy="${y}" r="8.5" fill="none" stroke="var(--ok-text)" stroke-width="1.8" />` : "";
+    return ring + `<circle cx="${x}" cy="${y}" r="4.5" fill="${s.c.c}" stroke="var(--card)" stroke-width="1.5" />`;
   }).join("");
 
-  // Tính điểm cân đối của bánh xe cuộc đời
-  const ratios = dataPoints.map(p => p.target > 0 ? Math.min(1, p.val / p.target) : Math.min(1, p.val / 8));
-  const avgR = ratios.reduce((a, b) => a + b, 0) / (ratios.length || 1);
-  const minR = Math.min(...ratios);
-  const balanceScore = Math.round((avgR * 0.6 + minR * 0.4) * 100);
-  const balanceLabel = balanceScore >= 80 ? "Bánh xe rất tròn và cân đối" : balanceScore >= 50 ? "Khá cân đối, cần nạp thêm vốn lõm" : "Bánh xe bị méo, cần tái cân bằng";
+  // Nhãn: cắt tên theo chỗ còn trống để không tràn khung, tên đầy đủ nằm trong <title>
+  const fs1 = numCaps > 10 ? 10 : 11.5, fs2 = numCaps > 10 ? 9 : 10.5, charW = fs1 * 0.6;
+  const labels = stats.map((s, i) => {
+    const cos = Math.cos(angles[i]), sin = Math.sin(angles[i]);
+    const lx = cx + (r + 32) * cos, ly = cy + (r + 32) * sin;
+    const anchor = Math.abs(cos) < 0.25 ? "middle" : cos > 0 ? "start" : "end";
+    const avail = anchor === "middle" ? 2 * Math.min(lx, VB - lx) : anchor === "start" ? VB - lx - 4 : lx - 4;
+    const maxCh = Math.max(6, Math.floor(avail / charW));
+    const name = s.c.n.length > maxCh ? s.c.n.slice(0, maxCh - 1).trimEnd() + "…" : s.c.n;
+    const statusColor = s.pct == null ? "var(--mu)" : s.pct >= 100 ? "var(--ok-text)" : s.pct >= 60 ? "var(--wa-text)" : "var(--bad)";
+    const sub = s.has ? `${r1(s.u)}h / ${r1(s.c.tg)}h (${s.pct}%)` : `${r1(s.u)}h (chưa đặt mục tiêu)`;
+    return `<g><title>${esc(s.c.n)}: ${sub}</title>
+      <text x="${lx.toFixed(1)}" y="${(ly - 2).toFixed(1)}" text-anchor="${anchor}" font-size="${fs1}" font-weight="600" fill="var(--tx)">${esc(name)}</text>
+      <text x="${lx.toFixed(1)}" y="${(ly + 12).toFixed(1)}" text-anchor="${anchor}" font-size="${fs2}" fill="${statusColor}">${sub}</text></g>`;
+  }).join("");
 
+  // Điểm cân bằng: chỉ tính các vốn đã đặt mục tiêu
+  const tg = stats.filter(s => s.has);
+  let balanceHtml;
+  if (!tg.length) {
+    balanceHtml = `<span class="pill pill-blush">🎯 Chưa tính điểm cân bằng</span>
+      <span style="color:var(--mu); font-size:12px;">Hãy đặt mục tiêu ▲/tuần ở tab Danh mục vốn.</span>`;
+  } else {
+    const ratios = tg.map(s => Math.min(1, s.u / s.c.tg));
+    const avgR = ratios.reduce((a, b) => a + b, 0) / ratios.length, minR = Math.min(...ratios);
+    const score = Math.round((avgR * 0.6 + minR * 0.4) * 100);
+    const label = score >= 80 ? "Bánh xe rất tròn và cân đối" : score >= 50 ? "Khá cân đối, cần nạp thêm vốn còn thiếu" : "Bánh xe bị méo, cần tái cân bằng";
+    const weakest = tg[ratios.indexOf(minR)];
+    balanceHtml = `<span class="pill pill-blush">🎯 Điểm cân bằng bánh xe: <b>${score}%</b></span>
+      <span style="color:var(--mu); font-size:12px;">${label}.${score < 80 ? ` Yếu nhất: <b>${esc(weakest.c.n)}</b> (${Math.round(minR * 100)}%).` : ""}${tg.length < stats.length ? ` Chưa tính ${stats.length - tg.length} vốn không có mục tiêu.` : ""}</span>`;
+  }
+
+  const aria = "Bánh xe cuộc đời: " + stats.map(s => `${s.c.n} ${s.has ? s.pct + "%" : "chưa đặt mục tiêu"}`).join(", ");
   return `
     <div class="radar-box" style="flex-direction:column; gap:12px;">
-      <svg class="radar-svg" viewBox="0 0 500 330" style="max-width:440px; overflow:visible;">
+      <svg class="radar-svg" viewBox="0 0 ${VB} 330" role="img" aria-label="${esc(aria)}" style="max-width:520px; overflow:visible;">
         ${levelPolygons}
         ${axisLines}
         ${levelLabels}
         <polygon points="${polyStr}" fill="rgba(224, 163, 187, 0.28)" stroke="var(--ac)" stroke-width="2.5" />
-        ${dataPoints.map(p => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4.5" fill="${p.cap.c}" stroke="var(--card)" stroke-width="1.5" />`).join("")}
+        ${dots}
         ${labels}
       </svg>
+      <div style="font-size:11.5px; color:var(--mu); text-align:center;">Điểm nằm trên vòng 100% là đã đạt mục tiêu (có viền xanh nếu đạt hoặc vượt) · chấm rỗng: chưa đặt mục tiêu</div>
       <div style="display:flex; justify-content:center; align-items:center; gap:12px; font-size:12.5px; margin-top:6px; flex-wrap:wrap; text-align:center;">
-        <span class="pill pill-blush">🎯 Điểm cân bằng bánh xe: <b>${balanceScore}%</b></span>
-        <span style="color:var(--mu); font-size:12px;">${balanceLabel}</span>
+        ${balanceHtml}
       </div>
     </div>
   `;
@@ -1537,8 +1550,9 @@ function renderRadarChartSVG(weekIdx) {
    6. TÍNH NĂNG 8: SUNDAY WEEKLY REVIEW MODAL (TỔNG KẾT TUẦN)
    ========================================================================== */
 function closeReviewModal() {
-  $("reviewModalOverlay").classList.remove("open");
-  if (LF && LF.focus) {
+  const ov = $("reviewModalOverlay"), wasOpen = ov.classList.contains("open");
+  ov.classList.remove("open");
+  if (wasOpen && LF && LF.focus) {
     try { LF.focus(); } catch (e) {}
   }
 }
@@ -1635,7 +1649,7 @@ function openWeeklyReviewModal(wIdx = sel) {
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
           ${CW >= 0 && wIdx !== CW ? `
-            <button type="button" class="btn btn-sm btn-ghost" onclick="openWeeklyReviewModal(CW)" style="color:var(--ac); font-weight:600; font-size:12px;">
+            <button type="button" class="btn btn-sm btn-ghost" onclick="openWeeklyReviewModal(CW)" style="color:var(--ac-text); font-weight:600; font-size:12px;">
               Về tuần hiện tại (W${CW + 1})
             </button>
           ` : `<span class="pill pill-ok" style="font-size:11px;">Tuần hiện tại</span>`}
@@ -1647,7 +1661,7 @@ function openWeeklyReviewModal(wIdx = sel) {
         <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
           <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Tổng Nạp / Tiêu</div>
           <div style="font:700 20px Georgia, serif; margin-top:4px;">
-            <span style="color:var(--ok)">▲${r1(totalU)}h</span> · <span style="color:var(--bad)">▼${r1(totalD)}h</span>
+            <span style="color: var(--ok-text)">▲${r1(totalU)}h</span> · <span style="color:var(--bad)">▼${r1(totalD)}h</span>
           </div>
           <small style="color:var(--tx-sec)">Cán cân: <b>${netEnergy >= 0 ? '+' : ''}${r1(netEnergy)}h</b></small>
         </div>
@@ -1781,31 +1795,19 @@ function switchTab(tabId) {
 }
 
 function getThemePreference() {
-  return localStorage.getItem("lc_theme") || "auto";
+  try { return localStorage.getItem("lc_theme") || "auto"; } catch (e) { return "auto"; }
 }
 
 function setThemePreference(mode) {
   const root = document.documentElement;
   if (mode === "auto") {
     root.removeAttribute("data-theme");
-    localStorage.setItem("lc_theme", "auto");
+    try { localStorage.setItem("lc_theme", "auto"); } catch (e) {}
   } else {
     root.setAttribute("data-theme", mode);
-    localStorage.setItem("lc_theme", mode);
+    try { localStorage.setItem("lc_theme", mode); } catch (e) {}
   }
-  updateThemeButton();
   renderSettingsModal();
-}
-
-function toggleTheme() {
-  const cur = getThemePreference();
-  const isDarkNow = document.documentElement.getAttribute("data-theme") === "dark" ||
-    (!document.documentElement.getAttribute("data-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
-  setThemePreference(isDarkNow ? "light" : "dark");
-}
-
-function updateThemeButton() {
-  // Theme indicator in settings or elsewhere
 }
 
 function openSettingsModal() {
@@ -1815,8 +1817,9 @@ function openSettingsModal() {
 }
 
 function closeSettingsModal() {
-  $("settingsModalOverlay").classList.remove("open");
-  if (LF && LF.focus) {
+  const ov = $("settingsModalOverlay"), wasOpen = ov.classList.contains("open");
+  ov.classList.remove("open");
+  if (wasOpen && LF && LF.focus) {
     try { LF.focus(); } catch (e) {}
   }
 }
@@ -1843,123 +1846,80 @@ function setBurnoutThreshold(val) {
 function resetToDefaultData() {
   if (!confirm("⚠️ CẢNH BÁO NGUY HIỂM:\nBạn có chắc chắn muốn xóa TOÀN BỘ dữ liệu đã ghi và đưa ứng dụng về trạng thái ban đầu?\n\nKhuyến nghị: Hãy nhấn 'Xuất tệp sao lưu (.json)' trước khi xóa!")) return;
   if (!confirm("Xác nhận lần cuối: Mọi hoạt động ghi chép sẽ bị xóa vĩnh viễn trên thiết bị này. Tiếp tục?")) return;
+  const keepLb = S.lb;
   S = defState();
+  S.ev = {};
+  S.lb = keepLb;
   save();
   draw(true);
   closeSettingsModal();
-  showToast("Đã đưa dữ liệu về trạng thái ban đầu!", "ok");
+  showToast("Đã xóa toàn bộ hoạt động. Danh mục vốn được đặt lại mặc định.", "ok");
 }
 
 function renderSettingsModal() {
   const curTheme = getThemePreference();
-  const totalEvents = Object.values(S.ev).flat().length;
-  const storageKB = (JSON.stringify(localStorage).length / 1024).toFixed(1);
-  const defDur = (S.cfg && S.cfg.defDuration) ? S.cfg.defDuration : 2;
-  const burnH = (S.cfg && S.cfg.burnoutHours) ? S.cfg.burnoutHours : 6;
+  const total = Object.values(S.ev).flat().length;
+  let kb = "0.0";
+  try { kb = ((localStorage.getItem("lc2") || "").length / 1024).toFixed(1); } catch (e) {}
+  const defDur = (S.cfg && S.cfg.defDuration) || 2;
+  const burnH = (S.cfg && S.cfg.burnoutHours) || 6;
+  const opt = (v, cur, label) => `<option value="${v}" ${cur === v ? "selected" : ""}>${label}</option>`;
+  const seg = (v, label) => `<button type="button" class="${curTheme === v ? "on" : ""}" aria-pressed="${curTheme === v}" onclick="setThemePreference('${v}')">${label}</button>`;
+  const backup = S.lb ? `sao lưu gần nhất ${new Date(S.lb).toLocaleString("vi-VN")}` : `<span style="color:var(--bad)">chưa sao lưu lần nào</span>`;
 
-  const html = `
-    <div style="display:flex; flex-direction:column; gap:18px;">
-      <!-- NHÓM 1: GIAO DIỆN -->
-      <div style="background:var(--card-subtle); padding:14px; border-radius:var(--radius-md); border:1px solid var(--bd);">
-        <div style="font-weight:600; font-size:14px; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
-          <span>🎨 Giao Diện & Hiển Thị</span>
-        </div>
-        <div style="font-size:12.5px; color:var(--mu); margin-bottom:12px;">
-          Chọn phong cách hiển thị phù hợp với thị giác của bạn.
-        </div>
-        <div class="row" style="gap:8px;">
-          <button type="button" class="btn btn-sm ${curTheme === 'light' ? 'btn-primary' : 'btn-ghost'}" onclick="setThemePreference('light')">
-            ☀️ Sáng
-          </button>
-          <button type="button" class="btn btn-sm ${curTheme === 'dark' ? 'btn-primary' : 'btn-ghost'}" onclick="setThemePreference('dark')">
-            🌙 Tối
-          </button>
-          <button type="button" class="btn btn-sm ${curTheme === 'auto' ? 'btn-primary' : 'btn-ghost'}" onclick="setThemePreference('auto')">
-            🌓 Theo hệ thống
-          </button>
+  $("settingsSheetBody").innerHTML = `
+    <section class="set-sec">
+      <h4 class="set-h">Giao diện</h4>
+      <div class="set-row">
+        <span class="set-lbl">Chế độ hiển thị</span>
+        <div class="set-seg">${seg("light", "Sáng")}${seg("dark", "Tối")}${seg("auto", "Theo hệ thống")}</div>
+      </div>
+    </section>
+
+    <section class="set-sec">
+      <h4 class="set-h">Mặc định</h4>
+      <div class="set-row">
+        <label class="set-lbl" for="setDur">Thời lượng hoạt động mới</label>
+        <select id="setDur" onchange="setDefaultDuration(+this.value)">
+          ${opt(0.5, defDur, "30 phút")}${opt(1, defDur, "1 giờ")}${opt(1.5, defDur, "1,5 giờ")}${opt(2, defDur, "2 giờ")}${opt(3, defDur, "3 giờ")}
+        </select>
+      </div>
+      <div class="set-row">
+        <label class="set-lbl" for="setBurn">Cảnh báo kiệt sức<small>Khi một ngày tiêu hao từ mức này trở lên</small></label>
+        <select id="setBurn" onchange="setBurnoutThreshold(+this.value)">
+          ${opt(5, burnH, "5 giờ")}${opt(6, burnH, "6 giờ")}${opt(7, burnH, "7 giờ")}${opt(8, burnH, "8 giờ")}
+        </select>
+      </div>
+    </section>
+
+    <section class="set-sec">
+      <h4 class="set-h">Dữ liệu</h4>
+      <p class="set-note">${total} hoạt động · ${kb} KB · ${backup}</p>
+      <div class="set-actions">
+        <button type="button" class="btn btn-primary btn-sm" onclick="exportData('json')">Sao lưu (.json)</button>
+        <button type="button" class="btn btn-sm" onclick="exportData('csv')">Xuất lịch (.csv)</button>
+      </div>
+      <div class="set-row">
+        <label class="set-lbl" for="importModeSelect">Khôi phục từ tệp sao lưu</label>
+        <div class="set-inline">
+          <select id="importModeSelect">
+            <option value="merge">Gộp vào dữ liệu hiện có</option>
+            <option value="replace">Ghi đè toàn bộ</option>
+          </select>
+          <button type="button" class="btn btn-sm" onclick="$('setFile').click()">Chọn tệp…</button>
+          <input id="setFile" type="file" accept=".json,application/json" onchange="importData(this)" style="display:none">
         </div>
       </div>
+    </section>
 
-      <!-- NHÓM 2: DỮ LIỆU & SAO LƯU -->
-      <div style="background:var(--card-subtle); padding:14px; border-radius:var(--radius-md); border:1px solid var(--bd);">
-        <div style="font-weight:600; font-size:14px; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
-          <span>💾 Quản Trị Dữ Liệu & Sao Lưu</span>
-        </div>
-        <div style="font-size:12.5px; color:var(--mu); margin-bottom:12px;">
-          Dữ liệu lưu an toàn trên trình duyệt: <b>${totalEvents} hoạt động</b> (${storageKB} KB).
-          ${S.lb ? `<br>Lần sao lưu gần nhất: <b>${new Date(S.lb).toLocaleString("vi-VN")}</b>` : '<br><span style="color:var(--bad);">Bạn chưa sao lưu lần nào. Hãy xuất file .json định kỳ!</span>'}
-        </div>
-
-        <div class="row" style="gap:8px; margin-bottom:14px;">
-          <button type="button" class="btn btn-primary" onclick="exportData('json')">📥 Xuất sao lưu (.json)</button>
-          <button type="button" class="btn" onclick="exportData('csv')">📊 Xuất lịch trình (.csv)</button>
-        </div>
-
-        <div style="padding-top:12px; border-top:1px dashed var(--bd);">
-          <div style="font-size:12.5px; font-weight:600; margin-bottom:8px;">Khôi phục dữ liệu từ tệp tin:</div>
-          <div class="row" style="gap:8px; align-items:center;">
-            <input type="file" accept=".json,application/json" onchange="importData(this)" style="font-size:12.5px; flex:1;">
-            <select id="importModeSelect" style="font-size:12.5px;">
-              <option value="merge">Gộp thêm vào lịch</option>
-              <option value="replace">Ghi đè toàn bộ</option>
-            </select>
-          </div>
-        </div>
+    <section class="set-sec set-danger">
+      <h4 class="set-h">Xóa dữ liệu</h4>
+      <div class="set-row">
+        <span class="set-lbl">Xóa toàn bộ hoạt động và đặt lại danh mục vốn<small>Không thể hoàn tác. Hãy sao lưu trước.</small></span>
+        <button type="button" class="btn btn-sm btn-danger" onclick="resetToDefaultData()">Xóa dữ liệu</button>
       </div>
-
-      <!-- NHÓM 3: QUY TẮC LỊCH BIỂU -->
-      <div style="background:var(--card-subtle); padding:14px; border-radius:var(--radius-md); border:1px solid var(--bd);">
-        <div style="font-weight:600; font-size:14px; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
-          <span>⏱️ Quy Tắc Lịch & Cảnh Báo Kiệt Sức</span>
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:10px;">
-          <div class="form-group">
-            <label class="form-label" style="font-size:11px;">Thời lượng mặc định khi tạo:</label>
-            <select onchange="setDefaultDuration(+this.value)" style="font-size:13px;">
-              <option value="0.5" ${defDur === 0.5 ? 'selected' : ''}>0.5 giờ (30 phút)</option>
-              <option value="1" ${defDur === 1 ? 'selected' : ''}>1.0 giờ</option>
-              <option value="1.5" ${defDur === 1.5 ? 'selected' : ''}>1.5 giờ</option>
-              <option value="2" ${defDur === 2 ? 'selected' : ''}>2.0 giờ (chuẩn)</option>
-              <option value="3" ${defDur === 3 ? 'selected' : ''}>3.0 giờ</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label" style="font-size:11px;">Ngưỡng báo kiệt sức / ngày:</label>
-            <select onchange="setBurnoutThreshold(+this.value)" style="font-size:13px;">
-              <option value="5" ${burnH === 5 ? 'selected' : ''}>≥ 5 giờ tiêu hao</option>
-              <option value="6" ${burnH === 6 ? 'selected' : ''}>≥ 6 giờ tiêu hao (chuẩn)</option>
-              <option value="7" ${burnH === 7 ? 'selected' : ''}>≥ 7 giờ tiêu hao</option>
-              <option value="8" ${burnH === 8 ? 'selected' : ''}>≥ 8 giờ tiêu hao</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- NHÓM 4: THÔNG TIN & CÀI APP -->
-      <div style="background:var(--card-subtle); padding:14px; border-radius:var(--radius-md); border:1px solid var(--bd);">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-          <span style="font-weight:600; font-size:13.5px;">📱 Cài Đặt Làm App Trên Điện Thoại (PWA)</span>
-          <span class="pill pill-ok" style="font-size:10px;">v2.1</span>
-        </div>
-        <div style="font-size:12.5px; color:var(--tx-sec); line-height:1.5;">
-          • <b>iPhone / iPad:</b> Mở trên Safari → bấm nút <b>Chia sẻ</b> (biểu tượng ⎋) → chọn <b>Thêm vào MH chính (Add to Home Screen)</b>.<br>
-          • <b>Android / Máy tính:</b> Nhấn biểu tượng Cài đặt trên thanh địa chỉ hoặc menu ba chấm (⋮).
-        </div>
-        <div style="margin-top:14px; padding-top:10px; border-top:1px dashed var(--bd); display:flex; justify-content:space-between; align-items:center;">
-          <span style="font-size:12px; color:var(--mu);">Làm mới lại toàn bộ ứng dụng:</span>
-          <button type="button" class="btn btn-sm btn-danger" onclick="resetToDefaultData()">
-            ⚠️ Đặt lại dữ liệu ban đầu
-          </button>
-        </div>
-      </div>
-
-      <div style="display:flex; justify-content:flex-end;">
-        <button type="button" class="btn btn-primary" onclick="closeSettingsModal()">Hoàn tất</button>
-      </div>
-    </div>
+    </section>
   `;
-
-  $("settingsSheetBody").innerHTML = html;
 }
 
 /* ==========================================================================
@@ -2497,10 +2457,13 @@ const V = {
 /* ==========================================================================
    9. MODAL EDITOR (THÊM / SỬA HOẠT ĐỘNG TRONG NGÀY)
    ========================================================================== */
+let LFi = -1, TPL = [];
+const FOC = "#v button,#v input,#v select,#v [tabindex]";
 let LF = null; // Ghi nhớ element được focus trước khi mở modal
 
 function openEditor(dateStr, editIndex = null) {
   LF = document.activeElement;
+  LFi = [...document.querySelectorAll(FOC)].indexOf(LF);
   ed = dateStr;
   ei = editIndex;
   renderEditorSheet();
@@ -2518,9 +2481,13 @@ function closeEditor() {
   $("modalOverlay").classList.remove("open");
   ed = null;
   ei = null;
-  if (LF && LF.focus) {
-    try { LF.focus(); } catch (e) {}
-  }
+  restoreFocus();
+}
+
+function restoreFocus() {
+  if (LF && LF.isConnected && LF.focus) { try { LF.focus(); return; } catch (e) {} }
+  const el = [...document.querySelectorAll(FOC)][LFi];
+  if (el) el.focus();
 }
 
 function handleBackdropClick(e) {
@@ -2551,7 +2518,8 @@ function tpls() {
   return Object.values(m).sort((a, b) => b.n - a.n).slice(0, 6).map(x => x.e);
 }
 
-function fillTpl(item) {
+function fillTpl(i) {
+  const item = TPL[i];
   if (!item) return;
   const tInp = $("inpTitle");
   const cInp = $("inpCap");
@@ -2643,6 +2611,7 @@ function renderEditorSheet() {
   $("sheetTitle").innerHTML = `<span>${X ? '✏️ Chỉnh sửa hoạt động' : '+ Thêm hoạt động mới'} · ${dateFormatted}</span>`;
 
   const quickTpls = !X ? tpls() : [];
+  TPL = quickTpls;
 
   let html = `
     <div style="display:flex; flex-direction:column; gap:12px;">
@@ -2652,7 +2621,7 @@ function renderEditorSheet() {
           ${quickTpls.map((p, idx) => `
             <button type="button" class="btn btn-sm btn-ghost"
                     style="border:1px solid var(--bd); padding:2px 8px; font-size:11.5px; background:var(--card);"
-                    onclick='fillTpl(${JSON.stringify(p).replace(/'/g, "&#39;")})'>
+                    onclick="fillTpl(${idx})">
               <span class="dot" style="background:${CM(p.c).c}; width:6px; height:6px;"></span> ${esc(p.t)}
             </button>
           `).join("")}
@@ -2746,6 +2715,7 @@ function renderEditorSheet() {
       ` : `
         <div style="display:flex; justify-content:flex-end; align-items:center; margin-top:10px; gap:8px;">
           <button type="button" class="btn btn-ghost" onclick="closeEditor()">Hủy</button>
+          <button type="button" class="btn" onclick="saveEventFromForm(true)" title="Ctrl + Enter">Lưu &amp; thêm tiếp</button>
           <button type="button" class="btn btn-primary" onclick="saveEventFromForm()">Lưu</button>
         </div>
       `}
@@ -2755,7 +2725,7 @@ function renderEditorSheet() {
   $("sheetBody").innerHTML = html;
 }
 
-function saveEventFromForm() {
+function saveEventFromForm(keepOpen) {
   const title = $("inpTitle").value.trim(), hours = +$("inpHours").value, start = $("inpStart").value;
   if (!title) { showToast("Vui lòng nhập tên hoạt động!", "bad"); $("inpTitle").focus(); return; }
   const c = chkEvent(ed, start, hours, ei);
@@ -2797,7 +2767,10 @@ function saveEventFromForm() {
   sortL(L);
   save();
   draw();
-  closeEditor();
+  if (keepOpen === true && !wasEdit) {
+    renderEditorSheet();
+    setTimeout(() => { const i = $("inpTitle"); if (i) i.focus(); }, 50);
+  } else closeEditor();
 }
 
 function handleTimelineGridClick(event, dateStr) {
@@ -2862,7 +2835,6 @@ function deleteCap(k) {
 }
 
 
-const SAFE_K = /^(?!__proto__$)[\w-]{1,24}$/;
 function cleanCap(c) { return c && SAFE_K.test(c.k) ? { k: c.k, n: String(c.n || "Vốn").slice(0, 60), c: /^#[0-9a-f]{6}$/i.test(c.c) ? c.c : "#888888", tg: Math.max(0, +c.tg || 0) } : null; }
 function cleanEv(e) { return e && typeof e.t === "string" && +e.h > 0 && +e.h <= 24 && SAFE_K.test(e.c || "") ? { t: e.t.slice(0, 120), c: e.c, m: e.m === "d" ? "d" : "u", h: +e.h, s: /^\d\d:\d\d$/.test(e.s || "") ? e.s : "", ...(SAFE_K.test(e.r || "") ? { r: e.r } : {}) } : null; }
 // Chuẩn hóa mọi dữ liệu đọc từ localStorage hoặc tệp sao lưu (khóa an toàn, giá trị hợp lệ, bù trường thiếu)
@@ -2874,7 +2846,9 @@ function cleanState(d) {
   Object.keys(d.ev).forEach(k => { if (/^\d{4}-\d\d-\d\d$/.test(k) && Array.isArray(d.ev[k])) { const l = d.ev[k].map(cleanEv).filter(Boolean); if (l.length) ev[k] = l; } });
   Object.keys(d.bl || {}).forEach(k => { if (SAFE_K.test(k) && d.bl[k]) bl[k] = { u: Math.max(0, +d.bl[k].u || 0), d: Math.max(0, +d.bl[k].d || 0) }; });
   Object.keys(d.mem || {}).forEach(k => { if (k !== "__proto__" && d.mem[k] && SAFE_K.test(d.mem[k].c || "")) mem[k.slice(0, 120)] = { c: d.mem[k].c }; });
-  return { ev, caps, bl, mem, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
+  const cl = (v, lo, hi, def) => { v = +v; return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : def; };
+  const cfg = { defDuration: cl(d.cfg && d.cfg.defDuration, 0.5, 24, 2), burnoutHours: cl(d.cfg && d.cfg.burnoutHours, 1, 24, 6) };
+  return { ev, caps, bl, mem, cfg, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
 }
 
 async function saveFile(filename, content, mime) {
@@ -2944,20 +2918,46 @@ function importData(inputEl) {
 /* ==========================================================================
    11. RENDER & KHỞI CHẠY
    ========================================================================== */
+/* Nhận định, đánh dấu số vừa thay đổi (khôi phục) */
+function conclCard() {
+  const nn0 = Math.max(0, W.findIndex((_, i) => evs(i).length));
+  const from = N === 0 ? Math.min(nn0, sel) : Math.max(0, sel - N + 1), nn = sel - from + 1;
+  const D = S.caps.map(c => { let u = 0, d = 0; for (let i = from; i <= sel; i++) { const w = wk(i, c.k); u += w.u; d += w.d; } u /= nn; d /= nn; return { c, u, d, p: c.tg ? u / c.tg : null }; });
+  const T = D.filter(x => x.p != null), ok = T.filter(x => x.p >= 1).length;
+  const worst = T.filter(x => x.p < 1).sort((a, b) => (b.c.tg - b.u) - (a.c.tg - a.u))[0];
+  const drain = D.filter(x => x.d > 0 && x.d > x.u);
+  const chip = x => x.p == null ? "–" : x.p >= 1 ? '<span class="pill pill-ok">Đạt</span>' : x.p >= .6 ? '<span class="pill">Gần đạt</span>' : '<span class="pill pill-bad">Thiếu</span>';
+  return `<div class="card"><div class="card-header"><div><h2 class="card-title">Nhận định</h2></div></div>
+    <p>${T.length ? `<b>${ok}/${T.length}</b> vốn đạt mục tiêu (trung bình ${nn} tuần đến W${sel + 1}).` : "Chưa đặt mục tiêu cho vốn nào. Vào tab Danh mục vốn để đặt mục tiêu ▲/tuần."}${CW >= 0 && sel > CW ? " Đây là kế hoạch, chưa phải thực tế." : ""}</p>
+    ${worst ? `<p>Thiếu nhiều nhất: <b>${esc(worst.c.n)}</b>, trung bình ${r1(worst.u)}h so với mục tiêu ${r1(worst.c.tg)}h (thiếu ${r1(worst.c.tg - worst.u)}h/tuần).</p>` : ""}
+    ${drain.length ? `<p>Đang tiêu nhiều hơn nạp: <b>${drain.map(x => esc(x.c.n)).join(", ")}</b>.</p>` : ""}
+    <div style="display:flex;flex-wrap:wrap;gap:8px 18px">${D.map(x => `<span><span class="dot" style="background:${x.c.c}"></span> ${esc(x.c.n)} ${chip(x)}</span>`).join("")}</div></div>`;
+}
+const _su = V.su;
+V.su = function () {
+  let h = _su.call(V);
+  const card = conclCard(), re = /<div class="card">\s*<div class="card-header">\s*<div>\s*<h2 class="card-title">Bánh Xe Cuộc Đời/;
+  h = re.test(h) ? h.replace(re, m => card + m) : card + h;
+  // Không gắn thẻ <span> bên trong <svg>: parser HTML sẽ phá vỡ cây SVG (bánh xe bị vỡ)
+  let n = 0;
+  return h.split(/(<svg[\s\S]*?<\/svg>)/).map(part => part.startsWith("<svg") ? part :
+    part.replace(/(<[^>]*>)|(\d+(?:\.\d+)?[h%])/g, (m, t, v) => t ? t : `<span data-k="n${n++}">${v}</span>`)).join("");
+};
+const vals = () => { const o = {}, t = document.createElement("div"); t.innerHTML = V.su(); t.querySelectorAll("[data-k]").forEach(e => { o[e.dataset.k] = e.textContent; }); return o; };
+const mark = () => document.querySelectorAll("[data-k]").forEach(e => e.classList.toggle("chg", CH.has(e.dataset.k)));
+
 function draw(jump) {
-  const headerWk = $("headerWeekNum");
-  if (headerWk) headerWk.textContent = "";
   const badge = $("brandYearBadge");
   if (badge) badge.textContent = activeYear;
   document.title = `Life Capital · Quản trị Năng lượng & Thời gian ${activeYear}`;
   renderNav();
 
   const y = window.scrollY;
+  const fo = [...document.querySelectorAll("#v input,#v select")], ai = fo.indexOf(document.activeElement), td = TABDIR;
   const tw = document.querySelector(".table-wrapper");
   const st = tw ? [tw.scrollTop, tw.scrollLeft] : null;
 
   $("v").innerHTML = V[cur]();
-  updateThemeButton();
 
   window.scrollTo(0, y);
   const t2 = document.querySelector(".table-wrapper");
@@ -2978,6 +2978,22 @@ function draw(jump) {
     if (hid) $("v").insertAdjacentHTML("beforeend", `<p style="font-size:12.5px; color:var(--mu); margin-top:8px;">⚠ ${hid} hoạt động không hiển thị trên dòng thời gian (chưa có giờ bắt đầu hoặc trước 06:00). Xem ở chế độ "Tuần chi tiết".</p>`);
     layoutTimeline();
   }
+  // Đánh dấu các số vừa thay đổi sau chỉnh sửa gần nhất
+  const nv = vals();
+  if (dirty) {
+    const c = new Set(Object.keys(nv).filter(k => k in PV && PV[k] !== nv[k]));
+    if (c.size) CH = c;
+    dirty = false;
+  }
+  PV = nv;
+  if (cur === "su" && CH.size) $("v").insertAdjacentHTML("afterbegin", '<div style="margin-bottom:10px;font-size:12.5px;color:var(--mu)">Số <b class="chg">in đậm có nền</b> là số vừa thay đổi sau chỉnh sửa gần nhất. <button class="btn btn-sm btn-ghost" onclick="CH=new Set();draw()">Bỏ đánh dấu</button></div>');
+  mark();
+  TABDIR = 0;
+  // Giữ con trỏ khi vẽ lại (Tab / Shift+Tab sang ô kế tiếp)
+  if (ai >= 0) setTimeout(() => {
+    const f = [...document.querySelectorAll("#v input,#v select")][ai + td];
+    if (f) { f.focus(); if (f.tagName === "INPUT" && f.type !== "color") f.select(); }
+  }, 0);
 }
 
 // Tự động chuyển tuần khi sang thứ Hai mới
@@ -2992,6 +3008,8 @@ document.addEventListener("visibilitychange", () => {
   if (!document.hidden) tick();
 });
 window.addEventListener("focus", tick);
+
+document.addEventListener("keydown", e => { TABDIR = e.key === "Tab" ? (e.shiftKey ? -1 : 1) : 0; }, true);
 
 // Xử lý phím tắt
 document.addEventListener("keydown", e => {
