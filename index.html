@@ -2036,31 +2036,32 @@ function toggleGCalAutoSync(enabled) {
 }
 
 function buildGCalEventPayload(eventObj, dateStr) {
-  const startTime = eventObj.s || "07:00";
-  const [sh, sm] = startTime.split(":").map(Number);
   const dur = eventObj.h || 1;
-  const endMin = (sh || 0) * 60 + (sm || 0) + Math.round(dur * 60);
-  const eh = Math.min(23, Math.floor(endMin / 60));
-  const em = endMin % 60;
-  const endTime = pad(eh) + ":" + pad(em);
-
   const cap = CM(eventObj.c);
   const capName = cap ? cap.n : "Khác";
   const modeText = eventObj.m === "u" ? "▲ Nạp vốn" : "▼ Tiêu vốn";
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Ho_Chi_Minh";
-
-  return {
+  const base = {
     summary: `${eventObj.m === 'u' ? '▲' : '▼'} ${eventObj.t}`,
     description: `Life Capital · Loại vốn: [${capName}] · Tác động: ${modeText} (${r1(dur)}h)`,
-    start: {
-      dateTime: `${dateStr}T${startTime}:00`,
-      timeZone: tz
-    },
-    end: {
-      dateTime: `${dateStr}T${endTime}:00`,
-      timeZone: tz
-    },
     colorId: GCAL_COLOR_MAP[eventObj.c] || "1"
+  };
+  const day = new Date(dateStr + "T00:00");
+
+  // Chưa xếp giờ → sự kiện cả ngày, không chiếm lịch bận
+  if (!eventObj.s) {
+    return { ...base, start: { date: dateStr }, end: { date: ky(ad(day, 1)) }, transparency: "transparent" };
+  }
+
+  // Tính bằng Date để 22:00 + 2h → 00:00 hôm sau (không cắt về 23:00)
+  const [sh, sm] = eventObj.s.split(":").map(Number);
+  const startD = new Date(day.getFullYear(), day.getMonth(), day.getDate(), sh, sm);
+  const endD = new Date(day.getFullYear(), day.getMonth(), day.getDate(), sh, sm + Math.round(dur * 60));
+  const fmt = d => `${ky(d)}T${pad(d.getHours())}:${pad(d.getMinutes())}:00`;
+  return {
+    ...base,
+    start: { dateTime: fmt(startD), timeZone: tz },
+    end: { dateTime: fmt(endD), timeZone: tz }
   };
 }
 
