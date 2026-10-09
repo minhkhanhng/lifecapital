@@ -51,7 +51,11 @@
 
 1. ⚡ **Command Bar Ghi nhanh bằng ngôn ngữ tự nhiên**:
    - Nhập: *"Mai 18h đánh cầu lông 2 tiếng"* hoặc *"Hôm nay 20h đọc sách 1h"*.
-   - Tự động nhận diện ngày, giờ bắt đầu, thời lượng, loại vốn và tác động Nạp/Tiêu theo thời gian thực.
+   - Tự động nhận diện ngày, giờ bắt đầu, thời lượng, loại vốn và tác động Nạp/Tiêu theo thời gian thực; dòng xem trước luôn ghi rõ thứ và ngày (vd *Hôm qua · Thứ 5, 08/10*).
+   - **Ngày:** *hôm nay, mai, ngày kia/mốt, hôm qua, tối qua, hôm kia*; ngày cụ thể *ngày 9 tháng 10 (năm 2026), 9 tháng 11, 09/10, 09-10, 09.10, 9/10/2026, ngày 15*; thứ *thứ 2 / t2 / thứ hai / chủ nhật* kèm *tuần này, tuần sau, tuần tới, tuần trước, tuần sau nữa* (đứng trước hoặc sau). Không nói tuần thì hiểu là lần tới gần nhất.
+   - **Giờ:** *18h, 6h30, 20:00, 5h sáng, 2 giờ chiều, tối 8h, 8 giờ rưỡi, 12h đêm, 14-16h, 2-4h chiều*.
+   - **Thời lượng:** *2 tiếng, 1.5h, 1h30, 1 tiếng 30 phút, một tiếng rưỡi, hai tiếng, 45 phút, mười lăm phút, nửa tiếng*.
+   - "Mai" là tên người khi đi sau *gặp, cho, với…* hoặc viết hoa giữa câu (*Gọi điện cho Mai 20h*).
 2. 📅 **3 Chế độ Xem Lịch Biểu**:
    - **Tuần chi tiết**: 7 thẻ ngày responsive kèm Pin năng lượng và nút thêm nhanh.
    - **Dòng thời gian 24h (Timeline)**: Trục thời gian dọc từ 06:00 đến 24:00, trực quan hoá các khối sự kiện. Tích hợp thuật toán **chia làn song song (Lane Splitting)** khi các sự kiện bị trùng khung giờ.
@@ -65,8 +69,8 @@
 5. 🛠️ **Popup Thêm / Sửa Hoạt Động Tinh Gọn**:
    - Giao diện form tinh gọn chỉ gồm các trường thông tin cần thiết, tự động đóng popup khi bấm Lưu.
    - Nhập bằng bàn phím: trong popup, mỗi lần nhấn Enter chuyển sang ô kế tiếp (Tên → Loại vốn → Tác động → Giờ bắt đầu → Thời lượng → Lặp lại → Đến hết ngày); Enter ở ô cuối cùng thì lưu. Khi đang gõ có dấu, một lần Enter vừa chốt chữ vừa chuyển ô. `Cmd/Ctrl + Enter` lưu ngay từ bất kỳ ô nào.
-   - Thanh ghi nhanh: phím Enter dùng để chốt chữ của bộ gõ (kể cả trên Safari) không bị tính là "gửi"; nhấn Enter lần nữa để ghi.
-   - Hỗ trợ tạo chuỗi lặp định kỳ (Hằng ngày, Ngày làm việc, Hằng tuần) kèm ngày kết thúc chuỗi.
+   - Thanh ghi nhanh: khi đang gõ có dấu, một lần Enter vừa chốt chữ vừa ghi hoạt động (Chrome và Safari).
+   - Hỗ trợ tạo chuỗi lặp định kỳ (Hằng ngày, Ngày làm việc, Hằng tuần) kèm ngày kết thúc chuỗi, cả khi thêm mới lẫn khi sửa một hoạt động lẻ (hoạt động đó thành buổi đầu của chuỗi).
 6. 🎡 **Bánh Xe Cuộc Đời (Radar Chart) Chuẩn Hoá**:
    - Khung hình mở rộng chống cắt chữ trên mọi kích thước màn hình.
    - Người mới bắt đầu với mục tiêu tuần bằng 0 cho mọi loại vốn; bánh xe và bản tổng kết hiện nút **"Đặt mục tiêu"** dẫn tới tab Danh mục vốn, không chấm điểm hay đưa khuyến nghị dựa trên số giả định.
@@ -98,7 +102,8 @@
    - Banner "Đang dùng dữ liệu mẫu" có nút xóa toàn bộ dữ liệu mẫu bằng một chạm. Hoạt động mẫu nào bạn đã sửa sẽ được giữ lại như dữ liệu thật.
 12. 🏷️ **Tùy Biến Từ Khóa Nhận Diện & Trí Nhớ AI Tự Học (Keyword Auto-tagging & Self-learning)**:
    - Cho phép người dùng tự do thêm/bớt từ khóa nhận diện cho từng loại vốn trong tab Danh mục vốn.
-   - Bộ nhớ `S.mem` tự động học các từ khóa mới sau mỗi lần thêm hoạt động qua thanh ghi nhanh.
+   - Loại vốn được đoán theo từ khóa khớp dài nhất (*học tiếng Anh* → Kỹ năng, không bị nhầm sang Quan hệ vì chữ *anh*).
+   - Bộ nhớ `S.mem` ghi nhớ loại vốn bạn chọn trong popup cho từng tên hoạt động, để lần sau ghi nhanh cùng tên sẽ đoán đúng.
 
 ---
 
@@ -120,11 +125,11 @@ Chỉ cần nhấp đúp vào tệp `index.html` để mở trực tiếp trên 
 Nên cài theo cách này thay vì dùng tab Safari thường: Safari có thể xóa dữ liệu của trang web không được mở trong 7 ngày, còn app đã thêm vào Màn hình chính thì không bị.
 
 ### Cấu hình Google Calendar (tùy chọn)
-1. Vào [Google Cloud Console](https://console.cloud.google.com/) → tạo project → bật **Google Calendar API**.
+1. Vào [Google Cloud Console](https://console.cloud.google.com/) → tạo project → **APIs & Services → Library → Google Calendar API → Enable**. Thiếu bước này, Google từ chối mọi sự kiện và app báo "Google Calendar API chưa được bật".
 2. **OAuth consent screen**: chọn *External*, giữ chế độ **Testing**, thêm scope `https://www.googleapis.com/auth/calendar.events`.
 3. Ở mục **Test users**, thêm email Google của **từng người** sẽ dùng tính năng này (tối đa 100 người). Người không có trong danh sách sẽ gặp lỗi `access_denied`.
 4. **Credentials** → *Create OAuth client ID* → *Web application*. Ở **Authorized JavaScript origins**, thêm địa chỉ bạn deploy (vd `https://lifecapital.vercel.app`) và `http://localhost:8765` nếu chạy trên máy.
-5. Trong app: `⚙️ Cài đặt` → dán **Client ID** → **Kết nối Google Calendar**.
+5. Trong app: `⚙️ Cài đặt` → dán **Client ID** → **Kết nối Google Calendar**. Trên màn hình của Google, nhớ **tick ô cho phép truy cập Google Calendar**; nếu bỏ tick, app sẽ báo và yêu cầu kết nối lại.
 
 ---
 
@@ -1248,8 +1253,8 @@ const DCAP = [
   ["sk", "Sức khỏe", "#97A13B", 0, ["gym", "bơi", "chạy bộ", "cầu lông", "đá bóng", "spa", "ngủ", "thể thao", "fitness", "yoga", "đi bộ", "sức khỏe", "massage", "nạp năng lượng"]],
   ["qh", "Quan hệ", "#E0A3BB", 0, ["dinner", "sinh nhật", "cưới", "gia đình", "bạn", "date", "chị", "em", "anh", "bố", "mẹ", "thăm", "ăn tối", "gặp mặt", "trò chuyện", "hẹn hò", "liên hoan"]],
   ["tn", "Trải nghiệm", "#8b6da9", 0, ["xem", "du lịch", "trip", "phim", "workshop", "thử", "concert", "cafe", "cà phê", "chill", "ăn uống", "dạo phố", "triển lãm", "bảo tàng", "khám phá"]],
-  ["kn", "Kỹ năng", "#4a859c", 0, ["học", "đọc", "course", "study", "khóa", "sách", "tiếng anh", "code", "nghiên cứu", "luyện", "đàn", "viết", "podcast", "kỹ năng", "vẽ"]],
-  ["tc", "Tài chính / công việc", "#b88628", 0, ["họp", "làm", "work", "meeting", "deep", "dự án", "khách", "bán", "deal", "deadline", "báo cáo", "ot", "tăng ca", "công ty", "văn phòng", "khách hàng", "tài chính", "tiền"]]
+  ["kn", "Kỹ năng", "#4a859c", 0, ["học", "đọc", "course", "study", "khóa", "sách", "tiếng anh", "code", "nghiên cứu", "luyện", "đàn", "viết", "podcast", "kỹ năng", "vẽ", "ngoại ngữ"]],
+  ["tc", "Tài chính / công việc", "#b88628", 0, ["họp", "làm việc", "work", "meeting", "deep", "dự án", "khách", "bán", "deal", "deadline", "báo cáo", "ot", "tăng ca", "công ty", "văn phòng", "khách hàng", "tài chính", "tiền"]]
 ];
 const DN_VI = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ Nhật"];
 const DN_SHORT = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
@@ -1374,6 +1379,8 @@ if (!S.cfg) S.cfg = { defDuration: 2, burnoutHours: 6 };
 S.bl = S.bl || {};
 S.mem = S.mem || {};
 S.gdel = S.gdel || [];
+// Bản cũ ghi cả phỏng đoán của thanh ghi nhanh vào bộ nhớ (vd "học tiếng anh" → Quan hệ): xóa một lần
+if (S.memV !== 2) { S.mem = {}; S.memV = 2; }
 
 const cmp = (a, b) => (a.s || "99:99").localeCompare(b.s || "99:99");
 const sortL = l => l.sort(cmp);
@@ -1514,23 +1521,26 @@ function getDayBattery(dateStr) {
   return { u, d, net, fillPercent, statusClass, label, isBurnout };
 }
 
+// Phân loại vốn theo từ khóa: cụm khớp nhiều từ / dài nhất thắng ("tiếng anh" thắng "anh"),
+// không phụ thuộc thứ tự các loại vốn.
 function guess(t) {
-  t = (t || "").normalize("NFC");
-  const normTitle = t.trim().toLowerCase();
-  const m = S.mem && S.mem[normTitle];
+  const normTitle = (t || "").normalize("NFC").trim().toLowerCase();
+  const m = S.mem && Object.prototype.hasOwnProperty.call(S.mem, normTitle) ? S.mem[normTitle] : null;
   if (m && S.caps.some(c => c.k === m.c)) return m.c;
 
   const w = " " + normTitle.split(/[^\p{L}\p{N}]+/u).join(" ") + " ";
-
-  // Kiểm tra từ khóa tùy chỉnh của từng loại vốn do người dùng cài đặt
+  let best = null, bestScore = 0;
   for (const c of S.caps) {
-    const kws = (c.kw && c.kw.length) ? c.kw : (DCAP.find(d => d[0] === c.k) ? DCAP.find(d => d[0] === c.k)[4] : []);
-    if (kws.some(k => k && w.includes(" " + k.toLowerCase().trim() + " "))) {
-      return c.k;
+    const def = DCAP.find(d => d[0] === c.k);
+    const kws = (c.kw && c.kw.length) ? c.kw : (def ? def[4] : []);
+    for (const k of kws) {
+      const kk = String(k || "").normalize("NFC").toLowerCase().trim();
+      if (!kk || !w.includes(" " + kk + " ")) continue;
+      const score = kk.split(/\s+/).length * 100 + kk.length;
+      if (score > bestScore) { best = c.k; bestScore = score; }
     }
   }
-
-  return S.caps[0] ? S.caps[0].k : "sk";
+  return best || (S.caps[0] ? S.caps[0].k : "sk");
 }
 
 /* ==========================================================================
@@ -1558,7 +1568,6 @@ let parsedNLP = null;
 
 const toMin = s => { const [a, b] = s.split(":").map(Number); return a * 60 + b; };
 const WB = p => new RegExp("(?<![\\p{L}\\p{N}])(?:" + p + ")(?![\\p{L}\\p{N}])", "iu");
-const PER = "sáng|trưa|chiều|tối|đêm";
 
 // Kiểm tra giờ/thời lượng/trùng giờ — dùng chung cho modal, ghi nhanh và chuỗi lặp
 function chkEvent(date, s, h, skip) {
@@ -1570,96 +1579,170 @@ function chkEvent(date, s, h, skip) {
   return { hit };
 }
 
+// Regex có ranh giới từ Unicode: « = không đứng sau chữ/số, » = không đứng trước chữ/số
+const NLP_RX = (src, flags = "iu") => new RegExp(src.replace(/«/g, "(?<![\\p{L}\\p{N}])").replace(/»/g, "(?![\\p{L}\\p{N}])"), flags);
+
+// Số đếm bằng chữ đứng trước đơn vị thời lượng: "hai tiếng", "mười lăm phút", "ba mươi phút"
+const VI_DIGIT = { "một": 1, "mốt": 1, "hai": 2, "ba": 3, "bốn": 4, "tư": 4, "năm": 5, "lăm": 5, "sáu": 6, "bảy": 7, "bẩy": 7, "tám": 8, "chín": 9 };
+function viNum(s) {
+  const t = s.toLowerCase().trim().split(/\s+/);
+  let n, i;
+  if (t[0] === "mười") { n = 10; i = 1; }
+  else if (t[1] === "mươi") { n = (VI_DIGIT[t[0]] || 0) * 10; i = 2; }
+  else { n = VI_DIGIT[t[0]] || 0; i = 1; }
+  if (n >= 10 && t[i] && VI_DIGIT[t[i]] != null) n += VI_DIGIT[t[i]];
+  return n;
+}
+const NUM_WORDS_RX = NLP_RX("«(?:một|hai|ba|bốn|tư|năm|sáu|bảy|bẩy|tám|chín|mười)(?:\\s+(?:mươi|mốt|một|hai|ba|bốn|tư|lăm|năm|sáu|bảy|bẩy|tám|chín))*(?=\\s*(?:tiếng|giờ|phút|ph|p)»)", "giu");
+const normalizeViNumbers = s => s.replace(NUM_WORDS_RX, m => String(viNum(m)));
+
+// "Hôm qua · Thứ 4, 07/10" — luôn hiện thứ và ngày cụ thể; thêm năm khi khác năm nay
+function describeDate(d) {
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const diff = Math.round((d - today) / 864e5);
+  const rel = { "-2": "Hôm kia", "-1": "Hôm qua", "0": "Hôm nay", "1": "Ngày mai", "2": "Ngày kia" }[diff];
+  const dm = pad(d.getDate()) + "/" + pad(d.getMonth() + 1) + (d.getFullYear() !== today.getFullYear() ? "/" + d.getFullYear() : "");
+  return (rel ? rel + " · " : "") + DN_VI[(d.getDay() + 6) % 7] + ", " + dm;
+}
+
+const NLP_PERIOD = "sáng|trưa|chiều|tối|đêm";
+// Từ đứng ngay trước "Mai" cho thấy đó là tên người, không phải "ngày mai"
+const NAME_BEFORE_MAI = /^(gặp|với|cùng|cho|bạn|chị|em|anh|thăm|nhà|đón|gọi|nhắn|của|và|chú|cô|bác|dì|cậu|mợ|ông|bà|tên|bé|con)$/i;
+const WD_RX = "(?:(?:thứ|thu)\\s*([2-7])|t([2-7])|thứ\\s+(hai|ba|tư|bốn|năm|sáu|bảy)|(chủ\\s*nhật|cn))";
+const WK_RX = "tuần\\s*(này|sau\\s*nữa|sau|tới|trước|rồi|qua)";
+const wdIndex = (n1, n2, word) => n1 ? +n1 - 2 : n2 ? +n2 - 2 : word ? { hai: 0, ba: 1, tư: 2, bốn: 2, năm: 3, sáu: 4, bảy: 5 }[word.toLowerCase()] : 6;
+const weekShift = q => !q ? null : /này/i.test(q) ? 0 : /nữa/i.test(q) ? 2 : /sau|tới/i.test(q) ? 1 : -1;
+
 function parseNLPText(str) {
   if (!str || !str.trim()) return null;
   const raw = str.trim().normalize("NFC");
-  let w = " " + raw + " ";
-  const cut = re => { const m = w.match(re); if (m) w = w.replace(re, " "); return m; };
-  const base = new Date(); base.setHours(0, 0, 0, 0);
-  let target = base, dateDesc = "Hôm nay", per = null, m;
-  const setPer = x => { if (x) per = x.toLowerCase(); };
-  const wkBase = W[CW >= 0 ? CW : Math.min(Math.max(sel, 0), W.length - 1)];
+  let w = " " + normalizeViNumbers(raw) + " ";
+  // Cắt đúng đoạn khớp (theo vị trí) ra khỏi câu, phần còn lại thành tên hoạt động
+  const cutAt = (m) => { w = w.slice(0, m.index) + " " + w.slice(m.index + m[0].length); return m; };
+  const cut = re => { const m = w.match(re); return m ? cutAt(m) : null; };
 
-  // 1. Phân tích Ngày
-  if ((m = cut(/(?<![\p{L}\p{N}])(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?(?![\p{L}\p{N}])/u))) {
-    const y = m[3] ? (+m[3] < 100 ? 2000 + +m[3] : +m[3]) : base.getFullYear(), d = new Date(y, +m[2] - 1, +m[1]);
-    if (d.getMonth() === +m[2] - 1) { target = d; dateDesc = DN_VI[(d.getDay() + 6) % 7] + " " + m[1] + "/" + m[2]; }
-  } else if (cut(/(?<![\p{L}\p{N}])(?:ngày\s+)?(?:mốt|kia)(?![\p{L}\p{N}])/iu)) {
-    target = ad(base, 2); dateDesc = "Ngày kia";
-  } else if ((m = cut(/(?<![\p{L}\p{N}])(?:(sáng|trưa|chiều|tối|đêm)\s+|ngày\s+)mai(?![\p{L}\p{N}])/iu))) {
-    setPer(m[1]); target = ad(base, 1); dateDesc = "Ngày mai";
-  } else if ((m = cut(/(?<!(?:gặp|với|cùng|bạn|chị|em|anh|thăm|nhà|đón)\s+)(?<![\p{L}\p{N}])mai(?![\p{L}\p{N}])/iu))) {
-    target = ad(base, 1); dateDesc = "Ngày mai";
-  } else if ((m = cut(/(?<![\p{L}\p{N}])(?:(sáng|trưa|chiều|tối|đêm)\s+)?(?:hôm\s+)?nay(?![\p{L}\p{N}])/iu))) {
-    setPer(m[1]); dateDesc = "Hôm nay";
-  } else {
-    let idx = null;
-    if ((m = cut(/(?<![\p{L}\p{N}])(?:thứ|thu|t)\s*([2-7])(?![\p{L}\p{N}])/iu))) idx = +m[1] - 2;
-    else if ((m = cut(/(?<![\p{L}\p{N}])thứ\s+(hai|ba|tư|bốn|năm|sáu|bảy)(?![\p{L}\p{N}])/iu))) idx = { hai: 0, ba: 1, tư: 2, bốn: 2, năm: 3, sáu: 4, bảy: 5 }[m[1].toLowerCase()];
-    else if (cut(WB("chủ nhật|cn"))) idx = 6;
-    if (idx !== null) {
-      let d = ad(wkBase, idx);
-      if (CW >= 0 && d < base) d = ad(d, 7);
-      target = d;
-      dateDesc = DN_VI[idx];
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const mon0 = ad(today, -((today.getDay() + 6) % 7)); // Thứ 2 của tuần này
+  let target = today, dateSet = false, per = null, err = null, m;
+  const setPer = x => { if (x) per = x.toLowerCase(); };
+  const setDate = d => { target = d; dateSet = true; };
+  const validDate = (y, mo, d) => { const x = new Date(y, mo - 1, d); return x.getMonth() === mo - 1 && x.getDate() === d ? x : null; };
+  const fullYear = y => !y ? today.getFullYear() : (+y < 100 ? 2000 + +y : +y);
+
+  // ===== 1. NGÀY =====
+  // 1a. "ngày 9 tháng 10", "9 tháng 10 năm 2026"
+  if ((m = cut(NLP_RX("«(?:ngày\\s*)?(\\d{1,2})\\s*tháng\\s*(\\d{1,2})(?:\\s*,?\\s*(?:năm\\s*)?(\\d{4}))?»")))) {
+    const d = validDate(fullYear(m[3]), +m[2], +m[1]);
+    if (d) setDate(d); else err = "Ngày không hợp lệ.";
+  }
+  // 1b. "09/10", "9-10", "09.10", "9/10/2026", "09.10.26" (không nhầm với "9-10h" hay "1.5 tiếng")
+  if (!dateSet && !err) {
+    for (const mm of w.matchAll(NLP_RX("«(?:ngày\\s*)?(\\d{1,2})([\\/.\\-])(\\d{1,2})(?:\\2(\\d{4}|\\d{2}))?(?![\\d\\/.\\-])(?!\\s*(?:h|g|giờ|tiếng|phút|ph|p|:)»)", "giu"))) {
+      // Dấu chấm dễ nhầm số thập phân ("1.5"): chỉ nhận "09.10" (đủ 2 chữ số) hoặc có năm
+      if (mm[2] === "." && !mm[4] && !(mm[1].length === 2 && mm[3].length === 2)) continue;
+      const d = validDate(fullYear(mm[4]), +mm[3], +mm[1]);
+      if (d) { cutAt(mm); setDate(d); break; }
+      if (mm[2] === "/") { cutAt(mm); err = "Ngày không hợp lệ."; break; }
+    }
+  }
+  // 1c. "ngày 9" = ngày 9 của tháng này
+  if (!dateSet && !err && (m = cut(NLP_RX("«ngày\\s*(\\d{1,2})»(?!\\s*[\\/.\\-]\\d)")))) {
+    const d = validDate(today.getFullYear(), today.getMonth() + 1, +m[1]);
+    if (d) setDate(d); else err = "Ngày không hợp lệ.";
+  }
+  // 1d. Thứ trong tuần: "thứ 2", "t2", "thứ hai", "chủ nhật", kèm "tuần này/sau/tới/trước" ở trước hoặc sau
+  let wd = null, wq = null;
+  if ((m = cut(NLP_RX(`«${WK_RX}\\s*,?\\s*(?:vào\\s*)?${WD_RX}»`)))) { wd = wdIndex(m[2], m[3], m[4]); wq = m[1]; }
+  else if ((m = cut(NLP_RX(`«${WD_RX}(?:\\s*,?\\s*${WK_RX})?»`)))) { wd = wdIndex(m[1], m[2], m[3]); wq = m[5]; }
+  if (!dateSet && wd !== null) {
+    const shift = weekShift(wq);
+    let d = ad(mon0, wd + 7 * (shift || 0));
+    if (shift === null && d < today) d = ad(d, 7); // không nói tuần nào: lần tới gần nhất
+    setDate(d);
+  }
+  // 1e. Ngày tương đối
+  if (!dateSet) {
+    if (cut(NLP_RX("«hôm\\s*kia»"))) setDate(ad(today, -2));
+    else if ((m = cut(NLP_RX(`«(?:(${NLP_PERIOD})\\s+|hôm\\s+)qua»`)))) { setPer(m[1]); setDate(ad(today, -1)); }
+    else if (cut(NLP_RX("«(?:ngày\\s+)?(?:mốt|kia)»"))) setDate(ad(today, 2));
+    else {
+      // "mai": là ngày mai khi đứng đầu câu, đi sau buổi/"ngày", hoặc đi trước giờ/buổi;
+      // là tên người khi đi sau từ chỉ người ("gặp Mai", "cho Mai") hoặc viết hoa giữa câu
+      for (const mm of w.matchAll(NLP_RX(`«(?:(${NLP_PERIOD})\\s+|(ngày)\\s+)?(mai)»`, "giu"))) {
+        const head = w.slice(0, mm.index).trim(), before = head.split(/\s+/).pop() || "";
+        const after = w.slice(mm.index + mm[0].length);
+        const isDate = mm[1] || mm[2] ? true
+          : !head ? true
+          : NAME_BEFORE_MAI.test(before) ? false
+          : mm[3][0] === "M" ? false
+          : /^\s*(?:\d|lúc|sáng|trưa|chiều|tối|đêm|$)/iu.test(after);
+        if (isDate) { cutAt(mm); setPer(mm[1]); setDate(ad(today, 1)); break; }
+      }
+      if (!dateSet && (m = cut(NLP_RX(`«(?:(${NLP_PERIOD})\\s+)?(?:hôm\\s+)?nay»`)))) { setPer(m[1]); setDate(today); }
     }
   }
 
-  // Bóc từ chỉ buổi nếu đứng riêng (trừ 'ăn tối', 'ăn trưa', 'ăn sáng')
-  if (!per && (m = cut(/(?<!(?:ăn|bữa)\s+)(?<![\p{L}\p{N}])(sáng|trưa|chiều|tối|đêm)(?![\p{L}\p{N}])/iu))) {
-    setPer(m[1]);
-  }
-
-  // 2. Phân tích Giờ bắt đầu & Thời lượng
+  // ===== 2. GIỜ BẮT ĐẦU & THỜI LƯỢNG =====
   let start = null, dur = null;
-  const hm = (a, b) => pad(Math.min(23, +a)) + ":" + pad(b ? +b : 0);
+  const hm = (h, mi) => {
+    h = +h; mi = +(mi || 0);
+    if (h > 24 || mi > 59) { err = err || "Giờ không hợp lệ."; return null; }
+    return pad(h % 24) + ":" + pad(mi);
+  };
   const adj = (hr, p) => {
     p = p || per;
+    if (p === "đêm" && hr === 12) return 0;                       // 12h đêm = 00:00
     if ((p === "chiều" || p === "tối") && hr < 12) return hr + 12;
     if (p === "trưa" && hr >= 1 && hr <= 5) return hr + 12;
     if (p === "đêm" && hr >= 6 && hr < 12) return hr + 12;
     return hr;
   };
   const ampm = (hr, ap) => /pm/i.test(ap) ? (hr < 12 ? hr + 12 : hr) : (hr === 12 ? 0 : hr);
+  const num = s => parseFloat(String(s).replace(",", "."));
 
-  // Khoảng giờ: 14h-16h, 14:00 - 16:00
-  if ((m = cut(/(?<![\p{L}\p{N}])(\d{1,2})(?:h|:|g)(\d{2})?\s*[-–]\s*(\d{1,2})(?:h|:|g)?(\d{2})?(?![\p{L}\p{N}])/iu))) {
+  // 2a. Khoảng giờ: "14h-16h", "14-16h", "2-4h chiều", "14:00 - 16:00"
+  if ((m = cut(NLP_RX(`«(\\d{1,2})(?:[h:g](\\d{2})?|\\s*giờ)?\\s*[-–]\\s*(\\d{1,2})(?:[h:g](\\d{2})?|\\s*giờ)?(?:\\s*(${NLP_PERIOD}))?»(?!\\s*(?:tiếng|phút|ph|p)»)`)))) {
+    setPer(m[5]);
     const a = adj(+m[1]) * 60 + (+m[2] || 0), b = adj(+m[3]) * 60 + (+m[4] || 0);
     if (b > a) { start = hm(a / 60 | 0, a % 60); dur = (b - a) / 60; }
   }
-
-  // Bóc tách thời lượng rõ ràng trước
+  // 2b. Thời lượng nói rõ
   if (dur === null) {
-    if (cut(/(?<![\p{L}\p{N}])(?:nửa|1\/2)\s*(?:tiếng|giờ|h)(?![\p{L}\p{N}])/iu)) dur = 0.5;
-    else if ((m = cut(/(?<![\p{L}\p{N}])(\d+(?:[.,]\d+)?)\s*(?:tiếng|giờ|gio|hrs?|hours?)(\s*rưỡi)?(?![\p{L}\p{N}])/iu))) dur = parseFloat(m[1].replace(",", ".")) + (m[2] ? 0.5 : 0);
-    else if ((m = cut(/(?<![\p{L}\p{N}])(\d+(?:[.,]\d+)?)\s*h\s*rưỡi(?![\p{L}\p{N}])/iu))) dur = parseFloat(m[1].replace(",", ".")) + 0.5;
-    else if ((m = cut(/(?<![\p{L}\p{N}])(\d+)\s*(?:phút|phut|min|p)(?![\p{L}\p{N}])/iu))) dur = Math.round(+m[1] / 60 * 100) / 100;
-    else if ((m = cut(/(?<![\p{L}\p{N}])(?:trong\s*)(\d+(?:[.,]\d+)?)\s*h(?![\p{L}\p{N}])/iu))) dur = parseFloat(m[1].replace(",", "."));
+    if (cut(NLP_RX("«(?:nửa|1\\/2)\\s*(?:tiếng|giờ|h)»"))) dur = 0.5;
+    else if ((m = cut(NLP_RX("«(\\d+(?:[.,]\\d+)?)\\s*tiếng(?:\\s+(\\d{1,2})(?:\\s*(?:phút|ph|p))?(?![\\p{L}\\p{N}:])(?!\\s*(?:h|g|giờ)(?!\\p{L})))?(\\s*rưỡi)?»")))) dur = num(m[1]) + (+m[2] || 0) / 60 + (m[3] ? 0.5 : 0);
+    else if (cut(NLP_RX("«tiếng\\s*rưỡi»"))) dur = 1.5;
+    else if ((m = cut(NLP_RX("«(\\d{1,2})\\s*(?:h|giờ)\\s*(\\d{1,2})\\s*(?:phút|ph|p)»")))) dur = +m[1] + +m[2] / 60;
+    else if ((m = cut(NLP_RX("«(\\d+(?:[.,]\\d+)?)\\s*(?:hrs?|hours?)»")))) dur = num(m[1]);
+    else if ((m = cut(NLP_RX("«(\\d+)\\s*(?:phút|phut|min|ph|p)»")))) dur = Math.round(+m[1] / 60 * 100) / 100;
+    else if ((m = cut(NLP_RX("«trong\\s*(\\d+(?:[.,]\\d+)?)\\s*(?:h|giờ)»")))) dur = num(m[1]);
   }
-
-  // Giờ bắt đầu có mốc cụ thể
-  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2}):(\d{2})(?![\p{L}\p{N}])/u))) start = hm(adj(+m[1]), m[2]);
-  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2})[hg](\d{2})(?![\p{L}\p{N}])/iu))) start = hm(adj(+m[1]), m[2]);
-  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(?:lúc|từ|vào|at|@)\s*(\d{1,2})(?:\s*(?:h|giờ|g))?(?:\s*(sáng|trưa|chiều|tối|đêm|am|pm))?(?![\p{L}\p{N}])/iu))) {
-    const p = m[2];
-    if (p && /^(am|pm)$/i.test(p)) start = hm(ampm(+m[1], p), 0);
-    else { setPer(p); start = hm(adj(+m[1]), 0); }
+  // 2c. Giờ kèm buổi: "5h sáng", "2 giờ chiều", "8h30 tối", "tối 8h", "chiều 3 giờ"
+  if (start === null && (m = cut(NLP_RX(`«(\\d{1,2})(?:[h:g](\\d{2})?|\\s*giờ(?:\\s*(\\d{1,2})(?:\\s*phút)?)?)?(\\s*rưỡi)?\\s*(${NLP_PERIOD})»`)))) {
+    setPer(m[5]); start = hm(adj(+m[1]), m[2] || m[3] || (m[4] ? 30 : 0));
   }
-  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2})\s*(?:h|giờ|g)?\s*(am|pm)(?![\p{L}\p{N}])/iu))) start = hm(ampm(+m[1], m[2]), 0);
-  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2})\s*(?:h|giờ|g)?\s*(sáng|trưa|chiều|tối|đêm)(?![\p{L}\p{N}])/iu))) {
-    setPer(m[2]); start = hm(adj(+m[1]), 0);
+  if (start === null && (m = cut(NLP_RX(`«(${NLP_PERIOD})\\s*(?:lúc\\s*)?(\\d{1,2})(?:[h:g](\\d{2})?|\\s*giờ(?:\\s*(\\d{1,2})(?:\\s*phút)?)?)?(\\s*rưỡi)?»(?!\\s*(?:tiếng|phút|ph|p)»)`)))) {
+    setPer(m[1]); start = hm(adj(+m[2]), m[3] || m[4] || (m[5] ? 30 : 0));
   }
-
-  // Quét các chữ "Xh" hoặc "X.Xh" còn lại trong chuỗi
-  while ((m = cut(/(?<![\p{L}\p{N}])(\d{1,2}(?:[.,]\d+)?)\s*h(?![\p{L}\p{N}])/iu))) {
-    const val = parseFloat(m[1].replace(",", "."));
-    if (start === null && (val >= 6 || dur !== null)) {
-      start = hm(adj(Math.floor(val)), Math.round((val % 1) * 60));
-    } else if (dur === null) {
-      dur = val;
-    } else if (start === null) {
-      start = hm(adj(Math.floor(val)), Math.round((val % 1) * 60));
-    }
+  // 2d. Từ chỉ buổi đứng riêng (trừ "ăn tối", "bữa trưa"…)
+  if (!per && (m = cut(NLP_RX(`(?<!(?:ăn|bữa)\\s+)«(${NLP_PERIOD})»`)))) setPer(m[1]);
+  // 2e. Giờ bắt đầu nói rõ
+  if (start === null && (m = cut(NLP_RX("«(?:lúc|từ|vào|at|@)\\s*(\\d{1,2})(?:[h:g](\\d{2})?|\\s*giờ(?:\\s*(\\d{1,2}))?)?(\\s*rưỡi)?(?:\\s*(am|pm))?»")))) {
+    start = m[5] ? hm(ampm(+m[1], m[5]), m[2] || 0) : hm(adj(+m[1]), m[2] || m[3] || (m[4] ? 30 : 0));
+  }
+  if (start === null && (m = cut(NLP_RX("«(\\d{1,2}):(\\d{2})»")))) start = hm(adj(+m[1]), m[2]);
+  if (start === null && (m = cut(NLP_RX("«(\\d{1,2})[hg](\\d{2})»")))) {
+    // "1h30" không kèm buổi: dưới 6 giờ thì hiểu là thời lượng 1,5 tiếng, không phải 01:30 sáng
+    if (+m[1] < 6 && !per && dur === null) dur = +m[1] + +m[2] / 60;
+    else start = hm(adj(+m[1]), m[2]);
+  }
+  if (start === null && (m = cut(NLP_RX("«(\\d{1,2})\\s*(?:h|giờ)?\\s*(am|pm)»")))) start = hm(ampm(+m[1], m[2]), 0);
+  // 2f. Các "Xh" / "X giờ" còn lại: từ 6 trở lên (hoặc có buổi) là giờ bắt đầu, nhỏ hơn là thời lượng
+  while ((m = cut(NLP_RX("«(\\d{1,2}(?:[.,]\\d+)?)\\s*(?:h|giờ)(\\s*rưỡi)?»")))) {
+    const val = num(m[1]) + (m[2] ? 0.5 : 0);
+    const asStart = () => hm(adj(Math.floor(val)), Math.round((val % 1) * 60));
+    if (start === null && (val >= 6 || per || dur !== null)) start = asStart();
+    else if (dur === null) dur = val;
+    else if (start === null) start = asStart();
   }
 
   const key = ky(target);
@@ -1669,16 +1752,18 @@ function parseNLPText(str) {
     start = per ? dm[per] : lastEv ? tt(lastEv.s, lastEv.h) : "07:00";
   }
   if (dur === null) dur = (S.cfg && S.cfg.defDuration) || 2;
+  dur = Math.round(dur * 100) / 100;
 
-  // 3. Tên hoạt động, tác động, loại vốn
-  let title = w.replace(/(?<![\p{L}\p{N}])(?:lúc|từ|vào|at|@|trong)(?![\p{L}\p{N}])/giu, " ")
+  // ===== 3. TÊN, TÁC ĐỘNG, LOẠI VỐN =====
+  let title = w.replace(NLP_RX("«(?:lúc|từ|vào|at|@|trong)»", "giu"), " ")
+               .replace(/(^|\s)[-–,;.\/]+(?=\s|$)/g, " ")
                .replace(/[,;]+/g, " ")
                .replace(/\s+/g, " ")
                .trim();
   if (!title) title = "Hoạt động mới";
   const mode = WB("họp|meeting|deadline|ot|tăng ca|làm việc|công việc|xử lý|áp lực|stress|báo cáo").test(title) ? "d" : "u";
-  const c = chkEvent(key, start, dur, -1);
-  return { raw, title, targetDate: key, dateDesc: dateDesc + " (" + key.slice(5) + ")", startTime: start, duration: dur, capKey: guess(title), mode, err: c.err, hit: c.hit };
+  const c = err ? {} : chkEvent(key, start, dur, -1);
+  return { raw, title, targetDate: key, dateDesc: describeDate(target), startTime: start, duration: dur, capKey: guess(title), mode, err: err || c.err, hit: c.hit };
 }
 
 function handleNLPInput(val) {
@@ -1696,13 +1781,15 @@ function handleNLPInput(val) {
     ${r.err ? `<span class="pill pill-bad">⚠ ${esc(r.err)}</span>` : r.hit ? `<span class="pill pill-bad">⚠ Trùng giờ với "${esc(r.hit.t)}"</span>` : ""}`;
 }
 
-// Enter dùng để chốt chữ của bộ gõ (gõ tiếng Việt có dấu) không được tính là "gửi".
-// Safari phát compositionend TRƯỚC keydown nên cần thêm cờ justComposed.
-let justComposed = false;
+// Gõ tiếng Việt có dấu: một lần Enter vừa chốt chữ vừa thực hiện (ghi nhanh / chuyển ô trong popup).
+// Chrome phát keydown Enter (isComposing) TRƯỚC compositionend: ghi nhớ, chờ bộ gõ chốt chữ xong rồi mới làm.
+// Safari phát compositionend trước, nên lúc keydown chữ đã chốt và làm ngay được.
+let nlpAfterCompose = false;
 function noteCompositionEnd() {
-  justComposed = true;
-  setTimeout(() => { justComposed = false; }, 0);
-  // Enter đã nhấn trong popup lúc đang gõ dở: chữ đã chốt xong, giờ mới chuyển ô
+  if (nlpAfterCompose) {
+    nlpAfterCompose = false;
+    setTimeout(executeNLP, 0);
+  }
   if (enterAfterCompose) {
     const el = enterAfterCompose;
     enterAfterCompose = null;
@@ -1711,10 +1798,10 @@ function noteCompositionEnd() {
 }
 // Không có thuộc tính oncompositionend trong HTML nên phải gắn bằng addEventListener
 document.addEventListener("compositionend", noteCompositionEnd, true);
-const isImeEnter = e => e.isComposing || e.keyCode === 229 || justComposed;
 
 function handleNLPKeydown(e) {
-  if (e.key !== "Enter" || isImeEnter(e)) return;
+  if (e.key !== "Enter" || e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+  if (e.isComposing || e.keyCode === 229) { nlpAfterCompose = true; return; }
   e.preventDefault();
   executeNLP();
 }
@@ -1729,7 +1816,6 @@ function executeNLP() {
   const newEvt = { t: r.title, c: r.capKey, m: r.mode, h: r.duration, s: r.startTime };
   L.push(newEvt);
   sortL(L);
-  S.mem[r.title.normalize("NFC").toLowerCase()] = { c: r.capKey };
   markPending(newEvt);
   save();
   gcalFlush();
@@ -2207,6 +2293,9 @@ const GCAL_COLOR_MAP = {
 };
 
 let gcalTokenClient = null;
+const GCAL_SCOPE = "https://www.googleapis.com/auth/calendar.events";
+// Lỗi cấu hình gần nhất (API chưa bật, chưa cấp quyền lịch…) để hiện trên badge; xóa khi đẩy thành công
+let gcalConfigErr = "", gcalLastFail = "";
 
 function getGCalToken() {
   try {
@@ -2251,13 +2340,22 @@ function initGCalTokenClient(onSuccess) {
   try {
     gcalTokenClient = google.accounts.oauth2.initTokenClient({
       client_id: clientId.trim(),
-      scope: "https://www.googleapis.com/auth/calendar.events",
+      scope: GCAL_SCOPE,
       callback: (resp) => {
         if (resp.error) {
           showToast("Lỗi xác thực Google: " + resp.error, "bad");
           return;
         }
+        // Màn hình của Google cho phép bỏ tick từng quyền: không có quyền lịch thì token vô dụng
+        if (resp.access_token && google.accounts.oauth2.hasGrantedAllScopes && !google.accounts.oauth2.hasGrantedAllScopes(resp, GCAL_SCOPE)) {
+          gcalConfigErr = "Bạn chưa cho phép truy cập Google Calendar. Bấm Kết nối lại và tick ô quyền Google Calendar trên màn hình của Google.";
+          showToast(gcalConfigErr, "bad");
+          renderSettingsModal();
+          updateSyncBadge();
+          return;
+        }
         if (resp.access_token) {
+          gcalConfigErr = "";
           const expTime = Date.now() + (parseInt(resp.expires_in, 10) || 3600) * 1000;
           localStorage.setItem("gcal_token", resp.access_token);
           localStorage.setItem("gcal_token_exp", String(expTime));
@@ -2372,11 +2470,30 @@ async function gcalFetch(method, path, token, body) {
 }
 
 // "ok" | "auth" (401: cần kết nối lại) | "retry" (mạng, giới hạn tần suất, lỗi máy chủ) | "fail" (Google từ chối dữ liệu)
+// "ok" | "auth" (401: cần kết nối lại) | "retry" (mạng, giới hạn tần suất, lỗi máy chủ)
+// | "config" (403 do cấu hình: API chưa bật, chưa cấp quyền lịch… sửa xong thì gửi lại được)
+// | "fail" (Google từ chối dữ liệu của riêng sự kiện này)
 function gcalOutcome(r) {
   if (r.ok) return "ok";
   if (r.status === 401) return "auth";
-  const reason = r.data && r.data.error && r.data.error.errors && r.data.error.errors[0] && r.data.error.errors[0].reason;
-  if (r.status === 0 || r.status === 429 || r.status >= 500 || (r.status === 403 && /rateLimit|quota/i.test(reason || ""))) return "retry";
+  const err = (r.data && r.data.error) || {};
+  const reasons = [
+    ...(err.errors || []).map(x => x.reason),
+    ...(err.details || []).map(x => x.reason)
+  ].filter(Boolean).join(" ");
+  if (r.status === 0 || r.status === 429 || r.status >= 500 || (r.status === 403 && /rateLimit|quota/i.test(reasons))) return "retry";
+  if (r.status === 403) {
+    if (/accessNotConfigured|SERVICE_DISABLED/i.test(reasons)) {
+      gcalConfigErr = "Google Calendar API chưa được bật cho ứng dụng này. Nhóm phát triển cần vào Google Cloud Console → APIs & Services → Library → Google Calendar API → Enable, rồi bấm vào badge trên thanh tiêu đề để gửi lại.";
+    } else if (/insufficientPermissions|SCOPE_INSUFFICIENT/i.test(reasons)) {
+      clearGCalToken();
+      gcalConfigErr = "Bạn chưa cho phép truy cập Google Calendar. Bấm Kết nối lại và tick ô quyền Google Calendar trên màn hình của Google.";
+    } else {
+      gcalConfigErr = "Google từ chối truy cập lịch (403" + (err.message ? ": " + err.message : "") + ").";
+    }
+    return "config";
+  }
+  gcalLastFail = (r.status || "") + (err.message ? " " + err.message : "");
   return "fail";
 }
 
@@ -2440,7 +2557,7 @@ async function gcalFlushRun(token, opts) {
   try {
     for (const gid of [...S.gdel]) {
       const o = await gcalDeleteEvent(gid, token);
-      if (o === "auth" || o === "retry") { stop = o; break; }
+      if (o === "auth" || o === "retry" || o === "config") { stop = o; break; }
       S.gdel = S.gdel.filter(g => g !== gid);
       if (o === "ok") ok++; else failed.push("(sự kiện đã xóa)");
       save();
@@ -2451,7 +2568,7 @@ async function gcalFlushRun(token, opts) {
         if (!e.ds) continue;
         const v = e.ds, sig = evSig(e);
         const o = e.gid ? await gcalUpdateEvent(e, k, token) : await gcalCreateEvent(e, k, token);
-        if (o === "auth" || o === "retry") { stop = o; break; }
+        if (o === "auth" || o === "retry" || o === "config") { stop = o; break; }
         if (o === "ok") ok++; else failed.push(e.t);
         gcalSettle(k, e, v, sig);
         save();
@@ -2461,14 +2578,18 @@ async function gcalFlushRun(token, opts) {
     gcalFlushing = false;
   }
 
-  if (stop === "auth") {
+  if (!stop && ok) gcalConfigErr = "";
+  if (stop === "config") {
+    // Giữ nguyên các thay đổi đang chờ: sửa cấu hình xong là gửi lại được
+    showToast(gcalConfigErr, "bad");
+  } else if (stop === "auth") {
     clearGCalToken();
     showToast("Phiên Google Calendar đã hết hạn. Bấm 'Kết nối lại' trên thanh tiêu đề để đẩy các thay đổi đang chờ.", "bad");
   } else if (stop === "retry") {
     gcalRetryT = setTimeout(() => gcalFlush(), 30000);
     if (opts.report) showToast(`Mất mạng hoặc Google đang giới hạn tần suất. Còn ${gcalPendingCount()} thay đổi chờ, sẽ tự thử lại.`, "bad");
   }
-  if (failed.length) showToast(`Google Calendar từ chối ${failed.length} hoạt động: ${failed.slice(0, 3).join(", ")}${failed.length > 3 ? "…" : ""}`, "bad");
+  if (failed.length) showToast(`Google Calendar từ chối ${failed.length} hoạt động (${gcalLastFail || "không rõ lý do"}): ${failed.slice(0, 3).join(", ")}${failed.length > 3 ? "…" : ""}`, "bad");
   if (opts.report && !stop && !failed.length) showToast(ok ? `✓ Đã đồng bộ ${ok} thay đổi lên Google Calendar` : "✓ Google Calendar đã cập nhật", "ok");
   updateSyncBadge();
   if (gcalRerun && !stop) setTimeout(() => gcalFlush(opts), 0);
@@ -2503,8 +2624,13 @@ function updateSyncBadge() {
   if (!tokenOk) {
     b.textContent = n ? `⚠ GCal · Kết nối lại (${n} chờ)` : "GCal · Kết nối lại";
     b.className = n ? "btn btn-sm btn-danger" : "btn btn-sm btn-ghost";
-    b.title = "Phiên Google Calendar hết hạn sau 1 giờ. Bấm để kết nối lại và đẩy các thay đổi đang chờ.";
+    b.title = gcalConfigErr || "Phiên Google Calendar hết hạn sau 1 giờ. Bấm để kết nối lại và đẩy các thay đổi đang chờ.";
     b.onclick = connectGoogleCalendar;
+  } else if (gcalConfigErr && !gcalFlushing) {
+    b.textContent = `⚠ GCal · Lỗi cấu hình (${n} chờ)`;
+    b.className = "btn btn-sm btn-danger";
+    b.title = gcalConfigErr + " Bấm để thử gửi lại.";
+    b.onclick = () => gcalFlush({ report: true });
   } else {
     b.textContent = gcalFlushing ? `⏳ Đang đồng bộ ${n}…` : `⏳ ${n} chờ đồng bộ`;
     b.className = "btn btn-sm";
@@ -2576,8 +2702,9 @@ function renderSettingsModal() {
           ${isGCalConnected() ? '✓ Đã kết nối' : 'Chưa kết nối'}
         </span>
       </div>
+      ${gcalConfigErr ? `<p class="set-note" style="color:var(--bad);" role="alert">⚠ ${esc(gcalConfigErr)}</p>` : ""}
       <p style="font-size:12px; color:var(--tx-sec); margin-bottom:12px; line-height:1.45;">
-        Tự động đồng bộ các hoạt động khi Thêm, Sửa, Xóa sang Google Calendar với màu sắc phân loại theo 5 loại vốn sống.
+        Tự động đẩy (một chiều) các hoạt động khi Thêm, Sửa, Xóa sang Google Calendar, màu theo 5 loại vốn. Sửa trên Google Calendar không cập nhật ngược về app.
       </p>
 
       <div class="set-row">
@@ -3330,19 +3457,20 @@ function fillTpl(i) {
   if (tInp) tInp.focus();
 }
 
-function rep(date, o, rp, end) {
-  const r = "r" + Date.now().toString(36);
+// Tạo chuỗi lặp từ ngày `date` tới `end`. Khi biến một hoạt động lẻ thành chuỗi: truyền `r` của
+// chuỗi và `skipFirst` để không tạo trùng ngày của chính hoạt động đó.
+function rep(date, o, rp, end, r = "r" + Date.now().toString(36), skipFirst = false) {
   const a = new Date(date + "T00:00");
   const z = new Date((end || activeYear + "-12-31") + "T00:00");
   const days = [];
-  for (let d = a; d <= z && days.length < 400; d = ad(d, 1)) {
+  for (let d = skipFirst ? ad(a, 1) : a; d <= z && days.length < 400; d = ad(d, 1)) {
     const g = d.getDay();
     if (rp === "d" || (rp === "wd" && g > 0 && g < 6) || (rp === "w" && g === a.getDay())) {
       days.push(ky(d));
     }
   }
   if (!days.length) {
-    showToast("Không tạo được chuỗi lặp: hãy kiểm tra ngày kết thúc.", "bad");
+    showToast("Không tạo được chuỗi lặp: hãy kiểm tra ngày kết thúc (phải sau ngày của hoạt động).", "bad");
     return 0;
   }
   const bad = o.s ? days.filter(k => chkEvent(k, o.s, o.h, -1).hit).length : 0;
@@ -3489,17 +3617,17 @@ function renderEditorSheet() {
         </div>
       </div>
 
-      ${X ? (X.r ? `
+      ${X && X.r ? `
         <div style="padding:6px 10px; background:var(--card-subtle); border-radius:var(--radius-sm); border:1px solid var(--bd);">
           <label style="font-size:12.5px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
             <input type="checkbox" id="inpSeries">
             <b>Áp dụng thay đổi cho cả chuỗi</b> từ ngày này trở đi
           </label>
         </div>
-      ` : '') : `
+      ` : `
         <div class="form-row" style="background:var(--card-subtle); padding:8px 10px; border-radius:var(--radius-sm); border:1px solid var(--bd);">
           <div class="form-group">
-            <label class="form-label" for="inpRepeat">Lặp lại định kỳ</label>
+            <label class="form-label" for="inpRepeat">${X ? "Lặp lại từ ngày này" : "Lặp lại định kỳ"}</label>
             <select id="inpRepeat">
               <option value="">Không lặp (Một lần)</option>
               <option value="w">Hằng tuần (cùng thứ)</option>
@@ -3574,10 +3702,21 @@ function saveEventFromForm(keepOpen) {
       });
       showToast(`Đã cập nhật cả chuỗi "${title}"`, "ok");
     } else {
-      Object.assign(L[ei], o);
-      delete L[ei].demo;
-      markPending(L[ei]);
-      showToast(`Đã cập nhật "${title}"`, "ok");
+      const rp = $("inpRepeat") ? $("inpRepeat").value : "";
+      if (rp) {
+        const r = "r" + Date.now().toString(36);
+        const n = rep(ed, o, rp, $("inpRepeatEnd").value, r, true);
+        if (!n) return;
+        Object.assign(L[ei], o, { r });
+        delete L[ei].demo;
+        markPending(L[ei]);
+        showToast(`Đã chuyển "${title}" thành chuỗi ${n + 1} hoạt động`, "ok");
+      } else {
+        Object.assign(L[ei], o);
+        delete L[ei].demo;
+        markPending(L[ei]);
+        showToast(`Đã cập nhật "${title}"`, "ok");
+      }
     }
   } else {
     const rp = $("inpRepeat") ? $("inpRepeat").value : "";
@@ -3728,7 +3867,7 @@ function cleanState(d) {
     ...(GCAL_CID.test(dc.gcalClientId || "") ? { gcalClientId: dc.gcalClientId } : {})
   };
   const gdel = Array.isArray(d.gdel) ? [...new Set(d.gdel.filter(g => typeof g === "string" && GID.test(g)))].slice(-500) : [];
-  return { ev, caps, bl, mem, cfg, gdel, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
+  return { ev, caps, bl, mem, memV: d.memV === 2 ? 2 : 0, cfg, gdel, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
 }
 
 async function saveFile(filename, content, mime) {
