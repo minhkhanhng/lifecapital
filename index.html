@@ -1561,13 +1561,15 @@ function handleNLPInput(val) {
     ${r.err ? `<span class="pill pill-bad">⚠ ${esc(r.err)}</span>` : r.hit ? `<span class="pill pill-bad">⚠ Trùng giờ với "${esc(r.hit.t)}"</span>` : ""}`;
 }
 
-// Enter dùng để chốt chữ của bộ gõ (gõ tiếng Việt có dấu) không được tính là "gửi".
-// Safari phát compositionend TRƯỚC keydown nên cần thêm cờ justComposed.
-let justComposed = false;
+// Gõ tiếng Việt có dấu: một lần Enter vừa chốt chữ vừa thực hiện (ghi nhanh / chuyển ô trong popup).
+// Chrome phát keydown Enter (isComposing) TRƯỚC compositionend: ghi nhớ, chờ bộ gõ chốt chữ xong rồi mới làm.
+// Safari phát compositionend trước, nên lúc keydown chữ đã chốt và làm ngay được.
+let nlpAfterCompose = false;
 function noteCompositionEnd() {
-  justComposed = true;
-  setTimeout(() => { justComposed = false; }, 0);
-  // Enter đã nhấn trong popup lúc đang gõ dở: chữ đã chốt xong, giờ mới chuyển ô
+  if (nlpAfterCompose) {
+    nlpAfterCompose = false;
+    setTimeout(executeNLP, 0);
+  }
   if (enterAfterCompose) {
     const el = enterAfterCompose;
     enterAfterCompose = null;
@@ -1576,10 +1578,10 @@ function noteCompositionEnd() {
 }
 // Không có thuộc tính oncompositionend trong HTML nên phải gắn bằng addEventListener
 document.addEventListener("compositionend", noteCompositionEnd, true);
-const isImeEnter = e => e.isComposing || e.keyCode === 229 || justComposed;
 
 function handleNLPKeydown(e) {
-  if (e.key !== "Enter" || isImeEnter(e)) return;
+  if (e.key !== "Enter" || e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+  if (e.isComposing || e.keyCode === 229) { nlpAfterCompose = true; return; }
   e.preventDefault();
   executeNLP();
 }
