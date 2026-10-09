@@ -3238,19 +3238,20 @@ function fillTpl(i) {
   if (tInp) tInp.focus();
 }
 
-function rep(date, o, rp, end) {
-  const r = "r" + Date.now().toString(36);
+// Tạo chuỗi lặp từ ngày `date` tới `end`. Khi biến một hoạt động lẻ thành chuỗi: truyền `r` của
+// chuỗi và `skipFirst` để không tạo trùng ngày của chính hoạt động đó.
+function rep(date, o, rp, end, r = "r" + Date.now().toString(36), skipFirst = false) {
   const a = new Date(date + "T00:00");
   const z = new Date((end || activeYear + "-12-31") + "T00:00");
   const days = [];
-  for (let d = a; d <= z && days.length < 400; d = ad(d, 1)) {
+  for (let d = skipFirst ? ad(a, 1) : a; d <= z && days.length < 400; d = ad(d, 1)) {
     const g = d.getDay();
     if (rp === "d" || (rp === "wd" && g > 0 && g < 6) || (rp === "w" && g === a.getDay())) {
       days.push(ky(d));
     }
   }
   if (!days.length) {
-    showToast("Không tạo được chuỗi lặp: hãy kiểm tra ngày kết thúc.", "bad");
+    showToast("Không tạo được chuỗi lặp: hãy kiểm tra ngày kết thúc (phải sau ngày của hoạt động).", "bad");
     return 0;
   }
   const bad = o.s ? days.filter(k => chkEvent(k, o.s, o.h, -1).hit).length : 0;
@@ -3397,17 +3398,17 @@ function renderEditorSheet() {
         </div>
       </div>
 
-      ${X ? (X.r ? `
+      ${X && X.r ? `
         <div style="padding:6px 10px; background:var(--card-subtle); border-radius:var(--radius-sm); border:1px solid var(--bd);">
           <label style="font-size:12.5px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
             <input type="checkbox" id="inpSeries">
             <b>Áp dụng thay đổi cho cả chuỗi</b> từ ngày này trở đi
           </label>
         </div>
-      ` : '') : `
+      ` : `
         <div class="form-row" style="background:var(--card-subtle); padding:8px 10px; border-radius:var(--radius-sm); border:1px solid var(--bd);">
           <div class="form-group">
-            <label class="form-label" for="inpRepeat">Lặp lại định kỳ</label>
+            <label class="form-label" for="inpRepeat">${X ? "Lặp lại từ ngày này" : "Lặp lại định kỳ"}</label>
             <select id="inpRepeat">
               <option value="">Không lặp (Một lần)</option>
               <option value="w">Hằng tuần (cùng thứ)</option>
@@ -3482,10 +3483,21 @@ function saveEventFromForm(keepOpen) {
       });
       showToast(`Đã cập nhật cả chuỗi "${title}"`, "ok");
     } else {
-      Object.assign(L[ei], o);
-      delete L[ei].demo;
-      markPending(L[ei]);
-      showToast(`Đã cập nhật "${title}"`, "ok");
+      const rp = $("inpRepeat") ? $("inpRepeat").value : "";
+      if (rp) {
+        const r = "r" + Date.now().toString(36);
+        const n = rep(ed, o, rp, $("inpRepeatEnd").value, r, true);
+        if (!n) return;
+        Object.assign(L[ei], o, { r });
+        delete L[ei].demo;
+        markPending(L[ei]);
+        showToast(`Đã chuyển "${title}" thành chuỗi ${n + 1} hoạt động`, "ok");
+      } else {
+        Object.assign(L[ei], o);
+        delete L[ei].demo;
+        markPending(L[ei]);
+        showToast(`Đã cập nhật "${title}"`, "ok");
+      }
     }
   } else {
     const rp = $("inpRepeat") ? $("inpRepeat").value : "";
