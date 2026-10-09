@@ -1113,8 +1113,8 @@ const DCAP = [
   ["sk", "Sức khỏe", "#97A13B", 0, ["gym", "bơi", "chạy bộ", "cầu lông", "đá bóng", "spa", "ngủ", "thể thao", "fitness", "yoga", "đi bộ", "sức khỏe", "massage", "nạp năng lượng"]],
   ["qh", "Quan hệ", "#E0A3BB", 0, ["dinner", "sinh nhật", "cưới", "gia đình", "bạn", "date", "chị", "em", "anh", "bố", "mẹ", "thăm", "ăn tối", "gặp mặt", "trò chuyện", "hẹn hò", "liên hoan"]],
   ["tn", "Trải nghiệm", "#8b6da9", 0, ["xem", "du lịch", "trip", "phim", "workshop", "thử", "concert", "cafe", "cà phê", "chill", "ăn uống", "dạo phố", "triển lãm", "bảo tàng", "khám phá"]],
-  ["kn", "Kỹ năng", "#4a859c", 0, ["học", "đọc", "course", "study", "khóa", "sách", "tiếng anh", "code", "nghiên cứu", "luyện", "đàn", "viết", "podcast", "kỹ năng", "vẽ"]],
-  ["tc", "Tài chính / công việc", "#b88628", 0, ["họp", "làm", "work", "meeting", "deep", "dự án", "khách", "bán", "deal", "deadline", "báo cáo", "ot", "tăng ca", "công ty", "văn phòng", "khách hàng", "tài chính", "tiền"]]
+  ["kn", "Kỹ năng", "#4a859c", 0, ["học", "đọc", "course", "study", "khóa", "sách", "tiếng anh", "code", "nghiên cứu", "luyện", "đàn", "viết", "podcast", "kỹ năng", "vẽ", "ngoại ngữ"]],
+  ["tc", "Tài chính / công việc", "#b88628", 0, ["họp", "làm việc", "work", "meeting", "deep", "dự án", "khách", "bán", "deal", "deadline", "báo cáo", "ot", "tăng ca", "công ty", "văn phòng", "khách hàng", "tài chính", "tiền"]]
 ];
 const DN_VI = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ Nhật"];
 const DN_SHORT = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
@@ -1239,6 +1239,8 @@ if (!S.cfg) S.cfg = { defDuration: 2, burnoutHours: 6 };
 S.bl = S.bl || {};
 S.mem = S.mem || {};
 S.gdel = S.gdel || [];
+// Bản cũ ghi cả phỏng đoán của thanh ghi nhanh vào bộ nhớ (vd "học tiếng anh" → Quan hệ): xóa một lần
+if (S.memV !== 2) { S.mem = {}; S.memV = 2; }
 
 const cmp = (a, b) => (a.s || "99:99").localeCompare(b.s || "99:99");
 const sortL = l => l.sort(cmp);
@@ -1379,23 +1381,26 @@ function getDayBattery(dateStr) {
   return { u, d, net, fillPercent, statusClass, label, isBurnout };
 }
 
+// Phân loại vốn theo từ khóa: cụm khớp nhiều từ / dài nhất thắng ("tiếng anh" thắng "anh"),
+// không phụ thuộc thứ tự các loại vốn.
 function guess(t) {
-  t = (t || "").normalize("NFC");
-  const normTitle = t.trim().toLowerCase();
-  const m = S.mem && S.mem[normTitle];
+  const normTitle = (t || "").normalize("NFC").trim().toLowerCase();
+  const m = S.mem && Object.prototype.hasOwnProperty.call(S.mem, normTitle) ? S.mem[normTitle] : null;
   if (m && S.caps.some(c => c.k === m.c)) return m.c;
 
   const w = " " + normTitle.split(/[^\p{L}\p{N}]+/u).join(" ") + " ";
-
-  // Kiểm tra từ khóa tùy chỉnh của từng loại vốn do người dùng cài đặt
+  let best = null, bestScore = 0;
   for (const c of S.caps) {
-    const kws = (c.kw && c.kw.length) ? c.kw : (DCAP.find(d => d[0] === c.k) ? DCAP.find(d => d[0] === c.k)[4] : []);
-    if (kws.some(k => k && w.includes(" " + k.toLowerCase().trim() + " "))) {
-      return c.k;
+    const def = DCAP.find(d => d[0] === c.k);
+    const kws = (c.kw && c.kw.length) ? c.kw : (def ? def[4] : []);
+    for (const k of kws) {
+      const kk = String(k || "").normalize("NFC").toLowerCase().trim();
+      if (!kk || !w.includes(" " + kk + " ")) continue;
+      const score = kk.split(/\s+/).length * 100 + kk.length;
+      if (score > bestScore) { best = c.k; bestScore = score; }
     }
   }
-
-  return S.caps[0] ? S.caps[0].k : "sk";
+  return best || (S.caps[0] ? S.caps[0].k : "sk");
 }
 
 /* ==========================================================================
@@ -1423,7 +1428,6 @@ let parsedNLP = null;
 
 const toMin = s => { const [a, b] = s.split(":").map(Number); return a * 60 + b; };
 const WB = p => new RegExp("(?<![\\p{L}\\p{N}])(?:" + p + ")(?![\\p{L}\\p{N}])", "iu");
-const PER = "sáng|trưa|chiều|tối|đêm";
 
 // Kiểm tra giờ/thời lượng/trùng giờ — dùng chung cho modal, ghi nhanh và chuỗi lặp
 function chkEvent(date, s, h, skip) {
@@ -1435,96 +1439,170 @@ function chkEvent(date, s, h, skip) {
   return { hit };
 }
 
+// Regex có ranh giới từ Unicode: « = không đứng sau chữ/số, » = không đứng trước chữ/số
+const NLP_RX = (src, flags = "iu") => new RegExp(src.replace(/«/g, "(?<![\\p{L}\\p{N}])").replace(/»/g, "(?![\\p{L}\\p{N}])"), flags);
+
+// Số đếm bằng chữ đứng trước đơn vị thời lượng: "hai tiếng", "mười lăm phút", "ba mươi phút"
+const VI_DIGIT = { "một": 1, "mốt": 1, "hai": 2, "ba": 3, "bốn": 4, "tư": 4, "năm": 5, "lăm": 5, "sáu": 6, "bảy": 7, "bẩy": 7, "tám": 8, "chín": 9 };
+function viNum(s) {
+  const t = s.toLowerCase().trim().split(/\s+/);
+  let n, i;
+  if (t[0] === "mười") { n = 10; i = 1; }
+  else if (t[1] === "mươi") { n = (VI_DIGIT[t[0]] || 0) * 10; i = 2; }
+  else { n = VI_DIGIT[t[0]] || 0; i = 1; }
+  if (n >= 10 && t[i] && VI_DIGIT[t[i]] != null) n += VI_DIGIT[t[i]];
+  return n;
+}
+const NUM_WORDS_RX = NLP_RX("«(?:một|hai|ba|bốn|tư|năm|sáu|bảy|bẩy|tám|chín|mười)(?:\\s+(?:mươi|mốt|một|hai|ba|bốn|tư|lăm|năm|sáu|bảy|bẩy|tám|chín))*(?=\\s*(?:tiếng|giờ|phút|ph|p)»)", "giu");
+const normalizeViNumbers = s => s.replace(NUM_WORDS_RX, m => String(viNum(m)));
+
+// "Hôm qua · Thứ 4, 07/10" — luôn hiện thứ và ngày cụ thể; thêm năm khi khác năm nay
+function describeDate(d) {
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const diff = Math.round((d - today) / 864e5);
+  const rel = { "-2": "Hôm kia", "-1": "Hôm qua", "0": "Hôm nay", "1": "Ngày mai", "2": "Ngày kia" }[diff];
+  const dm = pad(d.getDate()) + "/" + pad(d.getMonth() + 1) + (d.getFullYear() !== today.getFullYear() ? "/" + d.getFullYear() : "");
+  return (rel ? rel + " · " : "") + DN_VI[(d.getDay() + 6) % 7] + ", " + dm;
+}
+
+const NLP_PERIOD = "sáng|trưa|chiều|tối|đêm";
+// Từ đứng ngay trước "Mai" cho thấy đó là tên người, không phải "ngày mai"
+const NAME_BEFORE_MAI = /^(gặp|với|cùng|cho|bạn|chị|em|anh|thăm|nhà|đón|gọi|nhắn|của|và|chú|cô|bác|dì|cậu|mợ|ông|bà|tên|bé|con)$/i;
+const WD_RX = "(?:(?:thứ|thu)\\s*([2-7])|t([2-7])|thứ\\s+(hai|ba|tư|bốn|năm|sáu|bảy)|(chủ\\s*nhật|cn))";
+const WK_RX = "tuần\\s*(này|sau\\s*nữa|sau|tới|trước|rồi|qua)";
+const wdIndex = (n1, n2, word) => n1 ? +n1 - 2 : n2 ? +n2 - 2 : word ? { hai: 0, ba: 1, tư: 2, bốn: 2, năm: 3, sáu: 4, bảy: 5 }[word.toLowerCase()] : 6;
+const weekShift = q => !q ? null : /này/i.test(q) ? 0 : /nữa/i.test(q) ? 2 : /sau|tới/i.test(q) ? 1 : -1;
+
 function parseNLPText(str) {
   if (!str || !str.trim()) return null;
   const raw = str.trim().normalize("NFC");
-  let w = " " + raw + " ";
-  const cut = re => { const m = w.match(re); if (m) w = w.replace(re, " "); return m; };
-  const base = new Date(); base.setHours(0, 0, 0, 0);
-  let target = base, dateDesc = "Hôm nay", per = null, m;
-  const setPer = x => { if (x) per = x.toLowerCase(); };
-  const wkBase = W[CW >= 0 ? CW : Math.min(Math.max(sel, 0), W.length - 1)];
+  let w = " " + normalizeViNumbers(raw) + " ";
+  // Cắt đúng đoạn khớp (theo vị trí) ra khỏi câu, phần còn lại thành tên hoạt động
+  const cutAt = (m) => { w = w.slice(0, m.index) + " " + w.slice(m.index + m[0].length); return m; };
+  const cut = re => { const m = w.match(re); return m ? cutAt(m) : null; };
 
-  // 1. Phân tích Ngày
-  if ((m = cut(/(?<![\p{L}\p{N}])(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?(?![\p{L}\p{N}])/u))) {
-    const y = m[3] ? (+m[3] < 100 ? 2000 + +m[3] : +m[3]) : base.getFullYear(), d = new Date(y, +m[2] - 1, +m[1]);
-    if (d.getMonth() === +m[2] - 1) { target = d; dateDesc = DN_VI[(d.getDay() + 6) % 7] + " " + m[1] + "/" + m[2]; }
-  } else if (cut(/(?<![\p{L}\p{N}])(?:ngày\s+)?(?:mốt|kia)(?![\p{L}\p{N}])/iu)) {
-    target = ad(base, 2); dateDesc = "Ngày kia";
-  } else if ((m = cut(/(?<![\p{L}\p{N}])(?:(sáng|trưa|chiều|tối|đêm)\s+|ngày\s+)mai(?![\p{L}\p{N}])/iu))) {
-    setPer(m[1]); target = ad(base, 1); dateDesc = "Ngày mai";
-  } else if ((m = cut(/(?<!(?:gặp|với|cùng|bạn|chị|em|anh|thăm|nhà|đón)\s+)(?<![\p{L}\p{N}])mai(?![\p{L}\p{N}])/iu))) {
-    target = ad(base, 1); dateDesc = "Ngày mai";
-  } else if ((m = cut(/(?<![\p{L}\p{N}])(?:(sáng|trưa|chiều|tối|đêm)\s+)?(?:hôm\s+)?nay(?![\p{L}\p{N}])/iu))) {
-    setPer(m[1]); dateDesc = "Hôm nay";
-  } else {
-    let idx = null;
-    if ((m = cut(/(?<![\p{L}\p{N}])(?:thứ|thu|t)\s*([2-7])(?![\p{L}\p{N}])/iu))) idx = +m[1] - 2;
-    else if ((m = cut(/(?<![\p{L}\p{N}])thứ\s+(hai|ba|tư|bốn|năm|sáu|bảy)(?![\p{L}\p{N}])/iu))) idx = { hai: 0, ba: 1, tư: 2, bốn: 2, năm: 3, sáu: 4, bảy: 5 }[m[1].toLowerCase()];
-    else if (cut(WB("chủ nhật|cn"))) idx = 6;
-    if (idx !== null) {
-      let d = ad(wkBase, idx);
-      if (CW >= 0 && d < base) d = ad(d, 7);
-      target = d;
-      dateDesc = DN_VI[idx];
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const mon0 = ad(today, -((today.getDay() + 6) % 7)); // Thứ 2 của tuần này
+  let target = today, dateSet = false, per = null, err = null, m;
+  const setPer = x => { if (x) per = x.toLowerCase(); };
+  const setDate = d => { target = d; dateSet = true; };
+  const validDate = (y, mo, d) => { const x = new Date(y, mo - 1, d); return x.getMonth() === mo - 1 && x.getDate() === d ? x : null; };
+  const fullYear = y => !y ? today.getFullYear() : (+y < 100 ? 2000 + +y : +y);
+
+  // ===== 1. NGÀY =====
+  // 1a. "ngày 9 tháng 10", "9 tháng 10 năm 2026"
+  if ((m = cut(NLP_RX("«(?:ngày\\s*)?(\\d{1,2})\\s*tháng\\s*(\\d{1,2})(?:\\s*,?\\s*(?:năm\\s*)?(\\d{4}))?»")))) {
+    const d = validDate(fullYear(m[3]), +m[2], +m[1]);
+    if (d) setDate(d); else err = "Ngày không hợp lệ.";
+  }
+  // 1b. "09/10", "9-10", "09.10", "9/10/2026", "09.10.26" (không nhầm với "9-10h" hay "1.5 tiếng")
+  if (!dateSet && !err) {
+    for (const mm of w.matchAll(NLP_RX("«(?:ngày\\s*)?(\\d{1,2})([\\/.\\-])(\\d{1,2})(?:\\2(\\d{4}|\\d{2}))?(?![\\d\\/.\\-])(?!\\s*(?:h|g|giờ|tiếng|phút|ph|p|:)»)", "giu"))) {
+      // Dấu chấm dễ nhầm số thập phân ("1.5"): chỉ nhận "09.10" (đủ 2 chữ số) hoặc có năm
+      if (mm[2] === "." && !mm[4] && !(mm[1].length === 2 && mm[3].length === 2)) continue;
+      const d = validDate(fullYear(mm[4]), +mm[3], +mm[1]);
+      if (d) { cutAt(mm); setDate(d); break; }
+      if (mm[2] === "/") { cutAt(mm); err = "Ngày không hợp lệ."; break; }
+    }
+  }
+  // 1c. "ngày 9" = ngày 9 của tháng này
+  if (!dateSet && !err && (m = cut(NLP_RX("«ngày\\s*(\\d{1,2})»(?!\\s*[\\/.\\-]\\d)")))) {
+    const d = validDate(today.getFullYear(), today.getMonth() + 1, +m[1]);
+    if (d) setDate(d); else err = "Ngày không hợp lệ.";
+  }
+  // 1d. Thứ trong tuần: "thứ 2", "t2", "thứ hai", "chủ nhật", kèm "tuần này/sau/tới/trước" ở trước hoặc sau
+  let wd = null, wq = null;
+  if ((m = cut(NLP_RX(`«${WK_RX}\\s*,?\\s*(?:vào\\s*)?${WD_RX}»`)))) { wd = wdIndex(m[2], m[3], m[4]); wq = m[1]; }
+  else if ((m = cut(NLP_RX(`«${WD_RX}(?:\\s*,?\\s*${WK_RX})?»`)))) { wd = wdIndex(m[1], m[2], m[3]); wq = m[5]; }
+  if (!dateSet && wd !== null) {
+    const shift = weekShift(wq);
+    let d = ad(mon0, wd + 7 * (shift || 0));
+    if (shift === null && d < today) d = ad(d, 7); // không nói tuần nào: lần tới gần nhất
+    setDate(d);
+  }
+  // 1e. Ngày tương đối
+  if (!dateSet) {
+    if (cut(NLP_RX("«hôm\\s*kia»"))) setDate(ad(today, -2));
+    else if ((m = cut(NLP_RX(`«(?:(${NLP_PERIOD})\\s+|hôm\\s+)qua»`)))) { setPer(m[1]); setDate(ad(today, -1)); }
+    else if (cut(NLP_RX("«(?:ngày\\s+)?(?:mốt|kia)»"))) setDate(ad(today, 2));
+    else {
+      // "mai": là ngày mai khi đứng đầu câu, đi sau buổi/"ngày", hoặc đi trước giờ/buổi;
+      // là tên người khi đi sau từ chỉ người ("gặp Mai", "cho Mai") hoặc viết hoa giữa câu
+      for (const mm of w.matchAll(NLP_RX(`«(?:(${NLP_PERIOD})\\s+|(ngày)\\s+)?(mai)»`, "giu"))) {
+        const head = w.slice(0, mm.index).trim(), before = head.split(/\s+/).pop() || "";
+        const after = w.slice(mm.index + mm[0].length);
+        const isDate = mm[1] || mm[2] ? true
+          : !head ? true
+          : NAME_BEFORE_MAI.test(before) ? false
+          : mm[3][0] === "M" ? false
+          : /^\s*(?:\d|lúc|sáng|trưa|chiều|tối|đêm|$)/iu.test(after);
+        if (isDate) { cutAt(mm); setPer(mm[1]); setDate(ad(today, 1)); break; }
+      }
+      if (!dateSet && (m = cut(NLP_RX(`«(?:(${NLP_PERIOD})\\s+)?(?:hôm\\s+)?nay»`)))) { setPer(m[1]); setDate(today); }
     }
   }
 
-  // Bóc từ chỉ buổi nếu đứng riêng (trừ 'ăn tối', 'ăn trưa', 'ăn sáng')
-  if (!per && (m = cut(/(?<!(?:ăn|bữa)\s+)(?<![\p{L}\p{N}])(sáng|trưa|chiều|tối|đêm)(?![\p{L}\p{N}])/iu))) {
-    setPer(m[1]);
-  }
-
-  // 2. Phân tích Giờ bắt đầu & Thời lượng
+  // ===== 2. GIỜ BẮT ĐẦU & THỜI LƯỢNG =====
   let start = null, dur = null;
-  const hm = (a, b) => pad(Math.min(23, +a)) + ":" + pad(b ? +b : 0);
+  const hm = (h, mi) => {
+    h = +h; mi = +(mi || 0);
+    if (h > 24 || mi > 59) { err = err || "Giờ không hợp lệ."; return null; }
+    return pad(h % 24) + ":" + pad(mi);
+  };
   const adj = (hr, p) => {
     p = p || per;
+    if (p === "đêm" && hr === 12) return 0;                       // 12h đêm = 00:00
     if ((p === "chiều" || p === "tối") && hr < 12) return hr + 12;
     if (p === "trưa" && hr >= 1 && hr <= 5) return hr + 12;
     if (p === "đêm" && hr >= 6 && hr < 12) return hr + 12;
     return hr;
   };
   const ampm = (hr, ap) => /pm/i.test(ap) ? (hr < 12 ? hr + 12 : hr) : (hr === 12 ? 0 : hr);
+  const num = s => parseFloat(String(s).replace(",", "."));
 
-  // Khoảng giờ: 14h-16h, 14:00 - 16:00
-  if ((m = cut(/(?<![\p{L}\p{N}])(\d{1,2})(?:h|:|g)(\d{2})?\s*[-–]\s*(\d{1,2})(?:h|:|g)?(\d{2})?(?![\p{L}\p{N}])/iu))) {
+  // 2a. Khoảng giờ: "14h-16h", "14-16h", "2-4h chiều", "14:00 - 16:00"
+  if ((m = cut(NLP_RX(`«(\\d{1,2})(?:[h:g](\\d{2})?|\\s*giờ)?\\s*[-–]\\s*(\\d{1,2})(?:[h:g](\\d{2})?|\\s*giờ)?(?:\\s*(${NLP_PERIOD}))?»(?!\\s*(?:tiếng|phút|ph|p)»)`)))) {
+    setPer(m[5]);
     const a = adj(+m[1]) * 60 + (+m[2] || 0), b = adj(+m[3]) * 60 + (+m[4] || 0);
     if (b > a) { start = hm(a / 60 | 0, a % 60); dur = (b - a) / 60; }
   }
-
-  // Bóc tách thời lượng rõ ràng trước
+  // 2b. Thời lượng nói rõ
   if (dur === null) {
-    if (cut(/(?<![\p{L}\p{N}])(?:nửa|1\/2)\s*(?:tiếng|giờ|h)(?![\p{L}\p{N}])/iu)) dur = 0.5;
-    else if ((m = cut(/(?<![\p{L}\p{N}])(\d+(?:[.,]\d+)?)\s*(?:tiếng|giờ|gio|hrs?|hours?)(\s*rưỡi)?(?![\p{L}\p{N}])/iu))) dur = parseFloat(m[1].replace(",", ".")) + (m[2] ? 0.5 : 0);
-    else if ((m = cut(/(?<![\p{L}\p{N}])(\d+(?:[.,]\d+)?)\s*h\s*rưỡi(?![\p{L}\p{N}])/iu))) dur = parseFloat(m[1].replace(",", ".")) + 0.5;
-    else if ((m = cut(/(?<![\p{L}\p{N}])(\d+)\s*(?:phút|phut|min|p)(?![\p{L}\p{N}])/iu))) dur = Math.round(+m[1] / 60 * 100) / 100;
-    else if ((m = cut(/(?<![\p{L}\p{N}])(?:trong\s*)(\d+(?:[.,]\d+)?)\s*h(?![\p{L}\p{N}])/iu))) dur = parseFloat(m[1].replace(",", "."));
+    if (cut(NLP_RX("«(?:nửa|1\\/2)\\s*(?:tiếng|giờ|h)»"))) dur = 0.5;
+    else if ((m = cut(NLP_RX("«(\\d+(?:[.,]\\d+)?)\\s*tiếng(?:\\s+(\\d{1,2})(?:\\s*(?:phút|ph|p))?(?![\\p{L}\\p{N}:])(?!\\s*(?:h|g|giờ)(?!\\p{L})))?(\\s*rưỡi)?»")))) dur = num(m[1]) + (+m[2] || 0) / 60 + (m[3] ? 0.5 : 0);
+    else if (cut(NLP_RX("«tiếng\\s*rưỡi»"))) dur = 1.5;
+    else if ((m = cut(NLP_RX("«(\\d{1,2})\\s*(?:h|giờ)\\s*(\\d{1,2})\\s*(?:phút|ph|p)»")))) dur = +m[1] + +m[2] / 60;
+    else if ((m = cut(NLP_RX("«(\\d+(?:[.,]\\d+)?)\\s*(?:hrs?|hours?)»")))) dur = num(m[1]);
+    else if ((m = cut(NLP_RX("«(\\d+)\\s*(?:phút|phut|min|ph|p)»")))) dur = Math.round(+m[1] / 60 * 100) / 100;
+    else if ((m = cut(NLP_RX("«trong\\s*(\\d+(?:[.,]\\d+)?)\\s*(?:h|giờ)»")))) dur = num(m[1]);
   }
-
-  // Giờ bắt đầu có mốc cụ thể
-  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2}):(\d{2})(?![\p{L}\p{N}])/u))) start = hm(adj(+m[1]), m[2]);
-  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2})[hg](\d{2})(?![\p{L}\p{N}])/iu))) start = hm(adj(+m[1]), m[2]);
-  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(?:lúc|từ|vào|at|@)\s*(\d{1,2})(?:\s*(?:h|giờ|g))?(?:\s*(sáng|trưa|chiều|tối|đêm|am|pm))?(?![\p{L}\p{N}])/iu))) {
-    const p = m[2];
-    if (p && /^(am|pm)$/i.test(p)) start = hm(ampm(+m[1], p), 0);
-    else { setPer(p); start = hm(adj(+m[1]), 0); }
+  // 2c. Giờ kèm buổi: "5h sáng", "2 giờ chiều", "8h30 tối", "tối 8h", "chiều 3 giờ"
+  if (start === null && (m = cut(NLP_RX(`«(\\d{1,2})(?:[h:g](\\d{2})?|\\s*giờ(?:\\s*(\\d{1,2})(?:\\s*phút)?)?)?(\\s*rưỡi)?\\s*(${NLP_PERIOD})»`)))) {
+    setPer(m[5]); start = hm(adj(+m[1]), m[2] || m[3] || (m[4] ? 30 : 0));
   }
-  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2})\s*(?:h|giờ|g)?\s*(am|pm)(?![\p{L}\p{N}])/iu))) start = hm(ampm(+m[1], m[2]), 0);
-  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2})\s*(?:h|giờ|g)?\s*(sáng|trưa|chiều|tối|đêm)(?![\p{L}\p{N}])/iu))) {
-    setPer(m[2]); start = hm(adj(+m[1]), 0);
+  if (start === null && (m = cut(NLP_RX(`«(${NLP_PERIOD})\\s*(?:lúc\\s*)?(\\d{1,2})(?:[h:g](\\d{2})?|\\s*giờ(?:\\s*(\\d{1,2})(?:\\s*phút)?)?)?(\\s*rưỡi)?»(?!\\s*(?:tiếng|phút|ph|p)»)`)))) {
+    setPer(m[1]); start = hm(adj(+m[2]), m[3] || m[4] || (m[5] ? 30 : 0));
   }
-
-  // Quét các chữ "Xh" hoặc "X.Xh" còn lại trong chuỗi
-  while ((m = cut(/(?<![\p{L}\p{N}])(\d{1,2}(?:[.,]\d+)?)\s*h(?![\p{L}\p{N}])/iu))) {
-    const val = parseFloat(m[1].replace(",", "."));
-    if (start === null && (val >= 6 || dur !== null)) {
-      start = hm(adj(Math.floor(val)), Math.round((val % 1) * 60));
-    } else if (dur === null) {
-      dur = val;
-    } else if (start === null) {
-      start = hm(adj(Math.floor(val)), Math.round((val % 1) * 60));
-    }
+  // 2d. Từ chỉ buổi đứng riêng (trừ "ăn tối", "bữa trưa"…)
+  if (!per && (m = cut(NLP_RX(`(?<!(?:ăn|bữa)\\s+)«(${NLP_PERIOD})»`)))) setPer(m[1]);
+  // 2e. Giờ bắt đầu nói rõ
+  if (start === null && (m = cut(NLP_RX("«(?:lúc|từ|vào|at|@)\\s*(\\d{1,2})(?:[h:g](\\d{2})?|\\s*giờ(?:\\s*(\\d{1,2}))?)?(\\s*rưỡi)?(?:\\s*(am|pm))?»")))) {
+    start = m[5] ? hm(ampm(+m[1], m[5]), m[2] || 0) : hm(adj(+m[1]), m[2] || m[3] || (m[4] ? 30 : 0));
+  }
+  if (start === null && (m = cut(NLP_RX("«(\\d{1,2}):(\\d{2})»")))) start = hm(adj(+m[1]), m[2]);
+  if (start === null && (m = cut(NLP_RX("«(\\d{1,2})[hg](\\d{2})»")))) {
+    // "1h30" không kèm buổi: dưới 6 giờ thì hiểu là thời lượng 1,5 tiếng, không phải 01:30 sáng
+    if (+m[1] < 6 && !per && dur === null) dur = +m[1] + +m[2] / 60;
+    else start = hm(adj(+m[1]), m[2]);
+  }
+  if (start === null && (m = cut(NLP_RX("«(\\d{1,2})\\s*(?:h|giờ)?\\s*(am|pm)»")))) start = hm(ampm(+m[1], m[2]), 0);
+  // 2f. Các "Xh" / "X giờ" còn lại: từ 6 trở lên (hoặc có buổi) là giờ bắt đầu, nhỏ hơn là thời lượng
+  while ((m = cut(NLP_RX("«(\\d{1,2}(?:[.,]\\d+)?)\\s*(?:h|giờ)(\\s*rưỡi)?»")))) {
+    const val = num(m[1]) + (m[2] ? 0.5 : 0);
+    const asStart = () => hm(adj(Math.floor(val)), Math.round((val % 1) * 60));
+    if (start === null && (val >= 6 || per || dur !== null)) start = asStart();
+    else if (dur === null) dur = val;
+    else if (start === null) start = asStart();
   }
 
   const key = ky(target);
@@ -1534,16 +1612,18 @@ function parseNLPText(str) {
     start = per ? dm[per] : lastEv ? tt(lastEv.s, lastEv.h) : "07:00";
   }
   if (dur === null) dur = (S.cfg && S.cfg.defDuration) || 2;
+  dur = Math.round(dur * 100) / 100;
 
-  // 3. Tên hoạt động, tác động, loại vốn
-  let title = w.replace(/(?<![\p{L}\p{N}])(?:lúc|từ|vào|at|@|trong)(?![\p{L}\p{N}])/giu, " ")
+  // ===== 3. TÊN, TÁC ĐỘNG, LOẠI VỐN =====
+  let title = w.replace(NLP_RX("«(?:lúc|từ|vào|at|@|trong)»", "giu"), " ")
+               .replace(/(^|\s)[-–,;.\/]+(?=\s|$)/g, " ")
                .replace(/[,;]+/g, " ")
                .replace(/\s+/g, " ")
                .trim();
   if (!title) title = "Hoạt động mới";
   const mode = WB("họp|meeting|deadline|ot|tăng ca|làm việc|công việc|xử lý|áp lực|stress|báo cáo").test(title) ? "d" : "u";
-  const c = chkEvent(key, start, dur, -1);
-  return { raw, title, targetDate: key, dateDesc: dateDesc + " (" + key.slice(5) + ")", startTime: start, duration: dur, capKey: guess(title), mode, err: c.err, hit: c.hit };
+  const c = err ? {} : chkEvent(key, start, dur, -1);
+  return { raw, title, targetDate: key, dateDesc: describeDate(target), startTime: start, duration: dur, capKey: guess(title), mode, err: err || c.err, hit: c.hit };
 }
 
 function handleNLPInput(val) {
@@ -1596,7 +1676,6 @@ function executeNLP() {
   const newEvt = { t: r.title, c: r.capKey, m: r.mode, h: r.duration, s: r.startTime };
   L.push(newEvt);
   sortL(L);
-  S.mem[r.title.normalize("NFC").toLowerCase()] = { c: r.capKey };
   markPending(newEvt);
   save();
   gcalFlush();
@@ -3648,7 +3727,7 @@ function cleanState(d) {
     ...(GCAL_CID.test(dc.gcalClientId || "") ? { gcalClientId: dc.gcalClientId } : {})
   };
   const gdel = Array.isArray(d.gdel) ? [...new Set(d.gdel.filter(g => typeof g === "string" && GID.test(g)))].slice(-500) : [];
-  return { ev, caps, bl, mem, cfg, gdel, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
+  return { ev, caps, bl, mem, memV: d.memV === 2 ? 2 : 0, cfg, gdel, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
 }
 
 async function saveFile(filename, content, mime) {
