@@ -2072,6 +2072,9 @@ const GCAL_COLOR_MAP = {
 };
 
 let gcalTokenClient = null;
+const GCAL_SCOPE = "https://www.googleapis.com/auth/calendar.events";
+// Lỗi cấu hình gần nhất (API chưa bật, chưa cấp quyền lịch…) để hiện trên badge; xóa khi đẩy thành công
+let gcalConfigErr = "", gcalLastFail = "";
 
 function getGCalToken() {
   try {
@@ -2116,13 +2119,22 @@ function initGCalTokenClient(onSuccess) {
   try {
     gcalTokenClient = google.accounts.oauth2.initTokenClient({
       client_id: clientId.trim(),
-      scope: "https://www.googleapis.com/auth/calendar.events",
+      scope: GCAL_SCOPE,
       callback: (resp) => {
         if (resp.error) {
           showToast("Lỗi xác thực Google: " + resp.error, "bad");
           return;
         }
+        // Màn hình của Google cho phép bỏ tick từng quyền: không có quyền lịch thì token vô dụng
+        if (resp.access_token && google.accounts.oauth2.hasGrantedAllScopes && !google.accounts.oauth2.hasGrantedAllScopes(resp, GCAL_SCOPE)) {
+          gcalConfigErr = "Bạn chưa cho phép truy cập Google Calendar. Bấm Kết nối lại và tick ô quyền Google Calendar trên màn hình của Google.";
+          showToast(gcalConfigErr, "bad");
+          renderSettingsModal();
+          updateSyncBadge();
+          return;
+        }
         if (resp.access_token) {
+          gcalConfigErr = "";
           const expTime = Date.now() + (parseInt(resp.expires_in, 10) || 3600) * 1000;
           localStorage.setItem("gcal_token", resp.access_token);
           localStorage.setItem("gcal_token_exp", String(expTime));
@@ -2237,11 +2249,30 @@ async function gcalFetch(method, path, token, body) {
 }
 
 // "ok" | "auth" (401: cần kết nối lại) | "retry" (mạng, giới hạn tần suất, lỗi máy chủ) | "fail" (Google từ chối dữ liệu)
+// "ok" | "auth" (401: cần kết nối lại) | "retry" (mạng, giới hạn tần suất, lỗi máy chủ)
+// | "config" (403 do cấu hình: API chưa bật, chưa cấp quyền lịch… sửa xong thì gửi lại được)
+// | "fail" (Google từ chối dữ liệu của riêng sự kiện này)
 function gcalOutcome(r) {
   if (r.ok) return "ok";
   if (r.status === 401) return "auth";
-  const reason = r.data && r.data.error && r.data.error.errors && r.data.error.errors[0] && r.data.error.errors[0].reason;
-  if (r.status === 0 || r.status === 429 || r.status >= 500 || (r.status === 403 && /rateLimit|quota/i.test(reason || ""))) return "retry";
+  const err = (r.data && r.data.error) || {};
+  const reasons = [
+    ...(err.errors || []).map(x => x.reason),
+    ...(err.details || []).map(x => x.reason)
+  ].filter(Boolean).join(" ");
+  if (r.status === 0 || r.status === 429 || r.status >= 500 || (r.status === 403 && /rateLimit|quota/i.test(reasons))) return "retry";
+  if (r.status === 403) {
+    if (/accessNotConfigured|SERVICE_DISABLED/i.test(reasons)) {
+      gcalConfigErr = "Google Calendar API chưa được bật cho ứng dụng này. Nhóm phát triển cần vào Google Cloud Console → APIs & Services → Library → Google Calendar API → Enable, rồi bấm vào badge trên thanh tiêu đề để gửi lại.";
+    } else if (/insufficientPermissions|SCOPE_INSUFFICIENT/i.test(reasons)) {
+      clearGCalToken();
+      gcalConfigErr = "Bạn chưa cho phép truy cập Google Calendar. Bấm Kết nối lại và tick ô quyền Google Calendar trên màn hình của Google.";
+    } else {
+      gcalConfigErr = "Google từ chối truy cập lịch (403" + (err.message ? ": " + err.message : "") + ").";
+    }
+    return "config";
+  }
+  gcalLastFail = (r.status || "") + (err.message ? " " + err.message : "");
   return "fail";
 }
 
@@ -2305,7 +2336,7 @@ async function gcalFlushRun(token, opts) {
   try {
     for (const gid of [...S.gdel]) {
       const o = await gcalDeleteEvent(gid, token);
-      if (o === "auth" || o === "retry") { stop = o; break; }
+      if (o === "auth" || o === "retry" || o === "config") { stop = o; break; }
       S.gdel = S.gdel.filter(g => g !== gid);
       if (o === "ok") ok++; else failed.push("(sự kiện đã xóa)");
       save();
@@ -2316,7 +2347,7 @@ async function gcalFlushRun(token, opts) {
         if (!e.ds) continue;
         const v = e.ds, sig = evSig(e);
         const o = e.gid ? await gcalUpdateEvent(e, k, token) : await gcalCreateEvent(e, k, token);
-        if (o === "auth" || o === "retry") { stop = o; break; }
+        if (o === "auth" || o === "retry" || o === "config") { stop = o; break; }
         if (o === "ok") ok++; else failed.push(e.t);
         gcalSettle(k, e, v, sig);
         save();
@@ -2326,14 +2357,18 @@ async function gcalFlushRun(token, opts) {
     gcalFlushing = false;
   }
 
-  if (stop === "auth") {
+  if (!stop && ok) gcalConfigErr = "";
+  if (stop === "config") {
+    // Giữ nguyên các thay đổi đang chờ: sửa cấu hình xong là gửi lại được
+    showToast(gcalConfigErr, "bad");
+  } else if (stop === "auth") {
     clearGCalToken();
     showToast("Phiên Google Calendar đã hết hạn. Bấm 'Kết nối lại' trên thanh tiêu đề để đẩy các thay đổi đang chờ.", "bad");
   } else if (stop === "retry") {
     gcalRetryT = setTimeout(() => gcalFlush(), 30000);
     if (opts.report) showToast(`Mất mạng hoặc Google đang giới hạn tần suất. Còn ${gcalPendingCount()} thay đổi chờ, sẽ tự thử lại.`, "bad");
   }
-  if (failed.length) showToast(`Google Calendar từ chối ${failed.length} hoạt động: ${failed.slice(0, 3).join(", ")}${failed.length > 3 ? "…" : ""}`, "bad");
+  if (failed.length) showToast(`Google Calendar từ chối ${failed.length} hoạt động (${gcalLastFail || "không rõ lý do"}): ${failed.slice(0, 3).join(", ")}${failed.length > 3 ? "…" : ""}`, "bad");
   if (opts.report && !stop && !failed.length) showToast(ok ? `✓ Đã đồng bộ ${ok} thay đổi lên Google Calendar` : "✓ Google Calendar đã cập nhật", "ok");
   updateSyncBadge();
   if (gcalRerun && !stop) setTimeout(() => gcalFlush(opts), 0);
@@ -2368,8 +2403,13 @@ function updateSyncBadge() {
   if (!tokenOk) {
     b.textContent = n ? `⚠ GCal · Kết nối lại (${n} chờ)` : "GCal · Kết nối lại";
     b.className = n ? "btn btn-sm btn-danger" : "btn btn-sm btn-ghost";
-    b.title = "Phiên Google Calendar hết hạn sau 1 giờ. Bấm để kết nối lại và đẩy các thay đổi đang chờ.";
+    b.title = gcalConfigErr || "Phiên Google Calendar hết hạn sau 1 giờ. Bấm để kết nối lại và đẩy các thay đổi đang chờ.";
     b.onclick = connectGoogleCalendar;
+  } else if (gcalConfigErr && !gcalFlushing) {
+    b.textContent = `⚠ GCal · Lỗi cấu hình (${n} chờ)`;
+    b.className = "btn btn-sm btn-danger";
+    b.title = gcalConfigErr + " Bấm để thử gửi lại.";
+    b.onclick = () => gcalFlush({ report: true });
   } else {
     b.textContent = gcalFlushing ? `⏳ Đang đồng bộ ${n}…` : `⏳ ${n} chờ đồng bộ`;
     b.className = "btn btn-sm";
@@ -2441,8 +2481,9 @@ function renderSettingsModal() {
           ${isGCalConnected() ? '✓ Đã kết nối' : 'Chưa kết nối'}
         </span>
       </div>
+      ${gcalConfigErr ? `<p class="set-note" style="color:var(--bad);" role="alert">⚠ ${esc(gcalConfigErr)}</p>` : ""}
       <p style="font-size:12px; color:var(--tx-sec); margin-bottom:12px; line-height:1.45;">
-        Tự động đồng bộ các hoạt động khi Thêm, Sửa, Xóa sang Google Calendar với màu sắc phân loại theo 5 loại vốn sống.
+        Tự động đẩy (một chiều) các hoạt động khi Thêm, Sửa, Xóa sang Google Calendar, màu theo 5 loại vốn. Sửa trên Google Calendar không cập nhật ngược về app.
       </p>
 
       <div class="set-row">
