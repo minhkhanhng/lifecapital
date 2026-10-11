@@ -95,6 +95,7 @@
    - Tự động đẩy khi **Thêm, Sửa, Xóa** hoạt động (kể cả chuỗi lặp định kỳ). Các thay đổi được xếp hàng và gửi lần lượt từng cái, nên không bị Google giới hạn tần suất khi tạo chuỗi dài.
    - **Không mất thay đổi:** quyền truy cập Google chỉ có hiệu lực 1 giờ. Khi hết hạn hoặc mất mạng, thay đổi được giữ ở trạng thái "chờ"; thanh tiêu đề hiện badge `⚠ GCal · Kết nối lại (N chờ)` hoặc `⏳ N chờ đồng bộ`. Bấm vào badge để kết nối lại, các thay đổi đang chờ sẽ được đẩy lên tự động.
    - Hoạt động chưa đặt giờ được tạo thành sự kiện cả ngày trên Google Calendar. Dữ liệu mẫu không bao giờ được đẩy lên.
+   - Khi tắt *Tự động đồng bộ*: thêm và sửa không được gửi lên, nhưng lệnh **xóa** hoạt động đã có trên Google vẫn được ghi lại và hiện badge `⏳ N chờ đồng bộ (tự động đang tắt)`; bấm badge, bật lại tự động hoặc bấm *Đồng bộ tuần này* để gửi.
    - Tự động ánh xạ màu sắc Google Calendar (`colorId`) tương thích với 5 loại vốn sống (Xanh lá - Sức khỏe, Hồng - Quan hệ, Tím - Trải nghiệm, Xanh Cyan - Kỹ năng, Vàng - Tài chính).
    - Cung cấp nút đồng bộ hàng loạt `⟳ Đồng bộ tuần này` và công tắc bật/tắt tự động đồng bộ thời gian thực trong popup Cài đặt.
 11. 🌱 **Khởi Đầu Trống & Dữ Liệu Mẫu Tùy Chọn**:
@@ -2441,13 +2442,15 @@ function buildGCalEventPayload(eventObj, dateStr) {
 /* --- Hàng đợi đồng bộ: mọi thay đổi chỉ đánh dấu, gcalFlush() đẩy lên tuần tự ---
    e.ds  : sự kiện cần POST (chưa có gid) hoặc PATCH (đã có gid); tăng dần mỗi lần sửa
    S.gdel: gid đang chờ DELETE */
-let gcalFlushing = false, gcalRerun = false, gcalRetryT = null;
+let gcalFlushing = false, gcalRerun = false, gcalRetryT = null, gcalLockRetryT = null;
 
 function markPending(e) {
   if (e && !e.demo && gcalActive()) e.ds = (e.ds || 0) + 1;
 }
+// Lệnh xóa luôn được ghi lại khi đã liên kết, kể cả khi tự động đồng bộ đang tắt:
+// nếu không, sự kiện trên Google Calendar sẽ nằm lại vĩnh viễn (lỗi UAT xóa chuỗi)
 function queueDelete(gid) {
-  if (gid && gcalActive() && !S.gdel.includes(gid)) S.gdel.push(gid);
+  if (gid && gcalLinked() && !S.gdel.includes(gid)) S.gdel.push(gid);
 }
 function gcalPendingCount() {
   return S.gdel.length + Object.values(S.ev).reduce((n, l) => n + l.filter(e => e.ds).length, 0);
@@ -2455,17 +2458,23 @@ function gcalPendingCount() {
 
 const GCAL_API = "https://www.googleapis.com/calendar/v3/calendars/primary/events";
 async function gcalFetch(method, path, token, body) {
+  // Quá 20 giây không phản hồi thì coi như lỗi mạng (thử lại sau), tránh treo và giữ khóa mãi
+  const ctrl = typeof AbortController === "function" ? new AbortController() : null;
+  const timer = ctrl ? setTimeout(() => ctrl.abort(), 20000) : null;
   try {
     const res = await fetch(GCAL_API + path, {
       method,
       headers: { "Authorization": `Bearer ${token}`, ...(body ? { "Content-Type": "application/json" } : {}) },
-      ...(body ? { body: JSON.stringify(body) } : {})
+      ...(body ? { body: JSON.stringify(body) } : {}),
+      ...(ctrl ? { signal: ctrl.signal } : {})
     });
     const data = res.status === 204 ? null : await res.json().catch(() => null);
     return { ok: res.ok, status: res.status, data };
   } catch (err) {
     console.warn("Lỗi mạng khi gọi Google Calendar:", err);
     return { ok: false, status: 0, data: null };
+  } finally {
+    clearTimeout(timer);
   }
 }
 
@@ -2542,7 +2551,13 @@ async function gcalFlush(opts = {}) {
   if (!token || !gcalPendingCount()) { updateSyncBadge(); return; }
   // Hai cửa sổ cùng mở: chỉ một cửa sổ được đẩy, tránh tạo bản trùng
   if (navigator.locks && navigator.locks.request) {
-    return navigator.locks.request("lc-gcal-flush", { ifAvailable: true }, lock => lock ? gcalFlushRun(token, opts) : null);
+    return navigator.locks.request("lc-gcal-flush", { ifAvailable: true }, lock => {
+      if (lock) return gcalFlushRun(token, opts);
+      // Tab khác đang giữ khóa: hẹn thử lại, không để các thay đổi chờ nằm im
+      clearTimeout(gcalLockRetryT);
+      gcalLockRetryT = setTimeout(() => gcalFlush(opts), 2000);
+      return null;
+    });
   }
   return gcalFlushRun(token, opts);
 }
@@ -2592,7 +2607,11 @@ async function gcalFlushRun(token, opts) {
   if (failed.length) showToast(`Google Calendar từ chối ${failed.length} hoạt động (${gcalLastFail || "không rõ lý do"}): ${failed.slice(0, 3).join(", ")}${failed.length > 3 ? "…" : ""}`, "bad");
   if (opts.report && !stop && !failed.length) showToast(ok ? `✓ Đã đồng bộ ${ok} thay đổi lên Google Calendar` : "✓ Google Calendar đã cập nhật", "ok");
   updateSyncBadge();
-  if (gcalRerun && !stop) setTimeout(() => gcalFlush(opts), 0);
+  // Có thay đổi mới trong lúc đang gửi: gửi tiếp ngay khi vẫn giữ khóa (không nhả rồi tranh lại)
+  if (gcalRerun && !stop) {
+    const t = getGCalToken();
+    if (t && gcalPendingCount()) return gcalFlushRun(t, opts);
+  }
 }
 
 async function gcalSyncWeek(wIdx) {
@@ -2618,8 +2637,9 @@ async function gcalSyncWeek(wIdx) {
 function updateSyncBadge() {
   const b = $("syncBadge");
   if (!b) return;
-  const active = gcalActive(), tokenOk = !!getGCalToken(), n = active ? gcalPendingCount() : 0;
-  if (!active || (tokenOk && !n)) { b.hidden = true; return; }
+  const linked = gcalLinked(), active = gcalActive(), tokenOk = !!getGCalToken(), n = linked ? gcalPendingCount() : 0;
+  // Tự động đồng bộ tắt: chỉ hiện khi còn thay đổi chờ (vd lệnh xóa), không nhắc kết nối lại
+  if (!linked || (tokenOk && !n) || (!active && !n)) { b.hidden = true; return; }
   b.hidden = false;
   if (!tokenOk) {
     b.textContent = n ? `⚠ GCal · Kết nối lại (${n} chờ)` : "GCal · Kết nối lại";
@@ -2632,10 +2652,11 @@ function updateSyncBadge() {
     b.title = gcalConfigErr + " Bấm để thử gửi lại.";
     b.onclick = () => gcalFlush({ report: true });
   } else {
-    b.textContent = gcalFlushing ? `⏳ Đang đồng bộ ${n}…` : `⏳ ${n} chờ đồng bộ`;
+    b.textContent = gcalFlushing ? `⏳ Đang đồng bộ ${n}…` : active ? `⏳ ${n} chờ đồng bộ` : `⏳ ${n} chờ đồng bộ (tự động đang tắt)`;
     b.className = "btn btn-sm";
-    b.title = "Bấm để đẩy ngay các thay đổi đang chờ lên Google Calendar";
-    b.onclick = () => gcalFlush({ report: true });
+    b.title = active ? "Bấm để đẩy ngay các thay đổi đang chờ lên Google Calendar"
+      : "Tự động đồng bộ đang tắt. Bấm để gửi các thay đổi đang chờ (vd lệnh xóa) lên Google Calendar.";
+    b.onclick = () => gcalFlush({ report: true, force: !active });
   }
 }
 
@@ -4032,6 +4053,7 @@ window.addEventListener("storage", e => {
   if (ed) { closeEditor(); showToast("Dữ liệu vừa thay đổi ở tab khác, đã tải lại.", "bad"); }
   if ($("settingsModalOverlay").classList.contains("open")) renderSettingsModal();
   draw();
+  gcalFlush(); // có thể tab kia đã đóng hoặc đang giữ khóa: tab này cũng thử gửi các thay đổi chờ
 });
 
 // Xin trình duyệt giữ dữ liệu lâu dài (giảm nguy cơ bị tự dọn khi thiếu dung lượng)
