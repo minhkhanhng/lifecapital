@@ -71,6 +71,7 @@
    - Nhập bằng bàn phím: trong popup, mỗi lần nhấn Enter chuyển sang ô kế tiếp (Tên → Loại vốn → Tác động → Giờ bắt đầu → Thời lượng → Lặp lại → Đến hết ngày); Enter ở ô cuối cùng thì lưu. Khi đang gõ có dấu, một lần Enter vừa chốt chữ vừa chuyển ô. `Cmd/Ctrl + Enter` lưu ngay từ bất kỳ ô nào.
    - Thanh ghi nhanh: khi đang gõ có dấu, một lần Enter vừa chốt chữ vừa ghi hoạt động (Chrome và Safari).
    - Hỗ trợ tạo chuỗi lặp định kỳ (Hằng ngày, Ngày làm việc, Hằng tuần) kèm ngày kết thúc chuỗi, cả khi thêm mới lẫn khi sửa một hoạt động lẻ (hoạt động đó thành buổi đầu của chuỗi).
+   - Xóa chuỗi có hai lựa chọn: **Xóa từ ngày này về sau** (giữ các buổi trước ngày đang mở) và **Xóa toàn bộ chuỗi**; hộp xác nhận ghi rõ số buổi bị xóa và được giữ.
 6. 🎡 **Bánh Xe Cuộc Đời (Radar Chart) Chuẩn Hoá**:
    - Khung hình mở rộng chống cắt chữ trên mọi kích thước màn hình.
    - Người mới bắt đầu với mục tiêu tuần bằng 0 cho mọi loại vốn; bánh xe và bản tổng kết hiện nút **"Đặt mục tiêu"** dẫn tới tab Danh mục vốn, không chấm điểm hay đưa khuyến nghị dựa trên số giả định.
@@ -3506,12 +3507,22 @@ function rep(date, o, rp, end, r = "r" + Date.now().toString(36), skipFirst = fa
   return days.length;
 }
 
-function delSeries(i) {
+// Xóa chuỗi lặp: mode "future" = từ ngày đang mở trở về sau (giữ các buổi trước), "all" = toàn bộ chuỗi
+function delSeries(i, mode = "future") {
   if (!ed || !S.ev[ed] || !S.ev[ed][i]) return;
-  const r = S.ev[ed][i].r;
-  if (!r || !confirm("Xóa tất cả hoạt động của chuỗi này từ ngày này trở đi?")) return;
+  const { r, t } = S.ev[ed][i];
+  if (!r) return;
+  const inScope = k => mode === "all" || k >= ed;
+  const total = Object.keys(S.ev).reduce((n, k) => n + S.ev[k].filter(e => e.r === r).length, 0);
+  const count = Object.keys(S.ev).filter(inScope).reduce((n, k) => n + S.ev[k].filter(e => e.r === r).length, 0);
+  const kept = total - count;
+  const day = ed.slice(8, 10) + "/" + ed.slice(5, 7);
+  const question = mode === "all"
+    ? `Xóa toàn bộ ${total} buổi của chuỗi "${t}"?`
+    : `Xóa ${count} buổi của chuỗi "${t}" từ ${day} trở về sau?` + (kept ? ` ${kept} buổi trước ${day} vẫn được giữ.` : "");
+  if (!confirm(question)) return;
   Object.keys(S.ev).forEach(k => {
-    if (k >= ed) {
+    if (inScope(k)) {
       S.ev[k].forEach(e => { if (e.r === r) queueDelete(e.gid); });
       S.ev[k] = S.ev[k].filter(e => e.r !== r);
       if (!S.ev[k].length) delete S.ev[k];
@@ -3522,7 +3533,7 @@ function delSeries(i) {
   gcalFlush();
   draw();
   closeEditor();
-  showToast("Đã xóa chuỗi hoạt động định kỳ", "ok");
+  showToast(mode === "all" ? `Đã xóa toàn bộ chuỗi "${t}" (${count} buổi)` : `Đã xóa ${count} buổi của chuỗi "${t}" từ ${day} trở về sau`, "ok");
 }
 
 // Popup thêm/sửa: Enter chuyển lần lượt qua từng ô, Enter ở ô cuối cùng thì lưu.
@@ -3671,8 +3682,11 @@ function renderEditorSheet() {
               🗑️ Xóa hoạt động
             </button>
             ${X.r ? `
-              <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="delSeries(${ei})">
-                Xóa cả chuỗi
+              <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="delSeries(${ei}, 'future')" title="Giữ lại các buổi trước ngày này">
+                Xóa từ ngày này về sau
+              </button>
+              <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="delSeries(${ei}, 'all')" title="Xóa mọi buổi của chuỗi, kể cả các ngày trước">
+                Xóa toàn bộ chuỗi
               </button>
             ` : ''}
           </div>
