@@ -989,6 +989,8 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
   flex-wrap: wrap;
   gap: 10px;
 }
+[hidden] { display: none !important; }
+.save-alert { background: var(--bad-soft); border-color: var(--bad); color: var(--tx); }
 :focus-visible { outline: 2px solid var(--ac); outline-offset: 2px; }
 .chg { font-weight: 700; background: var(--ac-soft); border-radius: 4px; padding: 0 3px; box-shadow: 0 0 0 1px var(--ac); }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
@@ -1031,6 +1033,7 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
       </div>
     </div>
     <div class="header-actions">
+      <button type="button" class="btn btn-sm" id="syncBadge" hidden></button>
       <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(sel)" title="Xem tổng kết thành tích theo tuần">
         🏆 Tổng kết tuần
       </button>
@@ -1050,11 +1053,13 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
       <input id="nlpInput" class="quick-capture-input"
              placeholder="Ghi nhanh: vd 'Mai 18h đánh cầu lông 2 tiếng' hoặc 'Hôm nay 20h đọc sách 1.5h'..."
              oninput="handleNLPInput(this.value)"
-             onkeydown="if(event.key==='Enter') executeNLP()">
+             onkeydown="handleNLPKeydown(event)">
       <button class="btn btn-sm btn-primary" onclick="executeNLP()">Ghi ngay</button>
     </div>
     <div class="quick-preview-bar" id="nlpPreview" style="display:none;"></div>
   </div>
+
+  <div class="review-prompt-banner save-alert" id="saveAlert" role="alert" hidden></div>
 
   <!-- Navigation Tabs -->
   <nav class="main-nav" id="nav"></nav>
@@ -1103,12 +1108,13 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
 /* ==========================================================================
    1. DỮ LIỆU CỐT LÕI (5 LOẠI VỐN VỚI BẢNG MÀU YÊU CẦU)
    ========================================================================== */
+// [khóa, tên, màu, mục tiêu nạp/tuần, từ khóa]. Mục tiêu mặc định = 0: người dùng tự đặt, app không phán xét theo số giả định.
 const DCAP = [
-  ["sk", "Sức khỏe", "#97A13B", 6, ["gym", "bơi", "chạy bộ", "cầu lông", "đá bóng", "spa", "ngủ", "thể thao", "fitness", "yoga", "đi bộ", "sức khỏe", "massage", "nạp năng lượng"]],
-  ["qh", "Quan hệ", "#E0A3BB", 5, ["dinner", "sinh nhật", "cưới", "gia đình", "bạn", "date", "chị", "em", "anh", "bố", "mẹ", "thăm", "ăn tối", "gặp mặt", "trò chuyện", "hẹn hò", "liên hoan"]],
-  ["tn", "Trải nghiệm", "#8b6da9", 3, ["xem", "du lịch", "trip", "phim", "workshop", "thử", "concert", "cafe", "cà phê", "chill", "ăn uống", "dạo phố", "triển lãm", "bảo tàng", "khám phá"]],
-  ["kn", "Kỹ năng", "#4a859c", 4, ["học", "đọc", "course", "study", "khóa", "sách", "tiếng anh", "code", "nghiên cứu", "luyện", "đàn", "viết", "podcast", "kỹ năng", "vẽ"]],
-  ["tc", "Tài chính / công việc", "#b88628", 0, ["họp", "làm", "work", "meeting", "deep", "dự án", "khách", "bán", "deal", "deadline", "báo cáo", "ot", "tăng ca", "công ty", "văn phòng", "khách hàng", "tài chính", "tiền"]]
+  ["sk", "Sức khỏe", "#97A13B", 0, ["gym", "bơi", "chạy bộ", "cầu lông", "đá bóng", "spa", "ngủ", "thể thao", "fitness", "yoga", "đi bộ", "sức khỏe", "massage", "nạp năng lượng"]],
+  ["qh", "Quan hệ", "#E0A3BB", 0, ["dinner", "sinh nhật", "cưới", "gia đình", "bạn", "date", "chị", "em", "anh", "bố", "mẹ", "thăm", "ăn tối", "gặp mặt", "trò chuyện", "hẹn hò", "liên hoan"]],
+  ["tn", "Trải nghiệm", "#8b6da9", 0, ["xem", "du lịch", "trip", "phim", "workshop", "thử", "concert", "cafe", "cà phê", "chill", "ăn uống", "dạo phố", "triển lãm", "bảo tàng", "khám phá"]],
+  ["kn", "Kỹ năng", "#4a859c", 0, ["học", "đọc", "course", "study", "khóa", "sách", "tiếng anh", "code", "nghiên cứu", "luyện", "đàn", "viết", "podcast", "kỹ năng", "vẽ", "ngoại ngữ"]],
+  ["tc", "Tài chính / công việc", "#b88628", 0, ["họp", "làm việc", "work", "meeting", "deep", "dự án", "khách", "bán", "deal", "deadline", "báo cáo", "ot", "tăng ca", "công ty", "văn phòng", "khách hàng", "tài chính", "tiền"]]
 ];
 const DN_VI = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ Nhật"];
 const DN_SHORT = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
@@ -1151,43 +1157,63 @@ function changeYear(delta) {
   showToast(`Đã chuyển sang năm ${activeYear}`, "ok");
 }
 
-const sd = (m, d, t, c, h) => [ky(new Date(2026, m - 1, d)), { t, c, m: "u", h }];
-const SEED = [
-  [9, 9, "Đánh cầu", "sk", 2],
-  [9, 10, "Spa", "sk", 2],
-  [9, 11, "Đánh cầu", "sk", 2],
-  [9, 13, "Đi xem cầu lông", "tn", 2],
-  [9, 16, "Đánh cầu", "sk", 2],
-  [9, 18, "Dinner w chị em GM", "qh", 2.5],
-  [9, 25, "Đánh cầu", "sk", 2],
-  [9, 28, "Đánh cầu", "sk", 2],
-  [10, 2, "Dinner w bạn anh Tín", "qh", 2.5],
-  [10, 5, "Đánh cầu", "sk", 2],
-  [10, 7, "Đánh cầu", "sk", 2],
-  [10, 8, "Dinner w LHương", "qh", 2.5],
-  [10, 9, "Sinh nhật", "qh", 3],
-  [10, 12, "Đánh cầu", "sk", 2],
-  [10, 14, "Đánh cầu", "sk", 2],
-  [10, 18, "Đám cưới bạn anh", "qh", 4]
+// Dữ liệu mẫu ẩn danh, đặt theo tuần đang xem: [thứ (0 = T2), giờ, tiêu đề, vốn, Nạp/Tiêu, số giờ]
+const DEMO = [
+  [0, "06:30", "Chạy bộ", "sk", "u", 1],
+  [0, "09:00", "Làm việc dự án", "tc", "d", 8],
+  [1, "09:00", "Họp nhóm", "tc", "d", 2],
+  [1, "21:00", "Đọc sách", "kn", "u", 1],
+  [2, "18:30", "Gym", "sk", "u", 1.5],
+  [3, "09:00", "Làm việc dự án", "tc", "d", 8],
+  [3, "19:00", "Ăn tối cùng gia đình", "qh", "u", 1.5],
+  [4, "20:00", "Học tiếng Anh", "kn", "u", 1],
+  [5, "08:00", "Đánh cầu lông", "sk", "u", 2],
+  [5, "19:30", "Xem phim", "tn", "u", 2.5],
+  [6, "10:00", "Cà phê với bạn bè", "qh", "u", 2]
 ];
 
 function defState() {
-  const ev = {};
-  SEED.forEach(a => {
-    const [k, e] = sd(...a);
-    (ev[k] = ev[k] || []).push(e);
-  });
   return {
-    ev,
+    ev: {},
     caps: DCAP.map(c => ({ k: c[0], n: c[1], c: c[2], tg: c[3], kw: [...c[4]] })),
     bl: {},
     mem: {},
+    gdel: [],
     pm: "0",
     cfg: { defDuration: 2, burnoutHours: 6 }
   };
 }
 
+const hasDemo = () => Object.values(S.ev).some(l => l.some(e => e.demo));
+
+function loadDemo() {
+  const w = W[sel >= 0 ? sel : 0];
+  DEMO.forEach(([d, s, t, c, m, h]) => {
+    if (!S.caps.some(x => x.k === c)) return; // vốn mặc định đã bị xóa
+    const k = ky(ad(w, d));
+    const L = S.ev[k] = S.ev[k] || [];
+    L.push({ t, c, m, h, s, demo: 1 });
+    sortL(L);
+  });
+  save();
+  draw();
+  showToast("Đã thêm dữ liệu mẫu vào tuần đang xem", "ok");
+}
+
+function clearDemo() {
+  Object.keys(S.ev).forEach(k => {
+    S.ev[k] = S.ev[k].filter(e => !e.demo);
+    if (!S.ev[k].length) delete S.ev[k];
+  });
+  save();
+  draw();
+  showToast("Đã xóa dữ liệu mẫu", "ok");
+}
+
 const SAFE_K = /^(?!__proto__$)[\w-]{1,24}$/;
+// gid: id sự kiện Google (base32hex; instance của chuỗi lặp có thêm "_20261008T…Z")
+const GID = /^[\w-]{5,1024}$/;
+const GCAL_CID = /^[\w.-]{5,200}\.apps\.googleusercontent\.com$/;
 let S, rawSaved = null;
 try { rawSaved = localStorage.getItem("lc2"); } catch (e) {}
 try {
@@ -1212,6 +1238,9 @@ S.caps.forEach(c => {
 if (!S.cfg) S.cfg = { defDuration: 2, burnoutHours: 6 };
 S.bl = S.bl || {};
 S.mem = S.mem || {};
+S.gdel = S.gdel || [];
+// Bản cũ ghi cả phỏng đoán của thanh ghi nhanh vào bộ nhớ (vd "học tiếng anh" → Quan hệ): xóa một lần
+if (S.memV !== 2) { S.mem = {}; S.memV = 2; }
 
 const cmp = (a, b) => (a.s || "99:99").localeCompare(b.s || "99:99");
 const sortL = l => l.sort(cmp);
@@ -1221,6 +1250,33 @@ const CM = k => S.caps.find(c => c.k === k) || { n: "(đã xóa)", c: "#888888",
 const BL = k => S.bl[k] = S.bl[k] || { u: 0, d: 0 };
 const esc = s => String(s == null ? "" : s).replace(/[&<>"'`]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;", "`": "&#96;" }[c]));
 const $ = i => document.getElementById(i);
+
+// Nền + chữ cho khối màu vốn, đảm bảo contrast ≥ 4.5:1 (WCAG AA) với mọi màu người dùng chọn
+const DARK_INK = "#140c10";
+const lumHex = hex => {
+  const c = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255).map(v => v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+};
+const INK = new Map();
+function capInk(hex) {
+  if (!/^#[0-9a-f]{6}$/i.test(hex || "")) hex = "#888888";
+  if (INK.has(hex)) return INK.get(hex);
+  const L = lumHex(hex), onDark = (L + 0.05) / (lumHex(DARK_INK) + 0.05), onWhite = 1.05 / (L + 0.05);
+  let out;
+  if (onDark >= 4.5 && onDark >= onWhite) out = `background:${hex}; color:${DARK_INK};`;
+  else if (onWhite >= 4.5) out = `background:${hex}; color:#fff;`;
+  else {
+    // Màu tầm trung: làm tối nền dần cho tới khi chữ trắng đạt chuẩn
+    let rgb = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16)), bg = hex;
+    while (1.05 / (lumHex(bg) + 0.05) < 4.5) {
+      rgb = rgb.map(v => Math.floor(v * 0.94));
+      bg = "#" + rgb.map(v => v.toString(16).padStart(2, "0")).join("");
+    }
+    out = `background:${bg}; color:#fff;`;
+  }
+  INK.set(hex, out);
+  return out;
+}
 const r1 = n => (Math.round((n || 0) * 10) / 10).toString();
 const pad = n => String(n).padStart(2, "0");
 const tt = (s, h) => {
@@ -1230,15 +1286,29 @@ const tt = (s, h) => {
   return pad(m / 60 | 0) + ":" + pad(m % 60);
 };
 
-let CH = new Set(), PV = {}, dirty = false, TABDIR = 0;
+let CH = new Set(), PV = {}, dirty = false, TABDIR = 0, saveFailed = false;
 const save = () => {
   dirty = true;
   try {
     localStorage.setItem("lc2", JSON.stringify(S));
+    if (saveFailed) { saveFailed = false; renderSaveAlert(); }
   } catch (e) {
-    showToast("Không thể lưu vào localStorage!", "bad");
+    // Giữ cảnh báo cố định (không chỉ toast): đóng tab lúc này là mất các thay đổi chưa lưu
+    if (!saveFailed) { saveFailed = true; renderSaveAlert(); }
   }
 };
+
+function renderSaveAlert() {
+  const el = $("saveAlert");
+  if (!el) return;
+  el.hidden = !saveFailed;
+  el.innerHTML = saveFailed ? `
+    <div>
+      <b>⚠ Không lưu được dữ liệu vào trình duyệt</b>
+      <div style="font-size:12px; margin-top:2px;">Bộ nhớ có thể đã đầy hoặc trình duyệt đang chặn lưu trữ. Các thay đổi gần đây sẽ mất nếu đóng trang. Hãy tải tệp sao lưu ngay.</div>
+    </div>
+    <button type="button" class="btn btn-sm btn-danger" onclick="exportData('json')">Sao lưu (.json)</button>` : "";
+}
 
 /* ==========================================================================
    2. TÍNH TOÁN TUẦN & LOGIC PIN NĂNG LƯỢNG
@@ -1311,23 +1381,26 @@ function getDayBattery(dateStr) {
   return { u, d, net, fillPercent, statusClass, label, isBurnout };
 }
 
+// Phân loại vốn theo từ khóa: cụm khớp nhiều từ / dài nhất thắng ("tiếng anh" thắng "anh"),
+// không phụ thuộc thứ tự các loại vốn.
 function guess(t) {
-  t = (t || "").normalize("NFC");
-  const normTitle = t.trim().toLowerCase();
-  const m = S.mem && S.mem[normTitle];
+  const normTitle = (t || "").normalize("NFC").trim().toLowerCase();
+  const m = S.mem && Object.prototype.hasOwnProperty.call(S.mem, normTitle) ? S.mem[normTitle] : null;
   if (m && S.caps.some(c => c.k === m.c)) return m.c;
 
   const w = " " + normTitle.split(/[^\p{L}\p{N}]+/u).join(" ") + " ";
-
-  // Kiểm tra từ khóa tùy chỉnh của từng loại vốn do người dùng cài đặt
+  let best = null, bestScore = 0;
   for (const c of S.caps) {
-    const kws = (c.kw && c.kw.length) ? c.kw : (DCAP.find(d => d[0] === c.k) ? DCAP.find(d => d[0] === c.k)[4] : []);
-    if (kws.some(k => k && w.includes(" " + k.toLowerCase().trim() + " "))) {
-      return c.k;
+    const def = DCAP.find(d => d[0] === c.k);
+    const kws = (c.kw && c.kw.length) ? c.kw : (def ? def[4] : []);
+    for (const k of kws) {
+      const kk = String(k || "").normalize("NFC").toLowerCase().trim();
+      if (!kk || !w.includes(" " + kk + " ")) continue;
+      const score = kk.split(/\s+/).length * 100 + kk.length;
+      if (score > bestScore) { best = c.k; bestScore = score; }
     }
   }
-
-  return S.caps[0] ? S.caps[0].k : "sk";
+  return best || (S.caps[0] ? S.caps[0].k : "sk");
 }
 
 /* ==========================================================================
@@ -1355,7 +1428,6 @@ let parsedNLP = null;
 
 const toMin = s => { const [a, b] = s.split(":").map(Number); return a * 60 + b; };
 const WB = p => new RegExp("(?<![\\p{L}\\p{N}])(?:" + p + ")(?![\\p{L}\\p{N}])", "iu");
-const PER = "sáng|trưa|chiều|tối|đêm";
 
 // Kiểm tra giờ/thời lượng/trùng giờ — dùng chung cho modal, ghi nhanh và chuỗi lặp
 function chkEvent(date, s, h, skip) {
@@ -1367,96 +1439,170 @@ function chkEvent(date, s, h, skip) {
   return { hit };
 }
 
+// Regex có ranh giới từ Unicode: « = không đứng sau chữ/số, » = không đứng trước chữ/số
+const NLP_RX = (src, flags = "iu") => new RegExp(src.replace(/«/g, "(?<![\\p{L}\\p{N}])").replace(/»/g, "(?![\\p{L}\\p{N}])"), flags);
+
+// Số đếm bằng chữ đứng trước đơn vị thời lượng: "hai tiếng", "mười lăm phút", "ba mươi phút"
+const VI_DIGIT = { "một": 1, "mốt": 1, "hai": 2, "ba": 3, "bốn": 4, "tư": 4, "năm": 5, "lăm": 5, "sáu": 6, "bảy": 7, "bẩy": 7, "tám": 8, "chín": 9 };
+function viNum(s) {
+  const t = s.toLowerCase().trim().split(/\s+/);
+  let n, i;
+  if (t[0] === "mười") { n = 10; i = 1; }
+  else if (t[1] === "mươi") { n = (VI_DIGIT[t[0]] || 0) * 10; i = 2; }
+  else { n = VI_DIGIT[t[0]] || 0; i = 1; }
+  if (n >= 10 && t[i] && VI_DIGIT[t[i]] != null) n += VI_DIGIT[t[i]];
+  return n;
+}
+const NUM_WORDS_RX = NLP_RX("«(?:một|hai|ba|bốn|tư|năm|sáu|bảy|bẩy|tám|chín|mười)(?:\\s+(?:mươi|mốt|một|hai|ba|bốn|tư|lăm|năm|sáu|bảy|bẩy|tám|chín))*(?=\\s*(?:tiếng|giờ|phút|ph|p)»)", "giu");
+const normalizeViNumbers = s => s.replace(NUM_WORDS_RX, m => String(viNum(m)));
+
+// "Hôm qua · Thứ 4, 07/10" — luôn hiện thứ và ngày cụ thể; thêm năm khi khác năm nay
+function describeDate(d) {
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const diff = Math.round((d - today) / 864e5);
+  const rel = { "-2": "Hôm kia", "-1": "Hôm qua", "0": "Hôm nay", "1": "Ngày mai", "2": "Ngày kia" }[diff];
+  const dm = pad(d.getDate()) + "/" + pad(d.getMonth() + 1) + (d.getFullYear() !== today.getFullYear() ? "/" + d.getFullYear() : "");
+  return (rel ? rel + " · " : "") + DN_VI[(d.getDay() + 6) % 7] + ", " + dm;
+}
+
+const NLP_PERIOD = "sáng|trưa|chiều|tối|đêm";
+// Từ đứng ngay trước "Mai" cho thấy đó là tên người, không phải "ngày mai"
+const NAME_BEFORE_MAI = /^(gặp|với|cùng|cho|bạn|chị|em|anh|thăm|nhà|đón|gọi|nhắn|của|và|chú|cô|bác|dì|cậu|mợ|ông|bà|tên|bé|con)$/i;
+const WD_RX = "(?:(?:thứ|thu)\\s*([2-7])|t([2-7])|thứ\\s+(hai|ba|tư|bốn|năm|sáu|bảy)|(chủ\\s*nhật|cn))";
+const WK_RX = "tuần\\s*(này|sau\\s*nữa|sau|tới|trước|rồi|qua)";
+const wdIndex = (n1, n2, word) => n1 ? +n1 - 2 : n2 ? +n2 - 2 : word ? { hai: 0, ba: 1, tư: 2, bốn: 2, năm: 3, sáu: 4, bảy: 5 }[word.toLowerCase()] : 6;
+const weekShift = q => !q ? null : /này/i.test(q) ? 0 : /nữa/i.test(q) ? 2 : /sau|tới/i.test(q) ? 1 : -1;
+
 function parseNLPText(str) {
   if (!str || !str.trim()) return null;
   const raw = str.trim().normalize("NFC");
-  let w = " " + raw + " ";
-  const cut = re => { const m = w.match(re); if (m) w = w.replace(re, " "); return m; };
-  const base = new Date(); base.setHours(0, 0, 0, 0);
-  let target = base, dateDesc = "Hôm nay", per = null, m;
-  const setPer = x => { if (x) per = x.toLowerCase(); };
-  const wkBase = W[CW >= 0 ? CW : Math.min(Math.max(sel, 0), W.length - 1)];
+  let w = " " + normalizeViNumbers(raw) + " ";
+  // Cắt đúng đoạn khớp (theo vị trí) ra khỏi câu, phần còn lại thành tên hoạt động
+  const cutAt = (m) => { w = w.slice(0, m.index) + " " + w.slice(m.index + m[0].length); return m; };
+  const cut = re => { const m = w.match(re); return m ? cutAt(m) : null; };
 
-  // 1. Phân tích Ngày
-  if ((m = cut(/(?<![\p{L}\p{N}])(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?(?![\p{L}\p{N}])/u))) {
-    const y = m[3] ? (+m[3] < 100 ? 2000 + +m[3] : +m[3]) : base.getFullYear(), d = new Date(y, +m[2] - 1, +m[1]);
-    if (d.getMonth() === +m[2] - 1) { target = d; dateDesc = DN_VI[(d.getDay() + 6) % 7] + " " + m[1] + "/" + m[2]; }
-  } else if (cut(/(?<![\p{L}\p{N}])(?:ngày\s+)?(?:mốt|kia)(?![\p{L}\p{N}])/iu)) {
-    target = ad(base, 2); dateDesc = "Ngày kia";
-  } else if ((m = cut(/(?<![\p{L}\p{N}])(?:(sáng|trưa|chiều|tối|đêm)\s+|ngày\s+)mai(?![\p{L}\p{N}])/iu))) {
-    setPer(m[1]); target = ad(base, 1); dateDesc = "Ngày mai";
-  } else if ((m = cut(/(?<!(?:gặp|với|cùng|bạn|chị|em|anh|thăm|nhà|đón)\s+)(?<![\p{L}\p{N}])mai(?![\p{L}\p{N}])/iu))) {
-    target = ad(base, 1); dateDesc = "Ngày mai";
-  } else if ((m = cut(/(?<![\p{L}\p{N}])(?:(sáng|trưa|chiều|tối|đêm)\s+)?(?:hôm\s+)?nay(?![\p{L}\p{N}])/iu))) {
-    setPer(m[1]); dateDesc = "Hôm nay";
-  } else {
-    let idx = null;
-    if ((m = cut(/(?<![\p{L}\p{N}])(?:thứ|thu|t)\s*([2-7])(?![\p{L}\p{N}])/iu))) idx = +m[1] - 2;
-    else if ((m = cut(/(?<![\p{L}\p{N}])thứ\s+(hai|ba|tư|bốn|năm|sáu|bảy)(?![\p{L}\p{N}])/iu))) idx = { hai: 0, ba: 1, tư: 2, bốn: 2, năm: 3, sáu: 4, bảy: 5 }[m[1].toLowerCase()];
-    else if (cut(WB("chủ nhật|cn"))) idx = 6;
-    if (idx !== null) {
-      let d = ad(wkBase, idx);
-      if (CW >= 0 && d < base) d = ad(d, 7);
-      target = d;
-      dateDesc = DN_VI[idx];
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const mon0 = ad(today, -((today.getDay() + 6) % 7)); // Thứ 2 của tuần này
+  let target = today, dateSet = false, per = null, err = null, m;
+  const setPer = x => { if (x) per = x.toLowerCase(); };
+  const setDate = d => { target = d; dateSet = true; };
+  const validDate = (y, mo, d) => { const x = new Date(y, mo - 1, d); return x.getMonth() === mo - 1 && x.getDate() === d ? x : null; };
+  const fullYear = y => !y ? today.getFullYear() : (+y < 100 ? 2000 + +y : +y);
+
+  // ===== 1. NGÀY =====
+  // 1a. "ngày 9 tháng 10", "9 tháng 10 năm 2026"
+  if ((m = cut(NLP_RX("«(?:ngày\\s*)?(\\d{1,2})\\s*tháng\\s*(\\d{1,2})(?:\\s*,?\\s*(?:năm\\s*)?(\\d{4}))?»")))) {
+    const d = validDate(fullYear(m[3]), +m[2], +m[1]);
+    if (d) setDate(d); else err = "Ngày không hợp lệ.";
+  }
+  // 1b. "09/10", "9-10", "09.10", "9/10/2026", "09.10.26" (không nhầm với "9-10h" hay "1.5 tiếng")
+  if (!dateSet && !err) {
+    for (const mm of w.matchAll(NLP_RX("«(?:ngày\\s*)?(\\d{1,2})([\\/.\\-])(\\d{1,2})(?:\\2(\\d{4}|\\d{2}))?(?![\\d\\/.\\-])(?!\\s*(?:h|g|giờ|tiếng|phút|ph|p|:)»)", "giu"))) {
+      // Dấu chấm dễ nhầm số thập phân ("1.5"): chỉ nhận "09.10" (đủ 2 chữ số) hoặc có năm
+      if (mm[2] === "." && !mm[4] && !(mm[1].length === 2 && mm[3].length === 2)) continue;
+      const d = validDate(fullYear(mm[4]), +mm[3], +mm[1]);
+      if (d) { cutAt(mm); setDate(d); break; }
+      if (mm[2] === "/") { cutAt(mm); err = "Ngày không hợp lệ."; break; }
+    }
+  }
+  // 1c. "ngày 9" = ngày 9 của tháng này
+  if (!dateSet && !err && (m = cut(NLP_RX("«ngày\\s*(\\d{1,2})»(?!\\s*[\\/.\\-]\\d)")))) {
+    const d = validDate(today.getFullYear(), today.getMonth() + 1, +m[1]);
+    if (d) setDate(d); else err = "Ngày không hợp lệ.";
+  }
+  // 1d. Thứ trong tuần: "thứ 2", "t2", "thứ hai", "chủ nhật", kèm "tuần này/sau/tới/trước" ở trước hoặc sau
+  let wd = null, wq = null;
+  if ((m = cut(NLP_RX(`«${WK_RX}\\s*,?\\s*(?:vào\\s*)?${WD_RX}»`)))) { wd = wdIndex(m[2], m[3], m[4]); wq = m[1]; }
+  else if ((m = cut(NLP_RX(`«${WD_RX}(?:\\s*,?\\s*${WK_RX})?»`)))) { wd = wdIndex(m[1], m[2], m[3]); wq = m[5]; }
+  if (!dateSet && wd !== null) {
+    const shift = weekShift(wq);
+    let d = ad(mon0, wd + 7 * (shift || 0));
+    if (shift === null && d < today) d = ad(d, 7); // không nói tuần nào: lần tới gần nhất
+    setDate(d);
+  }
+  // 1e. Ngày tương đối
+  if (!dateSet) {
+    if (cut(NLP_RX("«hôm\\s*kia»"))) setDate(ad(today, -2));
+    else if ((m = cut(NLP_RX(`«(?:(${NLP_PERIOD})\\s+|hôm\\s+)qua»`)))) { setPer(m[1]); setDate(ad(today, -1)); }
+    else if (cut(NLP_RX("«(?:ngày\\s+)?(?:mốt|kia)»"))) setDate(ad(today, 2));
+    else {
+      // "mai": là ngày mai khi đứng đầu câu, đi sau buổi/"ngày", hoặc đi trước giờ/buổi;
+      // là tên người khi đi sau từ chỉ người ("gặp Mai", "cho Mai") hoặc viết hoa giữa câu
+      for (const mm of w.matchAll(NLP_RX(`«(?:(${NLP_PERIOD})\\s+|(ngày)\\s+)?(mai)»`, "giu"))) {
+        const head = w.slice(0, mm.index).trim(), before = head.split(/\s+/).pop() || "";
+        const after = w.slice(mm.index + mm[0].length);
+        const isDate = mm[1] || mm[2] ? true
+          : !head ? true
+          : NAME_BEFORE_MAI.test(before) ? false
+          : mm[3][0] === "M" ? false
+          : /^\s*(?:\d|lúc|sáng|trưa|chiều|tối|đêm|$)/iu.test(after);
+        if (isDate) { cutAt(mm); setPer(mm[1]); setDate(ad(today, 1)); break; }
+      }
+      if (!dateSet && (m = cut(NLP_RX(`«(?:(${NLP_PERIOD})\\s+)?(?:hôm\\s+)?nay»`)))) { setPer(m[1]); setDate(today); }
     }
   }
 
-  // Bóc từ chỉ buổi nếu đứng riêng (trừ 'ăn tối', 'ăn trưa', 'ăn sáng')
-  if (!per && (m = cut(/(?<!(?:ăn|bữa)\s+)(?<![\p{L}\p{N}])(sáng|trưa|chiều|tối|đêm)(?![\p{L}\p{N}])/iu))) {
-    setPer(m[1]);
-  }
-
-  // 2. Phân tích Giờ bắt đầu & Thời lượng
+  // ===== 2. GIỜ BẮT ĐẦU & THỜI LƯỢNG =====
   let start = null, dur = null;
-  const hm = (a, b) => pad(Math.min(23, +a)) + ":" + pad(b ? +b : 0);
+  const hm = (h, mi) => {
+    h = +h; mi = +(mi || 0);
+    if (h > 24 || mi > 59) { err = err || "Giờ không hợp lệ."; return null; }
+    return pad(h % 24) + ":" + pad(mi);
+  };
   const adj = (hr, p) => {
     p = p || per;
+    if (p === "đêm" && hr === 12) return 0;                       // 12h đêm = 00:00
     if ((p === "chiều" || p === "tối") && hr < 12) return hr + 12;
     if (p === "trưa" && hr >= 1 && hr <= 5) return hr + 12;
     if (p === "đêm" && hr >= 6 && hr < 12) return hr + 12;
     return hr;
   };
   const ampm = (hr, ap) => /pm/i.test(ap) ? (hr < 12 ? hr + 12 : hr) : (hr === 12 ? 0 : hr);
+  const num = s => parseFloat(String(s).replace(",", "."));
 
-  // Khoảng giờ: 14h-16h, 14:00 - 16:00
-  if ((m = cut(/(?<![\p{L}\p{N}])(\d{1,2})(?:h|:|g)(\d{2})?\s*[-–]\s*(\d{1,2})(?:h|:|g)?(\d{2})?(?![\p{L}\p{N}])/iu))) {
+  // 2a. Khoảng giờ: "14h-16h", "14-16h", "2-4h chiều", "14:00 - 16:00"
+  if ((m = cut(NLP_RX(`«(\\d{1,2})(?:[h:g](\\d{2})?|\\s*giờ)?\\s*[-–]\\s*(\\d{1,2})(?:[h:g](\\d{2})?|\\s*giờ)?(?:\\s*(${NLP_PERIOD}))?»(?!\\s*(?:tiếng|phút|ph|p)»)`)))) {
+    setPer(m[5]);
     const a = adj(+m[1]) * 60 + (+m[2] || 0), b = adj(+m[3]) * 60 + (+m[4] || 0);
     if (b > a) { start = hm(a / 60 | 0, a % 60); dur = (b - a) / 60; }
   }
-
-  // Bóc tách thời lượng rõ ràng trước
+  // 2b. Thời lượng nói rõ
   if (dur === null) {
-    if (cut(/(?<![\p{L}\p{N}])(?:nửa|1\/2)\s*(?:tiếng|giờ|h)(?![\p{L}\p{N}])/iu)) dur = 0.5;
-    else if ((m = cut(/(?<![\p{L}\p{N}])(\d+(?:[.,]\d+)?)\s*(?:tiếng|giờ|gio|hrs?|hours?)(\s*rưỡi)?(?![\p{L}\p{N}])/iu))) dur = parseFloat(m[1].replace(",", ".")) + (m[2] ? 0.5 : 0);
-    else if ((m = cut(/(?<![\p{L}\p{N}])(\d+(?:[.,]\d+)?)\s*h\s*rưỡi(?![\p{L}\p{N}])/iu))) dur = parseFloat(m[1].replace(",", ".")) + 0.5;
-    else if ((m = cut(/(?<![\p{L}\p{N}])(\d+)\s*(?:phút|phut|min|p)(?![\p{L}\p{N}])/iu))) dur = Math.round(+m[1] / 60 * 100) / 100;
-    else if ((m = cut(/(?<![\p{L}\p{N}])(?:trong\s*)(\d+(?:[.,]\d+)?)\s*h(?![\p{L}\p{N}])/iu))) dur = parseFloat(m[1].replace(",", "."));
+    if (cut(NLP_RX("«(?:nửa|1\\/2)\\s*(?:tiếng|giờ|h)»"))) dur = 0.5;
+    else if ((m = cut(NLP_RX("«(\\d+(?:[.,]\\d+)?)\\s*tiếng(?:\\s+(\\d{1,2})(?:\\s*(?:phút|ph|p))?(?![\\p{L}\\p{N}:])(?!\\s*(?:h|g|giờ)(?!\\p{L})))?(\\s*rưỡi)?»")))) dur = num(m[1]) + (+m[2] || 0) / 60 + (m[3] ? 0.5 : 0);
+    else if (cut(NLP_RX("«tiếng\\s*rưỡi»"))) dur = 1.5;
+    else if ((m = cut(NLP_RX("«(\\d{1,2})\\s*(?:h|giờ)\\s*(\\d{1,2})\\s*(?:phút|ph|p)»")))) dur = +m[1] + +m[2] / 60;
+    else if ((m = cut(NLP_RX("«(\\d+(?:[.,]\\d+)?)\\s*(?:hrs?|hours?)»")))) dur = num(m[1]);
+    else if ((m = cut(NLP_RX("«(\\d+)\\s*(?:phút|phut|min|ph|p)»")))) dur = Math.round(+m[1] / 60 * 100) / 100;
+    else if ((m = cut(NLP_RX("«trong\\s*(\\d+(?:[.,]\\d+)?)\\s*(?:h|giờ)»")))) dur = num(m[1]);
   }
-
-  // Giờ bắt đầu có mốc cụ thể
-  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2}):(\d{2})(?![\p{L}\p{N}])/u))) start = hm(adj(+m[1]), m[2]);
-  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2})[hg](\d{2})(?![\p{L}\p{N}])/iu))) start = hm(adj(+m[1]), m[2]);
-  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(?:lúc|từ|vào|at|@)\s*(\d{1,2})(?:\s*(?:h|giờ|g))?(?:\s*(sáng|trưa|chiều|tối|đêm|am|pm))?(?![\p{L}\p{N}])/iu))) {
-    const p = m[2];
-    if (p && /^(am|pm)$/i.test(p)) start = hm(ampm(+m[1], p), 0);
-    else { setPer(p); start = hm(adj(+m[1]), 0); }
+  // 2c. Giờ kèm buổi: "5h sáng", "2 giờ chiều", "8h30 tối", "tối 8h", "chiều 3 giờ"
+  if (start === null && (m = cut(NLP_RX(`«(\\d{1,2})(?:[h:g](\\d{2})?|\\s*giờ(?:\\s*(\\d{1,2})(?:\\s*phút)?)?)?(\\s*rưỡi)?\\s*(${NLP_PERIOD})»`)))) {
+    setPer(m[5]); start = hm(adj(+m[1]), m[2] || m[3] || (m[4] ? 30 : 0));
   }
-  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2})\s*(?:h|giờ|g)?\s*(am|pm)(?![\p{L}\p{N}])/iu))) start = hm(ampm(+m[1], m[2]), 0);
-  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2})\s*(?:h|giờ|g)?\s*(sáng|trưa|chiều|tối|đêm)(?![\p{L}\p{N}])/iu))) {
-    setPer(m[2]); start = hm(adj(+m[1]), 0);
+  if (start === null && (m = cut(NLP_RX(`«(${NLP_PERIOD})\\s*(?:lúc\\s*)?(\\d{1,2})(?:[h:g](\\d{2})?|\\s*giờ(?:\\s*(\\d{1,2})(?:\\s*phút)?)?)?(\\s*rưỡi)?»(?!\\s*(?:tiếng|phút|ph|p)»)`)))) {
+    setPer(m[1]); start = hm(adj(+m[2]), m[3] || m[4] || (m[5] ? 30 : 0));
   }
-
-  // Quét các chữ "Xh" hoặc "X.Xh" còn lại trong chuỗi
-  while ((m = cut(/(?<![\p{L}\p{N}])(\d{1,2}(?:[.,]\d+)?)\s*h(?![\p{L}\p{N}])/iu))) {
-    const val = parseFloat(m[1].replace(",", "."));
-    if (start === null && (val >= 6 || dur !== null)) {
-      start = hm(adj(Math.floor(val)), Math.round((val % 1) * 60));
-    } else if (dur === null) {
-      dur = val;
-    } else if (start === null) {
-      start = hm(adj(Math.floor(val)), Math.round((val % 1) * 60));
-    }
+  // 2d. Từ chỉ buổi đứng riêng (trừ "ăn tối", "bữa trưa"…)
+  if (!per && (m = cut(NLP_RX(`(?<!(?:ăn|bữa)\\s+)«(${NLP_PERIOD})»`)))) setPer(m[1]);
+  // 2e. Giờ bắt đầu nói rõ
+  if (start === null && (m = cut(NLP_RX("«(?:lúc|từ|vào|at|@)\\s*(\\d{1,2})(?:[h:g](\\d{2})?|\\s*giờ(?:\\s*(\\d{1,2}))?)?(\\s*rưỡi)?(?:\\s*(am|pm))?»")))) {
+    start = m[5] ? hm(ampm(+m[1], m[5]), m[2] || 0) : hm(adj(+m[1]), m[2] || m[3] || (m[4] ? 30 : 0));
+  }
+  if (start === null && (m = cut(NLP_RX("«(\\d{1,2}):(\\d{2})»")))) start = hm(adj(+m[1]), m[2]);
+  if (start === null && (m = cut(NLP_RX("«(\\d{1,2})[hg](\\d{2})»")))) {
+    // "1h30" không kèm buổi: dưới 6 giờ thì hiểu là thời lượng 1,5 tiếng, không phải 01:30 sáng
+    if (+m[1] < 6 && !per && dur === null) dur = +m[1] + +m[2] / 60;
+    else start = hm(adj(+m[1]), m[2]);
+  }
+  if (start === null && (m = cut(NLP_RX("«(\\d{1,2})\\s*(?:h|giờ)?\\s*(am|pm)»")))) start = hm(ampm(+m[1], m[2]), 0);
+  // 2f. Các "Xh" / "X giờ" còn lại: từ 6 trở lên (hoặc có buổi) là giờ bắt đầu, nhỏ hơn là thời lượng
+  while ((m = cut(NLP_RX("«(\\d{1,2}(?:[.,]\\d+)?)\\s*(?:h|giờ)(\\s*rưỡi)?»")))) {
+    const val = num(m[1]) + (m[2] ? 0.5 : 0);
+    const asStart = () => hm(adj(Math.floor(val)), Math.round((val % 1) * 60));
+    if (start === null && (val >= 6 || per || dur !== null)) start = asStart();
+    else if (dur === null) dur = val;
+    else if (start === null) start = asStart();
   }
 
   const key = ky(target);
@@ -1466,16 +1612,18 @@ function parseNLPText(str) {
     start = per ? dm[per] : lastEv ? tt(lastEv.s, lastEv.h) : "07:00";
   }
   if (dur === null) dur = (S.cfg && S.cfg.defDuration) || 2;
+  dur = Math.round(dur * 100) / 100;
 
-  // 3. Tên hoạt động, tác động, loại vốn
-  let title = w.replace(/(?<![\p{L}\p{N}])(?:lúc|từ|vào|at|@|trong)(?![\p{L}\p{N}])/giu, " ")
+  // ===== 3. TÊN, TÁC ĐỘNG, LOẠI VỐN =====
+  let title = w.replace(NLP_RX("«(?:lúc|từ|vào|at|@|trong)»", "giu"), " ")
+               .replace(/(^|\s)[-–,;.\/]+(?=\s|$)/g, " ")
                .replace(/[,;]+/g, " ")
                .replace(/\s+/g, " ")
                .trim();
   if (!title) title = "Hoạt động mới";
   const mode = WB("họp|meeting|deadline|ot|tăng ca|làm việc|công việc|xử lý|áp lực|stress|báo cáo").test(title) ? "d" : "u";
-  const c = chkEvent(key, start, dur, -1);
-  return { raw, title, targetDate: key, dateDesc: dateDesc + " (" + key.slice(5) + ")", startTime: start, duration: dur, capKey: guess(title), mode, err: c.err, hit: c.hit };
+  const c = err ? {} : chkEvent(key, start, dur, -1);
+  return { raw, title, targetDate: key, dateDesc: describeDate(target), startTime: start, duration: dur, capKey: guess(title), mode, err: err || c.err, hit: c.hit };
 }
 
 function handleNLPInput(val) {
@@ -1488,9 +1636,34 @@ function handleNLPInput(val) {
     <span class="pill pill-cyan">📅 ${esc(r.dateDesc)}</span>
     <span class="pill pill-neutral">⏰ ${r.startTime} – ${tt(r.startTime, r.duration)} (${r1(r.duration)}h)</span>
     <span class="pill ${r.mode === "u" ? "pill-ok" : "pill-bad"}">${r.mode === "u" ? "▲ Nạp" : "▼ Tiêu"}</span>
-    <span class="pill" style="background:${cap.c}; color:#fff;">🏷️ ${esc(cap.n)}</span>
+    <span class="pill" style="${capInk(cap.c)}">🏷️ ${esc(cap.n)}</span>
     <span style="font-weight:600; color:var(--tx); margin-left:4px;">"${esc(r.title)}"</span>
     ${r.err ? `<span class="pill pill-bad">⚠ ${esc(r.err)}</span>` : r.hit ? `<span class="pill pill-bad">⚠ Trùng giờ với "${esc(r.hit.t)}"</span>` : ""}`;
+}
+
+// Gõ tiếng Việt có dấu: một lần Enter vừa chốt chữ vừa thực hiện (ghi nhanh / chuyển ô trong popup).
+// Chrome phát keydown Enter (isComposing) TRƯỚC compositionend: ghi nhớ, chờ bộ gõ chốt chữ xong rồi mới làm.
+// Safari phát compositionend trước, nên lúc keydown chữ đã chốt và làm ngay được.
+let nlpAfterCompose = false;
+function noteCompositionEnd() {
+  if (nlpAfterCompose) {
+    nlpAfterCompose = false;
+    setTimeout(executeNLP, 0);
+  }
+  if (enterAfterCompose) {
+    const el = enterAfterCompose;
+    enterAfterCompose = null;
+    setTimeout(() => editorEnter(el), 0);
+  }
+}
+// Không có thuộc tính oncompositionend trong HTML nên phải gắn bằng addEventListener
+document.addEventListener("compositionend", noteCompositionEnd, true);
+
+function handleNLPKeydown(e) {
+  if (e.key !== "Enter" || e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+  if (e.isComposing || e.keyCode === 229) { nlpAfterCompose = true; return; }
+  e.preventDefault();
+  executeNLP();
 }
 
 function executeNLP() {
@@ -1503,9 +1676,9 @@ function executeNLP() {
   const newEvt = { t: r.title, c: r.capKey, m: r.mode, h: r.duration, s: r.startTime };
   L.push(newEvt);
   sortL(L);
-  S.mem[r.title.normalize("NFC").toLowerCase()] = { c: r.capKey };
+  markPending(newEvt);
   save();
-  gcalCreateEvent(newEvt, r.targetDate);
+  gcalFlush();
   input.value = "";
   handleNLPInput("");
 
@@ -1592,8 +1765,13 @@ function renderRadarChartSVG(weekIdx) {
   const tg = stats.filter(s => s.has);
   let balanceHtml;
   if (!tg.length) {
-    balanceHtml = `<span class="pill pill-blush">🎯 Chưa tính điểm cân bằng</span>
-      <span style="color:var(--mu); font-size:12px;">Hãy đặt mục tiêu ▲/tuần ở tab Danh mục vốn.</span>`;
+    balanceHtml = `<span class="pill pill-blush">🎯 Chưa đặt mục tiêu tuần</span>
+      <span style="color:var(--mu); font-size:12px;">Đặt số giờ ▲ Nạp mong muốn mỗi tuần cho từng loại vốn để bánh xe tính được điểm cân bằng.</span>
+      <button type="button" class="btn btn-sm btn-primary" onclick="goToTargets()">Đặt mục tiêu</button>`;
+  } else if (stats.every(s => s.u === 0)) {
+    // Chưa có giờ Nạp nào: chấm 0% và kết luận "bánh xe bị méo" là sai
+    balanceHtml = `<span class="pill pill-blush">🎯 Chưa có dữ liệu để tính điểm</span>
+      <span style="color:var(--mu); font-size:12px;">Tuần này chưa ghi giờ ▲ Nạp nào.</span>`;
   } else {
     const ratios = tg.map(s => Math.min(1, s.u / s.c.tg));
     const avgR = ratios.reduce((a, b) => a + b, 0) / ratios.length, minR = Math.min(...ratios);
@@ -1729,7 +1907,7 @@ function openWeeklyReviewModal(wIdx = sel) {
             <button type="button" class="btn btn-sm btn-ghost" onclick="openWeeklyReviewModal(CW)" style="color:var(--ac-text); font-weight:600; font-size:12px;">
               Về tuần hiện tại (W${CW + 1})
             </button>
-          ` : `<span class="pill pill-ok" style="font-size:11px;">Tuần hiện tại</span>`}
+          ` : wIdx === CW ? `<span class="pill pill-ok" style="font-size:11px;">Tuần hiện tại</span>` : ""}
         </div>
       </div>
 
@@ -1747,13 +1925,13 @@ function openWeeklyReviewModal(wIdx = sel) {
           <div style="font:700 20px Georgia, serif; margin-top:4px;">
             ${r1(totalAlloc)}h <span style="font-size:13px; font-weight:400; color:var(--mu);">(${Math.round(totalAlloc/168*100)}%)</span>
           </div>
-          <small style="color:${totalAlloc > 168 ? 'var(--bad)' : 'var(--ok)'}">
+          <small style="color:${totalAlloc > 168 ? 'var(--bad)' : 'var(--ok-text)'}">
             ${totalAlloc > 168 ? 'Vượt giới hạn 168h!' : `Còn ${r1(freeTime)}h tự do`}
           </small>
         </div>
         <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
           <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Đánh giá pin tuần</div>
-          <div style="font:700 20px Georgia, serif; margin-top:4px; color:${netEnergy >= 0 ? 'var(--ok)' : 'var(--bad)'}">
+          <div style="font:700 20px Georgia, serif; margin-top:4px; color:${noData ? 'var(--mu)' : netEnergy >= 0 ? 'var(--ok-text)' : 'var(--bad)'}">
             ${noData ? '— Chưa có dữ liệu' : netEnergy >= 4 ? '🔋 Nạp pin xuất sắc' : netEnergy >= 0 ? '🔋 Pin ổn định' : '🪫 Thâm hụt pin'}
           </div>
           <small style="color:var(--tx-sec)">${noData ? 'Ghi hoạt động để đánh giá' : netEnergy >= 0 ? 'Cân bằng phục hồi tốt' : 'Cần bù đắp nghỉ ngơi tuần tới'}</small>
@@ -1768,6 +1946,14 @@ function openWeeklyReviewModal(wIdx = sel) {
         ${renderRadarChartSVG(wIdx)}
       </div>
 
+      ${noData ? `
+      <!-- Tuần chưa có hoạt động: không đưa nhận định hay khuyến nghị dựa trên dữ liệu rỗng -->
+      <div style="padding:16px; background:var(--card-subtle); border-radius:var(--radius-md); border:1px dashed var(--bd); display:flex; flex-direction:column; gap:8px; align-items:flex-start;">
+        <b style="font-size:14px;">📭 Tuần W${wIdx + 1} chưa có hoạt động nào</b>
+        <span style="font-size:13px; color:var(--tx-sec); line-height:1.5;">Ghi lại các hoạt động trong tuần bằng thanh ghi nhanh hoặc nút “+ Thêm” để nhận nhận định về cán cân năng lượng, quỹ 168 giờ và kế hoạch cho tuần tới.</span>
+        <button type="button" class="btn btn-sm btn-primary" onclick="goToQuickCapture()">Ghi hoạt động</button>
+      </div>
+      ` : `
       <!-- PHÂN TÍCH CHUYÊN SÂU & INSIGHTS ĐA CHIỀU -->
       <div style="display:flex; flex-direction:column; gap:10px; font-size:13px;">
         <!-- Insight 1: Cán cân năng lượng -->
@@ -1824,6 +2010,7 @@ function openWeeklyReviewModal(wIdx = sel) {
           <div>3. <b>Giữ vững đà tăng trưởng:</b> Tiếp tục phát huy thế mạnh ở vốn <b>${starCap ? esc(starCap.c.n) : 'chủ lực'}</b>.</div>
         </div>
       </div>
+      `}
 
       <div style="display:flex; justify-content:flex-end; gap:8px;">
         <button type="button" class="btn" onclick="copyReviewToClipboard(${wIdx})">📋 Sao chép tóm tắt</button>
@@ -1869,6 +2056,23 @@ function renderNav() {
 function switchTab(tabId) {
   cur = tabId;
   draw(true);
+}
+
+// Từ bánh xe / bản tổng kết: mở tab Danh mục vốn và đặt con trỏ vào ô mục tiêu đầu tiên
+function goToTargets() {
+  closeReviewModal();
+  switchTab("set");
+  window.scrollTo(0, 0);
+  const inp = document.querySelector('#v input[data-target-input]');
+  if (inp) { inp.focus(); inp.select(); }
+}
+
+// Từ bản tổng kết tuần trống: đóng popup và đưa con trỏ về thanh ghi nhanh
+function goToQuickCapture() {
+  closeReviewModal();
+  const inp = $("nlpInput");
+  window.scrollTo(0, 0);
+  if (inp) inp.focus();
 }
 
 function getThemePreference() {
@@ -1923,10 +2127,14 @@ function setBurnoutThreshold(val) {
 function resetToDefaultData() {
   if (!confirm("⚠️ CẢNH BÁO NGUY HIỂM:\nBạn có chắc chắn muốn xóa TOÀN BỘ dữ liệu đã ghi và đưa ứng dụng về trạng thái ban đầu?\n\nKhuyến nghị: Hãy nhấn 'Xuất tệp sao lưu (.json)' trước khi xóa!")) return;
   if (!confirm("Xác nhận lần cuối: Mọi hoạt động ghi chép sẽ bị xóa vĩnh viễn trên thiết bị này. Tiếp tục?")) return;
-  const keepLb = S.lb;
+  const keepLb = S.lb, keepGdel = S.gdel || [], oldCfg = S.cfg || {};
   S = defState();
   S.ev = {};
   S.lb = keepLb;
+  // Giữ liên kết Google Calendar và các lệnh xóa đang chờ
+  S.gdel = keepGdel;
+  S.cfg.gcalAutoSync = oldCfg.gcalAutoSync !== false;
+  if (oldCfg.gcalClientId) S.cfg.gcalClientId = oldCfg.gcalClientId;
   save();
   draw(true);
   closeSettingsModal();
@@ -1945,6 +2153,9 @@ const GCAL_COLOR_MAP = {
 };
 
 let gcalTokenClient = null;
+const GCAL_SCOPE = "https://www.googleapis.com/auth/calendar.events";
+// Lỗi cấu hình gần nhất (API chưa bật, chưa cấp quyền lịch…) để hiện trên badge; xóa khi đẩy thành công
+let gcalConfigErr = "", gcalLastFail = "";
 
 function getGCalToken() {
   try {
@@ -1964,6 +2175,18 @@ function isGCalConnected() {
   return !!getGCalToken();
 }
 
+// Đã từng kết nối (token có thể đã hết hạn). Người dùng cũ chưa có cờ này thì suy ra từ token đã lưu.
+try { if (localStorage.getItem("gcal_token") && !localStorage.getItem("gcal_linked")) localStorage.setItem("gcal_linked", "1"); } catch (e) {}
+function gcalLinked() {
+  try { return localStorage.getItem("gcal_linked") === "1"; } catch (e) { return false; }
+}
+function gcalActive() {
+  return gcalLinked() && !(S.cfg && S.cfg.gcalAutoSync === false);
+}
+function clearGCalToken() {
+  try { localStorage.removeItem("gcal_token"); localStorage.removeItem("gcal_token_exp"); } catch (e) {}
+}
+
 function initGCalTokenClient(onSuccess) {
   const clientId = (S.cfg && S.cfg.gcalClientId) || localStorage.getItem("gcal_client_id") || "";
   if (!clientId) {
@@ -1977,19 +2200,30 @@ function initGCalTokenClient(onSuccess) {
   try {
     gcalTokenClient = google.accounts.oauth2.initTokenClient({
       client_id: clientId.trim(),
-      scope: "https://www.googleapis.com/auth/calendar.events",
+      scope: GCAL_SCOPE,
       callback: (resp) => {
         if (resp.error) {
           showToast("Lỗi xác thực Google: " + resp.error, "bad");
           return;
         }
+        // Màn hình của Google cho phép bỏ tick từng quyền: không có quyền lịch thì token vô dụng
+        if (resp.access_token && google.accounts.oauth2.hasGrantedAllScopes && !google.accounts.oauth2.hasGrantedAllScopes(resp, GCAL_SCOPE)) {
+          gcalConfigErr = "Bạn chưa cho phép truy cập Google Calendar. Bấm Kết nối lại và tick ô quyền Google Calendar trên màn hình của Google.";
+          showToast(gcalConfigErr, "bad");
+          renderSettingsModal();
+          updateSyncBadge();
+          return;
+        }
         if (resp.access_token) {
+          gcalConfigErr = "";
           const expTime = Date.now() + (parseInt(resp.expires_in, 10) || 3600) * 1000;
           localStorage.setItem("gcal_token", resp.access_token);
           localStorage.setItem("gcal_token_exp", String(expTime));
+          localStorage.setItem("gcal_linked", "1");
           showToast("✓ Đã kết nối Google Calendar thành công!", "ok");
           renderSettingsModal();
           if (onSuccess) onSuccess();
+          gcalFlush({ report: true });
         }
       }
     });
@@ -2010,14 +2244,19 @@ function connectGoogleCalendar() {
   }
   const ok = initGCalTokenClient();
   if (!ok) return;
-  gcalTokenClient.requestAccessToken({ prompt: "consent" });
+  // Đã cấp quyền trước đó thì không bắt đi qua màn hình xin quyền đầy đủ lần nữa
+  gcalTokenClient.requestAccessToken({ prompt: gcalLinked() ? "" : "consent" });
 }
 
 function disconnectGoogleCalendar() {
-  localStorage.removeItem("gcal_token");
-  localStorage.removeItem("gcal_token_exp");
+  let token = null;
+  try { token = localStorage.getItem("gcal_token"); } catch (e) {}
+  try { if (token && window.google && google.accounts && google.accounts.oauth2) google.accounts.oauth2.revoke(token, () => {}); } catch (e) {}
+  clearGCalToken();
+  try { localStorage.removeItem("gcal_linked"); } catch (e) {}
   showToast("Đã ngắt kết nối Google Calendar", "ok");
   renderSettingsModal();
+  updateSyncBadge();
 }
 
 function toggleGCalAutoSync(enabled) {
@@ -2025,135 +2264,259 @@ function toggleGCalAutoSync(enabled) {
   S.cfg.gcalAutoSync = enabled;
   save();
   showToast(enabled ? "Đã bật tự động đồng bộ sang Google Calendar" : "Đã tắt tự động đồng bộ", "ok");
+  updateSyncBadge();
+  if (enabled) gcalFlush();
 }
 
 function buildGCalEventPayload(eventObj, dateStr) {
-  const startTime = eventObj.s || "07:00";
-  const [sh, sm] = startTime.split(":").map(Number);
   const dur = eventObj.h || 1;
-  const endMin = (sh || 0) * 60 + (sm || 0) + Math.round(dur * 60);
-  const eh = Math.min(23, Math.floor(endMin / 60));
-  const em = endMin % 60;
-  const endTime = pad(eh) + ":" + pad(em);
-
   const cap = CM(eventObj.c);
   const capName = cap ? cap.n : "Khác";
   const modeText = eventObj.m === "u" ? "▲ Nạp vốn" : "▼ Tiêu vốn";
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Ho_Chi_Minh";
-
-  return {
+  const base = {
     summary: `${eventObj.m === 'u' ? '▲' : '▼'} ${eventObj.t}`,
     description: `Life Capital · Loại vốn: [${capName}] · Tác động: ${modeText} (${r1(dur)}h)`,
-    start: {
-      dateTime: `${dateStr}T${startTime}:00`,
-      timeZone: tz
-    },
-    end: {
-      dateTime: `${dateStr}T${endTime}:00`,
-      timeZone: tz
-    },
     colorId: GCAL_COLOR_MAP[eventObj.c] || "1"
+  };
+  const day = new Date(dateStr + "T00:00");
+
+  // Chưa xếp giờ → sự kiện cả ngày, không chiếm lịch bận
+  if (!eventObj.s) {
+    return { ...base, start: { date: dateStr }, end: { date: ky(ad(day, 1)) }, transparency: "transparent" };
+  }
+
+  // Tính bằng Date để 22:00 + 2h → 00:00 hôm sau (không cắt về 23:00)
+  const [sh, sm] = eventObj.s.split(":").map(Number);
+  const startD = new Date(day.getFullYear(), day.getMonth(), day.getDate(), sh, sm);
+  const endD = new Date(day.getFullYear(), day.getMonth(), day.getDate(), sh, sm + Math.round(dur * 60));
+  const fmt = d => `${ky(d)}T${pad(d.getHours())}:${pad(d.getMinutes())}:00`;
+  return {
+    ...base,
+    start: { dateTime: fmt(startD), timeZone: tz },
+    end: { dateTime: fmt(endD), timeZone: tz }
   };
 }
 
-async function gcalCreateEvent(eventObj, dateStr) {
-  const token = getGCalToken();
-  if (!token || (S.cfg && S.cfg.gcalAutoSync === false)) return null;
+/* --- Hàng đợi đồng bộ: mọi thay đổi chỉ đánh dấu, gcalFlush() đẩy lên tuần tự ---
+   e.ds  : sự kiện cần POST (chưa có gid) hoặc PATCH (đã có gid); tăng dần mỗi lần sửa
+   S.gdel: gid đang chờ DELETE */
+let gcalFlushing = false, gcalRerun = false, gcalRetryT = null, gcalLockRetryT = null;
 
-  const payload = buildGCalEventPayload(eventObj, dateStr);
+function markPending(e) {
+  if (e && !e.demo && gcalActive()) e.ds = (e.ds || 0) + 1;
+}
+// Lệnh xóa luôn được ghi lại khi đã liên kết, kể cả khi tự động đồng bộ đang tắt:
+// nếu không, sự kiện trên Google Calendar sẽ nằm lại vĩnh viễn (lỗi UAT xóa chuỗi)
+function queueDelete(gid) {
+  if (gid && gcalLinked() && !S.gdel.includes(gid)) S.gdel.push(gid);
+}
+function gcalPendingCount() {
+  return S.gdel.length + Object.values(S.ev).reduce((n, l) => n + l.filter(e => e.ds).length, 0);
+}
+
+const GCAL_API = "https://www.googleapis.com/calendar/v3/calendars/primary/events";
+async function gcalFetch(method, path, token, body) {
+  // Quá 20 giây không phản hồi thì coi như lỗi mạng (thử lại sau), tránh treo và giữ khóa mãi
+  const ctrl = typeof AbortController === "function" ? new AbortController() : null;
+  const timer = ctrl ? setTimeout(() => ctrl.abort(), 20000) : null;
   try {
-    const res = await fetch("https://www.googleapis.com/calendar/v3/calendars/primary/events", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
+    const res = await fetch(GCAL_API + path, {
+      method,
+      headers: { "Authorization": `Bearer ${token}`, ...(body ? { "Content-Type": "application/json" } : {}) },
+      ...(body ? { body: JSON.stringify(body) } : {}),
+      ...(ctrl ? { signal: ctrl.signal } : {})
     });
-    if (res.ok) {
-      const data = await res.json();
-      eventObj.gid = data.id;
+    const data = res.status === 204 ? null : await res.json().catch(() => null);
+    return { ok: res.ok, status: res.status, data };
+  } catch (err) {
+    console.warn("Lỗi mạng khi gọi Google Calendar:", err);
+    return { ok: false, status: 0, data: null };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+// "ok" | "auth" (401: cần kết nối lại) | "retry" (mạng, giới hạn tần suất, lỗi máy chủ) | "fail" (Google từ chối dữ liệu)
+// "ok" | "auth" (401: cần kết nối lại) | "retry" (mạng, giới hạn tần suất, lỗi máy chủ)
+// | "config" (403 do cấu hình: API chưa bật, chưa cấp quyền lịch… sửa xong thì gửi lại được)
+// | "fail" (Google từ chối dữ liệu của riêng sự kiện này)
+function gcalOutcome(r) {
+  if (r.ok) return "ok";
+  if (r.status === 401) return "auth";
+  const err = (r.data && r.data.error) || {};
+  const reasons = [
+    ...(err.errors || []).map(x => x.reason),
+    ...(err.details || []).map(x => x.reason)
+  ].filter(Boolean).join(" ");
+  if (r.status === 0 || r.status === 429 || r.status >= 500 || (r.status === 403 && /rateLimit|quota/i.test(reasons))) return "retry";
+  if (r.status === 403) {
+    if (/accessNotConfigured|SERVICE_DISABLED/i.test(reasons)) {
+      gcalConfigErr = "Google Calendar API chưa được bật cho ứng dụng này. Nhóm phát triển cần vào Google Cloud Console → APIs & Services → Library → Google Calendar API → Enable, rồi bấm vào badge trên thanh tiêu đề để gửi lại.";
+    } else if (/insufficientPermissions|SCOPE_INSUFFICIENT/i.test(reasons)) {
+      clearGCalToken();
+      gcalConfigErr = "Bạn chưa cho phép truy cập Google Calendar. Bấm Kết nối lại và tick ô quyền Google Calendar trên màn hình của Google.";
+    } else {
+      gcalConfigErr = "Google từ chối truy cập lịch (403" + (err.message ? ": " + err.message : "") + ").";
+    }
+    return "config";
+  }
+  gcalLastFail = (r.status || "") + (err.message ? " " + err.message : "");
+  return "fail";
+}
+
+async function gcalCreateEvent(e, dateStr, token) {
+  const r = await gcalFetch("POST", "", token, buildGCalEventPayload(e, dateStr));
+  if (r.ok && r.data && r.data.id) e.gid = r.data.id;
+  return gcalOutcome(r);
+}
+
+async function gcalUpdateEvent(e, dateStr, token) {
+  const p = buildGCalEventPayload(e, dateStr);
+  // PATCH gộp các object con: xóa trường cũ khi đổi giữa sự kiện cả ngày và sự kiện có giờ
+  if (p.start.date) { p.start.dateTime = p.end.dateTime = p.start.timeZone = p.end.timeZone = null; }
+  else { p.start.date = p.end.date = null; p.transparency = "opaque"; }
+  const r = await gcalFetch("PATCH", "/" + encodeURIComponent(e.gid), token, p);
+  if (r.status === 404 || r.status === 410) { delete e.gid; return gcalCreateEvent(e, dateStr, token); }
+  return gcalOutcome(r);
+}
+
+async function gcalDeleteEvent(gid, token) {
+  const r = await gcalFetch("DELETE", "/" + encodeURIComponent(gid), token);
+  return r.status === 404 || r.status === 410 ? "ok" : gcalOutcome(r);
+}
+
+const evSig = e => [e.t, e.s, e.h, e.c, e.m].join("|");
+
+// Ghi nhận kết quả vào state hiện tại. S có thể đã bị thay bằng dữ liệu từ tab khác
+// trong lúc chờ mạng, khi đó tìm bản tương ứng để không tạo bản trùng ở lần sau.
+function gcalSettle(k, e, v, sig) {
+  const L = S.ev[k] || [];
+  if (L.includes(e)) { if (e.ds === v) delete e.ds; return; }
+  const twin = L.find(x => (e.gid && x.gid === e.gid) || (!x.gid && x.ds && evSig(x) === sig));
+  if (twin) {
+    if (e.gid) twin.gid = e.gid;
+    if (evSig(twin) === sig) delete twin.ds;
+  } else if (e.gid && !S.gdel.includes(e.gid)) {
+    S.gdel.push(e.gid); // sự kiện đã bị xóa trong lúc đang gửi
+    gcalRerun = true;
+  }
+}
+
+async function gcalFlush(opts = {}) {
+  if (gcalFlushing) { gcalRerun = true; return; }
+  if (!gcalLinked() || (!opts.force && !gcalActive())) { updateSyncBadge(); return; }
+  const token = getGCalToken();
+  if (!token || !gcalPendingCount()) { updateSyncBadge(); return; }
+  // Hai cửa sổ cùng mở: chỉ một cửa sổ được đẩy, tránh tạo bản trùng
+  if (navigator.locks && navigator.locks.request) {
+    return navigator.locks.request("lc-gcal-flush", { ifAvailable: true }, lock => {
+      if (lock) return gcalFlushRun(token, opts);
+      // Tab khác đang giữ khóa: hẹn thử lại, không để các thay đổi chờ nằm im
+      clearTimeout(gcalLockRetryT);
+      gcalLockRetryT = setTimeout(() => gcalFlush(opts), 2000);
+      return null;
+    });
+  }
+  return gcalFlushRun(token, opts);
+}
+
+async function gcalFlushRun(token, opts) {
+  gcalFlushing = true;
+  gcalRerun = false;
+  clearTimeout(gcalRetryT);
+  updateSyncBadge();
+  let ok = 0, stop = null;
+  const failed = [];
+  try {
+    for (const gid of [...S.gdel]) {
+      const o = await gcalDeleteEvent(gid, token);
+      if (o === "auth" || o === "retry" || o === "config") { stop = o; break; }
+      S.gdel = S.gdel.filter(g => g !== gid);
+      if (o === "ok") ok++; else failed.push("(sự kiện đã xóa)");
       save();
-      return data.id;
-    } else if (res.status === 401) {
-      localStorage.removeItem("gcal_token");
-      showToast("Phiên Google Calendar hết hạn. Vui lòng kết nối lại trong Cài đặt.", "bad");
     }
-  } catch (err) {
-    console.warn("Lỗi khi thêm sự kiện lên Google Calendar:", err);
-  }
-  return null;
-}
-
-async function gcalUpdateEvent(eventObj, dateStr) {
-  const token = getGCalToken();
-  if (!token || !eventObj.gid || (S.cfg && S.cfg.gcalAutoSync === false)) return;
-
-  const payload = buildGCalEventPayload(eventObj, dateStr);
-  try {
-    const res = await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${encodeURIComponent(eventObj.gid)}`, {
-      method: "PATCH",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    });
-    if (!res.ok) {
-      if (res.status === 404) {
-        delete eventObj.gid;
-        await gcalCreateEvent(eventObj, dateStr);
-      } else if (res.status === 401) {
-        localStorage.removeItem("gcal_token");
-        showToast("Phiên Google Calendar hết hạn. Vui lòng kết nối lại.", "bad");
+    if (!stop) {
+      const items = Object.keys(S.ev).sort().flatMap(k => S.ev[k].filter(e => e.ds).map(e => [k, e]));
+      for (const [k, e] of items) {
+        if (!e.ds) continue;
+        const v = e.ds, sig = evSig(e);
+        const o = e.gid ? await gcalUpdateEvent(e, k, token) : await gcalCreateEvent(e, k, token);
+        if (o === "auth" || o === "retry" || o === "config") { stop = o; break; }
+        if (o === "ok") ok++; else failed.push(e.t);
+        gcalSettle(k, e, v, sig);
+        save();
       }
     }
-  } catch (err) {
-    console.warn("Lỗi khi cập nhật Google Calendar:", err);
+  } finally {
+    gcalFlushing = false;
   }
-}
 
-async function gcalDeleteEvent(gid) {
-  const token = getGCalToken();
-  if (!token || !gid || (S.cfg && S.cfg.gcalAutoSync === false)) return;
-
-  try {
-    await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${encodeURIComponent(gid)}`, {
-      method: "DELETE",
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
-    });
-  } catch (err) {
-    console.warn("Lỗi khi xóa sự kiện trên Google Calendar:", err);
+  if (!stop && ok) gcalConfigErr = "";
+  if (stop === "config") {
+    // Giữ nguyên các thay đổi đang chờ: sửa cấu hình xong là gửi lại được
+    showToast(gcalConfigErr, "bad");
+  } else if (stop === "auth") {
+    clearGCalToken();
+    showToast("Phiên Google Calendar đã hết hạn. Bấm 'Kết nối lại' trên thanh tiêu đề để đẩy các thay đổi đang chờ.", "bad");
+  } else if (stop === "retry") {
+    gcalRetryT = setTimeout(() => gcalFlush(), 30000);
+    if (opts.report) showToast(`Mất mạng hoặc Google đang giới hạn tần suất. Còn ${gcalPendingCount()} thay đổi chờ, sẽ tự thử lại.`, "bad");
+  }
+  if (failed.length) showToast(`Google Calendar từ chối ${failed.length} hoạt động (${gcalLastFail || "không rõ lý do"}): ${failed.slice(0, 3).join(", ")}${failed.length > 3 ? "…" : ""}`, "bad");
+  if (opts.report && !stop && !failed.length) showToast(ok ? `✓ Đã đồng bộ ${ok} thay đổi lên Google Calendar` : "✓ Google Calendar đã cập nhật", "ok");
+  updateSyncBadge();
+  // Có thay đổi mới trong lúc đang gửi: gửi tiếp ngay khi vẫn giữ khóa (không nhả rồi tranh lại)
+  if (gcalRerun && !stop) {
+    const t = getGCalToken();
+    if (t && gcalPendingCount()) return gcalFlushRun(t, opts);
   }
 }
 
 async function gcalSyncWeek(wIdx) {
-  const token = getGCalToken();
-  if (!token) {
+  if (!getGCalToken()) {
     showToast("Chưa kết nối Google Calendar!", "bad");
     return;
   }
   wIdx = (typeof wIdx === "number") ? wIdx : sel;
   const wStart = W[wIdx];
-  let count = 0;
-  showToast(`Đang đồng bộ tuần W${wIdx + 1} lên Google Calendar...`, "ok");
-
+  let n = 0;
   for (let di = 0; di < 7; di++) {
-    const dt = ad(wStart, di);
-    const dateStr = ky(dt);
-    const evsList = S.ev[dateStr] || [];
-    for (const e of evsList) {
-      if (e.gid) {
-        await gcalUpdateEvent(e, dateStr);
-      } else {
-        await gcalCreateEvent(e, dateStr);
-      }
-      count++;
-    }
+    (S.ev[ky(ad(wStart, di))] || []).forEach(e => {
+      if (!e.demo) { e.ds = (e.ds || 0) + 1; n++; }
+    });
   }
-  showToast(`✓ Đã đồng bộ ${count} hoạt động tuần W${wIdx + 1} lên Google Calendar!`, "ok");
+  if (!n) { showToast(`Tuần W${wIdx + 1} chưa có hoạt động nào để đồng bộ.`, "ok"); return; }
+  save();
+  showToast(`Đang đồng bộ ${n} hoạt động tuần W${wIdx + 1} lên Google Calendar...`, "ok");
+  await gcalFlush({ force: true, report: true });
+}
+
+// Badge trạng thái trên thanh tiêu đề (chỉ hiện khi đã liên kết và đang bật tự động đồng bộ)
+function updateSyncBadge() {
+  const b = $("syncBadge");
+  if (!b) return;
+  const linked = gcalLinked(), active = gcalActive(), tokenOk = !!getGCalToken(), n = linked ? gcalPendingCount() : 0;
+  // Tự động đồng bộ tắt: chỉ hiện khi còn thay đổi chờ (vd lệnh xóa), không nhắc kết nối lại
+  if (!linked || (tokenOk && !n) || (!active && !n)) { b.hidden = true; return; }
+  b.hidden = false;
+  if (!tokenOk) {
+    b.textContent = n ? `⚠ GCal · Kết nối lại (${n} chờ)` : "GCal · Kết nối lại";
+    b.className = n ? "btn btn-sm btn-danger" : "btn btn-sm btn-ghost";
+    b.title = gcalConfigErr || "Phiên Google Calendar hết hạn sau 1 giờ. Bấm để kết nối lại và đẩy các thay đổi đang chờ.";
+    b.onclick = connectGoogleCalendar;
+  } else if (gcalConfigErr && !gcalFlushing) {
+    b.textContent = `⚠ GCal · Lỗi cấu hình (${n} chờ)`;
+    b.className = "btn btn-sm btn-danger";
+    b.title = gcalConfigErr + " Bấm để thử gửi lại.";
+    b.onclick = () => gcalFlush({ report: true });
+  } else {
+    b.textContent = gcalFlushing ? `⏳ Đang đồng bộ ${n}…` : active ? `⏳ ${n} chờ đồng bộ` : `⏳ ${n} chờ đồng bộ (tự động đang tắt)`;
+    b.className = "btn btn-sm";
+    b.title = active ? "Bấm để đẩy ngay các thay đổi đang chờ lên Google Calendar"
+      : "Tự động đồng bộ đang tắt. Bấm để gửi các thay đổi đang chờ (vd lệnh xóa) lên Google Calendar.";
+    b.onclick = () => gcalFlush({ report: true, force: !active });
+  }
 }
 
 function renderSettingsModal() {
@@ -2219,8 +2582,9 @@ function renderSettingsModal() {
           ${isGCalConnected() ? '✓ Đã kết nối' : 'Chưa kết nối'}
         </span>
       </div>
+      ${gcalConfigErr ? `<p class="set-note" style="color:var(--bad);" role="alert">⚠ ${esc(gcalConfigErr)}</p>` : ""}
       <p style="font-size:12px; color:var(--tx-sec); margin-bottom:12px; line-height:1.45;">
-        Tự động đồng bộ các hoạt động khi Thêm, Sửa, Xóa sang Google Calendar với màu sắc phân loại theo 5 loại vốn sống.
+        Tự động đẩy (một chiều) các hoạt động khi Thêm, Sửa, Xóa sang Google Calendar, màu theo 5 loại vốn. Sửa trên Google Calendar không cập nhật ngược về app.
       </p>
 
       <div class="set-row">
@@ -2277,6 +2641,58 @@ function renderSettingsModal() {
 /* ==========================================================================
    8. MAIN VIEWS
    ========================================================================== */
+// Thông báo đầu tab Lịch biểu: bắt đầu sử dụng, dữ liệu mẫu, nhắc sao lưu
+function calendarNotices() {
+  return startOrDemoNotice() + backupNotice();
+}
+
+function backupNotice() {
+  const real = Object.values(S.ev).reduce((n, l) => n + l.filter(e => !e.demo).length, 0);
+  let snooze = 0;
+  try { snooze = +localStorage.getItem("lc_bk_snooze") || 0; } catch (e) {}
+  const days = S.lb ? Math.floor((Date.now() - S.lb) / 864e5) : null;
+  if (real < 10 || (days !== null && days < 14) || Date.now() < snooze) return "";
+  return `
+    <div class="review-prompt-banner">
+      <div>
+        <b>💾 ${days === null ? "Bạn chưa sao lưu dữ liệu lần nào" : `Đã ${days} ngày chưa sao lưu`}</b>
+        <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Dữ liệu chỉ nằm trong trình duyệt này. Safari có thể tự xóa dữ liệu của trang web nếu bạn không mở trong 7 ngày (trừ khi đã "Thêm vào Màn hình chính").</div>
+      </div>
+      <div class="row" style="gap:6px;">
+        <button type="button" class="btn btn-sm btn-ghost" onclick="snoozeBackup()">Để sau</button>
+        <button type="button" class="btn btn-sm btn-primary" onclick="exportData('json')">Sao lưu ngay</button>
+      </div>
+    </div>`;
+}
+
+function snoozeBackup() {
+  try { localStorage.setItem("lc_bk_snooze", String(Date.now() + 7 * 864e5)); } catch (e) {}
+  draw();
+}
+
+function startOrDemoNotice() {
+  if (!Object.keys(S.ev).length) {
+    return `
+      <div class="review-prompt-banner">
+        <div>
+          <b>👋 Bắt đầu với Life Capital</b>
+          <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Gõ vào thanh ghi nhanh phía trên, ví dụ <i>"Mai 18h đánh cầu lông 2 tiếng"</i>, hoặc bấm "+ Thêm" ở một ngày bất kỳ.</div>
+        </div>
+        <button type="button" class="btn btn-sm" onclick="loadDemo()">Thử với dữ liệu mẫu</button>
+      </div>`;
+  }
+  if (hasDemo()) {
+    return `
+      <div class="review-prompt-banner">
+        <div>
+          <b>🧪 Đang dùng dữ liệu mẫu</b>
+          <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Dữ liệu mẫu không được đẩy lên Google Calendar. Hoạt động mẫu bạn đã sửa sẽ được giữ lại như dữ liệu thật.</div>
+        </div>
+        <button type="button" class="btn btn-sm btn-danger" onclick="clearDemo()">Xóa dữ liệu mẫu</button>
+      </div>`;
+  }
+  return "";
+}
 const V = {
   // --- TAB 1: LỊCH BIỂU (CALENDAR) ---
   ca() {
@@ -2298,6 +2714,7 @@ const V = {
     ` : '';
 
     const headerBar = `
+      ${calendarNotices()}
       ${reviewPrompt}
       <div class="card" style="margin-bottom:12px; padding:12px 16px;">
         <div class="card-header" style="margin-bottom:0">
@@ -2307,7 +2724,7 @@ const V = {
               Tuần W${sel + 1} <span style="font-weight:400; color:var(--mu);">(${dateRangeStr})</span>
             </label>
             <button class="btn btn-sm" onclick="sel=Math.min(W.length - 1, sel + 1); draw()" title="Tuần sau">▶</button>
-            ${CW >= 0 && sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=Math.max(0, CW); draw()">Về tuần này (W${CW+1})</button>` : `<span class="pill pill-ok">Tuần hiện tại</span>`}
+            ${CW >= 0 && sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=Math.max(0, CW); draw()">Về tuần này (W${CW+1})</button>` : sel === CW ? `<span class="pill pill-ok">Tuần hiện tại</span>` : ""}
           </div>
           <div class="row">
             <div class="segmented-control">
@@ -2412,7 +2829,7 @@ const V = {
 
         return `
           <div class="timeline-event-block"
-               style="top:${topPx}px; height:${heightPx}px; background:${cap.c};"
+               style="top:${topPx}px; height:${heightPx}px; ${capInk(cap.c)}"
                onclick="openEditor('${activeDate}', ${idx})">
             <b>${e.s} – ${tt(e.s, e.h)}</b> · ${e.m === 'u' ? '▲' : '▼'} ${esc(e.t)} (${r1(e.h)}h)
           </div>
@@ -2426,7 +2843,7 @@ const V = {
         const curHr = now.getHours() + (now.getMinutes() / 60);
         if (curHr >= 6 && curHr <= 24) {
           const topNow = (curHr - 6) * 48;
-          timeNowIndicator = `<div style="position:absolute; left:0; right:0; top:${topNow}px; height:2px; background:var(--bad); z-index:4; pointer-events:none;"><span style="position:absolute; right:4px; top:-9px; font-size:10px; font-weight:700; background:var(--bad); color:#fff; padding:1px 4px; border-radius:3px;">${pad(now.getHours())}:${pad(now.getMinutes())}</span></div>`;
+          timeNowIndicator = `<div style="position:absolute; left:0; right:0; top:${topNow}px; height:2px; background:var(--bad); z-index:4; pointer-events:none;"><span style="position:absolute; right:4px; top:-9px; font-size:10px; font-weight:700; background:var(--bad); color:var(--card); padding:1px 4px; border-radius:3px;">${pad(now.getHours())}:${pad(now.getMinutes())}</span></div>`;
         }
       }
 
@@ -2466,7 +2883,7 @@ const V = {
             `<button class="${pm === o[0] ? 'active' : ''}" onclick="S.pm='${o[0]}'; save(); draw(); scrollToCurrentWeek();">${o[1]}</button>`
           ).join("")}
         </div>
-        <button class="btn btn-sm btn-ghost" onclick="scrollToCurrentWeek()">⟲ Về tuần hiện tại (W${CW >= 0 ? CW+1 : 1})</button>
+        ${CW >= 0 ? `<button class="btn btn-sm btn-ghost" onclick="scrollToCurrentWeek()">⟲ Về tuần hiện tại (W${CW + 1})</button>` : ""}
       </div>
     `;
 
@@ -2504,7 +2921,7 @@ const V = {
           </div>
           ${es.map((e, idx) => `
             <div onclick="event.stopPropagation(); openEditor('${k}', ${idx})"
-                 style="background:${CM(e.c).c}; color:#fff; border-radius:4px; padding:2px 5px; margin-top:2px; font-size:11px; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer;"
+                 style="${capInk(CM(e.c).c)} border-radius:4px; padding:2px 5px; margin-top:2px; font-size:11px; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer;"
                  title="${esc(e.t)} (${e.s || ''} ${r1(e.h)}h)">
               ${e.s ? e.s + ' ' : ''}${e.m === 'u' ? '▲' : '▼'} ${esc(e.t)} · ${r1(e.h)}h
             </div>
@@ -2604,7 +3021,7 @@ const V = {
           <h2 class="card-title">💡 Nhận Định & Tình Trạng Các Loại Vốn</h2>
         </div>
         <p style="margin:4px 0 10px; font-size:13.5px; color:var(--tx-sec);">
-          ${T.length ? `Đã có <b>${okCount}/${T.length}</b> nguồn vốn đạt mục tiêu tuần (trung bình ${nn} tuần gần nhất đến W${sel + 1}).` : "Chưa đặt mục tiêu cho vốn nào. Bạn có thể vào tab <b>Danh mục vốn</b> để đặt mục tiêu."}
+          ${T.length ? `Đã có <b>${okCount}/${T.length}</b> nguồn vốn đạt mục tiêu tuần (trung bình ${nn} tuần gần nhất đến W${sel + 1}).` : `Chưa đặt mục tiêu tuần cho loại vốn nào, nên chưa đánh giá được mức đạt. <button type="button" class="btn btn-sm btn-primary" onclick="goToTargets()">Đặt mục tiêu</button>`}
           ${CW >= 0 && sel > CW ? " <i>(Đang xem kế hoạch tuần tương lai).</i>" : ""}
         </p>
         <div style="display:flex; flex-direction:column; gap:6px; font-size:13px;">
@@ -2654,7 +3071,7 @@ const V = {
           </div>
           <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
             <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">${A > 168 ? 'Quá tải (Vượt)' : 'Chưa phân bổ'}</div>
-            <div style="font:700 22px Georgia, serif; margin-top:2px; color:${A > 168 ? 'var(--bad)' : 'var(--ok)'}">
+            <div style="font:700 22px Georgia, serif; margin-top:2px; color:${A > 168 ? 'var(--bad)' : 'var(--ok-text)'}">
               ${A > 168 ? '+' + r1(A - 168) + 'h' : r1(free) + 'h'}
               <span style="font-size:13px; font-weight:400; color:var(--mu);">${A > 168 ? '(vượt mức)' : `(${pc(free)}%)`}</span>
             </div>
@@ -2754,7 +3171,7 @@ const V = {
             </div>
           </td>
           <td>
-            <input type="number" step="0.5" min="0" value="${c.tg}" onchange="updateCap('${c.k}', 'tg', Math.max(0, +this.value || 0))">
+            <input type="number" step="0.5" min="0" value="${c.tg}" data-target-input aria-label="Mục tiêu nạp mỗi tuần của ${esc(c.n)}" onchange="updateCap('${c.k}', 'tg', Math.max(0, +this.value || 0))">
           </td>
           <td>
             <input type="number" step="0.5" min="0" value="${b.u}" onchange="BL('${c.k}').u=Math.max(0, +this.value || 0); save(); draw();">
@@ -2884,11 +3301,12 @@ function deleteCurrentEvent() {
   if (!confirm("Bạn có chắc chắn muốn xóa hoạt động này?")) return;
   const delEv = S.ev[ed][ei];
   const delTitle = delEv.t;
-  if (delEv.gid) gcalDeleteEvent(delEv.gid);
+  queueDelete(delEv.gid);
   S.ev[ed].splice(ei, 1);
   if (!S.ev[ed].length) delete S.ev[ed];
   ei = null;
   save();
+  gcalFlush();
   draw();
   closeEditor();
   showToast(`Đã xóa "${delTitle}"`, "ok");
@@ -2919,19 +3337,20 @@ function fillTpl(i) {
   if (tInp) tInp.focus();
 }
 
-function rep(date, o, rp, end) {
-  const r = "r" + Date.now().toString(36);
+// Tạo chuỗi lặp từ ngày `date` tới `end`. Khi biến một hoạt động lẻ thành chuỗi: truyền `r` của
+// chuỗi và `skipFirst` để không tạo trùng ngày của chính hoạt động đó.
+function rep(date, o, rp, end, r = "r" + Date.now().toString(36), skipFirst = false) {
   const a = new Date(date + "T00:00");
   const z = new Date((end || activeYear + "-12-31") + "T00:00");
   const days = [];
-  for (let d = a; d <= z && days.length < 400; d = ad(d, 1)) {
+  for (let d = skipFirst ? ad(a, 1) : a; d <= z && days.length < 400; d = ad(d, 1)) {
     const g = d.getDay();
     if (rp === "d" || (rp === "wd" && g > 0 && g < 6) || (rp === "w" && g === a.getDay())) {
       days.push(ky(d));
     }
   }
   if (!days.length) {
-    showToast("Không tạo được chuỗi lặp: hãy kiểm tra ngày kết thúc.", "bad");
+    showToast("Không tạo được chuỗi lặp: hãy kiểm tra ngày kết thúc (phải sau ngày của hoạt động).", "bad");
     return 0;
   }
   const bad = o.s ? days.filter(k => chkEvent(k, o.s, o.h, -1).hit).length : 0;
@@ -2941,37 +3360,67 @@ function rep(date, o, rp, end) {
     const item = { ...o, r };
     S.ev[k].push(item);
     sortL(S.ev[k]);
-    gcalCreateEvent(item, k);
+    markPending(item); // gcalFlush() đẩy lần lượt từng sự kiện, không bắn hàng trăm request cùng lúc
   });
   return days.length;
 }
 
-function delSeries(i) {
+// Xóa chuỗi lặp: mode "future" = từ ngày đang mở trở về sau (giữ các buổi trước), "all" = toàn bộ chuỗi
+function delSeries(i, mode = "future") {
   if (!ed || !S.ev[ed] || !S.ev[ed][i]) return;
-  const r = S.ev[ed][i].r;
-  if (!r || !confirm("Xóa tất cả hoạt động của chuỗi này từ ngày này trở đi?")) return;
+  const { r, t } = S.ev[ed][i];
+  if (!r) return;
+  const inScope = k => mode === "all" || k >= ed;
+  const total = Object.keys(S.ev).reduce((n, k) => n + S.ev[k].filter(e => e.r === r).length, 0);
+  const count = Object.keys(S.ev).filter(inScope).reduce((n, k) => n + S.ev[k].filter(e => e.r === r).length, 0);
+  const kept = total - count;
+  const day = ed.slice(8, 10) + "/" + ed.slice(5, 7);
+  const question = mode === "all"
+    ? `Xóa toàn bộ ${total} buổi của chuỗi "${t}"?`
+    : `Xóa ${count} buổi của chuỗi "${t}" từ ${day} trở về sau?` + (kept ? ` ${kept} buổi trước ${day} vẫn được giữ.` : "");
+  if (!confirm(question)) return;
   Object.keys(S.ev).forEach(k => {
-    if (k >= ed) {
-      S.ev[k].forEach(e => { if (e.r === r && e.gid) gcalDeleteEvent(e.gid); });
+    if (inScope(k)) {
+      S.ev[k].forEach(e => { if (e.r === r) queueDelete(e.gid); });
       S.ev[k] = S.ev[k].filter(e => e.r !== r);
       if (!S.ev[k].length) delete S.ev[k];
     }
   });
   ei = null;
   save();
+  gcalFlush();
   draw();
   closeEditor();
-  showToast("Đã xóa chuỗi hoạt động định kỳ", "ok");
+  showToast(mode === "all" ? `Đã xóa toàn bộ chuỗi "${t}" (${count} buổi)` : `Đã xóa ${count} buổi của chuỗi "${t}" từ ${day} trở về sau`, "ok");
 }
 
-function handleTitleKeydown(e) {
-  if (e.isComposing) return;
-  if (e.key === "Enter") {
-    e.preventDefault();
-    const startInp = $("inpStart");
-    if (startInp) startInp.focus();
-  }
+// Popup thêm/sửa: Enter chuyển lần lượt qua từng ô, Enter ở ô cuối cùng thì lưu.
+// Đang gõ có dấu thì một lần Enter vừa chốt chữ vừa chuyển ô: chờ bộ gõ chốt xong (compositionend) rồi mới chuyển.
+let enterAfterCompose = null;
+
+function editorFields() {
+  return [...$("sheetBody").querySelectorAll("input, select")].filter(el => !el.disabled && el.offsetParent !== null);
 }
+
+function editorEnter(from) {
+  const f = editorFields(), i = f.indexOf(from);
+  if (i < 0 || !ed) return;
+  if (i === f.length - 1) { saveEventFromForm(); return; }
+  const next = f[i + 1];
+  next.focus();
+  if (next.tagName === "INPUT" && (next.type === "text" || next.type === "number")) next.select();
+}
+
+function handleSheetKeydown(e) {
+  if (e.key !== "Enter" || e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+  const el = e.target;
+  if (!el.matches || !el.matches("input, select")) return;
+  // Chrome: Enter chốt chữ đến TRƯỚC compositionend, không chặn để bộ gõ chốt chữ bình thường
+  if (e.isComposing || e.keyCode === 229) { enterAfterCompose = el; return; }
+  e.preventDefault();
+  editorEnter(el);
+}
+$("sheetBody").addEventListener("keydown", handleSheetKeydown);
 
 function handleTitleInput(val) {
   const guessedCap = guess(val);
@@ -3022,8 +3471,7 @@ function renderEditorSheet() {
         <label class="form-label" for="inpTitle">Tên hoạt động <span style="color:var(--bad)">*</span></label>
         <input id="inpTitle" placeholder="Ví dụ: Đánh cầu lông, Đọc sách, Họp nhóm, Chạy bộ..."
                value="${X ? esc(X.t) : ''}"
-               oninput="handleTitleInput(this.value)"
-               onkeydown="handleTitleKeydown(event)">
+               oninput="handleTitleInput(this.value)">
       </div>
 
       <div class="form-row">
@@ -3059,17 +3507,17 @@ function renderEditorSheet() {
         </div>
       </div>
 
-      ${X ? (X.r ? `
+      ${X && X.r ? `
         <div style="padding:6px 10px; background:var(--card-subtle); border-radius:var(--radius-sm); border:1px solid var(--bd);">
           <label style="font-size:12.5px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
             <input type="checkbox" id="inpSeries">
             <b>Áp dụng thay đổi cho cả chuỗi</b> từ ngày này trở đi
           </label>
         </div>
-      ` : '') : `
+      ` : `
         <div class="form-row" style="background:var(--card-subtle); padding:8px 10px; border-radius:var(--radius-sm); border:1px solid var(--bd);">
           <div class="form-group">
-            <label class="form-label" for="inpRepeat">Lặp lại định kỳ</label>
+            <label class="form-label" for="inpRepeat">${X ? "Lặp lại từ ngày này" : "Lặp lại định kỳ"}</label>
             <select id="inpRepeat">
               <option value="">Không lặp (Một lần)</option>
               <option value="w">Hằng tuần (cùng thứ)</option>
@@ -3092,8 +3540,11 @@ function renderEditorSheet() {
               🗑️ Xóa hoạt động
             </button>
             ${X.r ? `
-              <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="delSeries(${ei})">
-                Xóa cả chuỗi
+              <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="delSeries(${ei}, 'future')" title="Giữ lại các buổi trước ngày này">
+                Xóa từ ngày này về sau
+              </button>
+              <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="delSeries(${ei}, 'all')" title="Xóa mọi buổi của chuỗi, kể cả các ngày trước">
+                Xóa toàn bộ chuỗi
               </button>
             ` : ''}
           </div>
@@ -3135,7 +3586,8 @@ function saveEventFromForm(keepOpen) {
           S.ev[k].forEach(e => {
             if (e.r === r0) {
               Object.assign(e, o);
-              gcalUpdateEvent(e, k);
+              delete e.demo; // đã sửa thì là dữ liệu thật
+              markPending(e);
             }
           });
           sortL(S.ev[k]);
@@ -3143,9 +3595,21 @@ function saveEventFromForm(keepOpen) {
       });
       showToast(`Đã cập nhật cả chuỗi "${title}"`, "ok");
     } else {
-      Object.assign(L[ei], o);
-      gcalUpdateEvent(L[ei], ed);
-      showToast(`Đã cập nhật "${title}"`, "ok");
+      const rp = $("inpRepeat") ? $("inpRepeat").value : "";
+      if (rp) {
+        const r = "r" + Date.now().toString(36);
+        const n = rep(ed, o, rp, $("inpRepeatEnd").value, r, true);
+        if (!n) return;
+        Object.assign(L[ei], o, { r });
+        delete L[ei].demo;
+        markPending(L[ei]);
+        showToast(`Đã chuyển "${title}" thành chuỗi ${n + 1} hoạt động`, "ok");
+      } else {
+        Object.assign(L[ei], o);
+        delete L[ei].demo;
+        markPending(L[ei]);
+        showToast(`Đã cập nhật "${title}"`, "ok");
+      }
     }
   } else {
     const rp = $("inpRepeat") ? $("inpRepeat").value : "";
@@ -3155,13 +3619,14 @@ function saveEventFromForm(keepOpen) {
       showToast(`Đã tạo chuỗi ${n} hoạt động "${title}"`, "ok");
     } else {
       L.push(o);
-      gcalCreateEvent(o, ed);
+      markPending(o);
       showToast(`Đã thêm "${title}" vào lịch`, "ok");
     }
   }
 
   sortL(L);
   save();
+  gcalFlush();
   draw();
   if (keepOpen === true && !wasEdit) {
     renderEditorSheet();
@@ -3266,7 +3731,17 @@ function cleanCap(c) {
     kw
   };
 }
-function cleanEv(e) { return e && typeof e.t === "string" && +e.h > 0 && +e.h <= 24 && SAFE_K.test(e.c || "") ? { t: e.t.slice(0, 120), c: e.c, m: e.m === "d" ? "d" : "u", h: +e.h, s: /^\d\d:\d\d$/.test(e.s || "") ? e.s : "", ...(SAFE_K.test(e.r || "") ? { r: e.r } : {}) } : null; }
+function cleanEv(e) {
+  if (!e || typeof e.t !== "string" || !(+e.h > 0 && +e.h <= 24) || !SAFE_K.test(e.c || "")) return null;
+  return {
+    t: e.t.slice(0, 120), c: e.c, m: e.m === "d" ? "d" : "u", h: +e.h,
+    s: /^([01]\d|2[0-3]):[0-5]\d$/.test(e.s || "") ? e.s : "",
+    ...(SAFE_K.test(e.r || "") ? { r: e.r } : {}),
+    ...(typeof e.gid === "string" && GID.test(e.gid) ? { gid: e.gid } : {}),
+    ...(e.ds ? { ds: 1 } : {}),     // đang chờ đẩy lên Google Calendar
+    ...(e.demo ? { demo: 1 } : {})  // dữ liệu mẫu, không đẩy lên Google Calendar
+  };
+}
 // Chuẩn hóa mọi dữ liệu đọc từ localStorage hoặc tệp sao lưu (khóa an toàn, giá trị hợp lệ, bù trường thiếu)
 function cleanState(d) {
   if (!d || typeof d !== "object" || !d.ev || typeof d.ev !== "object" || !Array.isArray(d.caps)) return null;
@@ -3277,8 +3752,15 @@ function cleanState(d) {
   Object.keys(d.bl || {}).forEach(k => { if (SAFE_K.test(k) && d.bl[k]) bl[k] = { u: Math.max(0, +d.bl[k].u || 0), d: Math.max(0, +d.bl[k].d || 0) }; });
   Object.keys(d.mem || {}).forEach(k => { if (k !== "__proto__" && d.mem[k] && SAFE_K.test(d.mem[k].c || "")) mem[k.slice(0, 120)] = { c: d.mem[k].c }; });
   const cl = (v, lo, hi, def) => { v = +v; return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : def; };
-  const cfg = { defDuration: cl(d.cfg && d.cfg.defDuration, 0.5, 24, 2), burnoutHours: cl(d.cfg && d.cfg.burnoutHours, 1, 24, 6) };
-  return { ev, caps, bl, mem, cfg, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
+  const dc = d.cfg || {};
+  const cfg = {
+    defDuration: cl(dc.defDuration, 0.5, 24, 2),
+    burnoutHours: cl(dc.burnoutHours, 1, 24, 6),
+    gcalAutoSync: dc.gcalAutoSync !== false,
+    ...(GCAL_CID.test(dc.gcalClientId || "") ? { gcalClientId: dc.gcalClientId } : {})
+  };
+  const gdel = Array.isArray(d.gdel) ? [...new Set(d.gdel.filter(g => typeof g === "string" && GID.test(g)))].slice(-500) : [];
+  return { ev, caps, bl, mem, memV: d.memV === 2 ? 2 : 0, cfg, gdel, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
 }
 
 async function saveFile(filename, content, mime) {
@@ -3365,6 +3847,7 @@ function draw(jump) {
   if (badge) badge.textContent = activeYear;
   document.title = `Life Capital · Quản trị Năng lượng & Thời gian ${activeYear}`;
   renderNav();
+  updateSyncBadge();
 
   const y = window.scrollY;
   const fo = [...document.querySelectorAll("#v input,#v select")], ai = fo.indexOf(document.activeElement), td = TABDIR;
@@ -3412,6 +3895,7 @@ function draw(jump) {
 
 // Tự động chuyển tuần khi sang thứ Hai mới
 function tick() {
+  updateSyncBadge(); // token Google hết hạn sau 1 giờ
   if (ed) return;
   const oldCW = CW, oldDay = lt, w = wkNow();
   if (w !== oldCW) { if (sel === oldCW) sel = w >= 0 ? w : sel; CW = w; lt = tk; draw(true); }
@@ -3419,9 +3903,33 @@ function tick() {
 }
 setInterval(tick, 60000);
 document.addEventListener("visibilitychange", () => {
-  if (!document.hidden) tick();
+  if (!document.hidden) { tick(); gcalFlush(); }
 });
 window.addEventListener("focus", tick);
+window.addEventListener("online", () => gcalFlush());
+
+// Tab khác vừa lưu: nạp lại để không ghi đè dữ liệu của tab đó bằng bản cũ trong bộ nhớ
+window.addEventListener("storage", e => {
+  if (e.key === "lc_theme") {
+    const root = document.documentElement;
+    if (e.newValue && e.newValue !== "auto") root.setAttribute("data-theme", e.newValue);
+    else root.removeAttribute("data-theme");
+    return;
+  }
+  if (e.key !== "lc2" || !e.newValue) return;
+  let d = null;
+  try { d = cleanState(JSON.parse(e.newValue)); } catch (err) {}
+  if (!d) return;
+  S = d;
+  Object.values(S.ev).forEach(sortL);
+  if (ed) { closeEditor(); showToast("Dữ liệu vừa thay đổi ở tab khác, đã tải lại.", "bad"); }
+  if ($("settingsModalOverlay").classList.contains("open")) renderSettingsModal();
+  draw();
+  gcalFlush(); // có thể tab kia đã đóng hoặc đang giữ khóa: tab này cũng thử gửi các thay đổi chờ
+});
+
+// Xin trình duyệt giữ dữ liệu lâu dài (giảm nguy cơ bị tự dọn khi thiếu dung lượng)
+try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {}); } catch (e) {}
 
 document.addEventListener("keydown", e => { TABDIR = e.key === "Tab" ? (e.shiftKey ? -1 : 1) : 0; }, true);
 
@@ -3491,6 +3999,7 @@ function layoutTimeline() {
 
 // Khởi chạy ứng dụng
 draw(true);
+gcalFlush(); // đẩy các thay đổi còn chờ từ lần mở trước
 </script>
 </body>
 </html>

@@ -46,7 +46,7 @@ Tài liệu này được chuẩn bị để gửi kèm dự án cho **Claude** 
 | **NLP Quick Input** | `parseNLPText()`, `executeNLP()`, `guess()` | Phân tích tiếng Việt tự nhiên (ngày, giờ, thời lượng, tác động, loại vốn, nhận diện xung đột giờ). |
 | **Radar Chart Engine** | `renderRadarChartSVG(weekIdx)` | Vẽ biểu đồ Radar SVG thuần 5 trục, vòng cấp độ 33%–66%–100%, tính độ cân bằng. |
 | **Review Engine** | `openWeeklyReviewModal(weekIdx)` | Báo cáo phân tích cao điểm nạp/tiêu, vốn dẫn đầu/tụt hậu, kế hoạch hành động theo tuần. |
-| **Google Calendar Sync** | `gcalCreateEvent()`, `gcalUpdateEvent()`, `gcalDeleteEvent()`, `gcalSyncWeek()` | Tích hợp Google Calendar API v3 qua GIS OAuth 2.0: đồng bộ CRUD hai chiều thời gian thực, mapping màu 5 loại vốn, batch sync. |
+| **Google Calendar Sync** | `markPending()`, `queueDelete()`, `gcalFlush()`, `gcalSyncWeek()`, `updateSyncBadge()` | Đẩy **một chiều** sang Google Calendar API v3 qua GIS OAuth 2.0: thay đổi được xếp hàng (`e.ds`, `S.gdel`) và gửi tuần tự, giữ lại khi hết token hoặc mất mạng, badge trạng thái trên header, mapping màu 5 loại vốn. |
 | **View Controller** | `V.ca()` (Lịch biểu), `V.su()` (Hiệu suất & 168h), `V.set()` (Danh mục vốn & Từ khóa) | Hệ thống render view phản ứng tự động theo `draw()`. |
 
 ---
