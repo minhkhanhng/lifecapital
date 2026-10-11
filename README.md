@@ -1,4 +1,3 @@
-[Uploading README.md…]()
 # Life Capital · Quản trị Năng lượng & Thời gian
 
 Ứng dụng web cá nhân hoá giúp quản trị năng lượng, tối ưu hoá quỹ 168 giờ và cân bằng 5 loại vốn cuộc sống (Health, Relationship, Experience, Skill, Finance & Career).
@@ -52,7 +51,11 @@
 
 1. ⚡ **Command Bar Ghi nhanh bằng ngôn ngữ tự nhiên**:
    - Nhập: *"Mai 18h đánh cầu lông 2 tiếng"* hoặc *"Hôm nay 20h đọc sách 1h"*.
-   - Tự động nhận diện ngày, giờ bắt đầu, thời lượng, loại vốn và tác động Nạp/Tiêu theo thời gian thực.
+   - Tự động nhận diện ngày, giờ bắt đầu, thời lượng, loại vốn và tác động Nạp/Tiêu theo thời gian thực; dòng xem trước luôn ghi rõ thứ và ngày (vd *Hôm qua · Thứ 5, 08/10*).
+   - **Ngày:** *hôm nay, mai, ngày kia/mốt, hôm qua, tối qua, hôm kia*; ngày cụ thể *ngày 9 tháng 10 (năm 2026), 9 tháng 11, 09/10, 09-10, 09.10, 9/10/2026, ngày 15*; thứ *thứ 2 / t2 / thứ hai / chủ nhật* kèm *tuần này, tuần sau, tuần tới, tuần trước, tuần sau nữa* (đứng trước hoặc sau). Không nói tuần thì hiểu là lần tới gần nhất.
+   - **Giờ:** *18h, 6h30, 20:00, 5h sáng, 2 giờ chiều, tối 8h, 8 giờ rưỡi, 12h đêm, 14-16h, 2-4h chiều*.
+   - **Thời lượng:** *2 tiếng, 1.5h, 1h30, 1 tiếng 30 phút, một tiếng rưỡi, hai tiếng, 45 phút, mười lăm phút, nửa tiếng*.
+   - "Mai" là tên người khi đi sau *gặp, cho, với…* hoặc viết hoa giữa câu (*Gọi điện cho Mai 20h*).
 2. 📅 **3 Chế độ Xem Lịch Biểu**:
    - **Tuần chi tiết**: 7 thẻ ngày responsive kèm Pin năng lượng và nút thêm nhanh.
    - **Dòng thời gian 24h (Timeline)**: Trục thời gian dọc từ 06:00 đến 24:00, trực quan hoá các khối sự kiện. Tích hợp thuật toán **chia làn song song (Lane Splitting)** khi các sự kiện bị trùng khung giờ.
@@ -63,25 +66,46 @@
 4. 🏆 **Bản Tin Tổng Kết Tuần Linh Hoạt (Weekly Review with Week Selector)**:
    - Cho phép chọn xem báo cáo tổng kết của **bất kỳ tuần nào** trong năm (từ W1 đến W52/53) qua bộ chuyển tuần `[ ◀ | ▶ ]` và menu thả xuống ngay trong popup.
    - Đánh giá Điểm sáng của tuần, Vốn cần cứu trợ, Bánh xe cuộc đời và gợi ý kế hoạch tuần mới.
-5. 🛠️ **Popup Thêm / Sửa Hoạt Động Thông Minh**:
-   - Tự động đóng popup khi bấm Lưu để xác nhận hoàn tất; tuỳ chọn bấm `+ Lưu & Thêm tiếp` để nhập liên tục.
-   - Chống lưu ngang khi gõ tiếng Việt: Phím Enter trong ô tên hoạt động tự động chuyển tiêu điểm sang ô giờ bắt đầu, không lưu khi chưa bấm nút.
-   - Phân định rõ ràng giữa chế độ Thêm mới và Sửa, có nút `Hủy sửa` tiện lợi.
+5. 🛠️ **Popup Thêm / Sửa Hoạt Động Tinh Gọn**:
+   - Giao diện form tinh gọn chỉ gồm các trường thông tin cần thiết, tự động đóng popup khi bấm Lưu.
+   - Nhập bằng bàn phím: trong popup, mỗi lần nhấn Enter chuyển sang ô kế tiếp (Tên → Loại vốn → Tác động → Giờ bắt đầu → Thời lượng → Lặp lại → Đến hết ngày); Enter ở ô cuối cùng thì lưu. Khi đang gõ có dấu, một lần Enter vừa chốt chữ vừa chuyển ô. `Cmd/Ctrl + Enter` lưu ngay từ bất kỳ ô nào.
+   - Thanh ghi nhanh: khi đang gõ có dấu, một lần Enter vừa chốt chữ vừa ghi hoạt động (Chrome và Safari).
+   - Hỗ trợ tạo chuỗi lặp định kỳ (Hằng ngày, Ngày làm việc, Hằng tuần) kèm ngày kết thúc chuỗi, cả khi thêm mới lẫn khi sửa một hoạt động lẻ (hoạt động đó thành buổi đầu của chuỗi).
+   - Xóa chuỗi có hai lựa chọn: **Xóa từ ngày này về sau** (giữ các buổi trước ngày đang mở) và **Xóa toàn bộ chuỗi**; hộp xác nhận ghi rõ số buổi bị xóa và được giữ.
 6. 🎡 **Bánh Xe Cuộc Đời (Radar Chart) Chuẩn Hoá**:
    - Khung hình mở rộng chống cắt chữ trên mọi kích thước màn hình.
-   - Xử lý hoàn hảo các loại vốn chưa đặt mục tiêu hoặc đạt 0 giờ.
+   - Người mới bắt đầu với mục tiêu tuần bằng 0 cho mọi loại vốn; bánh xe và bản tổng kết hiện nút **"Đặt mục tiêu"** dẫn tới tab Danh mục vốn, không chấm điểm hay đưa khuyến nghị dựa trên số giả định.
+   - Tuần chưa có hoạt động nào: bản tổng kết hiện trạng thái trống kèm nút "Ghi hoạt động" thay vì đưa ra nhận định.
    - Tích hợp chỉ số Điểm cân bằng bánh xe (Balance Score) trực quan.
 7. 🌐 **Động cơ Đa năm tự động (Multi-Year Engine)**:
    - Tự động nhận diện và tính toán 52/53 tuần theo chuẩn quốc tế **ISO 8601**.
-   - Tự chuyển sang năm 2027, 2028 khi qua năm mới; có nút `[ ◀ | ▶ ]` chuyển năm linh hoạt.
+   - Tự nhận năm ISO hiện tại mỗi khi mở app; có nút `[ ◀ | ▶ ]` chuyển năm linh hoạt.
 8. 💾 **Bảo mật & Toàn vẹn Dữ liệu (Security & Data Integrity)**:
    - Bộ lọc `cleanState` khử mã độc và chống Prototype Pollution khi nhập sao lưu JSON.
    - Phòng chống CSV Injection tự động khi xuất dữ liệu bảng tính.
    - Tải tệp sao lưu `.json` và lịch trình `.csv` trực tiếp qua Native Blob Download.
-   - Lưu trữ `localStorage` bền bỉ lên đến 30 - 40 năm.
+   - Dữ liệu lưu trong `localStorage` của trình duyệt (khoảng 300 KB mỗi năm với 10 hoạt động/ngày). App xin trình duyệt giữ dữ liệu lâu dài (`navigator.storage.persist`), nhắc sao lưu khi quá 14 ngày chưa sao lưu, và hiện cảnh báo đỏ nếu không lưu được (bộ nhớ đầy hoặc bị chặn).
+   - **Lưu ý Safari/iPhone:** Safari có thể tự xóa dữ liệu của trang web nếu bạn không mở trong 7 ngày. Hãy "Thêm vào Màn hình chính" và sao lưu `.json` định kỳ.
+   - Mở nhiều tab cùng lúc an toàn: tab này lưu thì các tab khác tự nạp lại, không ghi đè dữ liệu của nhau.
 9. 📱 **Chuẩn Progressive Web App (PWA)**:
    - Tích hợp `manifest.json` và `icon.svg` 5 cánh hoa độc quyền.
    - Cài đặt lên màn hình chính iPhone/Android, chạy toàn màn hình như Native App.
+10. 📅 **Đẩy Một Chiều Sang Google Calendar (Google Calendar API v3)**:
+   - Tích hợp chuẩn **Google Identity Services (GIS)** OAuth 2.0 cấp quyền trực tiếp phía Client (không cần máy chủ trung gian).
+   - **Một chiều:** Life Capital → Google Calendar. Sửa hoặc xóa trực tiếp trên Google Calendar **không** cập nhật ngược về app, và có thể bị ghi đè ở lần đồng bộ sau.
+   - Tự động đẩy khi **Thêm, Sửa, Xóa** hoạt động (kể cả chuỗi lặp định kỳ). Các thay đổi được xếp hàng và gửi lần lượt từng cái, nên không bị Google giới hạn tần suất khi tạo chuỗi dài.
+   - **Không mất thay đổi:** quyền truy cập Google chỉ có hiệu lực 1 giờ. Khi hết hạn hoặc mất mạng, thay đổi được giữ ở trạng thái "chờ"; thanh tiêu đề hiện badge `⚠ GCal · Kết nối lại (N chờ)` hoặc `⏳ N chờ đồng bộ`. Bấm vào badge để kết nối lại, các thay đổi đang chờ sẽ được đẩy lên tự động.
+   - Hoạt động chưa đặt giờ được tạo thành sự kiện cả ngày trên Google Calendar. Dữ liệu mẫu không bao giờ được đẩy lên.
+   - Khi tắt *Tự động đồng bộ*: thêm và sửa không được gửi lên, nhưng lệnh **xóa** hoạt động đã có trên Google vẫn được ghi lại và hiện badge `⏳ N chờ đồng bộ (tự động đang tắt)`; bấm badge, bật lại tự động hoặc bấm *Đồng bộ tuần này* để gửi.
+   - Tự động ánh xạ màu sắc Google Calendar (`colorId`) tương thích với 5 loại vốn sống (Xanh lá - Sức khỏe, Hồng - Quan hệ, Tím - Trải nghiệm, Xanh Cyan - Kỹ năng, Vàng - Tài chính).
+   - Cung cấp nút đồng bộ hàng loạt `⟳ Đồng bộ tuần này` và công tắc bật/tắt tự động đồng bộ thời gian thực trong popup Cài đặt.
+11. 🌱 **Khởi Đầu Trống & Dữ Liệu Mẫu Tùy Chọn**:
+   - Lần đầu mở app, lịch trống kèm gợi ý cách ghi nhanh và nút **"Thử với dữ liệu mẫu"**: thêm khoảng 10 hoạt động ẩn danh vào tuần đang xem.
+   - Banner "Đang dùng dữ liệu mẫu" có nút xóa toàn bộ dữ liệu mẫu bằng một chạm. Hoạt động mẫu nào bạn đã sửa sẽ được giữ lại như dữ liệu thật.
+12. 🏷️ **Tùy Biến Từ Khóa Nhận Diện & Trí Nhớ AI Tự Học (Keyword Auto-tagging & Self-learning)**:
+   - Cho phép người dùng tự do thêm/bớt từ khóa nhận diện cho từng loại vốn trong tab Danh mục vốn.
+   - Loại vốn được đoán theo từ khóa khớp dài nhất (*học tiếng Anh* → Kỹ năng, không bị nhầm sang Quan hệ vì chữ *anh*).
+   - Bộ nhớ `S.mem` ghi nhớ loại vốn bạn chọn trong popup cho từng tên hoạt động, để lần sau ghi nhanh cùng tên sẽ đoán đúng.
 
 ---
 
@@ -89,6 +113,7 @@
 
 ### Cách 1: Sử dụng Offline trên máy tính
 Chỉ cần nhấp đúp vào tệp `index.html` để mở trực tiếp trên trình duyệt (Chrome, Safari, Edge, Brave).
+> ⚠ Khi mở trực tiếp từ tệp (`file://`), **Google Calendar không hoạt động**, vì Google chỉ chấp nhận trang chạy qua HTTPS hoặc `localhost`. Muốn dùng Google Calendar trên máy, hãy chạy `python3 -m http.server 8765` trong thư mục dự án rồi mở `http://localhost:8765`.
 
 ### Cách 2: Đưa lên Hosting miễn phí (Vercel / Netlify / GitHub Pages)
 - **Qua Netlify Drop (30 giây)**: Kéo cả thư mục `life-capital` thả vào [app.netlify.com/drop](https://app.netlify.com/drop).
@@ -98,6 +123,15 @@ Chỉ cần nhấp đúp vào tệp `index.html` để mở trực tiếp trên 
 1. Mở link trên **Safari**.
 2. Nhấn nút **Chia sẻ** (biểu tượng hình vuông có mũi tên lên).
 3. Chọn **Thêm vào Màn hình chính** (Add to Home Screen).
+
+Nên cài theo cách này thay vì dùng tab Safari thường: Safari có thể xóa dữ liệu của trang web không được mở trong 7 ngày, còn app đã thêm vào Màn hình chính thì không bị.
+
+### Cấu hình Google Calendar (tùy chọn)
+1. Vào [Google Cloud Console](https://console.cloud.google.com/) → tạo project → **APIs & Services → Library → Google Calendar API → Enable**. Thiếu bước này, Google từ chối mọi sự kiện và app báo "Google Calendar API chưa được bật".
+2. **OAuth consent screen**: chọn *External*, giữ chế độ **Testing**, thêm scope `https://www.googleapis.com/auth/calendar.events`.
+3. Ở mục **Test users**, thêm email Google của **từng người** sẽ dùng tính năng này (tối đa 100 người). Người không có trong danh sách sẽ gặp lỗi `access_denied`.
+4. **Credentials** → *Create OAuth client ID* → *Web application*. Ở **Authorized JavaScript origins**, thêm địa chỉ bạn deploy (vd `https://lifecapital.vercel.app`) và `http://localhost:8765` nếu chạy trên máy.
+5. Trong app: `⚙️ Cài đặt` → dán **Client ID** → **Kết nối Google Calendar**. Trên màn hình của Google, nhớ **tick ô cho phép truy cập Google Calendar**; nếu bỏ tick, app sẽ báo và yêu cầu kết nối lại.
 
 ---
 
@@ -150,7 +184,7 @@ Dưới đây là mã nguồn độc lập đầy đủ (Full Standalone Source 
   --card-subtle: #fcf8fa;
   --tx: #251d21;
   --tx-sec: #594d53;
-  --mu: #85767d;
+  --mu: #796b71;
   --bd: #ebdde2;
   --bd-focus: #E0A3BB;
   --bar: #F4DFE6;              /* Thanh tiến trình / track nền */
@@ -167,8 +201,8 @@ Dưới đây là mã nguồn độc lập đầy đủ (Full Standalone Source 
   --shadow-md: 0 4px 14px rgba(100, 40, 65, 0.07);
   --shadow-lg: 0 12px 32px rgba(100, 40, 65, 0.14);
 
-  --on-ac: #421629;            /* Chữ trên nền hồng phấn --ac: luôn tối để rõ nét */
-  --on-olive: #ffffff;         /* Chữ trên nền xanh oliu đậm --c-olive */
+  --on-ac: #421629; --ac-text: #8a3f5f; --ok-text: #6c732a; --wa-text: #906525;            /* Chữ trên nền hồng phấn --ac: luôn tối để rõ nét */
+  --on-olive: #1f2608;         /* Chữ trên nền xanh oliu đậm --c-olive */
   --on-cyan: #1a4245;          /* Chữ trên nền xanh mây --c-cyan */
   --on-blush: #642841;         /* Chữ trên nền blush --c-blush */
 
@@ -213,7 +247,7 @@ Dưới đây là mã nguồn độc lập đầy đủ (Full Standalone Source 
     --shadow-md: 0 4px 14px rgba(0,0,0,0.4);
     --shadow-lg: 0 12px 32px rgba(0,0,0,0.6);
 
-    --on-ac: #381220;          /* Chữ trên nền hồng phấn --ac: luôn tối để rõ nét */
+    --on-ac: #381220; --ac-text: #E0A3BB; --ok-text: #C5CC82; --wa-text: #e5a13c;          /* Chữ trên nền hồng phấn --ac: luôn tối để rõ nét */
     --on-olive: #242c09;       /* Chữ trên nền xanh oliu sáng #C5CC82 */
     --on-cyan: #a3e8ee;        /* Chữ sáng trên nền cyan tối */
     --on-blush: #fcebf2;       /* Chữ sáng trên nền blush tối */
@@ -253,7 +287,7 @@ Dưới đây là mã nguồn độc lập đầy đủ (Full Standalone Source 
   --shadow-md: 0 4px 14px rgba(0,0,0,0.4);
   --shadow-lg: 0 12px 32px rgba(0,0,0,0.6);
 
-  --on-ac: #381220;          /* Chữ trên nền hồng phấn --ac: luôn tối để rõ nét */
+  --on-ac: #381220; --ac-text: #E0A3BB; --ok-text: #C5CC82; --wa-text: #e5a13c;          /* Chữ trên nền hồng phấn --ac: luôn tối để rõ nét */
   --on-olive: #242c09;       /* Chữ trên nền xanh oliu sáng #C5CC82 */
   --on-cyan: #a3e8ee;        /* Chữ sáng trên nền cyan tối */
   --on-blush: #fcebf2;       /* Chữ sáng trên nền blush tối */
@@ -309,7 +343,7 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   background: var(--ac-soft);
-  color: var(--ac);
+  color: var(--ac-text);
   padding: 3px 8px;
   border-radius: var(--radius-full);
 }
@@ -522,7 +556,7 @@ input[type="time"] { min-width: 105px; }
   font-size: 12px;
   font-weight: 500;
 }
-.pill.pill-ok { background: var(--ok-soft); color: var(--ok); }
+.pill.pill-ok { background: var(--ok-soft); color: var(--ok-text); }
 .pill.pill-bad { background: var(--bad-soft); color: var(--bad); }
 .pill.pill-cyan { background: var(--c-cyan); color: var(--on-cyan); }
 .pill.pill-blush { background: var(--c-blush); color: var(--on-blush); }
@@ -574,7 +608,7 @@ input[type="time"] { min-width: 105px; }
 }
 .battery-badge.positive {
   background: var(--ok-soft);
-  color: var(--ok);
+  color: var(--ok-text);
 }
 .battery-badge.negative {
   background: var(--bad-soft);
@@ -745,7 +779,7 @@ input[type="time"] { min-width: 105px; }
   justify-content: space-between;
   align-items: center;
 }
-.event-mode-up { color: var(--ok); font-weight: 700; }
+.event-mode-up { color: var(--ok-text); font-weight: 700; }
 .event-mode-down { color: var(--bad); font-weight: 700; }
 
 /* Dòng thời gian 24h */
@@ -874,7 +908,7 @@ tr.current-week td {
 }
 tr.current-week td:first-child, tr.current-week td:nth-child(2) {
   font-weight: 700;
-  color: var(--ac);
+  color: var(--ac-text);
 }
 tr.past-week td {
   opacity: 0.85;
@@ -1097,9 +1131,27 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
   flex-wrap: wrap;
   gap: 10px;
 }
+[hidden] { display: none !important; }
+.save-alert { background: var(--bad-soft); border-color: var(--bad); color: var(--tx); }
 :focus-visible { outline: 2px solid var(--ac); outline-offset: 2px; }
 .chg { font-weight: 700; background: var(--ac-soft); border-radius: 4px; padding: 0 3px; box-shadow: 0 0 0 1px var(--ac); }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+.chg { font-weight: 700; background: color-mix(in srgb, var(--ac) 22%, transparent); border-radius: 4px; padding: 0 3px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ac) 45%, transparent); }
+.set-sec { padding: 14px 0; border-bottom: 1px solid var(--bd); }
+.set-sec:first-child { padding-top: 0; }
+.set-sec:last-child { border-bottom: none; padding-bottom: 0; }
+.set-h { margin: 0 0 6px; font-size: 11.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--mu); }
+.set-danger .set-h { color: var(--bad); }
+.set-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 6px 0; }
+.set-lbl { display: flex; flex-direction: column; gap: 2px; font-size: 13.5px; color: var(--tx); }
+.set-lbl small { font-size: 12px; font-weight: 400; color: var(--mu); }
+.set-note { margin: 0 0 10px; font-size: 12.5px; color: var(--mu); }
+.set-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+.set-inline { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+.set-row select { min-width: 0; width: auto; }
+.set-seg { display: inline-flex; border: 1px solid var(--bd); border-radius: var(--radius-full); overflow: hidden; }
+.set-seg button { border: 0; background: transparent; color: var(--tx); padding: 6px 12px; font: inherit; font-size: 13px; cursor: pointer; }
+.set-seg button.on { background: var(--ac); color: var(--on-ac); font-weight: 600; }
 </style>
 <script>
   try {
@@ -1107,6 +1159,7 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
     if (t) document.documentElement.setAttribute("data-theme", t);
   } catch(e) {}
 </script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -1122,8 +1175,9 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
       </div>
     </div>
     <div class="header-actions">
+      <button type="button" class="btn btn-sm" id="syncBadge" hidden></button>
       <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(sel)" title="Xem tổng kết thành tích theo tuần">
-        🏆 Tổng kết tuần W<span id="headerWeekNum"></span>
+        🏆 Tổng kết tuần
       </button>
       <button class="btn btn-sm btn-primary" onclick="openEditor(tk)">
         + Thêm hôm nay
@@ -1141,11 +1195,13 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
       <input id="nlpInput" class="quick-capture-input"
              placeholder="Ghi nhanh: vd 'Mai 18h đánh cầu lông 2 tiếng' hoặc 'Hôm nay 20h đọc sách 1.5h'..."
              oninput="handleNLPInput(this.value)"
-             onkeydown="if(event.key==='Enter') executeNLP()">
+             onkeydown="handleNLPKeydown(event)">
       <button class="btn btn-sm btn-primary" onclick="executeNLP()">Ghi ngay</button>
     </div>
     <div class="quick-preview-bar" id="nlpPreview" style="display:none;"></div>
   </div>
+
+  <div class="review-prompt-banner save-alert" id="saveAlert" role="alert" hidden></div>
 
   <!-- Navigation Tabs -->
   <nav class="main-nav" id="nav"></nav>
@@ -1180,8 +1236,8 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
 <div class="modal-overlay" id="settingsModalOverlay" onclick="handleSettingsBackdropClick(event)">
   <div class="modal-sheet" id="settingsModalSheet" style="max-width:640px;" role="dialog" aria-modal="true" aria-labelledby="settingsSheetTitle">
     <div class="modal-header">
-      <h3 class="modal-title" id="settingsSheetTitle">⚙️ Cài Đặt & Dữ Liệu</h3>
-      <button type="button" class="btn btn-sm btn-ghost" onclick="closeSettingsModal()" title="Đóng (ESC)">✕</button>
+      <h3 class="modal-title" id="settingsSheetTitle">Cài đặt</h3>
+      <button type="button" class="btn btn-sm btn-ghost" onclick="closeSettingsModal()" title="Đóng (ESC)" aria-label="Đóng">✕</button>
     </div>
     <div class="modal-body" id="settingsSheetBody"></div>
   </div>
@@ -1194,12 +1250,13 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
 /* ==========================================================================
    1. DỮ LIỆU CỐT LÕI (5 LOẠI VỐN VỚI BẢNG MÀU YÊU CẦU)
    ========================================================================== */
+// [khóa, tên, màu, mục tiêu nạp/tuần, từ khóa]. Mục tiêu mặc định = 0: người dùng tự đặt, app không phán xét theo số giả định.
 const DCAP = [
-  ["sk", "Sức khỏe", "#97A13B", 6],
-  ["qh", "Quan hệ", "#E0A3BB", 5],
-  ["tn", "Trải nghiệm", "#8b6da9", 3],
-  ["kn", "Kỹ năng", "#4a859c", 4],
-  ["tc", "Tài chính / công việc", "#b88628", 0]
+  ["sk", "Sức khỏe", "#97A13B", 0, ["gym", "bơi", "chạy bộ", "cầu lông", "đá bóng", "spa", "ngủ", "thể thao", "fitness", "yoga", "đi bộ", "sức khỏe", "massage", "nạp năng lượng"]],
+  ["qh", "Quan hệ", "#E0A3BB", 0, ["dinner", "sinh nhật", "cưới", "gia đình", "bạn", "date", "chị", "em", "anh", "bố", "mẹ", "thăm", "ăn tối", "gặp mặt", "trò chuyện", "hẹn hò", "liên hoan"]],
+  ["tn", "Trải nghiệm", "#8b6da9", 0, ["xem", "du lịch", "trip", "phim", "workshop", "thử", "concert", "cafe", "cà phê", "chill", "ăn uống", "dạo phố", "triển lãm", "bảo tàng", "khám phá"]],
+  ["kn", "Kỹ năng", "#4a859c", 0, ["học", "đọc", "course", "study", "khóa", "sách", "tiếng anh", "code", "nghiên cứu", "luyện", "đàn", "viết", "podcast", "kỹ năng", "vẽ", "ngoại ngữ"]],
+  ["tc", "Tài chính / công việc", "#b88628", 0, ["họp", "làm việc", "work", "meeting", "deep", "dự án", "khách", "bán", "deal", "deadline", "báo cáo", "ot", "tăng ca", "công ty", "văn phòng", "khách hàng", "tài chính", "tiền"]]
 ];
 const DN_VI = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ Nhật"];
 const DN_SHORT = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
@@ -1242,53 +1299,90 @@ function changeYear(delta) {
   showToast(`Đã chuyển sang năm ${activeYear}`, "ok");
 }
 
-const sd = (m, d, t, c, h) => [ky(new Date(2026, m - 1, d)), { t, c, m: "u", h }];
-const SEED = [
-  [9, 9, "Đánh cầu", "sk", 2],
-  [9, 10, "Spa", "sk", 2],
-  [9, 11, "Đánh cầu", "sk", 2],
-  [9, 13, "Đi xem cầu lông", "tn", 2],
-  [9, 16, "Đánh cầu", "sk", 2],
-  [9, 18, "Dinner w chị em GM", "qh", 2.5],
-  [9, 25, "Đánh cầu", "sk", 2],
-  [9, 28, "Đánh cầu", "sk", 2],
-  [10, 2, "Dinner w bạn anh Tín", "qh", 2.5],
-  [10, 5, "Đánh cầu", "sk", 2],
-  [10, 7, "Đánh cầu", "sk", 2],
-  [10, 8, "Dinner w LHương", "qh", 2.5],
-  [10, 9, "Sinh nhật", "qh", 3],
-  [10, 12, "Đánh cầu", "sk", 2],
-  [10, 14, "Đánh cầu", "sk", 2],
-  [10, 18, "Đám cưới bạn anh", "qh", 4]
+// Dữ liệu mẫu ẩn danh, đặt theo tuần đang xem: [thứ (0 = T2), giờ, tiêu đề, vốn, Nạp/Tiêu, số giờ]
+const DEMO = [
+  [0, "06:30", "Chạy bộ", "sk", "u", 1],
+  [0, "09:00", "Làm việc dự án", "tc", "d", 8],
+  [1, "09:00", "Họp nhóm", "tc", "d", 2],
+  [1, "21:00", "Đọc sách", "kn", "u", 1],
+  [2, "18:30", "Gym", "sk", "u", 1.5],
+  [3, "09:00", "Làm việc dự án", "tc", "d", 8],
+  [3, "19:00", "Ăn tối cùng gia đình", "qh", "u", 1.5],
+  [4, "20:00", "Học tiếng Anh", "kn", "u", 1],
+  [5, "08:00", "Đánh cầu lông", "sk", "u", 2],
+  [5, "19:30", "Xem phim", "tn", "u", 2.5],
+  [6, "10:00", "Cà phê với bạn bè", "qh", "u", 2]
 ];
 
 function defState() {
-  const ev = {};
-  SEED.forEach(a => {
-    const [k, e] = sd(...a);
-    (ev[k] = ev[k] || []).push(e);
-  });
   return {
-    ev,
-    caps: DCAP.map(c => ({ k: c[0], n: c[1], c: c[2], tg: c[3] })),
+    ev: {},
+    caps: DCAP.map(c => ({ k: c[0], n: c[1], c: c[2], tg: c[3], kw: [...c[4]] })),
     bl: {},
     mem: {},
+    gdel: [],
     pm: "0",
     cfg: { defDuration: 2, burnoutHours: 6 }
   };
 }
 
-let S;
+const hasDemo = () => Object.values(S.ev).some(l => l.some(e => e.demo));
+
+function loadDemo() {
+  const w = W[sel >= 0 ? sel : 0];
+  DEMO.forEach(([d, s, t, c, m, h]) => {
+    if (!S.caps.some(x => x.k === c)) return; // vốn mặc định đã bị xóa
+    const k = ky(ad(w, d));
+    const L = S.ev[k] = S.ev[k] || [];
+    L.push({ t, c, m, h, s, demo: 1 });
+    sortL(L);
+  });
+  save();
+  draw();
+  showToast("Đã thêm dữ liệu mẫu vào tuần đang xem", "ok");
+}
+
+function clearDemo() {
+  Object.keys(S.ev).forEach(k => {
+    S.ev[k] = S.ev[k].filter(e => !e.demo);
+    if (!S.ev[k].length) delete S.ev[k];
+  });
+  save();
+  draw();
+  showToast("Đã xóa dữ liệu mẫu", "ok");
+}
+
+const SAFE_K = /^(?!__proto__$)[\w-]{1,24}$/;
+// gid: id sự kiện Google (base32hex; instance của chuỗi lặp có thêm "_20261008T…Z")
+const GID = /^[\w-]{5,1024}$/;
+const GCAL_CID = /^[\w.-]{5,200}\.apps\.googleusercontent\.com$/;
+let S, rawSaved = null;
+try { rawSaved = localStorage.getItem("lc2"); } catch (e) {}
 try {
-  S = cleanState(JSON.parse(localStorage.getItem("lc2") || "null")) || defState();
+  S = rawSaved ? cleanState(JSON.parse(rawSaved)) : null;
 } catch (e) {
+  console.error("Không đọc được dữ liệu đã lưu:", e);
+  S = null;
+}
+if (!S) {
+  // Dữ liệu có nhưng không đọc được: giữ lại bản gốc để có thể cứu, rồi mới dùng dữ liệu mặc định
+  if (rawSaved) { try { localStorage.setItem("lc2_unreadable", rawSaved); } catch (e) {} }
   S = defState();
 }
 
-if (!S.caps) S.caps = DCAP.map(c => ({ k: c[0], n: c[1], c: c[2], tg: (S.tg || {})[c[0]] ?? c[3] }));
+if (!S.caps) S.caps = DCAP.map(c => ({ k: c[0], n: c[1], c: c[2], tg: (S.tg || {})[c[0]] ?? c[3], kw: [...c[4]] }));
+S.caps.forEach(c => {
+  if (!c.kw || !Array.isArray(c.kw) || !c.kw.length) {
+    const def = DCAP.find(d => d[0] === c.k);
+    if (def && def[4]) c.kw = [...def[4]];
+  }
+});
 if (!S.cfg) S.cfg = { defDuration: 2, burnoutHours: 6 };
 S.bl = S.bl || {};
 S.mem = S.mem || {};
+S.gdel = S.gdel || [];
+// Bản cũ ghi cả phỏng đoán của thanh ghi nhanh vào bộ nhớ (vd "học tiếng anh" → Quan hệ): xóa một lần
+if (S.memV !== 2) { S.mem = {}; S.memV = 2; }
 
 const cmp = (a, b) => (a.s || "99:99").localeCompare(b.s || "99:99");
 const sortL = l => l.sort(cmp);
@@ -1298,6 +1392,33 @@ const CM = k => S.caps.find(c => c.k === k) || { n: "(đã xóa)", c: "#888888",
 const BL = k => S.bl[k] = S.bl[k] || { u: 0, d: 0 };
 const esc = s => String(s == null ? "" : s).replace(/[&<>"'`]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;", "`": "&#96;" }[c]));
 const $ = i => document.getElementById(i);
+
+// Nền + chữ cho khối màu vốn, đảm bảo contrast ≥ 4.5:1 (WCAG AA) với mọi màu người dùng chọn
+const DARK_INK = "#140c10";
+const lumHex = hex => {
+  const c = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255).map(v => v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+};
+const INK = new Map();
+function capInk(hex) {
+  if (!/^#[0-9a-f]{6}$/i.test(hex || "")) hex = "#888888";
+  if (INK.has(hex)) return INK.get(hex);
+  const L = lumHex(hex), onDark = (L + 0.05) / (lumHex(DARK_INK) + 0.05), onWhite = 1.05 / (L + 0.05);
+  let out;
+  if (onDark >= 4.5 && onDark >= onWhite) out = `background:${hex}; color:${DARK_INK};`;
+  else if (onWhite >= 4.5) out = `background:${hex}; color:#fff;`;
+  else {
+    // Màu tầm trung: làm tối nền dần cho tới khi chữ trắng đạt chuẩn
+    let rgb = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16)), bg = hex;
+    while (1.05 / (lumHex(bg) + 0.05) < 4.5) {
+      rgb = rgb.map(v => Math.floor(v * 0.94));
+      bg = "#" + rgb.map(v => v.toString(16).padStart(2, "0")).join("");
+    }
+    out = `background:${bg}; color:#fff;`;
+  }
+  INK.set(hex, out);
+  return out;
+}
 const r1 = n => (Math.round((n || 0) * 10) / 10).toString();
 const pad = n => String(n).padStart(2, "0");
 const tt = (s, h) => {
@@ -1307,15 +1428,29 @@ const tt = (s, h) => {
   return pad(m / 60 | 0) + ":" + pad(m % 60);
 };
 
-let CH = new Set(), PV = {}, dirty = false, TABDIR = 0;
+let CH = new Set(), PV = {}, dirty = false, TABDIR = 0, saveFailed = false;
 const save = () => {
   dirty = true;
   try {
     localStorage.setItem("lc2", JSON.stringify(S));
+    if (saveFailed) { saveFailed = false; renderSaveAlert(); }
   } catch (e) {
-    showToast("Không thể lưu vào localStorage!", "bad");
+    // Giữ cảnh báo cố định (không chỉ toast): đóng tab lúc này là mất các thay đổi chưa lưu
+    if (!saveFailed) { saveFailed = true; renderSaveAlert(); }
   }
 };
+
+function renderSaveAlert() {
+  const el = $("saveAlert");
+  if (!el) return;
+  el.hidden = !saveFailed;
+  el.innerHTML = saveFailed ? `
+    <div>
+      <b>⚠ Không lưu được dữ liệu vào trình duyệt</b>
+      <div style="font-size:12px; margin-top:2px;">Bộ nhớ có thể đã đầy hoặc trình duyệt đang chặn lưu trữ. Các thay đổi gần đây sẽ mất nếu đóng trang. Hãy tải tệp sao lưu ngay.</div>
+    </div>
+    <button type="button" class="btn btn-sm btn-danger" onclick="exportData('json')">Sao lưu (.json)</button>` : "";
+}
 
 /* ==========================================================================
    2. TÍNH TOÁN TUẦN & LOGIC PIN NĂNG LƯỢNG
@@ -1388,17 +1523,26 @@ function getDayBattery(dateStr) {
   return { u, d, net, fillPercent, statusClass, label, isBurnout };
 }
 
+// Phân loại vốn theo từ khóa: cụm khớp nhiều từ / dài nhất thắng ("tiếng anh" thắng "anh"),
+// không phụ thuộc thứ tự các loại vốn.
 function guess(t) {
-  t = (t || "").normalize("NFC");
-  const m = S.mem && S.mem[t.trim().toLowerCase()];
+  const normTitle = (t || "").normalize("NFC").trim().toLowerCase();
+  const m = S.mem && Object.prototype.hasOwnProperty.call(S.mem, normTitle) ? S.mem[normTitle] : null;
   if (m && S.caps.some(c => c.k === m.c)) return m.c;
-  const w = " " + t.toLowerCase().split(/[^\p{L}\p{N}]+/u).join(" ") + " ";
-  const has = a => a.some(k => w.includes(" " + k + " "));
-  if (has(["học", "đọc", "course", "study", "khóa", "sách", "tiếng anh", "code", "nghiên cứu"])) return "kn";
-  if (has(["họp", "làm", "work", "meeting", "deep", "dự án", "khách", "bán", "deal", "code"])) return "tc";
-  if (has(["xem", "du lịch", "trip", "phim", "workshop", "thử", "concert", "cafe", "chill", "ăn uống"])) return "tn";
-  if (has(["dinner", "sinh nhật", "cưới", "gia đình", "bạn", "date", "chị", "em", "anh", "bố", "mẹ", "thăm"])) return "qh";
-  return "sk";
+
+  const w = " " + normTitle.split(/[^\p{L}\p{N}]+/u).join(" ") + " ";
+  let best = null, bestScore = 0;
+  for (const c of S.caps) {
+    const def = DCAP.find(d => d[0] === c.k);
+    const kws = (c.kw && c.kw.length) ? c.kw : (def ? def[4] : []);
+    for (const k of kws) {
+      const kk = String(k || "").normalize("NFC").toLowerCase().trim();
+      if (!kk || !w.includes(" " + kk + " ")) continue;
+      const score = kk.split(/\s+/).length * 100 + kk.length;
+      if (score > bestScore) { best = c.k; bestScore = score; }
+    }
+  }
+  return best || (S.caps[0] ? S.caps[0].k : "sk");
 }
 
 /* ==========================================================================
@@ -1426,7 +1570,6 @@ let parsedNLP = null;
 
 const toMin = s => { const [a, b] = s.split(":").map(Number); return a * 60 + b; };
 const WB = p => new RegExp("(?<![\\p{L}\\p{N}])(?:" + p + ")(?![\\p{L}\\p{N}])", "iu");
-const PER = "sáng|trưa|chiều|tối|đêm";
 
 // Kiểm tra giờ/thời lượng/trùng giờ — dùng chung cho modal, ghi nhanh và chuỗi lặp
 function chkEvent(date, s, h, skip) {
@@ -1438,73 +1581,191 @@ function chkEvent(date, s, h, skip) {
   return { hit };
 }
 
+// Regex có ranh giới từ Unicode: « = không đứng sau chữ/số, » = không đứng trước chữ/số
+const NLP_RX = (src, flags = "iu") => new RegExp(src.replace(/«/g, "(?<![\\p{L}\\p{N}])").replace(/»/g, "(?![\\p{L}\\p{N}])"), flags);
+
+// Số đếm bằng chữ đứng trước đơn vị thời lượng: "hai tiếng", "mười lăm phút", "ba mươi phút"
+const VI_DIGIT = { "một": 1, "mốt": 1, "hai": 2, "ba": 3, "bốn": 4, "tư": 4, "năm": 5, "lăm": 5, "sáu": 6, "bảy": 7, "bẩy": 7, "tám": 8, "chín": 9 };
+function viNum(s) {
+  const t = s.toLowerCase().trim().split(/\s+/);
+  let n, i;
+  if (t[0] === "mười") { n = 10; i = 1; }
+  else if (t[1] === "mươi") { n = (VI_DIGIT[t[0]] || 0) * 10; i = 2; }
+  else { n = VI_DIGIT[t[0]] || 0; i = 1; }
+  if (n >= 10 && t[i] && VI_DIGIT[t[i]] != null) n += VI_DIGIT[t[i]];
+  return n;
+}
+const NUM_WORDS_RX = NLP_RX("«(?:một|hai|ba|bốn|tư|năm|sáu|bảy|bẩy|tám|chín|mười)(?:\\s+(?:mươi|mốt|một|hai|ba|bốn|tư|lăm|năm|sáu|bảy|bẩy|tám|chín))*(?=\\s*(?:tiếng|giờ|phút|ph|p)»)", "giu");
+const normalizeViNumbers = s => s.replace(NUM_WORDS_RX, m => String(viNum(m)));
+
+// "Hôm qua · Thứ 4, 07/10" — luôn hiện thứ và ngày cụ thể; thêm năm khi khác năm nay
+function describeDate(d) {
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const diff = Math.round((d - today) / 864e5);
+  const rel = { "-2": "Hôm kia", "-1": "Hôm qua", "0": "Hôm nay", "1": "Ngày mai", "2": "Ngày kia" }[diff];
+  const dm = pad(d.getDate()) + "/" + pad(d.getMonth() + 1) + (d.getFullYear() !== today.getFullYear() ? "/" + d.getFullYear() : "");
+  return (rel ? rel + " · " : "") + DN_VI[(d.getDay() + 6) % 7] + ", " + dm;
+}
+
+const NLP_PERIOD = "sáng|trưa|chiều|tối|đêm";
+// Từ đứng ngay trước "Mai" cho thấy đó là tên người, không phải "ngày mai"
+const NAME_BEFORE_MAI = /^(gặp|với|cùng|cho|bạn|chị|em|anh|thăm|nhà|đón|gọi|nhắn|của|và|chú|cô|bác|dì|cậu|mợ|ông|bà|tên|bé|con)$/i;
+const WD_RX = "(?:(?:thứ|thu)\\s*([2-7])|t([2-7])|thứ\\s+(hai|ba|tư|bốn|năm|sáu|bảy)|(chủ\\s*nhật|cn))";
+const WK_RX = "tuần\\s*(này|sau\\s*nữa|sau|tới|trước|rồi|qua)";
+const wdIndex = (n1, n2, word) => n1 ? +n1 - 2 : n2 ? +n2 - 2 : word ? { hai: 0, ba: 1, tư: 2, bốn: 2, năm: 3, sáu: 4, bảy: 5 }[word.toLowerCase()] : 6;
+const weekShift = q => !q ? null : /này/i.test(q) ? 0 : /nữa/i.test(q) ? 2 : /sau|tới/i.test(q) ? 1 : -1;
+
 function parseNLPText(str) {
   if (!str || !str.trim()) return null;
   const raw = str.trim().normalize("NFC");
-  let w = " " + raw + " ";
-  const cut = re => { const m = w.match(re); if (m) w = w.replace(re, " "); return m; };
-  const base = new Date(); base.setHours(0, 0, 0, 0);
-  let target = base, dateDesc = "Hôm nay", per = null, m;
-  const setPer = x => { if (x) per = x.toLowerCase(); };
-  const wkBase = W[CW >= 0 ? CW : Math.min(Math.max(sel, 0), W.length - 1)];
+  let w = " " + normalizeViNumbers(raw) + " ";
+  // Cắt đúng đoạn khớp (theo vị trí) ra khỏi câu, phần còn lại thành tên hoạt động
+  const cutAt = (m) => { w = w.slice(0, m.index) + " " + w.slice(m.index + m[0].length); return m; };
+  const cut = re => { const m = w.match(re); return m ? cutAt(m) : null; };
 
-  // 1. Ngày (khớp theo từ nguyên vẹn; "Mai" viết hoa được hiểu là tên người)
-  if ((m = cut(/(?<![\p{L}\p{N}])(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?(?![\p{L}\p{N}])/u))) {
-    const y = m[3] ? (+m[3] < 100 ? 2000 + +m[3] : +m[3]) : base.getFullYear(), d = new Date(y, +m[2] - 1, +m[1]);
-    if (d.getMonth() === +m[2] - 1) { target = d; dateDesc = DN_VI[(d.getDay() + 6) % 7] + " " + m[1] + "/" + m[2]; }
-  } else if (cut(/(?<![\p{L}\p{N}])(?:ngày\s+)?(?:mốt|kia)(?![\p{L}\p{N}])/iu)) {
-    target = ad(base, 2); dateDesc = "Ngày kia";
-  } else if ((m = cut(new RegExp("(?<![\\p{L}\\p{N}])(?:(" + PER + ")\\s+|ngày\\s+)mai(?![\\p{L}\\p{N}])", "iu"))) || (m = cut(/(?<![\p{L}\p{N}])mai(?![\p{L}\p{N}])/u))) {
-    setPer(m[1]); target = ad(base, 1); dateDesc = "Ngày mai";
-  } else if ((m = cut(new RegExp("(?<![\\p{L}\\p{N}])(?:(" + PER + ")\\s+)?(?:hôm\\s+)?nay(?![\\p{L}\\p{N}])", "iu")))) {
-    setPer(m[1]);
-  } else {
-    let idx = null;
-    if ((m = cut(/(?<![\p{L}\p{N}])(?:thứ|thu|t)\s*([2-7])(?![\p{L}\p{N}])/iu))) idx = +m[1] - 2;
-    else if ((m = cut(/(?<![\p{L}\p{N}])thứ\s+(hai|ba|tư|bốn|năm|sáu|bảy)(?![\p{L}\p{N}])/iu))) idx = { hai: 0, ba: 1, tư: 2, bốn: 2, năm: 3, sáu: 4, bảy: 5 }[m[1].toLowerCase()];
-    else if (cut(WB("chủ nhật|cn"))) idx = 6;
-    if (idx !== null) { let d = ad(wkBase, idx); if (CW >= 0 && d < base) d = ad(d, 7); target = d; dateDesc = DN_VI[idx]; }
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const mon0 = ad(today, -((today.getDay() + 6) % 7)); // Thứ 2 của tuần này
+  let target = today, dateSet = false, per = null, err = null, m;
+  const setPer = x => { if (x) per = x.toLowerCase(); };
+  const setDate = d => { target = d; dateSet = true; };
+  const validDate = (y, mo, d) => { const x = new Date(y, mo - 1, d); return x.getMonth() === mo - 1 && x.getDate() === d ? x : null; };
+  const fullYear = y => !y ? today.getFullYear() : (+y < 100 ? 2000 + +y : +y);
+
+  // ===== 1. NGÀY =====
+  // 1a. "ngày 9 tháng 10", "9 tháng 10 năm 2026"
+  if ((m = cut(NLP_RX("«(?:ngày\\s*)?(\\d{1,2})\\s*tháng\\s*(\\d{1,2})(?:\\s*,?\\s*(?:năm\\s*)?(\\d{4}))?»")))) {
+    const d = validDate(fullYear(m[3]), +m[2], +m[1]);
+    if (d) setDate(d); else err = "Ngày không hợp lệ.";
+  }
+  // 1b. "09/10", "9-10", "09.10", "9/10/2026", "09.10.26" (không nhầm với "9-10h" hay "1.5 tiếng")
+  if (!dateSet && !err) {
+    for (const mm of w.matchAll(NLP_RX("«(?:ngày\\s*)?(\\d{1,2})([\\/.\\-])(\\d{1,2})(?:\\2(\\d{4}|\\d{2}))?(?![\\d\\/.\\-])(?!\\s*(?:h|g|giờ|tiếng|phút|ph|p|:)»)", "giu"))) {
+      // Dấu chấm dễ nhầm số thập phân ("1.5"): chỉ nhận "09.10" (đủ 2 chữ số) hoặc có năm
+      if (mm[2] === "." && !mm[4] && !(mm[1].length === 2 && mm[3].length === 2)) continue;
+      const d = validDate(fullYear(mm[4]), +mm[3], +mm[1]);
+      if (d) { cutAt(mm); setDate(d); break; }
+      if (mm[2] === "/") { cutAt(mm); err = "Ngày không hợp lệ."; break; }
+    }
+  }
+  // 1c. "ngày 9" = ngày 9 của tháng này
+  if (!dateSet && !err && (m = cut(NLP_RX("«ngày\\s*(\\d{1,2})»(?!\\s*[\\/.\\-]\\d)")))) {
+    const d = validDate(today.getFullYear(), today.getMonth() + 1, +m[1]);
+    if (d) setDate(d); else err = "Ngày không hợp lệ.";
+  }
+  // 1d. Thứ trong tuần: "thứ 2", "t2", "thứ hai", "chủ nhật", kèm "tuần này/sau/tới/trước" ở trước hoặc sau
+  let wd = null, wq = null;
+  if ((m = cut(NLP_RX(`«${WK_RX}\\s*,?\\s*(?:vào\\s*)?${WD_RX}»`)))) { wd = wdIndex(m[2], m[3], m[4]); wq = m[1]; }
+  else if ((m = cut(NLP_RX(`«${WD_RX}(?:\\s*,?\\s*${WK_RX})?»`)))) { wd = wdIndex(m[1], m[2], m[3]); wq = m[5]; }
+  if (!dateSet && wd !== null) {
+    const shift = weekShift(wq);
+    let d = ad(mon0, wd + 7 * (shift || 0));
+    if (shift === null && d < today) d = ad(d, 7); // không nói tuần nào: lần tới gần nhất
+    setDate(d);
+  }
+  // 1e. Ngày tương đối
+  if (!dateSet) {
+    if (cut(NLP_RX("«hôm\\s*kia»"))) setDate(ad(today, -2));
+    else if ((m = cut(NLP_RX(`«(?:(${NLP_PERIOD})\\s+|hôm\\s+)qua»`)))) { setPer(m[1]); setDate(ad(today, -1)); }
+    else if (cut(NLP_RX("«(?:ngày\\s+)?(?:mốt|kia)»"))) setDate(ad(today, 2));
+    else {
+      // "mai": là ngày mai khi đứng đầu câu, đi sau buổi/"ngày", hoặc đi trước giờ/buổi;
+      // là tên người khi đi sau từ chỉ người ("gặp Mai", "cho Mai") hoặc viết hoa giữa câu
+      for (const mm of w.matchAll(NLP_RX(`«(?:(${NLP_PERIOD})\\s+|(ngày)\\s+)?(mai)»`, "giu"))) {
+        const head = w.slice(0, mm.index).trim(), before = head.split(/\s+/).pop() || "";
+        const after = w.slice(mm.index + mm[0].length);
+        const isDate = mm[1] || mm[2] ? true
+          : !head ? true
+          : NAME_BEFORE_MAI.test(before) ? false
+          : mm[3][0] === "M" ? false
+          : /^\s*(?:\d|lúc|sáng|trưa|chiều|tối|đêm|$)/iu.test(after);
+        if (isDate) { cutAt(mm); setPer(mm[1]); setDate(ad(today, 1)); break; }
+      }
+      if (!dateSet && (m = cut(NLP_RX(`«(?:(${NLP_PERIOD})\\s+)?(?:hôm\\s+)?nay»`)))) { setPer(m[1]); setDate(today); }
+    }
   }
 
-  // 2. Giờ bắt đầu & thời lượng ("2h" đứng một mình = thời lượng; dùng "lúc 18h", "18h30", "18:00", "7pm" để chỉ giờ bắt đầu)
+  // ===== 2. GIỜ BẮT ĐẦU & THỜI LƯỢNG =====
   let start = null, dur = null;
-  const hm = (a, b) => pad(Math.min(23, +a)) + ":" + pad(b ? +b : 0);
-  const adj = (hr, p) => { p = p || per; if ((p === "chiều" || p === "tối") && hr < 12) return hr + 12; if (p === "trưa" && hr >= 1 && hr <= 5) return hr + 12; if (p === "đêm" && hr >= 6 && hr < 12) return hr + 12; return hr; };
+  const hm = (h, mi) => {
+    h = +h; mi = +(mi || 0);
+    if (h > 24 || mi > 59) { err = err || "Giờ không hợp lệ."; return null; }
+    return pad(h % 24) + ":" + pad(mi);
+  };
+  const adj = (hr, p) => {
+    p = p || per;
+    if (p === "đêm" && hr === 12) return 0;                       // 12h đêm = 00:00
+    if ((p === "chiều" || p === "tối") && hr < 12) return hr + 12;
+    if (p === "trưa" && hr >= 1 && hr <= 5) return hr + 12;
+    if (p === "đêm" && hr >= 6 && hr < 12) return hr + 12;
+    return hr;
+  };
   const ampm = (hr, ap) => /pm/i.test(ap) ? (hr < 12 ? hr + 12 : hr) : (hr === 12 ? 0 : hr);
-  if ((m = cut(/(?<![\p{L}\p{N}])(\d{1,2})(?:h|:|g)(\d{2})?\s*[-–]\s*(\d{1,2})(?:h|:|g)?(\d{2})?(?![\p{L}\p{N}])/iu))) {
+  const num = s => parseFloat(String(s).replace(",", "."));
+
+  // 2a. Khoảng giờ: "14h-16h", "14-16h", "2-4h chiều", "14:00 - 16:00"
+  if ((m = cut(NLP_RX(`«(\\d{1,2})(?:[h:g](\\d{2})?|\\s*giờ)?\\s*[-–]\\s*(\\d{1,2})(?:[h:g](\\d{2})?|\\s*giờ)?(?:\\s*(${NLP_PERIOD}))?»(?!\\s*(?:tiếng|phút|ph|p)»)`)))) {
+    setPer(m[5]);
     const a = adj(+m[1]) * 60 + (+m[2] || 0), b = adj(+m[3]) * 60 + (+m[4] || 0);
     if (b > a) { start = hm(a / 60 | 0, a % 60); dur = (b - a) / 60; }
   }
-  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2}):(\d{2})(?![\p{L}\p{N}])/u))) start = hm(adj(+m[1]), m[2]);
-  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2})[hg](\d{2})(?![\p{L}\p{N}])/iu))) start = hm(adj(+m[1]), m[2]);
-  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(?:lúc|từ|vào|at|@)\s*(\d{1,2})(?:\s*(?:h|giờ|g))?(?:\s*(am|pm))?(?![\p{L}\p{N}])/iu))) start = hm(m[2] ? ampm(+m[1], m[2]) : adj(+m[1]), 0);
-  if (start === null && (m = cut(/(?<![\p{L}\p{N}])(\d{1,2})\s*(?:h|giờ|g)?\s*(am|pm)(?![\p{L}\p{N}])/iu))) start = hm(ampm(+m[1], m[2]), 0);
-  if (start === null && (m = cut(new RegExp("(?<![\\p{L}\\p{N}])(\\d{1,2})\\s*(?:h|giờ|g)?\\s*(" + PER + ")(?![\\p{L}\\p{N}])", "iu")))) { start = hm(adj(+m[1], m[2].toLowerCase()), 0); setPer(m[2]); }
+  // 2b. Thời lượng nói rõ
   if (dur === null) {
-    if (cut(/(?<![\p{L}\p{N}])(?:nửa|1\/2)\s*(?:tiếng|giờ)(?![\p{L}\p{N}])/iu)) dur = 0.5;
-    else if ((m = cut(/(?<![\p{L}\p{N}])(\d+(?:[.,]\d+)?)\s*(?:tiếng|giờ|gio|hrs?|hours?)(\s*rưỡi)?(?![\p{L}\p{N}])/iu))) dur = parseFloat(m[1].replace(",", ".")) + (m[2] ? 0.5 : 0);
-    else if ((m = cut(/(?<![\p{L}\p{N}])(\d+)\s*(?:phút|phut|min|p)(?![\p{L}\p{N}])/iu))) dur = Math.round(+m[1] / 60 * 100) / 100;
+    if (cut(NLP_RX("«(?:nửa|1\\/2)\\s*(?:tiếng|giờ|h)»"))) dur = 0.5;
+    else if ((m = cut(NLP_RX("«(\\d+(?:[.,]\\d+)?)\\s*tiếng(?:\\s+(\\d{1,2})(?:\\s*(?:phút|ph|p))?(?![\\p{L}\\p{N}:])(?!\\s*(?:h|g|giờ)(?!\\p{L})))?(\\s*rưỡi)?»")))) dur = num(m[1]) + (+m[2] || 0) / 60 + (m[3] ? 0.5 : 0);
+    else if (cut(NLP_RX("«tiếng\\s*rưỡi»"))) dur = 1.5;
+    else if ((m = cut(NLP_RX("«(\\d{1,2})\\s*(?:h|giờ)\\s*(\\d{1,2})\\s*(?:phút|ph|p)»")))) dur = +m[1] + +m[2] / 60;
+    else if ((m = cut(NLP_RX("«(\\d+(?:[.,]\\d+)?)\\s*(?:hrs?|hours?)»")))) dur = num(m[1]);
+    else if ((m = cut(NLP_RX("«(\\d+)\\s*(?:phút|phut|min|ph|p)»")))) dur = Math.round(+m[1] / 60 * 100) / 100;
+    else if ((m = cut(NLP_RX("«trong\\s*(\\d+(?:[.,]\\d+)?)\\s*(?:h|giờ)»")))) dur = num(m[1]);
   }
-  if ((m = cut(/(?<![\p{L}\p{N}])(\d{1,2}(?:[.,]\d+)?)h(?![\p{L}\p{N}])/iu))) {
-    const n = parseFloat(m[1].replace(",", "."));
-    if (start === null && (dur !== null || n > 4)) start = hm(adj(Math.floor(n)), Math.round((n % 1) * 60));
-    else if (dur === null) dur = n;
+  // 2c. Giờ kèm buổi: "5h sáng", "2 giờ chiều", "8h30 tối", "tối 8h", "chiều 3 giờ"
+  if (start === null && (m = cut(NLP_RX(`«(\\d{1,2})(?:[h:g](\\d{2})?|\\s*giờ(?:\\s*(\\d{1,2})(?:\\s*phút)?)?)?(\\s*rưỡi)?\\s*(${NLP_PERIOD})»`)))) {
+    setPer(m[5]); start = hm(adj(+m[1]), m[2] || m[3] || (m[4] ? 30 : 0));
   }
+  if (start === null && (m = cut(NLP_RX(`«(${NLP_PERIOD})\\s*(?:lúc\\s*)?(\\d{1,2})(?:[h:g](\\d{2})?|\\s*giờ(?:\\s*(\\d{1,2})(?:\\s*phút)?)?)?(\\s*rưỡi)?»(?!\\s*(?:tiếng|phút|ph|p)»)`)))) {
+    setPer(m[1]); start = hm(adj(+m[2]), m[3] || m[4] || (m[5] ? 30 : 0));
+  }
+  // 2d. Từ chỉ buổi đứng riêng (trừ "ăn tối", "bữa trưa"…)
+  if (!per && (m = cut(NLP_RX(`(?<!(?:ăn|bữa)\\s+)«(${NLP_PERIOD})»`)))) setPer(m[1]);
+  // 2e. Giờ bắt đầu nói rõ
+  if (start === null && (m = cut(NLP_RX("«(?:lúc|từ|vào|at|@)\\s*(\\d{1,2})(?:[h:g](\\d{2})?|\\s*giờ(?:\\s*(\\d{1,2}))?)?(\\s*rưỡi)?(?:\\s*(am|pm))?»")))) {
+    start = m[5] ? hm(ampm(+m[1], m[5]), m[2] || 0) : hm(adj(+m[1]), m[2] || m[3] || (m[4] ? 30 : 0));
+  }
+  if (start === null && (m = cut(NLP_RX("«(\\d{1,2}):(\\d{2})»")))) start = hm(adj(+m[1]), m[2]);
+  if (start === null && (m = cut(NLP_RX("«(\\d{1,2})[hg](\\d{2})»")))) {
+    // "1h30" không kèm buổi: dưới 6 giờ thì hiểu là thời lượng 1,5 tiếng, không phải 01:30 sáng
+    if (+m[1] < 6 && !per && dur === null) dur = +m[1] + +m[2] / 60;
+    else start = hm(adj(+m[1]), m[2]);
+  }
+  if (start === null && (m = cut(NLP_RX("«(\\d{1,2})\\s*(?:h|giờ)?\\s*(am|pm)»")))) start = hm(ampm(+m[1], m[2]), 0);
+  // 2f. Các "Xh" / "X giờ" còn lại: từ 6 trở lên (hoặc có buổi) là giờ bắt đầu, nhỏ hơn là thời lượng
+  while ((m = cut(NLP_RX("«(\\d{1,2}(?:[.,]\\d+)?)\\s*(?:h|giờ)(\\s*rưỡi)?»")))) {
+    const val = num(m[1]) + (m[2] ? 0.5 : 0);
+    const asStart = () => hm(adj(Math.floor(val)), Math.round((val % 1) * 60));
+    if (start === null && (val >= 6 || per || dur !== null)) start = asStart();
+    else if (dur === null) dur = val;
+    else if (start === null) start = asStart();
+  }
+
   const key = ky(target);
-  if (!per) { const pw = w.match(WB(PER)); if (pw) per = pw[0].toLowerCase(); }
   if (start === null) {
     const dm = { sáng: "07:00", trưa: "12:00", chiều: "15:00", tối: "19:00", đêm: "21:00" };
     const lastEv = (S.ev[key] || []).filter(e => e.s).pop();
     start = per ? dm[per] : lastEv ? tt(lastEv.s, lastEv.h) : "07:00";
   }
-  if (dur === null) dur = 2;
+  if (dur === null) dur = (S.cfg && S.cfg.defDuration) || 2;
+  dur = Math.round(dur * 100) / 100;
 
-  // 3. Tên hoạt động, tác động, loại vốn
-  let title = w.replace(/(?<![\p{L}\p{N}])(?:lúc|từ|vào|at|@)(?![\p{L}\p{N}])/giu, " ").replace(/[,;]+/g, " ").replace(/\s+/g, " ").trim();
+  // ===== 3. TÊN, TÁC ĐỘNG, LOẠI VỐN =====
+  let title = w.replace(NLP_RX("«(?:lúc|từ|vào|at|@|trong)»", "giu"), " ")
+               .replace(/(^|\s)[-–,;.\/]+(?=\s|$)/g, " ")
+               .replace(/[,;]+/g, " ")
+               .replace(/\s+/g, " ")
+               .trim();
   if (!title) title = "Hoạt động mới";
-  const mode = WB("họp|meeting|deadline|ot|tăng ca|làm việc|công việc|xử lý|áp lực|stress").test(title) ? "d" : "u";
-  const c = chkEvent(key, start, dur, -1);
-  return { raw, title, targetDate: key, dateDesc: dateDesc + " (" + key.slice(5) + ")", startTime: start, duration: dur, capKey: guess(title), mode, err: c.err, hit: c.hit };
+  const mode = WB("họp|meeting|deadline|ot|tăng ca|làm việc|công việc|xử lý|áp lực|stress|báo cáo").test(title) ? "d" : "u";
+  const c = err ? {} : chkEvent(key, start, dur, -1);
+  return { raw, title, targetDate: key, dateDesc: describeDate(target), startTime: start, duration: dur, capKey: guess(title), mode, err: err || c.err, hit: c.hit };
 }
 
 function handleNLPInput(val) {
@@ -1517,9 +1778,34 @@ function handleNLPInput(val) {
     <span class="pill pill-cyan">📅 ${esc(r.dateDesc)}</span>
     <span class="pill pill-neutral">⏰ ${r.startTime} – ${tt(r.startTime, r.duration)} (${r1(r.duration)}h)</span>
     <span class="pill ${r.mode === "u" ? "pill-ok" : "pill-bad"}">${r.mode === "u" ? "▲ Nạp" : "▼ Tiêu"}</span>
-    <span class="pill" style="background:${cap.c}; color:#fff;">🏷️ ${esc(cap.n)}</span>
+    <span class="pill" style="${capInk(cap.c)}">🏷️ ${esc(cap.n)}</span>
     <span style="font-weight:600; color:var(--tx); margin-left:4px;">"${esc(r.title)}"</span>
     ${r.err ? `<span class="pill pill-bad">⚠ ${esc(r.err)}</span>` : r.hit ? `<span class="pill pill-bad">⚠ Trùng giờ với "${esc(r.hit.t)}"</span>` : ""}`;
+}
+
+// Gõ tiếng Việt có dấu: một lần Enter vừa chốt chữ vừa thực hiện (ghi nhanh / chuyển ô trong popup).
+// Chrome phát keydown Enter (isComposing) TRƯỚC compositionend: ghi nhớ, chờ bộ gõ chốt chữ xong rồi mới làm.
+// Safari phát compositionend trước, nên lúc keydown chữ đã chốt và làm ngay được.
+let nlpAfterCompose = false;
+function noteCompositionEnd() {
+  if (nlpAfterCompose) {
+    nlpAfterCompose = false;
+    setTimeout(executeNLP, 0);
+  }
+  if (enterAfterCompose) {
+    const el = enterAfterCompose;
+    enterAfterCompose = null;
+    setTimeout(() => editorEnter(el), 0);
+  }
+}
+// Không có thuộc tính oncompositionend trong HTML nên phải gắn bằng addEventListener
+document.addEventListener("compositionend", noteCompositionEnd, true);
+
+function handleNLPKeydown(e) {
+  if (e.key !== "Enter" || e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+  if (e.isComposing || e.keyCode === 229) { nlpAfterCompose = true; return; }
+  e.preventDefault();
+  executeNLP();
 }
 
 function executeNLP() {
@@ -1529,12 +1815,34 @@ function executeNLP() {
   if (r.err) { showToast(r.err, "bad"); return; }
   if (r.hit && !confirm(`Trùng giờ với "${r.hit.t}" (${r.hit.s}). Vẫn thêm?`)) return;
   const L = S.ev[r.targetDate] = S.ev[r.targetDate] || [];
-  L.push({ t: r.title, c: r.capKey, m: r.mode, h: r.duration, s: r.startTime });
+  const newEvt = { t: r.title, c: r.capKey, m: r.mode, h: r.duration, s: r.startTime };
+  L.push(newEvt);
   sortL(L);
-  S.mem[r.title.normalize("NFC").toLowerCase()] = { c: r.capKey };
+  markPending(newEvt);
   save();
+  gcalFlush();
   input.value = "";
   handleNLPInput("");
+
+  // Tự động chuyển năm nếu hoạt động thuộc năm khác
+  const evtYear = parseInt(r.targetDate.slice(0, 4));
+  if (evtYear && evtYear !== activeYear) {
+    activeYear = evtYear;
+    yearData = getWeeksOfYear(activeYear);
+    W0 = yearData.w0;
+    W = yearData.weeks;
+    CW = wkNow();
+  }
+
+  // Tự động đồng bộ tuần và ngày để hiển thị ngay hoạt động vừa tạo
+  const targetWk = W.findIndex(m => {
+    const e = ad(m, 6);
+    return ky(m) <= r.targetDate && r.targetDate <= ky(e);
+  });
+  if (targetWk >= 0) sel = targetWk;
+  const dObj = new Date(r.targetDate + "T00:00");
+  timelineDayIdx = (dObj.getDay() + 6) % 7;
+
   draw();
   showToast(`Đã thêm: "${r.title}" vào ${r.dateDesc}`, "ok");
 }
@@ -1547,95 +1855,89 @@ function renderRadarChartSVG(weekIdx) {
   const numCaps = caps.length;
   if (numCaps < 3) return `<p style="color:var(--mu); text-align:center; padding:20px;">Cần ít nhất 3 loại vốn để vẽ biểu đồ radar.</p>`;
 
-  // Tọa độ trung tâm và bán kính tối ưu (không bị cắt chữ)
-  const cx = 250, cy = 160, r = 95;
+  const VB = 560, cx = 280, cy = 160, r = 95;
   const angles = caps.map((_, i) => -Math.PI / 2 + (i * 2 * Math.PI / numCaps));
 
   // Vòng cấp độ: 33%, 66%, 100% mục tiêu
-  const levels = [0.33, 0.66, 1.0];
-  let levelPolygons = levels.map(lvl => {
+  const levelPolygons = [0.33, 0.66, 1.0].map(lvl => {
     const pts = angles.map(a => `${(cx + r * lvl * Math.cos(a)).toFixed(1)},${(cy + r * lvl * Math.sin(a)).toFixed(1)}`).join(" ");
     const isTarget = lvl === 1.0;
-    return `<polygon points="${pts}" fill="none" stroke="${isTarget ? 'var(--ac)' : 'var(--bd)'}" stroke-width="${isTarget ? '1.5' : '1'}" stroke-dasharray="${isTarget ? '' : '3,3'}" opacity="${isTarget ? '0.9' : '0.6'}" />`;
+    return `<polygon points="${pts}" fill="none" stroke="${isTarget ? 'var(--ac)' : 'var(--bd)'}" stroke-width="${isTarget ? '1.5' : '1'}" stroke-dasharray="${isTarget ? '' : '3,3'}" opacity="${isTarget ? '0.9' : '0.8'}" />`;
   }).join("");
 
-  // Trục nan hoa
-  let axisLines = angles.map(a => {
-    const x2 = (cx + r * Math.cos(a)).toFixed(1);
-    const y2 = (cy + r * Math.sin(a)).toFixed(1);
-    return `<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="var(--bd)" stroke-width="1" opacity="0.7" />`;
-  }).join("");
+  const axisLines = angles.map(a => `<line x1="${cx}" y1="${cy}" x2="${(cx + r * Math.cos(a)).toFixed(1)}" y2="${(cy + r * Math.sin(a)).toFixed(1)}" stroke="var(--bd)" stroke-width="1" opacity="0.7" />`).join("");
 
-  // Nhãn tỷ lệ trên trục dọc
   const levelLabels = `
-    <text x="${cx + 4}" y="${(cy - r * 0.33).toFixed(1)}" font-size="9" fill="var(--mu)" opacity="0.8">33%</text>
-    <text x="${cx + 4}" y="${(cy - r * 0.66).toFixed(1)}" font-size="9" fill="var(--mu)" opacity="0.8">66%</text>
-    <text x="${cx + 4}" y="${(cy - r * 1.0).toFixed(1)}" font-size="9" font-weight="600" fill="var(--ac)">100%</text>
-  `;
+    <text x="${cx + 13}" y="${(cy - r * 0.33).toFixed(1)}" font-size="10" fill="var(--mu)">33%</text>
+    <text x="${cx + 13}" y="${(cy - r * 0.66).toFixed(1)}" font-size="10" fill="var(--mu)">66%</text>
+    <text x="${cx + 13}" y="${(cy - r).toFixed(1)}" font-size="10" font-weight="600" fill="var(--ac-text)">100%</text>`;
 
-  // Điểm dữ liệu (xử lý an toàn khi c.tg = 0 hoặc w.u = 0)
-  const dataPoints = caps.map((c, i) => {
+  // Số liệu từng vốn. Vốn chưa đặt mục tiêu KHÔNG được so với mốc tùy ý: đặt ở tâm (marker rỗng) và không tính vào điểm cân bằng.
+  const stats = caps.map(c => {
     const w = wk(weekIdx, c.k);
-    const target = c.tg || 0;
-    const benchmark = target > 0 ? target : Math.max(8, w.u);
-    const ratio = benchmark > 0 ? Math.min(1.25, Math.max(0, w.u / benchmark)) : 0;
-    const a = angles[i];
-    return {
-      x: cx + r * ratio * Math.cos(a),
-      y: cy + r * ratio * Math.sin(a),
-      val: w.u,
-      target,
-      ratio,
-      cap: c
-    };
+    const has = c.tg > 0;
+    return { c, u: w.u, has, pct: has ? Math.round(w.u / c.tg * 100) : null, ratio: has ? Math.min(1, Math.max(0, w.u / c.tg)) : 0 };
   });
-
-  const polyStr = dataPoints.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
-
-  // Nhãn tên vốn và số giờ (tính toán offset chống tràn khung)
-  let labels = caps.map((c, i) => {
-    const a = angles[i];
-    const cos = Math.cos(a), sin = Math.sin(a);
-    const offset = r + 30;
-    const lx = cx + offset * cos;
-    const ly = cy + offset * sin;
-    const anchor = Math.abs(cos) < 0.25 ? "middle" : cos > 0 ? "start" : "end";
-    const w = wk(weekIdx, c.k);
-    const pct = c.tg > 0 ? Math.round(w.u / c.tg * 100) : null;
-    const statusColor = pct == null ? "var(--mu)" : pct >= 100 ? "var(--ok)" : pct >= 60 ? "var(--wa)" : "var(--bad)";
-
-    return `
-      <g>
-        <text x="${lx.toFixed(1)}" y="${(ly - 2).toFixed(1)}" text-anchor="${anchor}" font-size="11.5" font-weight="600" fill="var(--tx)">
-          ${esc(c.n)}
-        </text>
-        <text x="${lx.toFixed(1)}" y="${(ly + 12).toFixed(1)}" text-anchor="${anchor}" font-size="10" fill="${statusColor}">
-          ${r1(w.u)}h ${c.tg ? '/ ' + r1(c.tg) + 'h (' + pct + '%)' : '(chưa đặt MT)'}
-        </text>
-      </g>
-    `;
+  const pts = stats.map((s, i) => ({ s, x: cx + r * s.ratio * Math.cos(angles[i]), y: cy + r * s.ratio * Math.sin(angles[i]) }));
+  const polyStr = pts.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+  const dots = pts.map(p => {
+    const s = p.s, x = p.x.toFixed(1), y = p.y.toFixed(1);
+    if (!s.has) return `<circle cx="${x}" cy="${y}" r="4.5" fill="var(--card)" stroke="${s.c.c}" stroke-width="2" />`;
+    const ring = s.pct >= 100 ? `<circle cx="${x}" cy="${y}" r="8.5" fill="none" stroke="var(--ok-text)" stroke-width="1.8" />` : "";
+    return ring + `<circle cx="${x}" cy="${y}" r="4.5" fill="${s.c.c}" stroke="var(--card)" stroke-width="1.5" />`;
   }).join("");
 
-  // Tính điểm cân đối của bánh xe cuộc đời
-  const ratios = dataPoints.map(p => p.target > 0 ? Math.min(1, p.val / p.target) : Math.min(1, p.val / 8));
-  const avgR = ratios.reduce((a, b) => a + b, 0) / (ratios.length || 1);
-  const minR = Math.min(...ratios);
-  const balanceScore = Math.round((avgR * 0.6 + minR * 0.4) * 100);
-  const balanceLabel = balanceScore >= 80 ? "Bánh xe rất tròn và cân đối" : balanceScore >= 50 ? "Khá cân đối, cần nạp thêm vốn lõm" : "Bánh xe bị méo, cần tái cân bằng";
+  // Nhãn: cắt tên theo chỗ còn trống để không tràn khung, tên đầy đủ nằm trong <title>
+  const fs1 = numCaps > 10 ? 10 : 11.5, fs2 = numCaps > 10 ? 9 : 10.5, charW = fs1 * 0.6;
+  const labels = stats.map((s, i) => {
+    const cos = Math.cos(angles[i]), sin = Math.sin(angles[i]);
+    const lx = cx + (r + 32) * cos, ly = cy + (r + 32) * sin;
+    const anchor = Math.abs(cos) < 0.25 ? "middle" : cos > 0 ? "start" : "end";
+    const avail = anchor === "middle" ? 2 * Math.min(lx, VB - lx) : anchor === "start" ? VB - lx - 4 : lx - 4;
+    const maxCh = Math.max(6, Math.floor(avail / charW));
+    const name = s.c.n.length > maxCh ? s.c.n.slice(0, maxCh - 1).trimEnd() + "…" : s.c.n;
+    const statusColor = s.pct == null ? "var(--mu)" : s.pct >= 100 ? "var(--ok-text)" : s.pct >= 60 ? "var(--wa-text)" : "var(--bad)";
+    const sub = s.has ? `${r1(s.u)}h / ${r1(s.c.tg)}h (${s.pct}%)` : `${r1(s.u)}h (chưa đặt mục tiêu)`;
+    return `<g><title>${esc(s.c.n)}: ${sub}</title>
+      <text x="${lx.toFixed(1)}" y="${(ly - 2).toFixed(1)}" text-anchor="${anchor}" font-size="${fs1}" font-weight="600" fill="var(--tx)">${esc(name)}</text>
+      <text x="${lx.toFixed(1)}" y="${(ly + 12).toFixed(1)}" text-anchor="${anchor}" font-size="${fs2}" fill="${statusColor}">${sub}</text></g>`;
+  }).join("");
 
+  // Điểm cân bằng: chỉ tính các vốn đã đặt mục tiêu
+  const tg = stats.filter(s => s.has);
+  let balanceHtml;
+  if (!tg.length) {
+    balanceHtml = `<span class="pill pill-blush">🎯 Chưa đặt mục tiêu tuần</span>
+      <span style="color:var(--mu); font-size:12px;">Đặt số giờ ▲ Nạp mong muốn mỗi tuần cho từng loại vốn để bánh xe tính được điểm cân bằng.</span>
+      <button type="button" class="btn btn-sm btn-primary" onclick="goToTargets()">Đặt mục tiêu</button>`;
+  } else if (stats.every(s => s.u === 0)) {
+    // Chưa có giờ Nạp nào: chấm 0% và kết luận "bánh xe bị méo" là sai
+    balanceHtml = `<span class="pill pill-blush">🎯 Chưa có dữ liệu để tính điểm</span>
+      <span style="color:var(--mu); font-size:12px;">Tuần này chưa ghi giờ ▲ Nạp nào.</span>`;
+  } else {
+    const ratios = tg.map(s => Math.min(1, s.u / s.c.tg));
+    const avgR = ratios.reduce((a, b) => a + b, 0) / ratios.length, minR = Math.min(...ratios);
+    const score = Math.round((avgR * 0.6 + minR * 0.4) * 100);
+    const label = score >= 80 ? "Bánh xe rất tròn và cân đối" : score >= 50 ? "Khá cân đối, cần nạp thêm vốn còn thiếu" : "Bánh xe bị méo, cần tái cân bằng";
+    const weakest = tg[ratios.indexOf(minR)];
+    balanceHtml = `<span class="pill pill-blush">🎯 Điểm cân bằng bánh xe: <b>${score}%</b></span>
+      <span style="color:var(--mu); font-size:12px;">${label}.${score < 80 ? ` Yếu nhất: <b>${esc(weakest.c.n)}</b> (${Math.round(minR * 100)}%).` : ""}${tg.length < stats.length ? ` Chưa tính ${stats.length - tg.length} vốn không có mục tiêu.` : ""}</span>`;
+  }
+
+  const aria = "Bánh xe cuộc đời: " + stats.map(s => `${s.c.n} ${s.has ? s.pct + "%" : "chưa đặt mục tiêu"}`).join(", ");
   return `
     <div class="radar-box" style="flex-direction:column; gap:12px;">
-      <svg class="radar-svg" viewBox="0 0 500 330" style="max-width:440px; overflow:visible;">
+      <svg class="radar-svg" viewBox="0 0 ${VB} 330" role="img" aria-label="${esc(aria)}" style="max-width:520px; overflow:visible;">
         ${levelPolygons}
         ${axisLines}
         ${levelLabels}
         <polygon points="${polyStr}" fill="rgba(224, 163, 187, 0.28)" stroke="var(--ac)" stroke-width="2.5" />
-        ${dataPoints.map(p => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4.5" fill="${p.cap.c}" stroke="var(--card)" stroke-width="1.5" />`).join("")}
+        ${dots}
         ${labels}
       </svg>
+      <div style="font-size:11.5px; color:var(--mu); text-align:center;">Điểm nằm trên vòng 100% là đã đạt mục tiêu (có viền xanh nếu đạt hoặc vượt) · chấm rỗng: chưa đặt mục tiêu</div>
       <div style="display:flex; justify-content:center; align-items:center; gap:12px; font-size:12.5px; margin-top:6px; flex-wrap:wrap; text-align:center;">
-        <span class="pill pill-blush">🎯 Điểm cân bằng bánh xe: <b>${balanceScore}%</b></span>
-        <span style="color:var(--mu); font-size:12px;">${balanceLabel}</span>
+        ${balanceHtml}
       </div>
     </div>
   `;
@@ -1644,6 +1946,18 @@ function renderRadarChartSVG(weekIdx) {
 /* ==========================================================================
    6. TÍNH NĂNG 8: SUNDAY WEEKLY REVIEW MODAL (TỔNG KẾT TUẦN)
    ========================================================================== */
+function closeReviewModal() {
+  const ov = $("reviewModalOverlay"), wasOpen = ov.classList.contains("open");
+  ov.classList.remove("open");
+  if (wasOpen && LF && LF.focus) {
+    try { LF.focus(); } catch (e) {}
+  }
+}
+
+function handleReviewBackdropClick(e) {
+  if (e.target.id === "reviewModalOverlay") closeReviewModal();
+}
+
 function openWeeklyReviewModal(wIdx = sel) {
   wIdx = Math.max(0, Math.min(W.length - 1, wIdx));
   const wStart = W[wIdx];
@@ -1659,18 +1973,61 @@ function openWeeklyReviewModal(wIdx = sel) {
     totalD += w.d;
   });
   const totalAlloc = al(wIdx);
+  const freeTime = Math.max(0, 168 - totalAlloc);
   const netEnergy = totalU - totalD;
   const noData = evs(wIdx).length === 0;
 
+  // Thống kê chi tiết từng vốn
   const capStats = S.caps.map(c => {
     const w = wk(wIdx, c.k);
     const target = c.tg || 0;
-    const ratio = target > 0 ? (w.u / target) : 1;
+    const ratio = target > 0 ? (w.u / target) : (w.u > 0 ? 1 : 0);
     return { c, u: w.u, d: w.d, target, ratio, diff: w.u - target };
   });
 
-  const starCap = [...capStats].sort((a, b) => b.ratio - a.ratio)[0];
+  // Phân tích áp lực hàng ngày trong tuần
+  const dailyBreakdown = [];
+  for (let di = 0; di < 7; di++) {
+    const dDate = ad(wStart, di);
+    const dStr = ky(dDate);
+    const dayEvs = S.ev[dStr] || [];
+    let du = 0, dd = 0;
+    dayEvs.forEach(e => { if (e.m === "u") du += e.h; else dd += e.h; });
+    dailyBreakdown.push({ dayName: DN_VI[di], dStr, dd, du });
+  }
+  const peakDrain = [...dailyBreakdown].sort((a, b) => b.dd - a.dd)[0];
+  const peakRecharge = [...dailyBreakdown].sort((a, b) => b.du - a.du)[0];
+
+  const starCap = [...capStats].filter(x => x.u > 0).sort((a, b) => (b.ratio || 0) - (a.ratio || 0))[0];
   const laggingCap = [...capStats].filter(x => x.target > 0).sort((a, b) => a.diff - b.diff)[0];
+  const neglectedCaps = capStats.filter(x => x.u === 0 && x.d === 0);
+  const drainExceedingCaps = capStats.filter(x => x.d > 0 && x.d > x.u);
+
+  // Nhận định Cán cân năng lượng
+  let energyInsight = "";
+  if (noData) {
+    energyInsight = "Chưa có hoạt động nào được ghi nhận trong tuần này. Hãy ghi lại các thói quen hàng ngày để ứng dụng đo lường và đưa ra nhận định chính xác.";
+  } else if (netEnergy >= 4) {
+    energyInsight = `<b>Tái tạo năng lượng xuất sắc (Thặng dư +${r1(netEnergy)}h):</b> Tổng nạp (${r1(totalU)}h) vượt trội hoàn toàn so với tiêu hao (${r1(totalD)}h). Bạn đang có mức tích lũy pin sinh học dồi dào, tâm lý tích cực và thể lực vững vàng.`;
+  } else if (netEnergy >= 0) {
+    energyInsight = `<b>Cán cân năng lượng cân bằng lành mạnh (+${r1(netEnergy)}h):</b> Hoạt động tái tạo (${r1(totalU)}h) vừa đủ bù đắp năng lượng tiêu hao (${r1(totalD)}h). Cơ thể ở trạng thái ổn định, không có tích tụ kiệt sức.`;
+  } else if (netEnergy >= -4) {
+    energyInsight = `<b>Thâm hụt năng lượng nhẹ (${r1(netEnergy)}h):</b> Tiêu hao (${r1(totalD)}h) bắt đầu vượt lượng nạp (${r1(totalU)}h). Hãy chủ động tăng thời lượng ngủ và thư giãn để tránh mệt mỏi tích lũy.`;
+  } else {
+    energyInsight = `<b>Cảnh báo mức độ kiệt sức cao (-${r1(Math.abs(netEnergy))}h):</b> Áp lực và năng lượng tiêu hao (${r1(totalD)}h) quá nặng nề so với phục hồi (${r1(totalU)}h). Nguy cơ kiệt sức sinh học (burnout) rất cao nếu tiếp tục duy trì nhịp độ này.`;
+  }
+
+  // Nhận định Quỹ 168 giờ
+  let timeInsight = "";
+  if (noData) {
+    timeInsight = "Quỹ 168 giờ hoàn toàn trống.";
+  } else if (totalAlloc > 168) {
+    timeInsight = `<b>Quá tải quỹ thời gian (+${r1(totalAlloc - 168)}h):</b> Bạn đã phân bổ ${r1(totalAlloc)}h / 168h (${Math.round(totalAlloc/168*100)}%). Lịch trình đang bị dồn ép quá mức, lấn chiếm vào thời gian nghỉ ngơi và sinh hoạt cơ bản.`;
+  } else if (totalAlloc >= 110) {
+    timeInsight = `<b>Kiểm soát quỹ thời gian tối ưu (${r1(totalAlloc)}h / 168h):</b> Lịch trình được tổ chức chặt chẽ (${Math.round(totalAlloc/168*100)}%), đồng thời vẫn giữ được ${r1(freeTime)}h vùng đệm tự do cho sinh hoạt cá nhân.`;
+  } else {
+    timeInsight = `<b>Quỹ thời gian rất thông thoáng (${r1(totalAlloc)}h / 168h):</b> Bạn còn ${r1(freeTime)}h chưa phân bổ (${Math.round(freeTime/168*100)}%). Bạn hoàn toàn có thể chủ động thêm các mục tiêu phát triển chuyên môn hoặc rèn luyện thể chất.`;
+  }
 
   const html = `
     <div style="display:flex; flex-direction:column; gap:14px;">
@@ -1689,19 +2046,19 @@ function openWeeklyReviewModal(wIdx = sel) {
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
           ${CW >= 0 && wIdx !== CW ? `
-            <button type="button" class="btn btn-sm btn-ghost" onclick="openWeeklyReviewModal(CW)" style="color:var(--ac); font-weight:600; font-size:12px;">
+            <button type="button" class="btn btn-sm btn-ghost" onclick="openWeeklyReviewModal(CW)" style="color:var(--ac-text); font-weight:600; font-size:12px;">
               Về tuần hiện tại (W${CW + 1})
             </button>
-          ` : `<span class="pill pill-ok" style="font-size:11px;">Tuần hiện tại</span>`}
+          ` : wIdx === CW ? `<span class="pill pill-ok" style="font-size:11px;">Tuần hiện tại</span>` : ""}
         </div>
       </div>
 
-      <!-- CÁC THẺ CHỈ SỐ -->
+      <!-- 3 THẺ CHỈ SỐ CỐT LÕI -->
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
         <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
-          <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Tổng Nạp / Rút</div>
+          <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Tổng Nạp / Tiêu</div>
           <div style="font:700 20px Georgia, serif; margin-top:4px;">
-            <span style="color:var(--ok)">▲${r1(totalU)}h</span> · <span style="color:var(--bad)">▼${r1(totalD)}h</span>
+            <span style="color: var(--ok-text)">▲${r1(totalU)}h</span> · <span style="color:var(--bad)">▼${r1(totalD)}h</span>
           </div>
           <small style="color:var(--tx-sec)">Cán cân: <b>${netEnergy >= 0 ? '+' : ''}${r1(netEnergy)}h</b></small>
         </div>
@@ -1710,19 +2067,20 @@ function openWeeklyReviewModal(wIdx = sel) {
           <div style="font:700 20px Georgia, serif; margin-top:4px;">
             ${r1(totalAlloc)}h <span style="font-size:13px; font-weight:400; color:var(--mu);">(${Math.round(totalAlloc/168*100)}%)</span>
           </div>
-          <small style="color:${totalAlloc > 168 ? 'var(--bad)' : 'var(--ok)'}">
-            ${totalAlloc > 168 ? 'Vượt giới hạn 168h!' : `Còn ${r1(168 - totalAlloc)}h chưa phân bổ`}
+          <small style="color:${totalAlloc > 168 ? 'var(--bad)' : 'var(--ok-text)'}">
+            ${totalAlloc > 168 ? 'Vượt giới hạn 168h!' : `Còn ${r1(freeTime)}h tự do`}
           </small>
         </div>
         <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
           <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Đánh giá pin tuần</div>
-          <div style="font:700 20px Georgia, serif; margin-top:4px; color:${netEnergy >= 0 ? 'var(--ok)' : 'var(--bad)'}">
-            ${noData ? '— Chưa có dữ liệu' : netEnergy >= 0 ? '🔋 Nạp pin tốt' : '🪫 Thâm hụt pin'}
+          <div style="font:700 20px Georgia, serif; margin-top:4px; color:${noData ? 'var(--mu)' : netEnergy >= 0 ? 'var(--ok-text)' : 'var(--bad)'}">
+            ${noData ? '— Chưa có dữ liệu' : netEnergy >= 4 ? '🔋 Nạp pin xuất sắc' : netEnergy >= 0 ? '🔋 Pin ổn định' : '🪫 Thâm hụt pin'}
           </div>
-          <small style="color:var(--tx-sec)">${noData ? 'Hãy ghi hoạt động để có đánh giá' : netEnergy >= 0 ? 'Tuần tái tạo năng lượng hiệu quả' : 'Cần bù đắp nghỉ ngơi tuần sau'}</small>
+          <small style="color:var(--tx-sec)">${noData ? 'Ghi hoạt động để đánh giá' : netEnergy >= 0 ? 'Cân bằng phục hồi tốt' : 'Cần bù đắp nghỉ ngơi tuần tới'}</small>
         </div>
       </div>
 
+      <!-- BÁNH XE CUỘC ĐỜI CỦA TUẦN ĐÓ -->
       <div style="border:1px solid var(--bd); border-radius:var(--radius-md); padding:12px; background:var(--card);">
         <div style="font-weight:600; font-size:14px; margin-bottom:4px; text-align:center;">
           Bánh Xe Cuộc Đời · Tuần W${wIdx + 1}
@@ -1730,22 +2088,71 @@ function openWeeklyReviewModal(wIdx = sel) {
         ${renderRadarChartSVG(wIdx)}
       </div>
 
-      <div style="display:flex; flex-direction:column; gap:8px; font-size:13.5px;">
-        ${starCap ? `
-          <div style="padding:10px 14px; background:var(--ok-soft); border-radius:var(--radius-md); border-left:4px solid var(--ok);">
-            ⭐ <b>Điểm sáng của tuần:</b> Vốn <b>${esc(starCap.c.n)}</b> đạt <b>${r1(starCap.u)}h</b> (đạt ${Math.round(starCap.ratio*100)}% mục tiêu).
+      ${noData ? `
+      <!-- Tuần chưa có hoạt động: không đưa nhận định hay khuyến nghị dựa trên dữ liệu rỗng -->
+      <div style="padding:16px; background:var(--card-subtle); border-radius:var(--radius-md); border:1px dashed var(--bd); display:flex; flex-direction:column; gap:8px; align-items:flex-start;">
+        <b style="font-size:14px;">📭 Tuần W${wIdx + 1} chưa có hoạt động nào</b>
+        <span style="font-size:13px; color:var(--tx-sec); line-height:1.5;">Ghi lại các hoạt động trong tuần bằng thanh ghi nhanh hoặc nút “+ Thêm” để nhận nhận định về cán cân năng lượng, quỹ 168 giờ và kế hoạch cho tuần tới.</span>
+        <button type="button" class="btn btn-sm btn-primary" onclick="goToQuickCapture()">Ghi hoạt động</button>
+      </div>
+      ` : `
+      <!-- PHÂN TÍCH CHUYÊN SÂU & INSIGHTS ĐA CHIỀU -->
+      <div style="display:flex; flex-direction:column; gap:10px; font-size:13px;">
+        <!-- Insight 1: Cán cân năng lượng -->
+        <div style="padding:12px 14px; background:var(--card-subtle); border-radius:var(--radius-md); border:1px solid var(--bd); border-left:4px solid ${netEnergy >= 0 ? 'var(--ok)' : 'var(--bad)'};">
+          <div style="font-weight:600; font-size:13.5px; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+            <span>${netEnergy >= 0 ? '🔋' : '⚡'} Cán Cân Sinh Học & Nguy Cơ Kiệt Sức</span>
           </div>
-        ` : ''}
-        ${laggingCap && laggingCap.diff < 0 ? `
-          <div style="padding:10px 14px; background:var(--bad-soft); border-radius:var(--radius-md); border-left:4px solid var(--bad);">
-            ⚠️ <b>Cần bổ sung gấp:</b> Vốn <b>${esc(laggingCap.c.n)}</b> chỉ đạt ${r1(laggingCap.u)}h / ${r1(laggingCap.target)}h (thiếu hụt <b>${r1(Math.abs(laggingCap.diff))}h</b>).
+          <div style="color:var(--tx); line-height:1.5;">${energyInsight}</div>
+          ${peakDrain && peakDrain.dd > 2 ? `<div style="font-size:12px; color:var(--mu); margin-top:6px;">• Ngày chịu áp lực lớn nhất: <b>${peakDrain.dayName}</b> (tiêu hao ${r1(peakDrain.dd)}h).</div>` : ''}
+          ${peakRecharge && peakRecharge.du > 2 ? `<div style="font-size:12px; color:var(--mu); margin-top:2px;">• Ngày tái tạo năng lượng tốt nhất: <b>${peakRecharge.dayName}</b> (nạp +${r1(peakRecharge.du)}h).</div>` : ''}
+        </div>
+
+        <!-- Insight 2: Quỹ 168h -->
+        <div style="padding:12px 14px; background:var(--card-subtle); border-radius:var(--radius-md); border:1px solid var(--bd); border-left:4px solid var(--c-cyan);">
+          <div style="font-weight:600; font-size:13.5px; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
+            <span>⏳ Quản Trị Quỹ 168 Giờ</span>
           </div>
-        ` : ''}
+          <div style="color:var(--tx); line-height:1.5;">${timeInsight}</div>
+        </div>
+
+        <!-- Insight 3: Đánh giá từng nguồn vốn -->
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          ${starCap ? `
+            <div style="padding:10px 14px; background:var(--ok-soft); border-radius:var(--radius-md); border-left:4px solid var(--ok);">
+              ⭐ <b>Điểm sáng của tuần:</b> Vốn <b>${esc(starCap.c.n)}</b> đạt <b>${r1(starCap.u)}h</b>${starCap.target ? ' (hoàn thành ' + Math.round(starCap.ratio*100) + '% mục tiêu)' : ''} — là nguồn cảm hứng bồi đắp lớn nhất tuần này.
+            </div>
+          ` : ''}
+          ${laggingCap && laggingCap.diff < 0 ? `
+            <div style="padding:10px 14px; background:var(--bad-soft); border-radius:var(--radius-md); border-left:4px solid var(--bad);">
+              ⚠️ <b>Cần tiếp sức khẩn cấp:</b> Vốn <b>${esc(laggingCap.c.n)}</b> chỉ đạt <b>${r1(laggingCap.u)}h</b> / ${r1(laggingCap.target)}h (thiếu hụt <b>${r1(Math.abs(laggingCap.diff))}h</b>). Trục này đang làm bánh xe cuộc đời bị lệch.
+            </div>
+          ` : ''}
+          ${drainExceedingCaps.length ? `
+            <div style="padding:10px 14px; background:var(--wa-soft); border-radius:var(--radius-md); border-left:4px solid var(--wa);">
+              ⚡ <b>Vốn chịu tải cao (Tiêu > Nạp):</b> <b>${drainExceedingCaps.map(x => esc(x.c.n) + ' (tiêu ' + r1(x.d) + 'h > nạp ' + r1(x.u) + 'h)').join(', ')}</b>.
+            </div>
+          ` : ''}
+          ${neglectedCaps.length ? `
+            <div style="padding:8px 12px; background:var(--card-subtle); border-radius:var(--radius-md); border:1px solid var(--bd); font-size:12.5px; color:var(--mu);">
+              💤 <b>Chưa phân bổ thời gian:</b> Tuần này bạn chưa dành thời lượng cho <b>${neglectedCaps.map(x => esc(x.c.n)).join(', ')}</b>.
+            </div>
+          ` : ''}
+        </div>
       </div>
 
-      <div style="padding:12px; background:var(--c-blush); border-radius:var(--radius-md); font-size:13px; color:var(--on-blush);">
-        💡 <b>Đề xuất kế hoạch tuần tới:</b> Hãy ưu tiên lên lịch ngay cho <b>${laggingCap ? esc(laggingCap.c.n) : 'các sở thích cá nhân'}</b> vào Thứ 2 hoặc Thứ 4 tới để cân bằng bánh xe cuộc sống.
+      <!-- Insight 4: Kế hoạch hành động cụ thể cho tuần tới -->
+      <div style="padding:14px; background:var(--c-blush); border-radius:var(--radius-md); font-size:13px; color:var(--on-blush); border:1px solid var(--ac);">
+        <div style="font-weight:700; font-size:13.5px; margin-bottom:6px; display:flex; align-items:center; gap:6px;">
+          <span>🎯 Kế Hoạch Hành Động Tuần Tới</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:4px; line-height:1.5;">
+          <div>1. <b>Ưu tiên nguồn vốn yếu:</b> Lên lịch ngay 1–2 buổi cho <b>${laggingCap ? esc(laggingCap.c.n) : 'hoạt động phục hồi'}</b> vào Thứ 3 hoặc Thứ 5.</div>
+          <div>2. <b>Bảo vệ năng lượng:</b> ${peakDrain && peakDrain.dd > 3 ? `Nếu <b>${peakDrain.dayName}</b> tiếp tục là ngày bận rộn, hãy chủ động nghỉ ngơi sớm vào tối hôm đó.` : 'Giữ thói quen ngủ đủ giấc để duy trì pin năng lượng dương.'}</div>
+          <div>3. <b>Giữ vững đà tăng trưởng:</b> Tiếp tục phát huy thế mạnh ở vốn <b>${starCap ? esc(starCap.c.n) : 'chủ lực'}</b>.</div>
+        </div>
       </div>
+      `}
 
       <div style="display:flex; justify-content:flex-end; gap:8px;">
         <button type="button" class="btn" onclick="copyReviewToClipboard(${wIdx})">📋 Sao chép tóm tắt</button>
@@ -1793,32 +2200,37 @@ function switchTab(tabId) {
   draw(true);
 }
 
+// Từ bánh xe / bản tổng kết: mở tab Danh mục vốn và đặt con trỏ vào ô mục tiêu đầu tiên
+function goToTargets() {
+  closeReviewModal();
+  switchTab("set");
+  window.scrollTo(0, 0);
+  const inp = document.querySelector('#v input[data-target-input]');
+  if (inp) { inp.focus(); inp.select(); }
+}
+
+// Từ bản tổng kết tuần trống: đóng popup và đưa con trỏ về thanh ghi nhanh
+function goToQuickCapture() {
+  closeReviewModal();
+  const inp = $("nlpInput");
+  window.scrollTo(0, 0);
+  if (inp) inp.focus();
+}
+
 function getThemePreference() {
-  return localStorage.getItem("lc_theme") || "auto";
+  try { return localStorage.getItem("lc_theme") || "auto"; } catch (e) { return "auto"; }
 }
 
 function setThemePreference(mode) {
   const root = document.documentElement;
   if (mode === "auto") {
     root.removeAttribute("data-theme");
-    localStorage.setItem("lc_theme", "auto");
+    try { localStorage.setItem("lc_theme", "auto"); } catch (e) {}
   } else {
     root.setAttribute("data-theme", mode);
-    localStorage.setItem("lc_theme", mode);
+    try { localStorage.setItem("lc_theme", mode); } catch (e) {}
   }
-  updateThemeButton();
   renderSettingsModal();
-}
-
-function toggleTheme() {
-  const cur = getThemePreference();
-  const isDarkNow = document.documentElement.getAttribute("data-theme") === "dark" ||
-    (!document.documentElement.getAttribute("data-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
-  setThemePreference(isDarkNow ? "light" : "dark");
-}
-
-function updateThemeButton() {
-  // Theme indicator in settings or elsewhere
 }
 
 function openSettingsModal() {
@@ -1828,8 +2240,9 @@ function openSettingsModal() {
 }
 
 function closeSettingsModal() {
-  $("settingsModalOverlay").classList.remove("open");
-  if (LF && LF.focus) {
+  const ov = $("settingsModalOverlay"), wasOpen = ov.classList.contains("open");
+  ov.classList.remove("open");
+  if (wasOpen && LF && LF.focus) {
     try { LF.focus(); } catch (e) {}
   }
 }
@@ -1856,128 +2269,572 @@ function setBurnoutThreshold(val) {
 function resetToDefaultData() {
   if (!confirm("⚠️ CẢNH BÁO NGUY HIỂM:\nBạn có chắc chắn muốn xóa TOÀN BỘ dữ liệu đã ghi và đưa ứng dụng về trạng thái ban đầu?\n\nKhuyến nghị: Hãy nhấn 'Xuất tệp sao lưu (.json)' trước khi xóa!")) return;
   if (!confirm("Xác nhận lần cuối: Mọi hoạt động ghi chép sẽ bị xóa vĩnh viễn trên thiết bị này. Tiếp tục?")) return;
+  const keepLb = S.lb, keepGdel = S.gdel || [], oldCfg = S.cfg || {};
   S = defState();
+  S.ev = {};
+  S.lb = keepLb;
+  // Giữ liên kết Google Calendar và các lệnh xóa đang chờ
+  S.gdel = keepGdel;
+  S.cfg.gcalAutoSync = oldCfg.gcalAutoSync !== false;
+  if (oldCfg.gcalClientId) S.cfg.gcalClientId = oldCfg.gcalClientId;
   save();
   draw(true);
   closeSettingsModal();
-  showToast("Đã đưa dữ liệu về trạng thái ban đầu!", "ok");
+  showToast("Đã xóa toàn bộ hoạt động. Danh mục vốn được đặt lại mặc định.", "ok");
+}
+
+/* ==========================================================================
+   7.1 GOOGLE CALENDAR SYNC MODULE
+   ========================================================================== */
+const GCAL_COLOR_MAP = {
+  sk: "10", // Basil (Xanh lá)
+  qh: "4",  // Flamingo (Hồng)
+  tn: "3",  // Grape (Tím)
+  kn: "7",  // Peacock (Xanh dương / Cyan)
+  tc: "5"   // Banana (Vàng)
+};
+
+let gcalTokenClient = null;
+const GCAL_SCOPE = "https://www.googleapis.com/auth/calendar.events";
+// Lỗi cấu hình gần nhất (API chưa bật, chưa cấp quyền lịch…) để hiện trên badge; xóa khi đẩy thành công
+let gcalConfigErr = "", gcalLastFail = "";
+
+function getGCalToken() {
+  try {
+    const token = localStorage.getItem("gcal_token");
+    const exp = parseInt(localStorage.getItem("gcal_token_exp") || "0", 10);
+    if (!token) return null;
+    if (exp && Date.now() > exp) {
+      return null;
+    }
+    return token;
+  } catch (e) {
+    return null;
+  }
+}
+
+function isGCalConnected() {
+  return !!getGCalToken();
+}
+
+// Đã từng kết nối (token có thể đã hết hạn). Người dùng cũ chưa có cờ này thì suy ra từ token đã lưu.
+try { if (localStorage.getItem("gcal_token") && !localStorage.getItem("gcal_linked")) localStorage.setItem("gcal_linked", "1"); } catch (e) {}
+function gcalLinked() {
+  try { return localStorage.getItem("gcal_linked") === "1"; } catch (e) { return false; }
+}
+function gcalActive() {
+  return gcalLinked() && !(S.cfg && S.cfg.gcalAutoSync === false);
+}
+function clearGCalToken() {
+  try { localStorage.removeItem("gcal_token"); localStorage.removeItem("gcal_token_exp"); } catch (e) {}
+}
+
+function initGCalTokenClient(onSuccess) {
+  const clientId = (S.cfg && S.cfg.gcalClientId) || localStorage.getItem("gcal_client_id") || "";
+  if (!clientId) {
+    showToast("Vui lòng nhập Google Client ID trước khi kết nối!", "bad");
+    return false;
+  }
+  if (typeof google === "undefined" || !google.accounts || !google.accounts.oauth2) {
+    showToast("Thư viện Google Identity chưa sẵn sàng. Vui lòng thử lại sau vài giây!", "bad");
+    return false;
+  }
+  try {
+    gcalTokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: clientId.trim(),
+      scope: GCAL_SCOPE,
+      callback: (resp) => {
+        if (resp.error) {
+          showToast("Lỗi xác thực Google: " + resp.error, "bad");
+          return;
+        }
+        // Màn hình của Google cho phép bỏ tick từng quyền: không có quyền lịch thì token vô dụng
+        if (resp.access_token && google.accounts.oauth2.hasGrantedAllScopes && !google.accounts.oauth2.hasGrantedAllScopes(resp, GCAL_SCOPE)) {
+          gcalConfigErr = "Bạn chưa cho phép truy cập Google Calendar. Bấm Kết nối lại và tick ô quyền Google Calendar trên màn hình của Google.";
+          showToast(gcalConfigErr, "bad");
+          renderSettingsModal();
+          updateSyncBadge();
+          return;
+        }
+        if (resp.access_token) {
+          gcalConfigErr = "";
+          const expTime = Date.now() + (parseInt(resp.expires_in, 10) || 3600) * 1000;
+          localStorage.setItem("gcal_token", resp.access_token);
+          localStorage.setItem("gcal_token_exp", String(expTime));
+          localStorage.setItem("gcal_linked", "1");
+          showToast("✓ Đã kết nối Google Calendar thành công!", "ok");
+          renderSettingsModal();
+          if (onSuccess) onSuccess();
+          gcalFlush({ report: true });
+        }
+      }
+    });
+    return true;
+  } catch (e) {
+    showToast("Lỗi khởi tạo Google Client: " + e.message, "bad");
+    return false;
+  }
+}
+
+function connectGoogleCalendar() {
+  const inp = $("inpGCalClientId");
+  if (inp && inp.value.trim()) {
+    S.cfg = S.cfg || {};
+    S.cfg.gcalClientId = inp.value.trim();
+    localStorage.setItem("gcal_client_id", S.cfg.gcalClientId);
+    save();
+  }
+  const ok = initGCalTokenClient();
+  if (!ok) return;
+  // Đã cấp quyền trước đó thì không bắt đi qua màn hình xin quyền đầy đủ lần nữa
+  gcalTokenClient.requestAccessToken({ prompt: gcalLinked() ? "" : "consent" });
+}
+
+function disconnectGoogleCalendar() {
+  let token = null;
+  try { token = localStorage.getItem("gcal_token"); } catch (e) {}
+  try { if (token && window.google && google.accounts && google.accounts.oauth2) google.accounts.oauth2.revoke(token, () => {}); } catch (e) {}
+  clearGCalToken();
+  try { localStorage.removeItem("gcal_linked"); } catch (e) {}
+  showToast("Đã ngắt kết nối Google Calendar", "ok");
+  renderSettingsModal();
+  updateSyncBadge();
+}
+
+function toggleGCalAutoSync(enabled) {
+  S.cfg = S.cfg || {};
+  S.cfg.gcalAutoSync = enabled;
+  save();
+  showToast(enabled ? "Đã bật tự động đồng bộ sang Google Calendar" : "Đã tắt tự động đồng bộ", "ok");
+  updateSyncBadge();
+  if (enabled) gcalFlush();
+}
+
+function buildGCalEventPayload(eventObj, dateStr) {
+  const dur = eventObj.h || 1;
+  const cap = CM(eventObj.c);
+  const capName = cap ? cap.n : "Khác";
+  const modeText = eventObj.m === "u" ? "▲ Nạp vốn" : "▼ Tiêu vốn";
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Ho_Chi_Minh";
+  const base = {
+    summary: `${eventObj.m === 'u' ? '▲' : '▼'} ${eventObj.t}`,
+    description: `Life Capital · Loại vốn: [${capName}] · Tác động: ${modeText} (${r1(dur)}h)`,
+    colorId: GCAL_COLOR_MAP[eventObj.c] || "1"
+  };
+  const day = new Date(dateStr + "T00:00");
+
+  // Chưa xếp giờ → sự kiện cả ngày, không chiếm lịch bận
+  if (!eventObj.s) {
+    return { ...base, start: { date: dateStr }, end: { date: ky(ad(day, 1)) }, transparency: "transparent" };
+  }
+
+  // Tính bằng Date để 22:00 + 2h → 00:00 hôm sau (không cắt về 23:00)
+  const [sh, sm] = eventObj.s.split(":").map(Number);
+  const startD = new Date(day.getFullYear(), day.getMonth(), day.getDate(), sh, sm);
+  const endD = new Date(day.getFullYear(), day.getMonth(), day.getDate(), sh, sm + Math.round(dur * 60));
+  const fmt = d => `${ky(d)}T${pad(d.getHours())}:${pad(d.getMinutes())}:00`;
+  return {
+    ...base,
+    start: { dateTime: fmt(startD), timeZone: tz },
+    end: { dateTime: fmt(endD), timeZone: tz }
+  };
+}
+
+/* --- Hàng đợi đồng bộ: mọi thay đổi chỉ đánh dấu, gcalFlush() đẩy lên tuần tự ---
+   e.ds  : sự kiện cần POST (chưa có gid) hoặc PATCH (đã có gid); tăng dần mỗi lần sửa
+   S.gdel: gid đang chờ DELETE */
+let gcalFlushing = false, gcalRerun = false, gcalRetryT = null, gcalLockRetryT = null;
+
+function markPending(e) {
+  if (e && !e.demo && gcalActive()) e.ds = (e.ds || 0) + 1;
+}
+// Lệnh xóa luôn được ghi lại khi đã liên kết, kể cả khi tự động đồng bộ đang tắt:
+// nếu không, sự kiện trên Google Calendar sẽ nằm lại vĩnh viễn (lỗi UAT xóa chuỗi)
+function queueDelete(gid) {
+  if (gid && gcalLinked() && !S.gdel.includes(gid)) S.gdel.push(gid);
+}
+function gcalPendingCount() {
+  return S.gdel.length + Object.values(S.ev).reduce((n, l) => n + l.filter(e => e.ds).length, 0);
+}
+
+const GCAL_API = "https://www.googleapis.com/calendar/v3/calendars/primary/events";
+async function gcalFetch(method, path, token, body) {
+  // Quá 20 giây không phản hồi thì coi như lỗi mạng (thử lại sau), tránh treo và giữ khóa mãi
+  const ctrl = typeof AbortController === "function" ? new AbortController() : null;
+  const timer = ctrl ? setTimeout(() => ctrl.abort(), 20000) : null;
+  try {
+    const res = await fetch(GCAL_API + path, {
+      method,
+      headers: { "Authorization": `Bearer ${token}`, ...(body ? { "Content-Type": "application/json" } : {}) },
+      ...(body ? { body: JSON.stringify(body) } : {}),
+      ...(ctrl ? { signal: ctrl.signal } : {})
+    });
+    const data = res.status === 204 ? null : await res.json().catch(() => null);
+    return { ok: res.ok, status: res.status, data };
+  } catch (err) {
+    console.warn("Lỗi mạng khi gọi Google Calendar:", err);
+    return { ok: false, status: 0, data: null };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+// "ok" | "auth" (401: cần kết nối lại) | "retry" (mạng, giới hạn tần suất, lỗi máy chủ) | "fail" (Google từ chối dữ liệu)
+// "ok" | "auth" (401: cần kết nối lại) | "retry" (mạng, giới hạn tần suất, lỗi máy chủ)
+// | "config" (403 do cấu hình: API chưa bật, chưa cấp quyền lịch… sửa xong thì gửi lại được)
+// | "fail" (Google từ chối dữ liệu của riêng sự kiện này)
+function gcalOutcome(r) {
+  if (r.ok) return "ok";
+  if (r.status === 401) return "auth";
+  const err = (r.data && r.data.error) || {};
+  const reasons = [
+    ...(err.errors || []).map(x => x.reason),
+    ...(err.details || []).map(x => x.reason)
+  ].filter(Boolean).join(" ");
+  if (r.status === 0 || r.status === 429 || r.status >= 500 || (r.status === 403 && /rateLimit|quota/i.test(reasons))) return "retry";
+  if (r.status === 403) {
+    if (/accessNotConfigured|SERVICE_DISABLED/i.test(reasons)) {
+      gcalConfigErr = "Google Calendar API chưa được bật cho ứng dụng này. Nhóm phát triển cần vào Google Cloud Console → APIs & Services → Library → Google Calendar API → Enable, rồi bấm vào badge trên thanh tiêu đề để gửi lại.";
+    } else if (/insufficientPermissions|SCOPE_INSUFFICIENT/i.test(reasons)) {
+      clearGCalToken();
+      gcalConfigErr = "Bạn chưa cho phép truy cập Google Calendar. Bấm Kết nối lại và tick ô quyền Google Calendar trên màn hình của Google.";
+    } else {
+      gcalConfigErr = "Google từ chối truy cập lịch (403" + (err.message ? ": " + err.message : "") + ").";
+    }
+    return "config";
+  }
+  gcalLastFail = (r.status || "") + (err.message ? " " + err.message : "");
+  return "fail";
+}
+
+async function gcalCreateEvent(e, dateStr, token) {
+  const r = await gcalFetch("POST", "", token, buildGCalEventPayload(e, dateStr));
+  if (r.ok && r.data && r.data.id) e.gid = r.data.id;
+  return gcalOutcome(r);
+}
+
+async function gcalUpdateEvent(e, dateStr, token) {
+  const p = buildGCalEventPayload(e, dateStr);
+  // PATCH gộp các object con: xóa trường cũ khi đổi giữa sự kiện cả ngày và sự kiện có giờ
+  if (p.start.date) { p.start.dateTime = p.end.dateTime = p.start.timeZone = p.end.timeZone = null; }
+  else { p.start.date = p.end.date = null; p.transparency = "opaque"; }
+  const r = await gcalFetch("PATCH", "/" + encodeURIComponent(e.gid), token, p);
+  if (r.status === 404 || r.status === 410) { delete e.gid; return gcalCreateEvent(e, dateStr, token); }
+  return gcalOutcome(r);
+}
+
+async function gcalDeleteEvent(gid, token) {
+  const r = await gcalFetch("DELETE", "/" + encodeURIComponent(gid), token);
+  return r.status === 404 || r.status === 410 ? "ok" : gcalOutcome(r);
+}
+
+const evSig = e => [e.t, e.s, e.h, e.c, e.m].join("|");
+
+// Ghi nhận kết quả vào state hiện tại. S có thể đã bị thay bằng dữ liệu từ tab khác
+// trong lúc chờ mạng, khi đó tìm bản tương ứng để không tạo bản trùng ở lần sau.
+function gcalSettle(k, e, v, sig) {
+  const L = S.ev[k] || [];
+  if (L.includes(e)) { if (e.ds === v) delete e.ds; return; }
+  const twin = L.find(x => (e.gid && x.gid === e.gid) || (!x.gid && x.ds && evSig(x) === sig));
+  if (twin) {
+    if (e.gid) twin.gid = e.gid;
+    if (evSig(twin) === sig) delete twin.ds;
+  } else if (e.gid && !S.gdel.includes(e.gid)) {
+    S.gdel.push(e.gid); // sự kiện đã bị xóa trong lúc đang gửi
+    gcalRerun = true;
+  }
+}
+
+async function gcalFlush(opts = {}) {
+  if (gcalFlushing) { gcalRerun = true; return; }
+  if (!gcalLinked() || (!opts.force && !gcalActive())) { updateSyncBadge(); return; }
+  const token = getGCalToken();
+  if (!token || !gcalPendingCount()) { updateSyncBadge(); return; }
+  // Hai cửa sổ cùng mở: chỉ một cửa sổ được đẩy, tránh tạo bản trùng
+  if (navigator.locks && navigator.locks.request) {
+    return navigator.locks.request("lc-gcal-flush", { ifAvailable: true }, lock => {
+      if (lock) return gcalFlushRun(token, opts);
+      // Tab khác đang giữ khóa: hẹn thử lại, không để các thay đổi chờ nằm im
+      clearTimeout(gcalLockRetryT);
+      gcalLockRetryT = setTimeout(() => gcalFlush(opts), 2000);
+      return null;
+    });
+  }
+  return gcalFlushRun(token, opts);
+}
+
+async function gcalFlushRun(token, opts) {
+  gcalFlushing = true;
+  gcalRerun = false;
+  clearTimeout(gcalRetryT);
+  updateSyncBadge();
+  let ok = 0, stop = null;
+  const failed = [];
+  try {
+    for (const gid of [...S.gdel]) {
+      const o = await gcalDeleteEvent(gid, token);
+      if (o === "auth" || o === "retry" || o === "config") { stop = o; break; }
+      S.gdel = S.gdel.filter(g => g !== gid);
+      if (o === "ok") ok++; else failed.push("(sự kiện đã xóa)");
+      save();
+    }
+    if (!stop) {
+      const items = Object.keys(S.ev).sort().flatMap(k => S.ev[k].filter(e => e.ds).map(e => [k, e]));
+      for (const [k, e] of items) {
+        if (!e.ds) continue;
+        const v = e.ds, sig = evSig(e);
+        const o = e.gid ? await gcalUpdateEvent(e, k, token) : await gcalCreateEvent(e, k, token);
+        if (o === "auth" || o === "retry" || o === "config") { stop = o; break; }
+        if (o === "ok") ok++; else failed.push(e.t);
+        gcalSettle(k, e, v, sig);
+        save();
+      }
+    }
+  } finally {
+    gcalFlushing = false;
+  }
+
+  if (!stop && ok) gcalConfigErr = "";
+  if (stop === "config") {
+    // Giữ nguyên các thay đổi đang chờ: sửa cấu hình xong là gửi lại được
+    showToast(gcalConfigErr, "bad");
+  } else if (stop === "auth") {
+    clearGCalToken();
+    showToast("Phiên Google Calendar đã hết hạn. Bấm 'Kết nối lại' trên thanh tiêu đề để đẩy các thay đổi đang chờ.", "bad");
+  } else if (stop === "retry") {
+    gcalRetryT = setTimeout(() => gcalFlush(), 30000);
+    if (opts.report) showToast(`Mất mạng hoặc Google đang giới hạn tần suất. Còn ${gcalPendingCount()} thay đổi chờ, sẽ tự thử lại.`, "bad");
+  }
+  if (failed.length) showToast(`Google Calendar từ chối ${failed.length} hoạt động (${gcalLastFail || "không rõ lý do"}): ${failed.slice(0, 3).join(", ")}${failed.length > 3 ? "…" : ""}`, "bad");
+  if (opts.report && !stop && !failed.length) showToast(ok ? `✓ Đã đồng bộ ${ok} thay đổi lên Google Calendar` : "✓ Google Calendar đã cập nhật", "ok");
+  updateSyncBadge();
+  // Có thay đổi mới trong lúc đang gửi: gửi tiếp ngay khi vẫn giữ khóa (không nhả rồi tranh lại)
+  if (gcalRerun && !stop) {
+    const t = getGCalToken();
+    if (t && gcalPendingCount()) return gcalFlushRun(t, opts);
+  }
+}
+
+async function gcalSyncWeek(wIdx) {
+  if (!getGCalToken()) {
+    showToast("Chưa kết nối Google Calendar!", "bad");
+    return;
+  }
+  wIdx = (typeof wIdx === "number") ? wIdx : sel;
+  const wStart = W[wIdx];
+  let n = 0;
+  for (let di = 0; di < 7; di++) {
+    (S.ev[ky(ad(wStart, di))] || []).forEach(e => {
+      if (!e.demo) { e.ds = (e.ds || 0) + 1; n++; }
+    });
+  }
+  if (!n) { showToast(`Tuần W${wIdx + 1} chưa có hoạt động nào để đồng bộ.`, "ok"); return; }
+  save();
+  showToast(`Đang đồng bộ ${n} hoạt động tuần W${wIdx + 1} lên Google Calendar...`, "ok");
+  await gcalFlush({ force: true, report: true });
+}
+
+// Badge trạng thái trên thanh tiêu đề (chỉ hiện khi đã liên kết và đang bật tự động đồng bộ)
+function updateSyncBadge() {
+  const b = $("syncBadge");
+  if (!b) return;
+  const linked = gcalLinked(), active = gcalActive(), tokenOk = !!getGCalToken(), n = linked ? gcalPendingCount() : 0;
+  // Tự động đồng bộ tắt: chỉ hiện khi còn thay đổi chờ (vd lệnh xóa), không nhắc kết nối lại
+  if (!linked || (tokenOk && !n) || (!active && !n)) { b.hidden = true; return; }
+  b.hidden = false;
+  if (!tokenOk) {
+    b.textContent = n ? `⚠ GCal · Kết nối lại (${n} chờ)` : "GCal · Kết nối lại";
+    b.className = n ? "btn btn-sm btn-danger" : "btn btn-sm btn-ghost";
+    b.title = gcalConfigErr || "Phiên Google Calendar hết hạn sau 1 giờ. Bấm để kết nối lại và đẩy các thay đổi đang chờ.";
+    b.onclick = connectGoogleCalendar;
+  } else if (gcalConfigErr && !gcalFlushing) {
+    b.textContent = `⚠ GCal · Lỗi cấu hình (${n} chờ)`;
+    b.className = "btn btn-sm btn-danger";
+    b.title = gcalConfigErr + " Bấm để thử gửi lại.";
+    b.onclick = () => gcalFlush({ report: true });
+  } else {
+    b.textContent = gcalFlushing ? `⏳ Đang đồng bộ ${n}…` : active ? `⏳ ${n} chờ đồng bộ` : `⏳ ${n} chờ đồng bộ (tự động đang tắt)`;
+    b.className = "btn btn-sm";
+    b.title = active ? "Bấm để đẩy ngay các thay đổi đang chờ lên Google Calendar"
+      : "Tự động đồng bộ đang tắt. Bấm để gửi các thay đổi đang chờ (vd lệnh xóa) lên Google Calendar.";
+    b.onclick = () => gcalFlush({ report: true, force: !active });
+  }
 }
 
 function renderSettingsModal() {
   const curTheme = getThemePreference();
-  const totalEvents = Object.values(S.ev).flat().length;
-  const storageKB = (JSON.stringify(localStorage).length / 1024).toFixed(1);
-  const defDur = (S.cfg && S.cfg.defDuration) ? S.cfg.defDuration : 2;
-  const burnH = (S.cfg && S.cfg.burnoutHours) ? S.cfg.burnoutHours : 6;
+  const total = Object.values(S.ev).flat().length;
+  let kb = "0.0";
+  try { kb = ((localStorage.getItem("lc2") || "").length / 1024).toFixed(1); } catch (e) {}
+  const defDur = (S.cfg && S.cfg.defDuration) || 2;
+  const burnH = (S.cfg && S.cfg.burnoutHours) || 6;
+  const opt = (v, cur, label) => `<option value="${v}" ${cur === v ? "selected" : ""}>${label}</option>`;
+  const seg = (v, label) => `<button type="button" class="${curTheme === v ? "on" : ""}" aria-pressed="${curTheme === v}" onclick="setThemePreference('${v}')">${label}</button>`;
+  const backup = S.lb ? `sao lưu gần nhất ${new Date(S.lb).toLocaleString("vi-VN")}` : `<span style="color:var(--bad)">chưa sao lưu lần nào</span>`;
 
-  const html = `
-    <div style="display:flex; flex-direction:column; gap:18px;">
-      <!-- NHÓM 1: GIAO DIỆN -->
-      <div style="background:var(--card-subtle); padding:14px; border-radius:var(--radius-md); border:1px solid var(--bd);">
-        <div style="font-weight:600; font-size:14px; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
-          <span>🎨 Giao Diện & Hiển Thị</span>
+  $("settingsSheetBody").innerHTML = `
+    <section class="set-sec">
+      <h4 class="set-h">Giao diện</h4>
+      <div class="set-row">
+        <span class="set-lbl">Chế độ hiển thị</span>
+        <div class="set-seg">${seg("light", "Sáng")}${seg("dark", "Tối")}${seg("auto", "Theo hệ thống")}</div>
+      </div>
+    </section>
+
+    <section class="set-sec">
+      <h4 class="set-h">Mặc định</h4>
+      <div class="set-row">
+        <label class="set-lbl" for="setDur">Thời lượng hoạt động mới</label>
+        <select id="setDur" onchange="setDefaultDuration(+this.value)">
+          ${opt(0.5, defDur, "30 phút")}${opt(1, defDur, "1 giờ")}${opt(1.5, defDur, "1,5 giờ")}${opt(2, defDur, "2 giờ")}${opt(3, defDur, "3 giờ")}
+        </select>
+      </div>
+      <div class="set-row">
+        <label class="set-lbl" for="setBurn">Cảnh báo kiệt sức<small>Khi một ngày tiêu hao từ mức này trở lên</small></label>
+        <select id="setBurn" onchange="setBurnoutThreshold(+this.value)">
+          ${opt(5, burnH, "5 giờ")}${opt(6, burnH, "6 giờ")}${opt(7, burnH, "7 giờ")}${opt(8, burnH, "8 giờ")}
+        </select>
+      </div>
+    </section>
+
+    <section class="set-sec">
+      <h4 class="set-h">Dữ liệu</h4>
+      <p class="set-note">${total} hoạt động · ${kb} KB · ${backup}</p>
+      <div class="set-actions">
+        <button type="button" class="btn btn-primary btn-sm" onclick="exportData('json')">Sao lưu (.json)</button>
+        <button type="button" class="btn btn-sm" onclick="exportData('csv')">Xuất lịch (.csv)</button>
+      </div>
+      <div class="set-row">
+        <label class="set-lbl" for="importModeSelect">Khôi phục từ tệp sao lưu</label>
+        <div class="set-inline">
+          <select id="importModeSelect">
+            <option value="merge">Gộp vào dữ liệu hiện có</option>
+            <option value="replace">Ghi đè toàn bộ</option>
+          </select>
+          <button type="button" class="btn btn-sm" onclick="$('setFile').click()">Chọn tệp…</button>
+          <input id="setFile" type="file" accept=".json,application/json" onchange="importData(this)" style="display:none">
         </div>
-        <div style="font-size:12.5px; color:var(--mu); margin-bottom:12px;">
-          Chọn phong cách hiển thị phù hợp với thị giác của bạn.
-        </div>
-        <div class="row" style="gap:8px;">
-          <button type="button" class="btn btn-sm ${curTheme === 'light' ? 'btn-primary' : 'btn-ghost'}" onclick="setThemePreference('light')">
-            ☀️ Sáng
+      </div>
+    </section>
+
+    <section class="set-sec">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <h4 class="set-h" style="margin-bottom:0;">📅 Đồng bộ Google Calendar</h4>
+        <span class="pill ${isGCalConnected() ? 'pill-ok' : 'pill-neutral'}" style="font-size:11px;">
+          ${isGCalConnected() ? '✓ Đã kết nối' : 'Chưa kết nối'}
+        </span>
+      </div>
+      ${gcalConfigErr ? `<p class="set-note" style="color:var(--bad);" role="alert">⚠ ${esc(gcalConfigErr)}</p>` : ""}
+      <p style="font-size:12px; color:var(--tx-sec); margin-bottom:12px; line-height:1.45;">
+        Tự động đẩy (một chiều) các hoạt động khi Thêm, Sửa, Xóa sang Google Calendar, màu theo 5 loại vốn. Sửa trên Google Calendar không cập nhật ngược về app.
+      </p>
+
+      <div class="set-row">
+        <label class="set-lbl" for="inpGCalClientId">
+          Google Client ID
+          <small>Tạo từ Google Cloud Console (OAuth 2.0 Web Client)</small>
+        </label>
+        <input id="inpGCalClientId" type="text"
+               placeholder="xxxxxx.apps.googleusercontent.com"
+               value="${esc((S.cfg && S.cfg.gcalClientId) || localStorage.getItem('gcal_client_id') || '')}"
+               onchange="if(!S.cfg) S.cfg={}; S.cfg.gcalClientId=this.value.trim(); localStorage.setItem('gcal_client_id', this.value.trim()); save();"
+               style="width:100%; max-width:280px; font-size:12px; font-family:monospace; background:var(--card);">
+      </div>
+
+      <div class="set-row">
+        <span class="set-lbl">
+          Tự động đồng bộ thời gian thực
+          <small>Gọi API cập nhật ngay khi Thêm / Sửa / Xóa</small>
+        </span>
+        <label class="row" style="gap:6px; cursor:pointer;">
+          <input type="checkbox" id="chkGCalAutoSync"
+                 ${(S.cfg && S.cfg.gcalAutoSync !== false) ? 'checked' : ''}
+                 onchange="toggleGCalAutoSync(this.checked)">
+          <span style="font-size:13px; font-weight:600;">Bật</span>
+        </label>
+      </div>
+
+      <div class="set-actions" style="margin-top:12px; align-items:center;">
+        ${!isGCalConnected() ? `
+          <button type="button" class="btn btn-primary btn-sm" onclick="connectGoogleCalendar()">
+            🔗 Kết nối Google Calendar
           </button>
-          <button type="button" class="btn btn-sm ${curTheme === 'dark' ? 'btn-primary' : 'btn-ghost'}" onclick="setThemePreference('dark')">
-            🌙 Tối
+        ` : `
+          <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="disconnectGoogleCalendar()">
+            Ngắt kết nối
           </button>
-          <button type="button" class="btn btn-sm ${curTheme === 'auto' ? 'btn-primary' : 'btn-ghost'}" onclick="setThemePreference('auto')">
-            🌓 Theo hệ thống
+          <button type="button" class="btn btn-sm" onclick="gcalSyncWeek(sel)" title="Đồng bộ tất cả hoạt động trong tuần đang xem">
+            ⟳ Đồng bộ tuần này (W${sel + 1})
           </button>
-        </div>
+        `}
       </div>
+    </section>
 
-      <!-- NHÓM 2: DỮ LIỆU & SAO LƯU -->
-      <div style="background:var(--card-subtle); padding:14px; border-radius:var(--radius-md); border:1px solid var(--bd);">
-        <div style="font-weight:600; font-size:14px; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
-          <span>💾 Quản Trị Dữ Liệu & Sao Lưu</span>
-        </div>
-        <div style="font-size:12.5px; color:var(--mu); margin-bottom:12px;">
-          Dữ liệu lưu an toàn trên trình duyệt: <b>${totalEvents} hoạt động</b> (${storageKB} KB).
-          ${S.lb ? `<br>Lần sao lưu gần nhất: <b>${new Date(S.lb).toLocaleString("vi-VN")}</b>` : '<br><span style="color:var(--bad);">Bạn chưa sao lưu lần nào. Hãy xuất file .json định kỳ!</span>'}
-        </div>
-
-        <div class="row" style="gap:8px; margin-bottom:14px;">
-          <button type="button" class="btn btn-primary" onclick="exportData('json')">📥 Xuất sao lưu (.json)</button>
-          <button type="button" class="btn" onclick="exportData('csv')">📊 Xuất lịch trình (.csv)</button>
-        </div>
-
-        <div style="padding-top:12px; border-top:1px dashed var(--bd);">
-          <div style="font-size:12.5px; font-weight:600; margin-bottom:8px;">Khôi phục dữ liệu từ tệp tin:</div>
-          <div class="row" style="gap:8px; align-items:center;">
-            <input type="file" accept=".json,application/json" onchange="importData(this)" style="font-size:12.5px; flex:1;">
-            <select id="importModeSelect" style="font-size:12.5px;">
-              <option value="merge">Gộp thêm vào lịch</option>
-              <option value="replace">Ghi đè toàn bộ</option>
-            </select>
-          </div>
-        </div>
+    <section class="set-sec set-danger">
+      <h4 class="set-h">Xóa dữ liệu</h4>
+      <div class="set-row">
+        <span class="set-lbl">Xóa toàn bộ hoạt động và đặt lại danh mục vốn<small>Không thể hoàn tác. Hãy sao lưu trước.</small></span>
+        <button type="button" class="btn btn-sm btn-danger" onclick="resetToDefaultData()">Xóa dữ liệu</button>
       </div>
-
-      <!-- NHÓM 3: QUY TẮC LỊCH BIỂU -->
-      <div style="background:var(--card-subtle); padding:14px; border-radius:var(--radius-md); border:1px solid var(--bd);">
-        <div style="font-weight:600; font-size:14px; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
-          <span>⏱️ Quy Tắc Lịch & Cảnh Báo Kiệt Sức</span>
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:10px;">
-          <div class="form-group">
-            <label class="form-label" style="font-size:11px;">Thời lượng mặc định khi tạo:</label>
-            <select onchange="setDefaultDuration(+this.value)" style="font-size:13px;">
-              <option value="0.5" ${defDur === 0.5 ? 'selected' : ''}>0.5 giờ (30 phút)</option>
-              <option value="1" ${defDur === 1 ? 'selected' : ''}>1.0 giờ</option>
-              <option value="1.5" ${defDur === 1.5 ? 'selected' : ''}>1.5 giờ</option>
-              <option value="2" ${defDur === 2 ? 'selected' : ''}>2.0 giờ (chuẩn)</option>
-              <option value="3" ${defDur === 3 ? 'selected' : ''}>3.0 giờ</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label" style="font-size:11px;">Ngưỡng báo kiệt sức / ngày:</label>
-            <select onchange="setBurnoutThreshold(+this.value)" style="font-size:13px;">
-              <option value="5" ${burnH === 5 ? 'selected' : ''}>≥ 5 giờ tiêu hao</option>
-              <option value="6" ${burnH === 6 ? 'selected' : ''}>≥ 6 giờ tiêu hao (chuẩn)</option>
-              <option value="7" ${burnH === 7 ? 'selected' : ''}>≥ 7 giờ tiêu hao</option>
-              <option value="8" ${burnH === 8 ? 'selected' : ''}>≥ 8 giờ tiêu hao</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- NHÓM 4: THÔNG TIN & CÀI APP -->
-      <div style="background:var(--card-subtle); padding:14px; border-radius:var(--radius-md); border:1px solid var(--bd);">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-          <span style="font-weight:600; font-size:13.5px;">📱 Cài Đặt Làm App Trên Điện Thoại (PWA)</span>
-          <span class="pill pill-ok" style="font-size:10px;">v2.1</span>
-        </div>
-        <div style="font-size:12.5px; color:var(--tx-sec); line-height:1.5;">
-          • <b>iPhone / iPad:</b> Mở trên Safari → bấm nút <b>Chia sẻ</b> (biểu tượng ⎋) → chọn <b>Thêm vào MH chính (Add to Home Screen)</b>.<br>
-          • <b>Android / Máy tính:</b> Nhấn biểu tượng Cài đặt trên thanh địa chỉ hoặc menu ba chấm (⋮).
-        </div>
-        <div style="margin-top:14px; padding-top:10px; border-top:1px dashed var(--bd); display:flex; justify-content:space-between; align-items:center;">
-          <span style="font-size:12px; color:var(--mu);">Làm mới lại toàn bộ ứng dụng:</span>
-          <button type="button" class="btn btn-sm btn-danger" onclick="resetToDefaultData()">
-            ⚠️ Đặt lại dữ liệu ban đầu
-          </button>
-        </div>
-      </div>
-
-      <div style="display:flex; justify-content:flex-end;">
-        <button type="button" class="btn btn-primary" onclick="closeSettingsModal()">Hoàn tất</button>
-      </div>
-    </div>
+    </section>
   `;
-
-  $("settingsSheetBody").innerHTML = html;
 }
 
 /* ==========================================================================
    8. MAIN VIEWS
    ========================================================================== */
+// Thông báo đầu tab Lịch biểu: bắt đầu sử dụng, dữ liệu mẫu, nhắc sao lưu
+function calendarNotices() {
+  return startOrDemoNotice() + backupNotice();
+}
+
+function backupNotice() {
+  const real = Object.values(S.ev).reduce((n, l) => n + l.filter(e => !e.demo).length, 0);
+  let snooze = 0;
+  try { snooze = +localStorage.getItem("lc_bk_snooze") || 0; } catch (e) {}
+  const days = S.lb ? Math.floor((Date.now() - S.lb) / 864e5) : null;
+  if (real < 10 || (days !== null && days < 14) || Date.now() < snooze) return "";
+  return `
+    <div class="review-prompt-banner">
+      <div>
+        <b>💾 ${days === null ? "Bạn chưa sao lưu dữ liệu lần nào" : `Đã ${days} ngày chưa sao lưu`}</b>
+        <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Dữ liệu chỉ nằm trong trình duyệt này. Safari có thể tự xóa dữ liệu của trang web nếu bạn không mở trong 7 ngày (trừ khi đã "Thêm vào Màn hình chính").</div>
+      </div>
+      <div class="row" style="gap:6px;">
+        <button type="button" class="btn btn-sm btn-ghost" onclick="snoozeBackup()">Để sau</button>
+        <button type="button" class="btn btn-sm btn-primary" onclick="exportData('json')">Sao lưu ngay</button>
+      </div>
+    </div>`;
+}
+
+function snoozeBackup() {
+  try { localStorage.setItem("lc_bk_snooze", String(Date.now() + 7 * 864e5)); } catch (e) {}
+  draw();
+}
+
+function startOrDemoNotice() {
+  if (!Object.keys(S.ev).length) {
+    return `
+      <div class="review-prompt-banner">
+        <div>
+          <b>👋 Bắt đầu với Life Capital</b>
+          <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Gõ vào thanh ghi nhanh phía trên, ví dụ <i>"Mai 18h đánh cầu lông 2 tiếng"</i>, hoặc bấm "+ Thêm" ở một ngày bất kỳ.</div>
+        </div>
+        <button type="button" class="btn btn-sm" onclick="loadDemo()">Thử với dữ liệu mẫu</button>
+      </div>`;
+  }
+  if (hasDemo()) {
+    return `
+      <div class="review-prompt-banner">
+        <div>
+          <b>🧪 Đang dùng dữ liệu mẫu</b>
+          <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Dữ liệu mẫu không được đẩy lên Google Calendar. Hoạt động mẫu bạn đã sửa sẽ được giữ lại như dữ liệu thật.</div>
+        </div>
+        <button type="button" class="btn btn-sm btn-danger" onclick="clearDemo()">Xóa dữ liệu mẫu</button>
+      </div>`;
+  }
+  return "";
+}
 const V = {
   // --- TAB 1: LỊCH BIỂU (CALENDAR) ---
   ca() {
@@ -1999,6 +2856,7 @@ const V = {
     ` : '';
 
     const headerBar = `
+      ${calendarNotices()}
       ${reviewPrompt}
       <div class="card" style="margin-bottom:12px; padding:12px 16px;">
         <div class="card-header" style="margin-bottom:0">
@@ -2008,7 +2866,7 @@ const V = {
               Tuần W${sel + 1} <span style="font-weight:400; color:var(--mu);">(${dateRangeStr})</span>
             </label>
             <button class="btn btn-sm" onclick="sel=Math.min(W.length - 1, sel + 1); draw()" title="Tuần sau">▶</button>
-            ${CW >= 0 && sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=Math.max(0, CW); draw()">Về tuần này (W${CW+1})</button>` : `<span class="pill pill-ok">Tuần hiện tại</span>`}
+            ${CW >= 0 && sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=Math.max(0, CW); draw()">Về tuần này (W${CW+1})</button>` : sel === CW ? `<span class="pill pill-ok">Tuần hiện tại</span>` : ""}
           </div>
           <div class="row">
             <div class="segmented-control">
@@ -2113,7 +2971,7 @@ const V = {
 
         return `
           <div class="timeline-event-block"
-               style="top:${topPx}px; height:${heightPx}px; background:${cap.c};"
+               style="top:${topPx}px; height:${heightPx}px; ${capInk(cap.c)}"
                onclick="openEditor('${activeDate}', ${idx})">
             <b>${e.s} – ${tt(e.s, e.h)}</b> · ${e.m === 'u' ? '▲' : '▼'} ${esc(e.t)} (${r1(e.h)}h)
           </div>
@@ -2127,7 +2985,7 @@ const V = {
         const curHr = now.getHours() + (now.getMinutes() / 60);
         if (curHr >= 6 && curHr <= 24) {
           const topNow = (curHr - 6) * 48;
-          timeNowIndicator = `<div style="position:absolute; left:0; right:0; top:${topNow}px; height:2px; background:var(--bad); z-index:4; pointer-events:none;"><span style="position:absolute; right:4px; top:-9px; font-size:10px; font-weight:700; background:var(--bad); color:#fff; padding:1px 4px; border-radius:3px;">${pad(now.getHours())}:${pad(now.getMinutes())}</span></div>`;
+          timeNowIndicator = `<div style="position:absolute; left:0; right:0; top:${topNow}px; height:2px; background:var(--bad); z-index:4; pointer-events:none;"><span style="position:absolute; right:4px; top:-9px; font-size:10px; font-weight:700; background:var(--bad); color:var(--card); padding:1px 4px; border-radius:3px;">${pad(now.getHours())}:${pad(now.getMinutes())}</span></div>`;
         }
       }
 
@@ -2167,7 +3025,7 @@ const V = {
             `<button class="${pm === o[0] ? 'active' : ''}" onclick="S.pm='${o[0]}'; save(); draw(); scrollToCurrentWeek();">${o[1]}</button>`
           ).join("")}
         </div>
-        <button class="btn btn-sm btn-ghost" onclick="scrollToCurrentWeek()">⟲ Về tuần hiện tại (W${CW >= 0 ? CW+1 : 1})</button>
+        ${CW >= 0 ? `<button class="btn btn-sm btn-ghost" onclick="scrollToCurrentWeek()">⟲ Về tuần hiện tại (W${CW + 1})</button>` : ""}
       </div>
     `;
 
@@ -2205,7 +3063,7 @@ const V = {
           </div>
           ${es.map((e, idx) => `
             <div onclick="event.stopPropagation(); openEditor('${k}', ${idx})"
-                 style="background:${CM(e.c).c}; color:#fff; border-radius:4px; padding:2px 5px; margin-top:2px; font-size:11px; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer;"
+                 style="${capInk(CM(e.c).c)} border-radius:4px; padding:2px 5px; margin-top:2px; font-size:11px; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer;"
                  title="${esc(e.t)} (${e.s || ''} ${r1(e.h)}h)">
               ${e.s ? e.s + ' ' : ''}${e.m === 'u' ? '▲' : '▼'} ${esc(e.t)} · ${r1(e.h)}h
             </div>
@@ -2281,7 +3139,7 @@ const V = {
             ${CW >= 0 && sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=Math.max(0, CW); draw()">Về tuần này</button>` : ""}
           </div>
           <div class="row">
-            <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(${sel})">🏆 Báo cáo tổng kết W${sel+1}</button>
+            <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(${sel})">🏆 Báo cáo tổng kết tuần</button>
             <select onchange="N=+this.value; draw()">
               <option value="4" ${N === 4 ? 'selected' : ''}>TB 4 tuần</option>
               <option value="8" ${N === 8 ? 'selected' : ''}>TB 8 tuần</option>
@@ -2305,7 +3163,7 @@ const V = {
           <h2 class="card-title">💡 Nhận Định & Tình Trạng Các Loại Vốn</h2>
         </div>
         <p style="margin:4px 0 10px; font-size:13.5px; color:var(--tx-sec);">
-          ${T.length ? `Đã có <b>${okCount}/${T.length}</b> nguồn vốn đạt mục tiêu tuần (trung bình ${nn} tuần gần nhất đến W${sel + 1}).` : "Chưa đặt mục tiêu cho vốn nào. Bạn có thể vào tab <b>Danh mục vốn</b> để đặt mục tiêu."}
+          ${T.length ? `Đã có <b>${okCount}/${T.length}</b> nguồn vốn đạt mục tiêu tuần (trung bình ${nn} tuần gần nhất đến W${sel + 1}).` : `Chưa đặt mục tiêu tuần cho loại vốn nào, nên chưa đánh giá được mức đạt. <button type="button" class="btn btn-sm btn-primary" onclick="goToTargets()">Đặt mục tiêu</button>`}
           ${CW >= 0 && sel > CW ? " <i>(Đang xem kế hoạch tuần tương lai).</i>" : ""}
         </p>
         <div style="display:flex; flex-direction:column; gap:6px; font-size:13px;">
@@ -2355,7 +3213,7 @@ const V = {
           </div>
           <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
             <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">${A > 168 ? 'Quá tải (Vượt)' : 'Chưa phân bổ'}</div>
-            <div style="font:700 22px Georgia, serif; margin-top:2px; color:${A > 168 ? 'var(--bad)' : 'var(--ok)'}">
+            <div style="font:700 22px Georgia, serif; margin-top:2px; color:${A > 168 ? 'var(--bad)' : 'var(--ok-text)'}">
               ${A > 168 ? '+' + r1(A - 168) + 'h' : r1(free) + 'h'}
               <span style="font-size:13px; font-weight:400; color:var(--mu);">${A > 168 ? '(vượt mức)' : `(${pc(free)}%)`}</span>
             </div>
@@ -2455,7 +3313,7 @@ const V = {
             </div>
           </td>
           <td>
-            <input type="number" step="0.5" min="0" value="${c.tg}" onchange="updateCap('${c.k}', 'tg', Math.max(0, +this.value || 0))">
+            <input type="number" step="0.5" min="0" value="${c.tg}" data-target-input aria-label="Mục tiêu nạp mỗi tuần của ${esc(c.n)}" onchange="updateCap('${c.k}', 'tg', Math.max(0, +this.value || 0))">
           </td>
           <td>
             <input type="number" step="0.5" min="0" value="${b.u}" onchange="BL('${c.k}').u=Math.max(0, +this.value || 0); save(); draw();">
@@ -2469,6 +3327,38 @@ const V = {
         </tr>
       `;
     }).join("");
+
+    const keywordCards = `
+      <div class="card" style="margin-top:16px;">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">🏷️ Từ Khóa Nhận Diện Tự Động (Auto-tagging Keywords)</h2>
+            <div class="card-sub">Khi bạn nhập trên thanh ghi nhanh (ví dụ: 'Mai 18h đá bóng 2 tiếng'), ứng dụng sẽ tìm các từ khóa này để tự động gán đúng loại vốn. Phân tách các từ bằng dấu phẩy.</div>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          ${S.caps.map(c => `
+            <div style="background:var(--card-subtle); padding:12px 14px; border-radius:var(--radius-md); border:1px solid var(--bd); border-left:4px solid ${c.c};">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span class="dot" style="background:${c.c}"></span>
+                  <b style="font-size:13.5px;">${esc(c.n)}</b>
+                  <span class="pill pill-cyan" style="font-size:11px;">${(c.kw || []).length} từ khóa</span>
+                </div>
+                <button type="button" class="btn btn-sm btn-ghost" onclick="resetCapKeywords('${c.k}')" style="font-size:11.5px; color:var(--tx-sec);">
+                  ⟲ Khôi phục mặc định
+                </button>
+              </div>
+              <input type="text"
+                     value="${esc((c.kw || []).join(', '))}"
+                     onchange="updateCapKeywords('${c.k}', this.value)"
+                     placeholder="Nhập các từ khóa phân cách bằng dấu phẩy (vd: gym, bơi, chạy bộ...)"
+                     style="width:100%; font-size:13px; background:var(--card);">
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
 
     return `
       <div class="card">
@@ -2497,6 +3387,7 @@ const V = {
           </table>
         </div>
       </div>
+      ${keywordCards}
     `;
   },
 
@@ -2510,10 +3401,13 @@ const V = {
 /* ==========================================================================
    9. MODAL EDITOR (THÊM / SỬA HOẠT ĐỘNG TRONG NGÀY)
    ========================================================================== */
+let LFi = -1, TPL = [];
+const FOC = "#v button,#v input,#v select,#v [tabindex]";
 let LF = null; // Ghi nhớ element được focus trước khi mở modal
 
 function openEditor(dateStr, editIndex = null) {
   LF = document.activeElement;
+  LFi = [...document.querySelectorAll(FOC)].indexOf(LF);
   ed = dateStr;
   ei = editIndex;
   renderEditorSheet();
@@ -2531,34 +3425,33 @@ function closeEditor() {
   $("modalOverlay").classList.remove("open");
   ed = null;
   ei = null;
-  if (LF && LF.focus) {
-    try { LF.focus(); } catch (e) {}
-  }
+  restoreFocus();
+}
+
+function restoreFocus() {
+  if (LF && LF.isConnected && LF.focus) { try { LF.focus(); return; } catch (e) {} }
+  const el = [...document.querySelectorAll(FOC)][LFi];
+  if (el) el.focus();
 }
 
 function handleBackdropClick(e) {
   if (e.target.id === "modalOverlay") closeEditor();
 }
 
-function editEvent(idx) {
-  ei = idx;
-  renderEditorSheet();
-  setTimeout(() => {
-    const inp = $("inpTitle");
-    if (inp) {
-      inp.focus();
-      inp.select();
-    }
-  }, 50);
-}
-
-function cancelEdit() {
+function deleteCurrentEvent() {
+  if (ei == null || !ed || !S.ev[ed] || !S.ev[ed][ei]) return;
+  if (!confirm("Bạn có chắc chắn muốn xóa hoạt động này?")) return;
+  const delEv = S.ev[ed][ei];
+  const delTitle = delEv.t;
+  queueDelete(delEv.gid);
+  S.ev[ed].splice(ei, 1);
+  if (!S.ev[ed].length) delete S.ev[ed];
   ei = null;
-  renderEditorSheet();
-  setTimeout(() => {
-    const inp = $("inpTitle");
-    if (inp) inp.focus();
-  }, 50);
+  save();
+  gcalFlush();
+  draw();
+  closeEditor();
+  showToast(`Đã xóa "${delTitle}"`, "ok");
 }
 
 function tpls() {
@@ -2572,7 +3465,8 @@ function tpls() {
   return Object.values(m).sort((a, b) => b.n - a.n).slice(0, 6).map(x => x.e);
 }
 
-function fillTpl(item) {
+function fillTpl(i) {
+  const item = TPL[i];
   if (!item) return;
   const tInp = $("inpTitle");
   const cInp = $("inpCap");
@@ -2585,56 +3479,90 @@ function fillTpl(item) {
   if (tInp) tInp.focus();
 }
 
-function rep(date, o, rp, end) {
-  const r = "r" + Date.now().toString(36);
+// Tạo chuỗi lặp từ ngày `date` tới `end`. Khi biến một hoạt động lẻ thành chuỗi: truyền `r` của
+// chuỗi và `skipFirst` để không tạo trùng ngày của chính hoạt động đó.
+function rep(date, o, rp, end, r = "r" + Date.now().toString(36), skipFirst = false) {
   const a = new Date(date + "T00:00");
   const z = new Date((end || activeYear + "-12-31") + "T00:00");
   const days = [];
-  for (let d = a; d <= z && days.length < 400; d = ad(d, 1)) {
+  for (let d = skipFirst ? ad(a, 1) : a; d <= z && days.length < 400; d = ad(d, 1)) {
     const g = d.getDay();
     if (rp === "d" || (rp === "wd" && g > 0 && g < 6) || (rp === "w" && g === a.getDay())) {
       days.push(ky(d));
     }
   }
   if (!days.length) {
-    showToast("Không tạo được chuỗi lặp: hãy kiểm tra ngày kết thúc.", "bad");
+    showToast("Không tạo được chuỗi lặp: hãy kiểm tra ngày kết thúc (phải sau ngày của hoạt động).", "bad");
     return 0;
   }
   const bad = o.s ? days.filter(k => chkEvent(k, o.s, o.h, -1).hit).length : 0;
   if (bad && !confirm(`${bad} ngày trong chuỗi bị trùng giờ với hoạt động khác. Vẫn tạo chuỗi?`)) return 0;
   days.forEach(k => {
     S.ev[k] = S.ev[k] || [];
-    S.ev[k].push({ ...o, r });
+    const item = { ...o, r };
+    S.ev[k].push(item);
     sortL(S.ev[k]);
+    markPending(item); // gcalFlush() đẩy lần lượt từng sự kiện, không bắn hàng trăm request cùng lúc
   });
   return days.length;
 }
 
-function delSeries(i) {
+// Xóa chuỗi lặp: mode "future" = từ ngày đang mở trở về sau (giữ các buổi trước), "all" = toàn bộ chuỗi
+function delSeries(i, mode = "future") {
   if (!ed || !S.ev[ed] || !S.ev[ed][i]) return;
-  const r = S.ev[ed][i].r;
-  if (!r || !confirm("Xóa tất cả hoạt động của chuỗi này từ ngày này trở đi?")) return;
+  const { r, t } = S.ev[ed][i];
+  if (!r) return;
+  const inScope = k => mode === "all" || k >= ed;
+  const total = Object.keys(S.ev).reduce((n, k) => n + S.ev[k].filter(e => e.r === r).length, 0);
+  const count = Object.keys(S.ev).filter(inScope).reduce((n, k) => n + S.ev[k].filter(e => e.r === r).length, 0);
+  const kept = total - count;
+  const day = ed.slice(8, 10) + "/" + ed.slice(5, 7);
+  const question = mode === "all"
+    ? `Xóa toàn bộ ${total} buổi của chuỗi "${t}"?`
+    : `Xóa ${count} buổi của chuỗi "${t}" từ ${day} trở về sau?` + (kept ? ` ${kept} buổi trước ${day} vẫn được giữ.` : "");
+  if (!confirm(question)) return;
   Object.keys(S.ev).forEach(k => {
-    if (k >= ed) {
+    if (inScope(k)) {
+      S.ev[k].forEach(e => { if (e.r === r) queueDelete(e.gid); });
       S.ev[k] = S.ev[k].filter(e => e.r !== r);
       if (!S.ev[k].length) delete S.ev[k];
     }
   });
   ei = null;
   save();
-  renderEditorSheet();
+  gcalFlush();
   draw();
-  showToast("Đã xóa chuỗi hoạt động định kỳ", "ok");
+  closeEditor();
+  showToast(mode === "all" ? `Đã xóa toàn bộ chuỗi "${t}" (${count} buổi)` : `Đã xóa ${count} buổi của chuỗi "${t}" từ ${day} trở về sau`, "ok");
 }
 
-function handleTitleKeydown(e) {
-  if (e.isComposing) return;
-  if (e.key === "Enter") {
-    e.preventDefault();
-    const startInp = $("inpStart");
-    if (startInp) startInp.focus();
-  }
+// Popup thêm/sửa: Enter chuyển lần lượt qua từng ô, Enter ở ô cuối cùng thì lưu.
+// Đang gõ có dấu thì một lần Enter vừa chốt chữ vừa chuyển ô: chờ bộ gõ chốt xong (compositionend) rồi mới chuyển.
+let enterAfterCompose = null;
+
+function editorFields() {
+  return [...$("sheetBody").querySelectorAll("input, select")].filter(el => !el.disabled && el.offsetParent !== null);
 }
+
+function editorEnter(from) {
+  const f = editorFields(), i = f.indexOf(from);
+  if (i < 0 || !ed) return;
+  if (i === f.length - 1) { saveEventFromForm(); return; }
+  const next = f[i + 1];
+  next.focus();
+  if (next.tagName === "INPUT" && (next.type === "text" || next.type === "number")) next.select();
+}
+
+function handleSheetKeydown(e) {
+  if (e.key !== "Enter" || e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+  const el = e.target;
+  if (!el.matches || !el.matches("input, select")) return;
+  // Chrome: Enter chốt chữ đến TRƯỚC compositionend, không chặn để bộ gõ chốt chữ bình thường
+  if (e.isComposing || e.keyCode === 229) { enterAfterCompose = el; return; }
+  e.preventDefault();
+  editorEnter(el);
+}
+$("sheetBody").addEventListener("keydown", handleSheetKeydown);
 
 function handleTitleInput(val) {
   const guessedCap = guess(val);
@@ -2656,80 +3584,25 @@ function renderEditorSheet() {
   const L = S.ev[ed] || [];
   const X = ei != null ? L[ei] : null;
   const last = L.filter(y => y.s).pop();
+  const defaultDuration = (S && S.cfg && S.cfg.defDuration) ? S.cfg.defDuration : 2;
   const defaultStartTime = X ? (X.s || "") : last ? tt(last.s, last.h) : "07:00";
 
   const dateObj = new Date(ed + "T00:00");
   const dateFormatted = dateObj.toLocaleDateString("vi-VN", { weekday: "long", day: "numeric", month: "numeric", year: "numeric" });
-  $("sheetTitle").innerHTML = `<span>📅 ${dateFormatted}</span>`;
+  $("sheetTitle").innerHTML = `<span>${X ? '✏️ Chỉnh sửa hoạt động' : '+ Thêm hoạt động mới'} · ${dateFormatted}</span>`;
 
-  let html = "";
-
-  // 1. Danh sách hoạt động hiện có trong ngày
-  if (L.length > 0) {
-    html += `
-      <div class="form-group" style="margin-bottom:6px;">
-        <div class="form-label" style="display:flex; justify-content:space-between; align-items:center;">
-          <span>Các hoạt động trong ngày (${L.length})</span>
-          ${ei != null ? `<span style="color:var(--ac); font-weight:600; font-size:11.5px;">Đang chọn sửa mục #${ei + 1}</span>` : ''}
-        </div>
-        <div style="display:flex; flex-direction:column; gap:6px; max-height:170px; overflow-y:auto; padding-right:2px;">
-          ${L.map((y, i) => {
-            const cap = CM(y.c);
-            const isEditing = i === ei;
-            return `
-              <div style="display:flex; justify-content:space-between; align-items:center; padding:7px 10px; background:${isEditing ? 'var(--ac-soft)' : 'var(--card-subtle)'}; border-radius:var(--radius-md); border-left:4px solid ${cap.c}; border:${isEditing ? '1.5px solid var(--ac)' : '1px solid var(--bd)'};">
-                <div style="flex:1; min-width:0; margin-right:8px;">
-                  <div style="font-weight:600; font-size:13px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">
-                    ${y.r ? '<span title="Chuỗi lặp lại">↻ </span>' : ''}${y.m === 'u' ? '▲ Nạp' : '▼ Tiêu'} ${esc(y.t)}
-                  </div>
-                  <div style="font-size:11.5px; color:var(--mu); margin-top:2px;">
-                    ${y.s ? y.s + ' – ' + tt(y.s, y.h) + ' · ' : ''}${r1(y.h)}h · <span style="color:${cap.c}; font-weight:600;">${esc(cap.n)}</span>
-                  </div>
-                </div>
-                <div class="row" style="gap:4px; flex-shrink:0;">
-                  <button type="button" class="btn btn-sm ${isEditing ? 'btn-primary' : 'btn-ghost'}" onclick="editEvent(${i})" style="padding:3px 8px; font-size:11.5px;">
-                    ${isEditing ? 'Đang sửa' : 'Sửa'}
-                  </button>
-                  <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad); padding:3px 8px; font-size:11.5px;" onclick="deleteEvent(${i})" title="Xóa hoạt động này">
-                    Xóa
-                  </button>
-                  ${y.r ? `
-                    <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad); padding:3px 8px; font-size:11px;" onclick="delSeries(${i})" title="Xóa toàn bộ chuỗi lặp">
-                      Xóa chuỗi
-                    </button>
-                  ` : ''}
-                </div>
-              </div>
-            `;
-          }).join("")}
-        </div>
-      </div>
-    `;
-  }
-
-  // 2. Biểu mẫu thêm / chỉnh sửa
   const quickTpls = !X ? tpls() : [];
+  TPL = quickTpls;
 
-  html += `
-    <div style="border-top:1px solid var(--bd); padding-top:12px; display:flex; flex-direction:column; gap:11px;">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <div style="font-weight:600; font-size:14px; color:var(--tx); display:flex; align-items:center; gap:6px;">
-          ${X ? '✏️ Chỉnh sửa hoạt động' : '+ Thêm hoạt động mới'}
-        </div>
-        ${X ? `
-          <button type="button" class="btn btn-sm btn-ghost" onclick="cancelEdit()" style="font-size:12px; color:var(--ac);">
-            ← Hủy sửa, thêm mới
-          </button>
-        ` : ''}
-      </div>
-
+  let html = `
+    <div style="display:flex; flex-direction:column; gap:12px;">
       ${!X && quickTpls.length > 0 ? `
-        <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center; padding:6px 8px; background:var(--card-subtle); border-radius:var(--radius-sm); border:1px solid var(--bd);">
-          <span style="font-size:11.5px; color:var(--mu); font-weight:600;">Hay dùng:</span>
+        <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center; padding:6px 10px; background:var(--card-subtle); border-radius:var(--radius-sm); border:1px solid var(--bd);">
+          <span style="font-size:11.5px; color:var(--mu); font-weight:600;">Gợi ý nhanh:</span>
           ${quickTpls.map((p, idx) => `
             <button type="button" class="btn btn-sm btn-ghost"
-                    style="border:1px solid var(--bd); padding:2px 7px; font-size:11.5px; background:var(--card);"
-                    onclick='fillTpl(${JSON.stringify(p).replace(/'/g, "&#39;")})'>
+                    style="border:1px solid var(--bd); padding:2px 8px; font-size:11.5px; background:var(--card);"
+                    onclick="fillTpl(${idx})">
               <span class="dot" style="background:${CM(p.c).c}; width:6px; height:6px;"></span> ${esc(p.t)}
             </button>
           `).join("")}
@@ -2740,8 +3613,7 @@ function renderEditorSheet() {
         <label class="form-label" for="inpTitle">Tên hoạt động <span style="color:var(--bad)">*</span></label>
         <input id="inpTitle" placeholder="Ví dụ: Đánh cầu lông, Đọc sách, Họp nhóm, Chạy bộ..."
                value="${X ? esc(X.t) : ''}"
-               oninput="handleTitleInput(this.value)"
-               onkeydown="handleTitleKeydown(event)">
+               oninput="handleTitleInput(this.value)">
       </div>
 
       <div class="form-row">
@@ -2771,23 +3643,23 @@ function renderEditorSheet() {
           <label class="form-label" for="inpHours">Thời lượng (giờ)</label>
           <div style="display:flex; align-items:center; gap:6px;">
             <button type="button" class="btn btn-sm" onclick="adjustHours(-0.5)" style="padding:5px 8px;">-0.5</button>
-            <input id="inpHours" type="number" step="0.5" min="0.5" max="24" value="${X ? X.h : 2}" style="flex:1; text-align:center;">
+            <input id="inpHours" type="number" step="0.5" min="0.5" max="24" value="${X ? X.h : defaultDuration}" style="flex:1; text-align:center;">
             <button type="button" class="btn btn-sm" onclick="adjustHours(0.5)" style="padding:5px 8px;">+0.5</button>
           </div>
         </div>
       </div>
 
-      ${X ? (X.r ? `
+      ${X && X.r ? `
         <div style="padding:6px 10px; background:var(--card-subtle); border-radius:var(--radius-sm); border:1px solid var(--bd);">
           <label style="font-size:12.5px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
             <input type="checkbox" id="inpSeries">
-            <b>Áp dụng cho cả chuỗi</b> từ ngày này trở đi
+            <b>Áp dụng thay đổi cho cả chuỗi</b> từ ngày này trở đi
           </label>
         </div>
-      ` : '') : `
+      ` : `
         <div class="form-row" style="background:var(--card-subtle); padding:8px 10px; border-radius:var(--radius-sm); border:1px solid var(--bd);">
           <div class="form-group">
-            <label class="form-label" for="inpRepeat">Lặp lại định kỳ</label>
+            <label class="form-label" for="inpRepeat">${X ? "Lặp lại từ ngày này" : "Lặp lại định kỳ"}</label>
             <select id="inpRepeat">
               <option value="">Không lặp (Một lần)</option>
               <option value="w">Hằng tuần (cùng thứ)</option>
@@ -2802,28 +3674,40 @@ function renderEditorSheet() {
         </div>
       `}
 
-      <div style="display:flex; gap:8px; margin-top:8px; justify-content:flex-end; align-items:center; flex-wrap:wrap;">
-        ${X ? `
-          <button type="button" class="btn" onclick="cancelEdit()">Hủy sửa</button>
-          <button type="button" class="btn btn-primary" onclick="saveEventFromForm(true)">
-            Lưu thay đổi
-          </button>
-        ` : `
-          <button type="button" class="btn btn-ghost" onclick="saveEventFromForm(false)" title="Lưu hoạt động này và tiếp tục nhập hoạt động khác">
-            + Lưu & Thêm tiếp
-          </button>
-          <button type="button" class="btn btn-primary" onclick="saveEventFromForm(true)">
-            Thêm vào lịch
-          </button>
-        `}
-      </div>
+      <!-- NÚT HÀNH ĐỘNG TINH GỌN -->
+      ${X ? `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; gap:8px; flex-wrap:wrap;">
+          <div class="row" style="gap:6px;">
+            <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="deleteCurrentEvent()">
+              🗑️ Xóa hoạt động
+            </button>
+            ${X.r ? `
+              <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="delSeries(${ei}, 'future')" title="Giữ lại các buổi trước ngày này">
+                Xóa từ ngày này về sau
+              </button>
+              <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="delSeries(${ei}, 'all')" title="Xóa mọi buổi của chuỗi, kể cả các ngày trước">
+                Xóa toàn bộ chuỗi
+              </button>
+            ` : ''}
+          </div>
+          <div class="row" style="gap:8px;">
+            <button type="button" class="btn btn-ghost" onclick="closeEditor()">Hủy</button>
+            <button type="button" class="btn btn-primary" onclick="saveEventFromForm()">Lưu thay đổi</button>
+          </div>
+        </div>
+      ` : `
+        <div style="display:flex; justify-content:flex-end; align-items:center; margin-top:10px; gap:8px;">
+          <button type="button" class="btn btn-ghost" onclick="closeEditor()">Hủy</button>
+          <button type="button" class="btn btn-primary" onclick="saveEventFromForm()">Lưu</button>
+        </div>
+      `}
     </div>
   `;
 
   $("sheetBody").innerHTML = html;
 }
 
-function saveEventFromForm(andClose = true) {
+function saveEventFromForm(keepOpen) {
   const title = $("inpTitle").value.trim(), hours = +$("inpHours").value, start = $("inpStart").value;
   if (!title) { showToast("Vui lòng nhập tên hoạt động!", "bad"); $("inpTitle").focus(); return; }
   const c = chkEvent(ed, start, hours, ei);
@@ -2841,16 +3725,34 @@ function saveEventFromForm(andClose = true) {
       const r0 = L[ei].r;
       Object.keys(S.ev).forEach(k => {
         if (k >= ed) {
-          S.ev[k].forEach(e => { if (e.r === r0) Object.assign(e, o); });
+          S.ev[k].forEach(e => {
+            if (e.r === r0) {
+              Object.assign(e, o);
+              delete e.demo; // đã sửa thì là dữ liệu thật
+              markPending(e);
+            }
+          });
           sortL(S.ev[k]);
         }
       });
       showToast(`Đã cập nhật cả chuỗi "${title}"`, "ok");
     } else {
-      Object.assign(L[ei], o);
-      showToast(`Đã cập nhật "${title}"`, "ok");
+      const rp = $("inpRepeat") ? $("inpRepeat").value : "";
+      if (rp) {
+        const r = "r" + Date.now().toString(36);
+        const n = rep(ed, o, rp, $("inpRepeatEnd").value, r, true);
+        if (!n) return;
+        Object.assign(L[ei], o, { r });
+        delete L[ei].demo;
+        markPending(L[ei]);
+        showToast(`Đã chuyển "${title}" thành chuỗi ${n + 1} hoạt động`, "ok");
+      } else {
+        Object.assign(L[ei], o);
+        delete L[ei].demo;
+        markPending(L[ei]);
+        showToast(`Đã cập nhật "${title}"`, "ok");
+      }
     }
-    ei = null;
   } else {
     const rp = $("inpRepeat") ? $("inpRepeat").value : "";
     if (rp) {
@@ -2859,36 +3761,19 @@ function saveEventFromForm(andClose = true) {
       showToast(`Đã tạo chuỗi ${n} hoạt động "${title}"`, "ok");
     } else {
       L.push(o);
-      showToast(`Đã thêm "${title}"`, "ok");
+      markPending(o);
+      showToast(`Đã thêm "${title}" vào lịch`, "ok");
     }
   }
 
   sortL(L);
   save();
+  gcalFlush();
   draw();
-
-  if (andClose) {
-    closeEditor();
-  } else {
-    ei = null;
+  if (keepOpen === true && !wasEdit) {
     renderEditorSheet();
-    setTimeout(() => {
-      const inp = $("inpTitle");
-      if (inp) inp.focus();
-    }, 60);
-  }
-}
-
-function deleteEvent(idx) {
-  if (!confirm("Bạn có chắc muốn xóa hoạt động này?")) return;
-  const deletedTitle = S.ev[ed][idx].t;
-  S.ev[ed].splice(idx, 1);
-  if (!S.ev[ed].length) delete S.ev[ed];
-  ei = null;
-  save();
-  renderEditorSheet();
-  draw();
-  showToast(`Đã xóa "${deletedTitle}"`, "ok");
+    setTimeout(() => { const i = $("inpTitle"); if (i) i.focus(); }, 50);
+  } else closeEditor();
 }
 
 function handleTimelineGridClick(event, dateStr) {
@@ -2925,13 +3810,33 @@ function updateCap(k, field, val) {
   showToast("Đã cập nhật loại vốn", "ok");
 }
 
+function updateCapKeywords(k, val) {
+  const cap = CM(k);
+  if (!cap) return;
+  cap.kw = String(val || "").split(/[,;\n]+/).map(s => s.trim().toLowerCase()).filter(Boolean);
+  save();
+  draw();
+  showToast(`Đã lưu ${cap.kw.length} từ khóa cho "${cap.n}"`, "ok");
+}
+
+function resetCapKeywords(k) {
+  const cap = CM(k);
+  if (!cap) return;
+  const def = DCAP.find(d => d[0] === k);
+  cap.kw = def && def[4] ? [...def[4]] : [];
+  save();
+  draw();
+  showToast(`Đã khôi phục từ khóa mặc định cho "${cap.n}"`, "ok");
+}
+
 function addCap() {
   const newKey = "c" + Date.now().toString(36);
   S.caps.push({
     k: newKey,
     n: "Vốn mới",
     c: PALETTE[S.caps.length % PALETTE.length],
-    tg: 0
+    tg: 0,
+    kw: []
   });
   save();
   draw();
@@ -2953,19 +3858,51 @@ function deleteCap(k) {
 }
 
 
-const SAFE_K = /^(?!__proto__$)[\w-]{1,24}$/;
-function cleanCap(c) { return c && SAFE_K.test(c.k) ? { k: c.k, n: String(c.n || "Vốn").slice(0, 60), c: /^#[0-9a-f]{6}$/i.test(c.c) ? c.c : "#888888", tg: Math.max(0, +c.tg || 0) } : null; }
-function cleanEv(e) { return e && typeof e.t === "string" && +e.h > 0 && +e.h <= 24 && SAFE_K.test(e.c || "") ? { t: e.t.slice(0, 120), c: e.c, m: e.m === "d" ? "d" : "u", h: +e.h, s: /^\d\d:\d\d$/.test(e.s || "") ? e.s : "", ...(SAFE_K.test(e.r || "") ? { r: e.r } : {}) } : null; }
+function cleanCap(c) {
+  if (!c || !SAFE_K.test(c.k)) return null;
+  const def = DCAP.find(d => d[0] === c.k);
+  const defKw = def && def[4] ? def[4] : [];
+  let kw = Array.isArray(c.kw)
+    ? c.kw.map(x => String(x).trim().toLowerCase()).filter(Boolean)
+    : (typeof c.kw === "string" ? c.kw.split(/[,;\n]+/).map(x => x.trim().toLowerCase()).filter(Boolean) : [...defKw]);
+  return {
+    k: c.k,
+    n: String(c.n || "Vốn").slice(0, 60),
+    c: /^#[0-9a-f]{6}$/i.test(c.c) ? c.c : "#888888",
+    tg: Math.max(0, +c.tg || 0),
+    kw
+  };
+}
+function cleanEv(e) {
+  if (!e || typeof e.t !== "string" || !(+e.h > 0 && +e.h <= 24) || !SAFE_K.test(e.c || "")) return null;
+  return {
+    t: e.t.slice(0, 120), c: e.c, m: e.m === "d" ? "d" : "u", h: +e.h,
+    s: /^([01]\d|2[0-3]):[0-5]\d$/.test(e.s || "") ? e.s : "",
+    ...(SAFE_K.test(e.r || "") ? { r: e.r } : {}),
+    ...(typeof e.gid === "string" && GID.test(e.gid) ? { gid: e.gid } : {}),
+    ...(e.ds ? { ds: 1 } : {}),     // đang chờ đẩy lên Google Calendar
+    ...(e.demo ? { demo: 1 } : {})  // dữ liệu mẫu, không đẩy lên Google Calendar
+  };
+}
 // Chuẩn hóa mọi dữ liệu đọc từ localStorage hoặc tệp sao lưu (khóa an toàn, giá trị hợp lệ, bù trường thiếu)
 function cleanState(d) {
   if (!d || typeof d !== "object" || !d.ev || typeof d.ev !== "object" || !Array.isArray(d.caps)) return null;
   let caps = d.caps.map(cleanCap).filter(Boolean);
-  if (!caps.length) caps = DCAP.map(c => ({ k: c[0], n: c[1], c: c[2], tg: c[3] }));
+  if (!caps.length) caps = DCAP.map(c => ({ k: c[0], n: c[1], c: c[2], tg: c[3], kw: [...c[4]] }));
   const ev = {}, bl = {}, mem = {};
   Object.keys(d.ev).forEach(k => { if (/^\d{4}-\d\d-\d\d$/.test(k) && Array.isArray(d.ev[k])) { const l = d.ev[k].map(cleanEv).filter(Boolean); if (l.length) ev[k] = l; } });
   Object.keys(d.bl || {}).forEach(k => { if (SAFE_K.test(k) && d.bl[k]) bl[k] = { u: Math.max(0, +d.bl[k].u || 0), d: Math.max(0, +d.bl[k].d || 0) }; });
   Object.keys(d.mem || {}).forEach(k => { if (k !== "__proto__" && d.mem[k] && SAFE_K.test(d.mem[k].c || "")) mem[k.slice(0, 120)] = { c: d.mem[k].c }; });
-  return { ev, caps, bl, mem, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
+  const cl = (v, lo, hi, def) => { v = +v; return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : def; };
+  const dc = d.cfg || {};
+  const cfg = {
+    defDuration: cl(dc.defDuration, 0.5, 24, 2),
+    burnoutHours: cl(dc.burnoutHours, 1, 24, 6),
+    gcalAutoSync: dc.gcalAutoSync !== false,
+    ...(GCAL_CID.test(dc.gcalClientId || "") ? { gcalClientId: dc.gcalClientId } : {})
+  };
+  const gdel = Array.isArray(d.gdel) ? [...new Set(d.gdel.filter(g => typeof g === "string" && GID.test(g)))].slice(-500) : [];
+  return { ev, caps, bl, mem, memV: d.memV === 2 ? 2 : 0, cfg, gdel, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
 }
 
 async function saveFile(filename, content, mime) {
@@ -3035,20 +3972,31 @@ function importData(inputEl) {
 /* ==========================================================================
    11. RENDER & KHỞI CHẠY
    ========================================================================== */
+/* Đánh dấu số vừa thay đổi */
+const _su = V.su;
+V.su = function () {
+  const h = _su.call(V);
+  // Không gắn thẻ <span> bên trong <svg>: parser HTML sẽ phá vỡ cây SVG (bánh xe bị vỡ)
+  let n = 0;
+  return h.split(/(<svg[\s\S]*?<\/svg>)/).map(part => part.startsWith("<svg") ? part :
+    part.replace(/(<[^>]*>)|(\d+(?:\.\d+)?[h%])/g, (m, t, v) => t ? t : `<span data-k="n${n++}">${v}</span>`)).join("");
+};
+const vals = () => { const o = {}, t = document.createElement("div"); t.innerHTML = V.su(); t.querySelectorAll("[data-k]").forEach(e => { o[e.dataset.k] = e.textContent; }); return o; };
+const mark = () => document.querySelectorAll("[data-k]").forEach(e => e.classList.toggle("chg", CH.has(e.dataset.k)));
+
 function draw(jump) {
-  const headerWk = $("headerWeekNum");
-  if (headerWk) headerWk.textContent = sel + 1;
   const badge = $("brandYearBadge");
   if (badge) badge.textContent = activeYear;
   document.title = `Life Capital · Quản trị Năng lượng & Thời gian ${activeYear}`;
   renderNav();
+  updateSyncBadge();
 
   const y = window.scrollY;
+  const fo = [...document.querySelectorAll("#v input,#v select")], ai = fo.indexOf(document.activeElement), td = TABDIR;
   const tw = document.querySelector(".table-wrapper");
   const st = tw ? [tw.scrollTop, tw.scrollLeft] : null;
 
   $("v").innerHTML = V[cur]();
-  updateThemeButton();
 
   window.scrollTo(0, y);
   const t2 = document.querySelector(".table-wrapper");
@@ -3069,10 +4017,27 @@ function draw(jump) {
     if (hid) $("v").insertAdjacentHTML("beforeend", `<p style="font-size:12.5px; color:var(--mu); margin-top:8px;">⚠ ${hid} hoạt động không hiển thị trên dòng thời gian (chưa có giờ bắt đầu hoặc trước 06:00). Xem ở chế độ "Tuần chi tiết".</p>`);
     layoutTimeline();
   }
+  // Đánh dấu các số vừa thay đổi sau chỉnh sửa gần nhất
+  const nv = vals();
+  if (dirty) {
+    const c = new Set(Object.keys(nv).filter(k => k in PV && PV[k] !== nv[k]));
+    if (c.size) CH = c;
+    dirty = false;
+  }
+  PV = nv;
+  if (cur === "su" && CH.size) $("v").insertAdjacentHTML("afterbegin", '<div style="margin-bottom:10px;font-size:12.5px;color:var(--mu)">Số <b class="chg">in đậm có nền</b> là số vừa thay đổi sau chỉnh sửa gần nhất. <button class="btn btn-sm btn-ghost" onclick="CH=new Set();draw()">Bỏ đánh dấu</button></div>');
+  mark();
+  TABDIR = 0;
+  // Giữ con trỏ khi vẽ lại (Tab / Shift+Tab sang ô kế tiếp)
+  if (ai >= 0) setTimeout(() => {
+    const f = [...document.querySelectorAll("#v input,#v select")][ai + td];
+    if (f) { f.focus(); if (f.tagName === "INPUT" && f.type !== "color") f.select(); }
+  }, 0);
 }
 
 // Tự động chuyển tuần khi sang thứ Hai mới
 function tick() {
+  updateSyncBadge(); // token Google hết hạn sau 1 giờ
   if (ed) return;
   const oldCW = CW, oldDay = lt, w = wkNow();
   if (w !== oldCW) { if (sel === oldCW) sel = w >= 0 ? w : sel; CW = w; lt = tk; draw(true); }
@@ -3080,9 +4045,35 @@ function tick() {
 }
 setInterval(tick, 60000);
 document.addEventListener("visibilitychange", () => {
-  if (!document.hidden) tick();
+  if (!document.hidden) { tick(); gcalFlush(); }
 });
 window.addEventListener("focus", tick);
+window.addEventListener("online", () => gcalFlush());
+
+// Tab khác vừa lưu: nạp lại để không ghi đè dữ liệu của tab đó bằng bản cũ trong bộ nhớ
+window.addEventListener("storage", e => {
+  if (e.key === "lc_theme") {
+    const root = document.documentElement;
+    if (e.newValue && e.newValue !== "auto") root.setAttribute("data-theme", e.newValue);
+    else root.removeAttribute("data-theme");
+    return;
+  }
+  if (e.key !== "lc2" || !e.newValue) return;
+  let d = null;
+  try { d = cleanState(JSON.parse(e.newValue)); } catch (err) {}
+  if (!d) return;
+  S = d;
+  Object.values(S.ev).forEach(sortL);
+  if (ed) { closeEditor(); showToast("Dữ liệu vừa thay đổi ở tab khác, đã tải lại.", "bad"); }
+  if ($("settingsModalOverlay").classList.contains("open")) renderSettingsModal();
+  draw();
+  gcalFlush(); // có thể tab kia đã đóng hoặc đang giữ khóa: tab này cũng thử gửi các thay đổi chờ
+});
+
+// Xin trình duyệt giữ dữ liệu lâu dài (giảm nguy cơ bị tự dọn khi thiếu dung lượng)
+try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {}); } catch (e) {}
+
+document.addEventListener("keydown", e => { TABDIR = e.key === "Tab" ? (e.shiftKey ? -1 : 1) : 0; }, true);
 
 // Xử lý phím tắt
 document.addEventListener("keydown", e => {
@@ -3093,7 +4084,7 @@ document.addEventListener("keydown", e => {
   }
   if ((e.ctrlKey || e.metaKey) && e.key === "Enter" && ed) {
     e.preventDefault();
-    saveEventFromForm(true);
+    saveEventFromForm();
   }
   // Focus trap trong modal
   if (e.key === "Tab") {
@@ -3150,8 +4141,8 @@ function layoutTimeline() {
 
 // Khởi chạy ứng dụng
 draw(true);
+gcalFlush(); // đẩy các thay đổi còn chờ từ lần mở trước
 </script>
 </body>
 </html>
-
 ```
