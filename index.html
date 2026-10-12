@@ -993,6 +993,64 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
 .save-alert { background: var(--bad-soft); border-color: var(--bad); color: var(--tx); }
 :focus-visible { outline: 2px solid var(--ac); outline-offset: 2px; }
 .chg { font-weight: 700; background: var(--ac-soft); border-radius: 4px; padding: 0 3px; box-shadow: 0 0 0 1px var(--ac); }
+/* Hộp việc chờ (v0.2.0) */
+.cal-with-inbox { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 14px; align-items: start; }
+.cal-with-inbox .week-cards-grid { grid-template-columns: repeat(4, 1fr); }
+@media (min-width: 1440px) { .cal-with-inbox .week-cards-grid { grid-template-columns: repeat(7, minmax(0, 1fr)); } }
+.inbox-aside { position: sticky; top: 12px; max-height: calc(100vh - 24px); overflow-y: auto; background: var(--card); border: 1px solid var(--bd); border-radius: var(--radius-lg); padding: 12px; }
+@media (max-width: 1023px) { .cal-with-inbox { grid-template-columns: minmax(0, 1fr); } .inbox-aside { display: none; } }
+.hv-box { display: flex; flex-direction: column; gap: 8px; }
+.hv-panel-head { display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+.hv-hint { font-size: 11.5px; color: var(--mu); }
+.hv-add, .hv-add-sub { width: 100%; }
+.hv-add-sub { margin: 6px 0 2px; font-size: 13px; }
+.hv-empty { font-size: 13px; color: var(--mu); padding: 14px 6px; text-align: center; }
+.hv-task { border: 1px solid var(--bd); border-left: 4px solid var(--ac); border-radius: var(--radius-md); padding: 8px 10px; background: var(--card); display: flex; flex-direction: column; gap: 4px; }
+.hv-head { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.hv-head[draggable="true"] { cursor: grab; }
+.hv-handle { color: var(--mu); font-size: 12px; letter-spacing: -2px; cursor: grab; user-select: none; padding: 0 2px; }
+.hv-toggle { border: 0; background: transparent; color: var(--tx-sec); cursor: pointer; font-size: 13px; padding: 2px 4px; }
+.hv-name { border: 0; background: transparent; color: var(--tx); font: inherit; text-align: left; cursor: text; padding: 2px 0; min-width: 0; overflow-wrap: anywhere; }
+.hv-title { font-weight: 600; font-size: 14px; flex: 1; }
+.hv-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 12px; color: var(--mu); }
+.hv-mini { font: inherit; font-size: 11.5px; font-weight: 600; border: 1px solid var(--bd); border-radius: var(--radius-full); padding: 2px 8px; background: var(--card-subtle); color: var(--tx); cursor: pointer; max-width: 140px; }
+.hv-mini.up { color: var(--ok-text); } .hv-mini.down { color: var(--bad); }
+.hv-acts { display: inline-flex; gap: 2px; margin-left: auto; align-items: center; }
+.hv-acts .btn-sm { padding: 3px 7px; }
+.hv-subs { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.hv-sub { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 4px 6px; border-radius: var(--radius-sm); font-size: 13px; }
+.hv-sub:hover { background: var(--card-subtle); }
+.hv-sub[draggable="true"] { cursor: grab; }
+.hv-sub .hv-name { flex: 1 1 120px; }
+.hv-sub.sched .hv-name { color: var(--mu); }
+.hv-sub.done .hv-name { text-decoration: line-through; color: var(--mu); }
+.hv-sub.editing input:not([type="number"]) { flex: 1 1 140px; min-width: 0; }
+.hv-dur { font-size: 11.5px; font-weight: 600; color: var(--tx-sec); background: var(--card-subtle); border: 1px solid var(--bd); border-radius: var(--radius-full); padding: 0 7px; }
+.hv-when { font: inherit; font-size: 11.5px; border: 0; background: var(--ok-soft); color: var(--ok-text); border-radius: var(--radius-full); padding: 1px 8px; cursor: pointer; }
+.hv-sched { font-weight: 600; }
+.hv-done-toggle { align-self: flex-start; }
+.hv-over { outline: 2px dashed var(--ac); outline-offset: 2px; background: color-mix(in srgb, var(--ac) 8%, var(--card)); }
+.hv-ghost { position: absolute; left: 0; right: 0; border: 2px dashed var(--ac-text); background: color-mix(in srgb, var(--ac) 22%, transparent); border-radius: var(--radius-sm); font-size: 12px; font-weight: 700; color: var(--tx); padding: 2px 8px; pointer-events: none; z-index: 5; }
+body.hv-dragging .day-card { border-style: dashed; }
+.hv-slot.on { border-color: var(--ac); background: var(--ac-soft); font-weight: 700; }
+.hv-plan { display: flex; flex-direction: column; gap: 4px; padding: 8px 10px; border: 1px solid var(--bd); border-radius: var(--radius-sm); background: var(--card-subtle); }
+.hv-plan-row { display: flex; gap: 10px; font-size: 13px; align-items: baseline; flex-wrap: wrap; }
+.hv-plan-row b { font-variant-numeric: tabular-nums; min-width: 92px; }
+.hv-plan-row.over { color: var(--mu); text-decoration: line-through; }
+.ev-linked { font-size: 11px; margin-right: 3px; }
+/* Cột bên lịch hẹp: bỏ nút lên/xuống (đổi thứ tự bằng kéo, hoặc ở tab Hộp việc), gom mỗi việc nhỏ về một dòng */
+.hv-box.panel .hv-mv { display: none; }
+.hv-box.panel .hv-sub { flex-wrap: nowrap; }
+.hv-box.panel .hv-sub .hv-name { flex: 1 1 auto; min-width: 48px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hv-box.panel .hv-sub .hv-when { white-space: nowrap; }
+.hv-box.panel .hv-sub.sched .hv-dur { display: none; }
+.hv-box.panel .hv-sub .hv-acts { margin-left: 0; }
+@media (hover: none), (pointer: coarse) {
+  .hv-box .btn-sm, .hv-toggle, .hv-mini, .hv-when, .hv-name { min-height: 44px; }
+  .hv-acts .btn-sm { min-width: 44px; }
+  .hv-sub input[type="checkbox"], .hv-head input[type="checkbox"] { width: 22px; height: 22px; }
+  .hv-add, .hv-add-sub { min-height: 44px; font-size: 16px; }
+}
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 .chg { font-weight: 700; background: color-mix(in srgb, var(--ac) 22%, transparent); border-radius: 4px; padding: 0 3px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ac) 45%, transparent); }
 .set-sec { padding: 14px 0; border-bottom: 1px solid var(--bd); }
@@ -1101,6 +1159,17 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
   </div>
 </div>
 
+<!-- Modal Xếp lịch (Hộp việc) -->
+<div class="modal-overlay" id="schedOverlay" onclick="if (event.target.id === 'schedOverlay') closeSched()">
+  <div class="modal-sheet" style="max-width:520px;" role="dialog" aria-modal="true" aria-labelledby="schedTitle">
+    <div class="modal-header">
+      <h3 class="modal-title" id="schedTitle">Xếp lịch</h3>
+      <button type="button" class="btn btn-sm btn-ghost" onclick="closeSched()" title="Đóng (ESC)" aria-label="Đóng">✕</button>
+    </div>
+    <div class="modal-body" id="schedBody" onkeydown="if (event.key === 'Enter' && event.target.tagName !== 'BUTTON') { event.preventDefault(); confirmSched(); }"></div>
+  </div>
+</div>
+
 <!-- Toast Container -->
 <div class="toast-container" id="toastContainer" aria-live="polite"></div>
 
@@ -1179,12 +1248,13 @@ function defState() {
     bl: {},
     mem: {},
     gdel: [],
+    tasks: [],
     pm: "0",
     cfg: { defDuration: 2, burnoutHours: 6 }
   };
 }
 
-const hasDemo = () => Object.values(S.ev).some(l => l.some(e => e.demo));
+const hasDemo = () => Object.values(S.ev).some(l => l.some(e => e.demo)) || S.tasks.some(t => t.demo);
 
 function loadDemo() {
   const w = W[sel >= 0 ? sel : 0];
@@ -1195,6 +1265,11 @@ function loadDemo() {
     L.push({ t, c, m, h, s, demo: 1 });
     sortL(L);
   });
+  if (!S.tasks.some(t => t.demo)) {
+    const title = "Chuẩn bị chuyến đi Đà Lạt";
+    S.tasks.unshift({ id: nid("t"), t: title, c: S.caps.some(c => c.k === "tn") ? "tn" : guess(title), m: "u", demo: 1,
+      subs: [["Chốt ngày đi với cả nhà", 0.5], ["Đặt vé xe", 0.5], ["Đặt homestay", 1]].map(([t, h]) => ({ id: nid("s"), t, h })) });
+  }
   save();
   draw();
   showToast("Đã thêm dữ liệu mẫu vào tuần đang xem", "ok");
@@ -1205,6 +1280,7 @@ function clearDemo() {
     S.ev[k] = S.ev[k].filter(e => !e.demo);
     if (!S.ev[k].length) delete S.ev[k];
   });
+  S.tasks = S.tasks.filter(t => !t.demo);
   save();
   draw();
   showToast("Đã xóa dữ liệu mẫu", "ok");
@@ -1239,6 +1315,7 @@ if (!S.cfg) S.cfg = { defDuration: 2, burnoutHours: 6 };
 S.bl = S.bl || {};
 S.mem = S.mem || {};
 S.gdel = S.gdel || [];
+S.tasks = S.tasks || [];
 // Bản cũ ghi cả phỏng đoán của thanh ghi nhanh vào bộ nhớ (vd "học tiếng anh" → Quan hệ): xóa một lần
 if (S.memV !== 2) { S.mem = {}; S.memV = 2; }
 
@@ -1627,6 +1704,19 @@ function parseNLPText(str) {
 }
 
 function handleNLPInput(val) {
+  const plus = /^\s*\+\s*/.exec(val || "");
+  if (plus) {
+    // "+ việc" ghi vào Hộp việc, không vào lịch
+    parsedNLP = null;
+    const p = $("nlpPreview"), t = val.slice(plus[0].length).trim(), cap = CM(guess(t)), md = guessMode(t);
+    p.style.display = "flex";
+    p.innerHTML = t ? `
+      <span class="pill pill-cyan">📥 → Hộp việc (chưa có ngày giờ)</span>
+      <span class="pill ${md === "u" ? "pill-ok" : "pill-bad"}">${md === "u" ? "▲ Nạp" : "▼ Tiêu"}</span>
+      <span class="pill" style="${capInk(cap.c)}">🏷️ ${esc(cap.n)}</span>
+      <span style="font-weight:600; color:var(--tx); margin-left:4px;">"${esc(t)}"</span>` : `<span class="pill pill-cyan">📥 Gõ tên việc sau dấu + để ghi vào Hộp việc</span>`;
+    return;
+  }
   parsedNLP = parseNLPText(val);
   const p = $("nlpPreview");
   if (!parsedNLP) { p.style.display = "none"; return; }
@@ -1650,6 +1740,11 @@ function noteCompositionEnd() {
     nlpAfterCompose = false;
     setTimeout(executeNLP, 0);
   }
+  if (hvAfterCompose) {
+    const el = hvAfterCompose;
+    hvAfterCompose = null;
+    setTimeout(() => hvInputEnter(el), 0);
+  }
   if (enterAfterCompose) {
     const el = enterAfterCompose;
     enterAfterCompose = null;
@@ -1668,6 +1763,16 @@ function handleNLPKeydown(e) {
 
 function executeNLP() {
   const input = $("nlpInput");
+  const plus = /^\s*\+\s*/.exec(input.value);
+  if (plus) {
+    const t = addTask(input.value.slice(plus[0].length));
+    if (!t) { showToast("Gõ tên việc sau dấu +", "bad"); return; }
+    input.value = "";
+    handleNLPInput("");
+    draw();
+    showToast(`Đã thêm "${t.t}" vào Hộp việc`, "ok");
+    return;
+  }
   const r = parseNLPText(input.value);
   if (!r) { showToast("Vui lòng nhập nội dung!", "bad"); return; }
   if (r.err) { showToast(r.err, "bad"); return; }
@@ -2041,6 +2146,7 @@ function copyReviewToClipboard(wIdx) {
    ========================================================================== */
 const TABS = [
   { id: "ca", label: "Lịch biểu", icon: "📅" },
+  { id: "hv", label: "Hộp việc", icon: "📥" },
   { id: "su", label: "Tổng quan & 168h", icon: "📊" },
   { id: "set", label: "Danh mục vốn", icon: "🏷️" }
 ];
@@ -2048,7 +2154,7 @@ const TABS = [
 function renderNav() {
   $("nav").innerHTML = TABS.map(t =>
     `<button class="${t.id === cur ? "active" : ""}" aria-current="${t.id === cur ? "page" : "false"}" onclick="switchTab('${t.id}')">
-      <span>${t.icon}</span> <span>${t.label}</span>
+      <span>${t.icon}</span> <span>${t.label}${t.id === "hv" && inboxCount() ? ` · ${inboxCount()}` : ""}</span>
     </button>`
   ).join("");
 }
@@ -2727,6 +2833,7 @@ const V = {
             ${CW >= 0 && sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=Math.max(0, CW); draw()">Về tuần này (W${CW+1})</button>` : sel === CW ? `<span class="pill pill-ok">Tuần hiện tại</span>` : ""}
           </div>
           <div class="row">
+            ${calSubView !== "year" ? `<button class="btn btn-sm ${inboxPanel ? "btn-ghost" : ""} hv-toggle-btn" onclick="toggleInboxPanel()" title="Hiện hoặc ẩn cột Hộp việc để kéo việc vào lịch">📥 Hộp việc${inboxCount() ? ` (${inboxCount()})` : ""}</button>` : ""}
             <div class="segmented-control">
               <button class="${calSubView === 'focus' ? 'active' : ''}" onclick="calSubView='focus'; draw()">Tuần chi tiết</button>
               <button class="${calSubView === 'timeline' ? 'active' : ''}" onclick="calSubView='timeline'; draw()">Dòng thời gian 24h</button>
@@ -2748,7 +2855,7 @@ const V = {
         const bat = getDayBattery(k);
 
         cards += `
-          <div class="day-card ${isToday ? 'today' : ''}">
+          <div class="day-card ${isToday ? 'today' : ''}" ondragover="dayOver(event)" ondragleave="dayLeave(event)" ondrop="dayDrop(event, '${k}')">
             <div class="day-card-header">
               <span class="day-name">${DN_VI[j]}</span>
               <span class="day-date">${dt.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" })}</span>
@@ -2767,7 +2874,7 @@ const V = {
                 return `
                   <div class="event-item" style="border-left-color: ${cap.c}" onclick="openEditor('${k}', ${idx})">
                     <div class="event-item-top">
-                      <span class="event-title" title="${esc(e.t)}">${esc(e.t)}</span>
+                      <span class="event-title" title="${esc(e.t)}">${e.tk ? '<span class="ev-linked" title="Từ Hộp việc">📥</span>' : ""}${esc(e.t)}</span>
                       <span class="${e.m === 'u' ? 'event-mode-up' : 'event-mode-down'}">${e.m === 'u' ? '▲' : '▼'}</span>
                     </div>
                     <div class="event-meta">
@@ -2785,7 +2892,7 @@ const V = {
         `;
       }
       cards += '</div>';
-      return headerBar + cards;
+      return headerBar + withInbox(cards);
     }
 
     // 2. Chế độ DÒNG THỜI GIAN 24H
@@ -2847,7 +2954,7 @@ const V = {
         }
       }
 
-      return headerBar + `
+      return headerBar + withInbox(`
         <div class="timeline-container">
           ${dayNav}
           <div style="padding:10px 14px; background:var(--card); display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--bd);">
@@ -2860,7 +2967,7 @@ const V = {
             </div>
             <button class="btn btn-sm btn-primary" onclick="openEditor('${activeDate}')">+ Thêm hoạt động</button>
           </div>
-          <div class="timeline-grid" onclick="handleTimelineGridClick(event, '${activeDate}')">
+          <div class="timeline-grid" onclick="handleTimelineGridClick(event, '${activeDate}')" ondragover="tlOver(event, '${activeDate}')" ondragleave="tlLeave(event)" ondrop="tlDrop(event, '${activeDate}')">
             ${hourMarkers}
             <div class="timeline-content-area">
               ${timeNowIndicator}
@@ -2868,7 +2975,7 @@ const V = {
             </div>
           </div>
         </div>
-      `;
+      `);
     }
 
     // 3. Chế độ LƯỚI 53 TUẦN (SỬA LỖI HOÀN CHỈNH)
@@ -3467,6 +3574,13 @@ function renderEditorSheet() {
         </div>
       ` : ''}
 
+      ${X && X.tk ? (() => {
+        const f = findSub(X.tk), owner = f ? f.task : findTask(X.tk);
+        return owner ? `<div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; padding:6px 10px; background:var(--card-subtle); border-radius:var(--radius-sm); border:1px solid var(--bd); font-size:12.5px;">
+          <span>📥 Thuộc việc: <b>${esc(owner.t)}</b></span>
+          <button type="button" class="btn btn-sm" onclick="returnToInbox()" title="Gỡ khỏi lịch, việc nhỏ trở lại Chưa xếp">↩ Đưa về hộp việc</button>
+        </div>` : "";
+      })() : ""}
       <div class="form-group">
         <label class="form-label" for="inpTitle">Tên hoạt động <span style="color:var(--bad)">*</span></label>
         <input id="inpTitle" placeholder="Ví dụ: Đánh cầu lông, Đọc sách, Họp nhóm, Chạy bộ..."
@@ -3737,6 +3851,7 @@ function cleanEv(e) {
     t: e.t.slice(0, 120), c: e.c, m: e.m === "d" ? "d" : "u", h: +e.h,
     s: /^([01]\d|2[0-3]):[0-5]\d$/.test(e.s || "") ? e.s : "",
     ...(SAFE_K.test(e.r || "") ? { r: e.r } : {}),
+    ...(SAFE_K.test(e.tk || "") ? { tk: e.tk } : {}), // liên kết tới việc nhỏ trong Hộp việc
     ...(typeof e.gid === "string" && GID.test(e.gid) ? { gid: e.gid } : {}),
     ...(e.ds ? { ds: 1 } : {}),     // đang chờ đẩy lên Google Calendar
     ...(e.demo ? { demo: 1 } : {})  // dữ liệu mẫu, không đẩy lên Google Calendar
@@ -3760,7 +3875,8 @@ function cleanState(d) {
     ...(GCAL_CID.test(dc.gcalClientId || "") ? { gcalClientId: dc.gcalClientId } : {})
   };
   const gdel = Array.isArray(d.gdel) ? [...new Set(d.gdel.filter(g => typeof g === "string" && GID.test(g)))].slice(-500) : [];
-  return { ev, caps, bl, mem, memV: d.memV === 2 ? 2 : 0, cfg, gdel, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
+  const tasks = Array.isArray(d.tasks) ? d.tasks.map(cleanTask).filter(Boolean).slice(0, 500) : [];
+  return { ev, caps, bl, mem, memV: d.memV === 2 ? 2 : 0, cfg, gdel, tasks, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
 }
 
 async function saveFile(filename, content, mime) {
@@ -3815,6 +3931,7 @@ function importData(inputEl) {
         d.caps.forEach(c => { if (!S.caps.some(x => x.k === c.k)) S.caps.push(c); });
         Object.keys(d.bl).forEach(k => { if (!S.bl[k]) S.bl[k] = d.bl[k]; });
         S.mem = Object.assign({}, d.mem, S.mem);
+        d.tasks.forEach(t => { if (!S.tasks.some(x => x.id === t.id)) S.tasks.push(t); });
         const sg = e => [e.t, e.s, e.c, e.m, e.h, e.r].join("|");
         Object.keys(d.ev).forEach(k => { const L = S.ev[k] = S.ev[k] || []; d.ev[k].forEach(e => { if (!L.some(y => sg(y) === sg(e))) L.push(e); }); sortL(L); });
       }
@@ -3922,7 +4039,9 @@ window.addEventListener("storage", e => {
   if (!d) return;
   S = d;
   Object.values(S.ev).forEach(sortL);
+  hvEdit = null;
   if (ed) { closeEditor(); showToast("Dữ liệu vừa thay đổi ở tab khác, đã tải lại.", "bad"); }
+  if (sch) { closeSched(); showToast("Dữ liệu vừa thay đổi ở tab khác, đã tải lại.", "bad"); }
   if ($("settingsModalOverlay").classList.contains("open")) renderSettingsModal();
   draw();
   gcalFlush(); // có thể tab kia đã đóng hoặc đang giữ khóa: tab này cũng thử gửi các thay đổi chờ
@@ -3937,6 +4056,7 @@ document.addEventListener("keydown", e => { TABDIR = e.key === "Tab" ? (e.shiftK
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") {
     if (ed) closeEditor();
+    closeSched();
     closeReviewModal();
     closeSettingsModal();
   }
@@ -3995,6 +4115,534 @@ function layoutTimeline() {
       x.b.style.width = `calc(${100 / lanes.length}% - 4px)`;
     });
   });
+}
+
+/* ==========================================================================
+   13. HỘP VIỆC CHỜ (v0.2.0): việc chưa có ngày giờ, chia việc nhỏ, kéo vào lịch
+   Liên kết: hoạt động trên lịch có trường tk = id việc nhỏ (hoặc id việc nếu xếp cả việc không có việc nhỏ).
+   Trạng thái "Đã xếp" không lưu riêng mà tính từ lịch, nên sửa giờ / xóa hoạt động tự cập nhật hộp.
+   ========================================================================== */
+const nid = p => p + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+const SUB_DEF_H = 1;
+const MODE_RX = WB("họp|meeting|deadline|ot|tăng ca|làm việc|công việc|xử lý|áp lực|stress|báo cáo");
+const guessMode = t => MODE_RX.test(t) ? "d" : "u";
+const CAN_DRAG = window.matchMedia && matchMedia("(hover: hover) and (pointer: fine)").matches;
+const openTasks = new Set();
+let hvEdit = null;          // { kind: "task" | "sub", id }
+let hvShowDone = false;
+let dragItem = null;        // { kind: "sub" | "task", id }
+let hvAfterCompose = null;  // ô nhập đang chờ bộ gõ chốt chữ
+let inboxPanel = true;
+try { inboxPanel = localStorage.getItem("lc_inbox_panel") !== "0"; } catch (e) {}
+
+function cleanSub(x) {
+  if (!x || !SAFE_K.test(x.id || "") || typeof x.t !== "string" || !x.t.trim()) return null;
+  const h = +x.h;
+  return { id: x.id, t: x.t.slice(0, 120), h: h > 0 && h <= 12 ? Math.round(h * 100) / 100 : 1, ...(x.done ? { done: 1 } : {}) };
+}
+function cleanTask(x) {
+  if (!x || !SAFE_K.test(x.id || "") || typeof x.t !== "string" || !x.t.trim()) return null;
+  return {
+    id: x.id, t: x.t.slice(0, 160), c: SAFE_K.test(x.c || "") ? x.c : "sk", m: x.m === "d" ? "d" : "u",
+    subs: Array.isArray(x.subs) ? x.subs.map(cleanSub).filter(Boolean).slice(0, 100) : [],
+    ...(x.done ? { done: 1 } : {}), ...(x.demo ? { demo: 1 } : {})
+  };
+}
+
+// Duyệt lịch một lần mỗi lần vẽ: tk → nơi đã xếp
+function schedMap() {
+  const m = new Map();
+  Object.keys(S.ev).forEach(k => S.ev[k].forEach((e, i) => { if (e.tk) m.set(e.tk, { date: k, idx: i, s: e.s, h: e.h }); }));
+  return m;
+}
+const findTask = id => S.tasks.find(t => t.id === id);
+function findSub(id) {
+  for (const t of S.tasks) { const s = t.subs.find(x => x.id === id); if (s) return { task: t, sub: s }; }
+  return null;
+}
+const taskDone = t => t.subs.length ? t.subs.every(s => s.done) : !!t.done;
+// Đơn vị cần xếp của một việc: các việc nhỏ, hoặc chính việc nếu chưa chia nhỏ
+const units = t => t.subs.length ? t.subs.map(s => ({ tk: s.id, t: s.t, h: s.h, done: s.done })) : [{ tk: t.id, t: t.t, h: SUB_DEF_H, done: t.done }];
+function inboxCount() {
+  const m = schedMap();
+  return S.tasks.reduce((n, t) => n + units(t).filter(u => !u.done && !m.has(u.tk)).length, 0);
+}
+const hrs = h => r1(h).replace(".", ",") + "h";
+const whenLabel = p => {
+  const d = new Date(p.date + "T00:00");
+  return `${DN_SHORT[(d.getDay() + 6) % 7]} ${pad(d.getDate())}/${pad(d.getMonth() + 1)}${p.s ? " " + p.s : ""}`;
+};
+
+// Thời lượng viết kiểu thanh ⚡: "30p", "1h30", "2 tiếng", "một tiếng rưỡi"; còn lại là tên
+function parseSubText(str) {
+  let w = " " + normalizeViNumbers(String(str || "").trim().normalize("NFC")) + " ", h = null, m;
+  const cut = re => { const x = w.match(re); if (x) w = w.slice(0, x.index) + " " + w.slice(x.index + x[0].length); return x; };
+  const num = s => parseFloat(String(s).replace(",", "."));
+  if (cut(NLP_RX("«(?:nửa|1\\/2)\\s*(?:tiếng|giờ|h)»"))) h = 0.5;
+  else if ((m = cut(NLP_RX("«(\\d+(?:[.,]\\d+)?)\\s*tiếng(?:\\s+(\\d{1,2})\\s*(?:phút|ph|p)?)?(\\s*rưỡi)?»")))) h = num(m[1]) + (+m[2] || 0) / 60 + (m[3] ? 0.5 : 0);
+  else if (cut(NLP_RX("«tiếng\\s*rưỡi»"))) h = 1.5;
+  else if ((m = cut(NLP_RX("«(\\d{1,2})\\s*(?:h|g|giờ)\\s*(\\d{1,2})\\s*(?:phút|ph|p)?»")))) h = +m[1] + +m[2] / 60;
+  else if ((m = cut(NLP_RX("«(\\d+(?:[.,]\\d+)?)\\s*(?:h|giờ)(\\s*rưỡi)?»")))) h = num(m[1]) + (m[2] ? 0.5 : 0);
+  else if ((m = cut(NLP_RX("«(\\d+)\\s*(?:phút|phut|min|ph|p)»")))) h = +m[1] / 60;
+  const t = w.replace(/\s+/g, " ").trim();
+  if (h !== null) h = Math.min(12, Math.max(0.25, Math.round(h * 100) / 100));
+  return { t, h };
+}
+
+/* ---------- Thêm, sửa, xóa, sắp xếp ---------- */
+function addTask(title) {
+  title = String(title || "").trim();
+  if (!title) return null;
+  const t = { id: nid("t"), t: title.slice(0, 160), c: guess(title), m: guessMode(title), subs: [] };
+  S.tasks.unshift(t);
+  openTasks.add(t.id);
+  save();
+  return t;
+}
+function addSub(taskId, text) {
+  const t = findTask(taskId), p = parseSubText(text);
+  if (!t || !p.t) return false;
+  t.subs.push({ id: nid("s"), t: p.t.slice(0, 120), h: p.h || SUB_DEF_H });
+  delete t.done;
+  save();
+  return true;
+}
+function hvInputEnter(el) {
+  const v = el.value;
+  if (el.dataset.hv === "task") {
+    if (!addTask(v)) return;
+    el.value = "";
+    draw();
+    showToast("Đã thêm vào Hộp việc", "ok");
+    setTimeout(() => { const i = $(el.id); if (i) i.focus(); }, 0);
+  } else if (el.dataset.hv === "sub") {
+    if (!addSub(el.dataset.task, v)) return;
+    draw();
+    setTimeout(() => { const i = $(el.id); if (i) { i.value = ""; i.focus(); } }, 0);
+  } else if (el.dataset.hv === "edit") saveHvEdit();
+}
+function hvKeydown(e) {
+  const el = e.target;
+  if (e.key === "Escape" && el.dataset.hv === "edit") { e.preventDefault(); e.stopPropagation(); hvEdit = null; draw(); return; }
+  if (e.key !== "Enter" || e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) return;
+  if (e.isComposing || e.keyCode === 229) { hvAfterCompose = el; return; }
+  e.preventDefault();
+  hvInputEnter(el);
+}
+function startHvEdit(kind, id) {
+  hvEdit = { kind, id };
+  draw();
+  setTimeout(() => { const i = $("hvEditName"); if (i) { i.focus(); i.select(); } }, 0);
+}
+function saveHvEdit() {
+  if (!hvEdit) return;
+  const name = ($("hvEditName") || {}).value, dur = +(($("hvEditDur") || {}).value);
+  if (hvEdit.kind === "task") {
+    const t = findTask(hvEdit.id);
+    if (t && name && name.trim()) t.t = name.trim().slice(0, 160);
+  } else {
+    const f = findSub(hvEdit.id);
+    if (f && name && name.trim()) {
+      f.sub.t = name.trim().slice(0, 120);
+      if (dur > 0 && dur <= 12) f.sub.h = Math.round(dur * 100) / 100;
+    }
+  }
+  hvEdit = null;
+  save();
+  draw();
+}
+function setTaskField(id, field, val) {
+  const t = findTask(id);
+  if (!t) return;
+  t[field] = val;
+  save();
+  draw();
+}
+function toggleTaskOpen(id) {
+  openTasks.has(id) ? openTasks.delete(id) : openTasks.add(id);
+  draw();
+}
+function toggleDone(kind, id) {
+  if (kind === "sub") { const f = findSub(id); if (!f) return; f.sub.done ? delete f.sub.done : (f.sub.done = 1); if (taskDone(f.task)) showToast(`Đã xong cả việc "${f.task.t}"`, "ok"); }
+  else { const t = findTask(id); if (!t) return; t.done ? delete t.done : (t.done = 1); }
+  save();
+  draw();
+}
+function moveItem(kind, id, delta) {
+  let list, i;
+  if (kind === "task") { list = S.tasks; i = list.findIndex(t => t.id === id); }
+  else { const f = findSub(id); if (!f) return; list = f.task.subs; i = list.indexOf(f.sub); }
+  const j = i + delta;
+  if (i < 0 || j < 0 || j >= list.length) return;
+  [list[i], list[j]] = [list[j], list[i]];
+  save();
+  draw();
+}
+// Gỡ các hoạt động đã xếp của những tk này khỏi lịch (kèm lệnh xóa trên Google)
+function unschedule(tks, keep) {
+  let n = 0;
+  Object.keys(S.ev).forEach(k => {
+    S.ev[k] = S.ev[k].filter(e => {
+      if (!e.tk || !tks.includes(e.tk)) return true;
+      if (keep) { delete e.tk; return true; }
+      queueDelete(e.gid); n++; return false;
+    });
+    if (!S.ev[k].length) delete S.ev[k];
+  });
+  return n;
+}
+function deleteSub(id) {
+  const f = findSub(id);
+  if (!f || !confirm(`Xóa việc nhỏ "${f.sub.t}"?`)) return;
+  const sched = schedMap().has(id);
+  if (sched) unschedule([id], !confirm(`"${f.sub.t}" đang nằm trên lịch.\n\nOK: xóa luôn hoạt động trên lịch.\nHủy: giữ hoạt động trên lịch.`));
+  f.task.subs = f.task.subs.filter(s => s.id !== id);
+  save(); gcalFlush(); draw();
+  showToast(`Đã xóa "${f.sub.t}"`, "ok");
+}
+function deleteTask(id) {
+  const t = findTask(id);
+  if (!t || !confirm(`Xóa việc "${t.t}" cùng ${t.subs.length} việc nhỏ?`)) return;
+  const m = schedMap(), tks = units(t).map(u => u.tk).filter(k => m.has(k));
+  if (tks.length) unschedule(tks, !confirm(`${tks.length} việc nhỏ của "${t.t}" đang nằm trên lịch.\n\nOK: xóa luôn các hoạt động đó.\nHủy: giữ các hoạt động trên lịch.`));
+  S.tasks = S.tasks.filter(x => x.id !== id);
+  openTasks.delete(id);
+  save(); gcalFlush(); draw();
+  showToast(`Đã xóa việc "${t.t}"`, "ok");
+}
+// Từ popup hoạt động: đưa việc nhỏ về hộp
+function returnToInbox() {
+  if (ei == null || !ed || !S.ev[ed] || !S.ev[ed][ei] || !S.ev[ed][ei].tk) return;
+  const e = S.ev[ed][ei];
+  queueDelete(e.gid);
+  S.ev[ed].splice(ei, 1);
+  if (!S.ev[ed].length) delete S.ev[ed];
+  ei = null;
+  save(); gcalFlush(); draw(); closeEditor();
+  showToast(`Đã đưa "${e.t}" về Hộp việc`, "ok");
+}
+function toggleInboxPanel() {
+  if (window.innerWidth < 1024) { switchTab("hv"); return; }
+  inboxPanel = !inboxPanel;
+  try { localStorage.setItem("lc_inbox_panel", inboxPanel ? "1" : "0"); } catch (e) {}
+  draw();
+}
+
+/* ---------- Xếp lịch ---------- */
+const minOf = s => { const [a, b] = s.split(":").map(Number); return a * 60 + b; };
+const hmOf = m => pad(m / 60 | 0) + ":" + pad(m % 60);
+function busy(date) {
+  return (S.ev[date] || []).filter(e => e.s).map(e => [minOf(e.s), minOf(e.s) + Math.round(e.h * 60)]).sort((a, b) => a[0] - b[0]);
+}
+// Các điểm bắt đầu trống đủ dài (phút), trong khung [from, to]
+function freeStarts(date, h, from, to, max) {
+  const need = Math.round(h * 60), out = [];
+  let t = from;
+  for (const [a, b] of busy(date).concat([[to, to]])) {
+    if (a - t >= need && t + need <= to) out.push(t);
+    if (out.length >= max) break;
+    t = Math.max(t, b);
+  }
+  return out;
+}
+const defaultStart = (date, h) => { const f = freeStarts(date, h, 480, 1440, 1); return hmOf(f.length ? f[0] : 480); };
+// Kế hoạch xếp liền nhau theo thứ tự: mỗi phần tử có giờ, chỗ trùng, hoặc không vừa trong ngày
+function planUnits(date, start, list) {
+  let t = minOf(start), over = false;
+  return list.map(u => {
+    const end = t + Math.round(u.h * 60);
+    // Giữ đúng thứ tự: từ việc đầu tiên không vừa, mọi việc sau cũng ở lại hộp
+    if (over || end > 1440) { over = true; return { ...u, over: true }; }
+    const c = chkEvent(date, hmOf(t), u.h, -1), p = { ...u, s: hmOf(t), hit: c.hit };
+    t = end;
+    return p;
+  });
+}
+function createEvents(task, date, plan) {
+  const L = S.ev[date] = S.ev[date] || [];
+  const made = plan.filter(p => !p.over).map(p => {
+    const e = { t: p.t, c: task.c, m: task.m, h: p.h, s: p.s, tk: p.tk, ...(task.demo ? { demo: 1 } : {}) };
+    L.push(e);
+    markPending(e);
+    return e;
+  });
+  sortL(L);
+  if (!L.length) delete S.ev[date];
+  save(); gcalFlush();
+  return made.length;
+}
+const dayDesc = date => describeDate(new Date(date + "T00:00"));
+// Xếp một việc nhỏ vào ngày giờ cho trước (thả trên dòng thời gian, hoặc bấm Lưu trong bảng)
+function scheduleSub(tk, date, start) {
+  const f = findSub(tk), task = f ? f.task : findTask(tk);
+  if (!task) return false;
+  const u = f ? { tk, t: f.sub.t, h: f.sub.h } : { tk, t: task.t, h: SUB_DEF_H };
+  const c = chkEvent(date, start, u.h, -1);
+  if (c.err) { showToast(c.err, "bad"); return false; }
+  if (c.hit && !confirm(`Trùng giờ với "${c.hit.t}" (${c.hit.s}). Vẫn thêm?`)) return false;
+  if (schedMap().has(tk)) unschedule([tk], false); // xếp lại: bỏ chỗ cũ
+  createEvents(task, date, [{ ...u, s: start }]);
+  draw();
+  showToast(`Đã xếp "${u.t}" vào ${dayDesc(date)} ${start}`, "ok");
+  return true;
+}
+
+/* Bảng "Xếp lịch": dùng cho nút Xếp lịch (iPhone), thả vào một ngày ở Tuần chi tiết, và thả cả việc */
+let sch = null; // { kind, id, date, start }
+function schedTarget() {
+  if (!sch) return null;
+  const m = schedMap();
+  if (sch.kind === "task") {
+    const task = findTask(sch.id);
+    if (!task) return null;
+    return { task, list: units(task).filter(u => !u.done && !m.has(u.tk)), whole: true };
+  }
+  const f = findSub(sch.id), task = f ? f.task : findTask(sch.id);
+  if (!task) return null;
+  return { task, list: [f ? { tk: f.sub.id, t: f.sub.t, h: f.sub.h } : { tk: task.id, t: task.t, h: SUB_DEF_H }], whole: false, moving: m.get(sch.id) };
+}
+function openSched(kind, id, date, start) {
+  sch = { kind, id, date: date || tk, start: start || "" };
+  const tg = schedTarget();
+  if (!tg) { sch = null; return; }
+  if (tg.whole && !tg.list.length) { sch = null; showToast("Mọi việc nhỏ của việc này đã được xếp hoặc đã xong", "bad"); return; }
+  if (!sch.start) sch.start = defaultStart(sch.date, tg.whole ? tg.list.reduce((a, u) => a + u.h, 0) : tg.list[0].h);
+  LF = document.activeElement;
+  renderSched();
+  $("schedOverlay").classList.add("open");
+  setTimeout(() => { const b = $("schedOk"); if (b) b.focus(); }, 80);
+}
+function closeSched() {
+  if (!sch) return;
+  sch = null;
+  $("schedOverlay").classList.remove("open");
+  restoreFocus();
+}
+function schedSet(field, val) {
+  if (!val) return;
+  sch[field] = val;
+  if (field === "date") { const tg = schedTarget(); if (tg) sch.start = defaultStart(val, tg.whole ? tg.list.reduce((a, u) => a + u.h, 0) : tg.list[0].h); }
+  renderSched();
+}
+function renderSched() {
+  const tg = schedTarget();
+  if (!tg) { closeSched(); return; }
+  const total = tg.list.reduce((a, u) => a + u.h, 0), tmr = ky(ad(new Date(tk + "T00:00"), 1));
+  $("schedTitle").textContent = tg.whole ? `Xếp cả việc: ${tg.task.t}` : `Xếp lịch: ${tg.list[0].t}`;
+  const slots = freeStarts(sch.date, tg.whole ? total : tg.list[0].h, 360, 1380, 3);
+  const plan = planUnits(sch.date, sch.start, tg.list), over = plan.filter(p => p.over).length;
+  $("schedBody").innerHTML = `
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      <div style="font-size:13px; color:var(--tx-sec);">${tg.whole ? `${tg.list.length} việc nhỏ chưa xếp · tổng ${hrs(total)} · xếp liền nhau theo thứ tự` : `Thời lượng ${hrs(tg.list[0].h)}${tg.moving ? ` · đang ở ${whenLabel(tg.moving)}, lưu sẽ dời sang giờ mới` : ""}`}</div>
+      <div class="form-group">
+        <span class="form-label">Ngày</span>
+        <div class="row" style="gap:6px;">
+          <button type="button" class="btn btn-sm ${sch.date === tk ? "btn-primary" : ""}" onclick="schedSet('date','${tk}')">Hôm nay</button>
+          <button type="button" class="btn btn-sm ${sch.date === tmr ? "btn-primary" : ""}" onclick="schedSet('date','${tmr}')">Ngày mai</button>
+          <input id="schedDate" type="date" value="${sch.date}" onchange="schedSet('date', this.value)" aria-label="Chọn ngày" style="flex:1; min-width:140px;">
+        </div>
+        <div style="font-size:12px; color:var(--mu);">${esc(dayDesc(sch.date))}</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="schedStart">Giờ bắt đầu</label>
+        <input id="schedStart" type="time" step="900" value="${sch.start}" onchange="schedSet('start', this.value)">
+        <div class="row" style="gap:6px; margin-top:4px;">
+          <span style="font-size:12px; color:var(--mu);">${slots.length ? "Khung trống:" : "Không còn khung trống đủ dài trong ngày (06:00–23:00)"}</span>
+          ${slots.map(m => `<button type="button" class="btn btn-sm btn-ghost hv-slot ${hmOf(m) === sch.start ? "on" : ""}" onclick="schedSet('start','${hmOf(m)}')">${hmOf(m)}</button>`).join("")}
+        </div>
+      </div>
+      ${tg.whole ? `
+        <div class="hv-plan">
+          <span class="form-label">Xem trước</span>
+          ${plan.map(p => p.over
+            ? `<div class="hv-plan-row over"><span>Không vừa trong ngày</span><span>${esc(p.t)} · ${hrs(p.h)}</span></div>`
+            : `<div class="hv-plan-row"><b>${p.s}–${tt(p.s, p.h)}</b><span>${esc(p.t)}${p.hit ? ` <span class="pill pill-bad">⚠ trùng "${esc(p.hit.t)}"</span>` : ""}</span></div>`).join("")}
+          ${over ? `<div style="font-size:12.5px; color:var(--wa-text);">${over} việc nhỏ không vừa trước 24:00, được giữ lại trong hộp.</div>` : ""}
+        </div>` : ""}
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:4px;">
+        <button type="button" class="btn btn-ghost" onclick="closeSched()">Hủy</button>
+        <button type="button" class="btn btn-primary" id="schedOk" onclick="confirmSched()" ${tg.whole && over === plan.length ? "disabled" : ""}>${tg.whole ? "Xếp" : "Lưu"}</button>
+      </div>
+    </div>`;
+}
+function confirmSched() {
+  const tg = schedTarget();
+  if (!tg) return;
+  const st = $("schedStart") ? $("schedStart").value : sch.start;
+  if (!st) { showToast("Chọn giờ bắt đầu", "bad"); return; }
+  sch.start = st;
+  if (!tg.whole) { if (scheduleSub(tg.list[0].tk, sch.date, st)) closeSched(); return; }
+  const plan = planUnits(sch.date, st, tg.list), n = createEvents(tg.task, sch.date, plan), date = sch.date;
+  closeSched();
+  draw();
+  showToast(`Đã xếp ${n} việc nhỏ của "${tg.task.t}" vào ${dayDesc(date)}${plan.length > n ? `; ${plan.length - n} việc còn trong hộp` : ""}`, "ok");
+}
+
+/* ---------- Kéo thả (chỉ trên máy tính có chuột) ---------- */
+function dndStart(e, kind, id) {
+  dragItem = { kind, id };
+  e.dataTransfer.effectAllowed = "move";
+  try { e.dataTransfer.setData("text/plain", kind + ":" + id); } catch (x) {}
+  e.stopPropagation();
+  document.body.classList.add("hv-dragging");
+}
+function dndEnd() {
+  dragItem = null;
+  document.body.classList.remove("hv-dragging");
+  document.querySelectorAll(".hv-over").forEach(x => x.classList.remove("hv-over"));
+  const g = $("hvGhost"); if (g) g.remove();
+}
+const dragUnitH = () => {
+  if (!dragItem) return SUB_DEF_H;
+  if (dragItem.kind === "sub") { const f = findSub(dragItem.id); return f ? f.sub.h : SUB_DEF_H; }
+  const t = findTask(dragItem.id), m = schedMap();
+  return t ? units(t).filter(u => !u.done && !m.has(u.tk)).reduce((a, u) => a + u.h, 0) || SUB_DEF_H : SUB_DEF_H;
+};
+// Dòng thời gian: vị trí con trỏ → giờ, làm tròn 15 phút
+function tlMinute(e, grid) {
+  const y = e.clientY - grid.getBoundingClientRect().top + grid.scrollTop;
+  return Math.min(1425, Math.max(360, 360 + Math.round(y / 48 * 4) * 15));
+}
+function tlOver(e, date) {
+  if (!dragItem) return;
+  e.preventDefault();
+  const grid = e.currentTarget, area = grid.querySelector(".timeline-content-area"), m = tlMinute(e, grid), h = dragUnitH();
+  let g = $("hvGhost");
+  if (!g) { g = document.createElement("div"); g.id = "hvGhost"; g.className = "hv-ghost"; area.appendChild(g); }
+  g.style.top = (m - 360) / 60 * 48 + "px";
+  g.style.height = Math.max(24, h * 48) + "px";
+  g.textContent = `${hmOf(m)} – ${tt(hmOf(m), h)}${dragItem.kind === "task" ? " · cả việc" : ""}`;
+}
+function tlLeave(e) {
+  if (e.currentTarget.contains(e.relatedTarget)) return;
+  const g = $("hvGhost"); if (g) g.remove();
+}
+function tlDrop(e, date) {
+  if (!dragItem) return;
+  e.preventDefault();
+  const it = dragItem, st = hmOf(tlMinute(e, e.currentTarget));
+  dndEnd();
+  if (it.kind === "sub") scheduleSub(it.id, date, st);
+  else { const t = findTask(it.id); if (t && !t.subs.length && !schedMap().has(t.id)) scheduleSub(t.id, date, st); else openSched("task", it.id, date, st); }
+}
+// Tuần chi tiết: thả vào một ngày → bảng chọn giờ
+function dayOver(e) { if (!dragItem) return; e.preventDefault(); e.currentTarget.classList.add("hv-over"); }
+function dayLeave(e) { if (!e.currentTarget.contains(e.relatedTarget)) e.currentTarget.classList.remove("hv-over"); }
+function dayDrop(e, date) {
+  if (!dragItem) return;
+  e.preventDefault();
+  const it = dragItem;
+  dndEnd();
+  openSched(it.kind === "sub" ? "sub" : "task", it.id, date);
+}
+// Trong hộp: thả lên một việc nhỏ cùng việc / một việc khác để đổi thứ tự
+function rowOver(e, kind, id) {
+  if (!dragItem || dragItem.kind !== kind || dragItem.id === id) return;
+  if (kind === "sub") { const a = findSub(dragItem.id), b = findSub(id); if (!a || !b || a.task !== b.task) return; }
+  e.preventDefault(); e.stopPropagation();
+  e.currentTarget.classList.add("hv-over");
+}
+function rowDrop(e, kind, id) {
+  if (!dragItem || dragItem.kind !== kind || dragItem.id === id) return;
+  e.preventDefault(); e.stopPropagation();
+  let list, from, to;
+  if (kind === "task") { list = S.tasks; from = list.findIndex(t => t.id === dragItem.id); to = list.findIndex(t => t.id === id); }
+  else { const a = findSub(dragItem.id), b = findSub(id); if (!a || !b || a.task !== b.task) return; list = a.task.subs; from = list.indexOf(a.sub); to = list.indexOf(b.sub); }
+  dndEnd();
+  if (from < 0 || to < 0) return;
+  const [x] = list.splice(from, 1);
+  list.splice(to, 0, x);
+  save(); draw();
+}
+
+/* ---------- Giao diện hộp việc (tab riêng và cột bên lịch) ---------- */
+function inboxHTML(where) {
+  const m = schedMap(), P = where === "panel" ? "p" : "t";
+  const active = S.tasks.filter(t => !taskDone(t)), done = S.tasks.filter(taskDone);
+  const drag = (kind, id) => CAN_DRAG ? `draggable="true" ondragstart="dndStart(event,'${kind}','${id}')" ondragend="dndEnd()"` : "";
+  const sub = (t, s, i) => {
+    const p = m.get(s.id);
+    if (hvEdit && hvEdit.kind === "sub" && hvEdit.id === s.id) return `
+      <li class="hv-sub editing">
+        <input id="hvEditName" data-hv="edit" value="${esc(s.t)}" onkeydown="hvKeydown(event)" aria-label="Tên việc nhỏ">
+        <input id="hvEditDur" data-hv="edit" type="number" min="0.25" max="12" step="0.25" value="${s.h}" onkeydown="hvKeydown(event)" aria-label="Thời lượng (giờ)" style="width:72px;">
+        <button type="button" class="btn btn-sm btn-primary" onclick="saveHvEdit()">Lưu</button>
+      </li>`;
+    return `
+      <li class="hv-sub ${p ? "sched" : ""} ${s.done ? "done" : ""}" ${drag("sub", s.id)}
+          ondragover="rowOver(event,'sub','${s.id}')" ondragleave="this.classList.remove('hv-over')" ondrop="rowDrop(event,'sub','${s.id}')">
+        ${CAN_DRAG ? `<span class="hv-handle" aria-hidden="true">⋮⋮</span>` : ""}
+        <input type="checkbox" ${s.done ? "checked" : ""} onchange="toggleDone('sub','${s.id}')" aria-label="Xong: ${esc(s.t)}">
+        <button type="button" class="hv-name" onclick="startHvEdit('sub','${s.id}')" title="Bấm để sửa">${esc(s.t)}</button>
+        <span class="hv-dur">${hrs(s.h)}</span>
+        ${p ? `<button type="button" class="hv-when" onclick="openEditor('${p.date}', ${p.idx})" title="Đã xếp · ${whenLabel(p)} · bấm để mở hoạt động">${where === "panel" ? whenLabel(p).replace(/ \d\d\/\d\d/, "") : "Đã xếp · " + whenLabel(p)}</button>` : ""}
+        <span class="hv-acts">
+          ${s.done ? "" : `<button type="button" class="btn btn-sm hv-sched" onclick="openSched('sub','${s.id}')" title="${p ? "Dời sang ngày giờ khác" : "Chọn ngày giờ"}" aria-label="${p ? "Dời" : "Xếp lịch"} ${esc(s.t)}">${where === "panel" ? "🗓" : p ? "Dời" : "Xếp lịch"}</button>`}
+          <button type="button" class="btn btn-sm btn-ghost hv-mv" onclick="moveItem('sub','${s.id}',-1)" ${i ? "" : "disabled"} aria-label="Lên">↑</button>
+          <button type="button" class="btn btn-sm btn-ghost hv-mv" onclick="moveItem('sub','${s.id}',1)" ${i < t.subs.length - 1 ? "" : "disabled"} aria-label="Xuống">↓</button>
+          <button type="button" class="btn btn-sm btn-ghost hv-del" onclick="deleteSub('${s.id}')" aria-label="Xóa ${esc(s.t)}">✕</button>
+        </span>
+      </li>`;
+  };
+  const card = (t, i, list) => {
+    const us = units(t), nS = us.filter(u => m.has(u.tk)).length, tot = us.reduce((a, u) => a + u.h, 0), open = openTasks.has(t.id), cap = CM(t.c);
+    const selfP = !t.subs.length ? m.get(t.id) : null;
+    const editing = hvEdit && hvEdit.kind === "task" && hvEdit.id === t.id;
+    return `
+      <div class="hv-task ${open ? "open" : ""}" style="border-left-color:${cap.c}" ondragover="rowOver(event,'task','${t.id}')" ondragleave="this.classList.remove('hv-over')" ondrop="rowDrop(event,'task','${t.id}')">
+        <div class="hv-head" ${drag("task", t.id)}>
+          ${CAN_DRAG ? `<span class="hv-handle" title="Kéo cả việc vào lịch" aria-hidden="true">⋮⋮</span>` : ""}
+          ${!t.subs.length ? `<input type="checkbox" ${t.done ? "checked" : ""} onchange="toggleDone('task','${t.id}')" aria-label="Xong: ${esc(t.t)}">` : ""}
+          <button type="button" class="hv-toggle" onclick="toggleTaskOpen('${t.id}')" aria-expanded="${open}" aria-label="${open ? "Thu gọn" : "Mở"} ${esc(t.t)}">${open ? "▾" : "▸"}</button>
+          ${editing
+            ? `<input id="hvEditName" data-hv="edit" value="${esc(t.t)}" onkeydown="hvKeydown(event)" aria-label="Tên việc" style="flex:1; min-width:0;"><button type="button" class="btn btn-sm btn-primary" onclick="saveHvEdit()">Lưu</button>`
+            : `<button type="button" class="hv-name hv-title" onclick="startHvEdit('task','${t.id}')" title="Bấm để sửa">${esc(t.t)}</button>`}
+        </div>
+        <div class="hv-meta">
+          <span>${t.subs.length ? `Đã xếp ${nS}/${us.length} · tổng ${hrs(tot)}` : selfP ? `Đã xếp · ${whenLabel(selfP)}` : "Chưa chia nhỏ"}</span>
+          <select class="hv-mini" onchange="setTaskField('${t.id}','c',this.value)" aria-label="Loại vốn" style="${capInk(cap.c)}">
+            ${S.caps.map(c => `<option value="${c.k}" ${c.k === t.c ? "selected" : ""}>${esc(c.n)}</option>`).join("")}
+          </select>
+          <button type="button" class="hv-mini ${t.m === "u" ? "up" : "down"}" onclick="setTaskField('${t.id}','m','${t.m === "u" ? "d" : "u"}')" title="Đổi tác động">${t.m === "u" ? "▲ Nạp" : "▼ Tiêu"}</button>
+          <span class="hv-acts">
+            ${taskDone(t) ? "" : `<button type="button" class="btn btn-sm hv-sched" onclick="openSched('task','${t.id}')">${t.subs.length ? "Xếp cả việc" : selfP ? "Dời" : "Xếp lịch"}</button>`}
+            ${list ? `<button type="button" class="btn btn-sm btn-ghost hv-mv" onclick="moveItem('task','${t.id}',-1)" ${i ? "" : "disabled"} aria-label="Lên">↑</button>
+            <button type="button" class="btn btn-sm btn-ghost hv-mv" onclick="moveItem('task','${t.id}',1)" ${i < list.length - 1 ? "" : "disabled"} aria-label="Xuống">↓</button>` : ""}
+            <button type="button" class="btn btn-sm btn-ghost hv-del" onclick="deleteTask('${t.id}')" aria-label="Xóa việc ${esc(t.t)}">✕</button>
+          </span>
+        </div>
+        ${open ? `
+          <ul class="hv-subs">${t.subs.map((s, j) => sub(t, s, j)).join("")}</ul>
+          <input id="hvSub-${P}-${t.id}" class="hv-add-sub" data-hv="sub" data-task="${t.id}" placeholder="+ Thêm việc nhỏ… vd: Đặt vé xe 30p" onkeydown="hvKeydown(event)" aria-label="Thêm việc nhỏ cho ${esc(t.t)}">
+        ` : ""}
+      </div>`;
+  };
+  return `
+    <div class="hv-box ${where}">
+      ${where === "panel" ? `<div class="hv-panel-head"><b>📥 Hộp việc</b><button type="button" class="btn btn-sm btn-ghost" onclick="toggleInboxPanel()" title="Ẩn cột hộp việc">Ẩn</button></div>
+        <div class="hv-hint">Kéo một việc nhỏ vào ${calSubView === "timeline" ? "khung giờ" : "một ngày"}; kéo dòng tên việc để xếp cả việc.</div>` : ""}
+      <input id="hvTask-${P}" class="hv-add" data-hv="task" placeholder="+ Thêm việc… (Enter)" onkeydown="hvKeydown(event)" aria-label="Thêm việc vào hộp">
+      ${active.length ? active.map((t, i) => card(t, i, active)).join("") : `<div class="hv-empty">${S.tasks.length ? "Mọi việc đã xong 🎉" : "Chưa có việc nào. Ghi những việc còn mơ hồ vào đây, chia nhỏ khi nghĩ ra, rồi xếp vào lịch khi biết lúc nào làm."}</div>`}
+      ${done.length ? `
+        <button type="button" class="btn btn-sm btn-ghost hv-done-toggle" onclick="hvShowDone=!hvShowDone; draw()" aria-expanded="${hvShowDone}">${hvShowDone ? "▾" : "▸"} Đã xong (${done.length})</button>
+        ${hvShowDone ? done.map(t => card(t, 0, null)).join("") : ""}` : ""}
+    </div>`;
+}
+V.hv = function () {
+  return `
+    <div class="card" style="padding:14px 16px; max-width:760px; margin:0 auto;">
+      <div class="card-header" style="margin-bottom:8px;">
+        <h2 style="font-size:17px; margin:0;">📥 Hộp việc chờ</h2>
+        <span style="font-size:12.5px; color:var(--mu);">${inboxCount()} việc chưa xếp</span>
+      </div>
+      <p style="font-size:13px; color:var(--tx-sec); margin:0 0 10px;">Mẹo: gõ <b>+</b> ở đầu thanh ⚡ để ghi thẳng vào hộp, vd <code>+ Chuẩn bị chuyến đi Đà Lạt</code>.</p>
+      ${inboxHTML("tab")}
+    </div>`;
+};
+
+function withInbox(h) {
+  if (!inboxPanel) return h;
+  return `<div class="cal-with-inbox"><div style="min-width:0">${h}</div><aside class="inbox-aside" aria-label="Hộp việc">${inboxHTML("panel")}</aside></div>`;
 }
 
 // Khởi chạy ứng dụng
