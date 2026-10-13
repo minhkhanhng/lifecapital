@@ -87,6 +87,8 @@
    - Dữ liệu lưu trong `localStorage` của trình duyệt (khoảng 300 KB mỗi năm với 10 hoạt động/ngày). App xin trình duyệt giữ dữ liệu lâu dài (`navigator.storage.persist`), nhắc sao lưu khi quá 14 ngày chưa sao lưu, và hiện cảnh báo đỏ nếu không lưu được (bộ nhớ đầy hoặc bị chặn).
    - **Lưu ý Safari/iPhone:** Safari có thể tự xóa dữ liệu của trang web nếu bạn không mở trong 7 ngày. Hãy "Thêm vào Màn hình chính" và sao lưu `.json` định kỳ.
    - Mở nhiều tab cùng lúc an toàn: tab này lưu thì các tab khác tự nạp lại, không ghi đè dữ liệu của nhau.
+   - **Gộp khi lưu (v0.1.1):** trước mỗi lần lưu, app kiểm tra xem tab hay cửa sổ khác có vừa ghi mà tab này chưa biết không (tab bị trình duyệt tạm dừng, trang mở lại từ bộ nhớ đệm, bản cũ của app còn mở). Nếu có thì gộp hai bên thay vì ghi đè. Bản cũ (không có cơ chế gộp) lưu đè thì app gộp lại ngay, hoặc ở lần mở sau nhờ bản sao lần ghi gần nhất (`lc2_mine`).
+   - **Bản tự lưu hằng ngày:** đầu mỗi ngày app giữ một bản (7 ngày gần nhất, trên máy đó). Cài đặt → Dữ liệu → *Bản tự lưu hằng ngày* → *Gộp lại* để thêm lại những hoạt động bị thiếu, không xóa gì.
 9. 📱 **Chuẩn Progressive Web App (PWA)**:
    - Tích hợp `manifest.json` và `icon.svg` 5 cánh hoa độc quyền.
    - Cài đặt lên màn hình chính iPhone/Android, chạy toàn màn hình như Native App.
@@ -1432,13 +1434,136 @@ let CH = new Set(), PV = {}, dirty = false, TABDIR = 0, saveFailed = false;
 const save = () => {
   dirty = true;
   try {
-    localStorage.setItem("lc2", JSON.stringify(S));
+    absorb(readDisk()); // nơi khác vừa ghi mà tab này chưa biết: gộp trước, không ghi đè
+    S.sv = SV;
+    const out = JSON.stringify(S);
+    try { localStorage.setItem("lc2", out); }
+    catch (q) { freeSpace(); localStorage.setItem("lc2", out); } // đầy bộ nhớ: bỏ bản phụ rồi thử lại
+    lastRaw = out;
+    try { localStorage.setItem("lc2_mine", out); } catch (e) {}
     if (saveFailed) { saveFailed = false; renderSaveAlert(); }
   } catch (e) {
     // Giữ cảnh báo cố định (không chỉ toast): đóng tab lúc này là mất các thay đổi chưa lưu
     if (!saveFailed) { saveFailed = true; renderSaveAlert(); }
   }
+  if (oldWriterSeen === 1) {
+    oldWriterSeen = 2;
+    showToast("Một cửa sổ Life Capital bản cũ vừa lưu đè dữ liệu. App đã gộp lại, không mất gì. Hãy tải lại hoặc đóng các tab Life Capital khác.", "bad");
+  }
 };
+
+/* ---- Lưu an toàn khi có nhiều nơi cùng ghi (v0.1.1) ----
+   lastRaw là chuỗi tab này đọc hoặc ghi gần nhất. Lúc lưu, nếu lc2 trên máy khác lastRaw thì một tab
+   hay cửa sổ khác đã ghi mà tab này không nhận được (tab bị trình duyệt tạm dừng, trang khôi phục từ
+   bộ nhớ đệm, bản cũ của app không biết lắng nghe…): gộp hai bên thay vì ghi đè.
+   Dữ liệu do bản này ghi có sv = 2. Bên ghi không có sv (bản cũ) thì chỉ cộng thêm, không xóa gì. */
+const SV = 2;
+let lastRaw = rawSaved, oldWriterSeen = 0;
+function readDisk() { try { return localStorage.getItem("lc2"); } catch (e) { return null; } }
+const evKey = e => [e.t, e.s, e.h, e.c, e.m, e.r || "", e.demo ? 1 : 0].join("|");
+const sameJ = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+// trust = bên kia là bản mới và có gốc chung: việc nó xóa là thật. Không trust: hợp hai bên, không xóa gì.
+function mergeStates(base, mine, theirs, trust) {
+  const ev = {};
+  const days = new Set([...Object.keys(mine.ev), ...Object.keys(theirs.ev), ...(base ? Object.keys(base.ev) : [])]);
+  days.forEach(k => {
+    const B = (base && base.ev[k]) || [], M = mine.ev[k] || [], T = theirs.ev[k] || [], L = [];
+    new Set([...M, ...T].map(evKey)).forEach(g => {
+      const m = M.filter(e => evKey(e) === g), t = T.filter(e => evKey(e) === g);
+      const cb = B.filter(e => evKey(e) === g).length;
+      const pool = m.concat(t.slice(m.length));
+      const n = Math.min(pool.length, trust ? Math.max(0, m.length + t.length - cb) : pool.length);
+      for (let i = 0; i < n; i++) {
+        const e = pool[i], twin = i < m.length ? t[i] : null;
+        if (twin && twin.gid && !e.gid) e.gid = twin.gid; // giữ liên kết Google, tránh tạo bản trùng
+        L.push(e);
+      }
+    });
+    if (L.length) ev[k] = sortL(L);
+  });
+  const used = new Set(Object.values(ev).flat().map(e => e.c));
+  const cap = st => new Map(((st && st.caps) || []).map(c => [c.k, c]));
+  const cB = cap(base), cM = cap(mine), cT = cap(theirs), caps = [];
+  [...new Set([...theirs.caps.map(c => c.k), ...mine.caps.map(c => c.k)])].forEach(k => {
+    const b = cB.get(k), m = cM.get(k), t = cT.get(k);
+    let c;
+    if (m && t) c = trust && b && sameJ(m, b) ? t : m;
+    else c = trust && b && !used.has(k) ? null : (m || t); // một bên đã xóa loại vốn không còn hoạt động nào
+    if (c) caps.push(c);
+  });
+  const pick = f => (trust && base && sameJ(mine[f], base[f])) ? theirs[f] : mine[f];
+  return {
+    ...theirs, ...mine, ev, caps: caps.length ? caps : mine.caps,
+    bl: pick("bl"), mem: pick("mem"), cfg: pick("cfg"), pm: pick("pm"), memV: pick("memV"),
+    lb: Math.max(+mine.lb || 0, +theirs.lb || 0),
+    gdel: [...new Set([...(mine.gdel || []), ...(theirs.gdel || [])])].slice(-500),
+    sv: SV
+  };
+}
+// Gộp dữ liệu vừa đọc từ máy (raw) vào S. Trả về true nếu S đã thay đổi.
+function absorb(raw) {
+  if (raw == null || raw === lastRaw) return false;
+  let parsed = null, theirs = null, base = null;
+  try { parsed = JSON.parse(raw); theirs = cleanState(parsed); } catch (e) {}
+  if (!theirs) return false;
+  Object.values(theirs.ev).forEach(sortL);
+  try { base = lastRaw ? cleanState(JSON.parse(lastRaw)) : null; } catch (e) {}
+  const fresh = parsed.sv === SV;
+  S = mergeStates(base, S, theirs, fresh && !!base);
+  lastRaw = raw;
+  if (!fresh && !oldWriterSeen) oldWriterSeen = 1;
+  return true;
+}
+// Bản tự lưu đầu mỗi ngày, giữ 7 ngày gần nhất
+const SNAP = "lc2_bk_";
+function snapKeys() { try { return Object.keys(localStorage).filter(k => k.startsWith(SNAP)).sort(); } catch (e) { return []; } }
+function snapshotDaily() {
+  try {
+    const key = SNAP + ky(new Date()), raw = localStorage.getItem("lc2");
+    if (!raw || localStorage.getItem(key)) return;
+    localStorage.setItem(key, raw);
+    snapKeys().slice(0, -7).forEach(k => localStorage.removeItem(k));
+  } catch (e) {}
+}
+function freeSpace() {
+  try { localStorage.removeItem("lc2_mine"); snapKeys().slice(0, -1).forEach(k => localStorage.removeItem(k)); } catch (e) {}
+}
+// Gộp một bản tự lưu vào dữ liệu hiện tại: chỉ cộng thêm những gì còn thiếu, không xóa gì
+function restoreSnapshot(key) {
+  let d = null;
+  try { d = cleanState(JSON.parse(localStorage.getItem(key))); } catch (e) {}
+  if (!d) { showToast("Không đọc được bản tự lưu này", "bad"); return; }
+  Object.values(d.ev).forEach(sortL);
+  const before = Object.values(S.ev).flat().length;
+  S = mergeStates(null, S, d, false);
+  save();
+  draw();
+  renderSettingsModal();
+  const n = Object.values(S.ev).flat().length - before;
+  showToast(n ? `Đã khôi phục ${n} hoạt động từ bản tự lưu ${key.slice(SNAP.length)}` : "Không có hoạt động nào bị thiếu so với bản tự lưu này", "ok");
+}
+// Đọc lại dữ liệu khi quay lại tab (trình duyệt có thể đã tạm dừng tab và bỏ lỡ thay đổi từ tab khác)
+function pullDisk() {
+  if (!absorb(readDisk())) return;
+  if (oldWriterSeen === 1) save(); // bản cũ vừa ghi đè: ghi lại bản đã gộp ngay
+  if (ed) { closeEditor(); showToast("Dữ liệu vừa thay đổi ở tab khác, đã tải lại.", "bad"); }
+  if ($("settingsModalOverlay").classList.contains("open")) renderSettingsModal();
+  draw();
+}
+// Khởi động: bản cũ của app đã lưu đè lúc không có tab bản mới nào mở → gộp lại với lần ghi gần nhất của bản này
+try {
+  const mineRaw = localStorage.getItem("lc2_mine");
+  if (rawSaved && mineRaw && mineRaw !== rawSaved && JSON.parse(rawSaved).sv !== SV) {
+    const mine = cleanState(JSON.parse(mineRaw));
+    if (mine) {
+      Object.values(mine.ev).forEach(sortL);
+      S = mergeStates(null, mine, S, false);
+      oldWriterSeen = 1;
+      save();
+    }
+  }
+} catch (e) {}
+snapshotDaily();
 
 function renderSaveAlert() {
   const el = $("saveAlert");
@@ -2713,6 +2838,17 @@ function renderSettingsModal() {
           </select>
           <button type="button" class="btn btn-sm" onclick="$('setFile').click()">Chọn tệp…</button>
           <input id="setFile" type="file" accept=".json,application/json" onchange="importData(this)" style="display:none">
+        </div>
+      </div>
+      <div class="set-row" style="align-items:flex-start;">
+        <span class="set-lbl">Bản tự lưu hằng ngày<small>App tự giữ một bản đầu mỗi ngày, 7 ngày gần nhất, trên máy này. Gộp lại chỉ thêm những hoạt động đang thiếu, không xóa gì.</small></span>
+        <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-end;">
+          ${snapKeys().reverse().map(k => {
+            let n = "?";
+            try { n = Object.values(JSON.parse(localStorage.getItem(k)).ev).flat().length; } catch (e) {}
+            const d = k.slice(SNAP.length);
+            return `<div class="set-inline" style="gap:6px;"><span style="font-size:12.5px; color:var(--tx-sec);">${d.slice(8, 10)}/${d.slice(5, 7)} · ${n} hoạt động</span><button type="button" class="btn btn-sm" onclick="restoreSnapshot('${k}')">Gộp lại</button></div>`;
+          }).join("") || `<span style="font-size:12.5px; color:var(--mu);">Chưa có</span>`}
         </div>
       </div>
     </section>
@@ -4037,6 +4173,8 @@ function draw(jump) {
 
 // Tự động chuyển tuần khi sang thứ Hai mới
 function tick() {
+  pullDisk();
+  snapshotDaily();
   updateSyncBadge(); // token Google hết hạn sau 1 giờ
   if (ed) return;
   const oldCW = CW, oldDay = lt, w = wkNow();
@@ -4048,6 +4186,7 @@ document.addEventListener("visibilitychange", () => {
   if (!document.hidden) { tick(); gcalFlush(); }
 });
 window.addEventListener("focus", tick);
+window.addEventListener("pageshow", e => { if (e.persisted) pullDisk(); });
 window.addEventListener("online", () => gcalFlush());
 
 // Tab khác vừa lưu: nạp lại để không ghi đè dữ liệu của tab đó bằng bản cũ trong bộ nhớ
@@ -4059,11 +4198,8 @@ window.addEventListener("storage", e => {
     return;
   }
   if (e.key !== "lc2" || !e.newValue) return;
-  let d = null;
-  try { d = cleanState(JSON.parse(e.newValue)); } catch (err) {}
-  if (!d) return;
-  S = d;
-  Object.values(S.ev).forEach(sortL);
+  if (!absorb(e.newValue)) return;
+  if (oldWriterSeen === 1) save(); // bản cũ vừa ghi đè: ghi lại bản đã gộp ngay
   if (ed) { closeEditor(); showToast("Dữ liệu vừa thay đổi ở tab khác, đã tải lại.", "bad"); }
   if ($("settingsModalOverlay").classList.contains("open")) renderSettingsModal();
   draw();
