@@ -1720,6 +1720,7 @@ let CH = new Set(), PV = {}, dirty = false, TABDIR = 0, saveFailed = false;
 const save = () => {
   dirty = true;
   try {
+    stampEdits(); // đánh dấu những gì tab này vừa sửa, trước khi gộp với nơi khác
     absorb(readDisk()); // nơi khác vừa ghi mà tab này chưa biết: gộp trước, không ghi đè
     S.sv = SV;
     const out = JSON.stringify(S);
@@ -1744,7 +1745,7 @@ const save = () => {
    hay cửa sổ khác đã ghi mà tab này không nhận được (tab bị trình duyệt tạm dừng, trang khôi phục từ
    bộ nhớ đệm, bản cũ của app không biết lắng nghe…): gộp hai bên thay vì ghi đè.
    Dữ liệu do bản này ghi có sv = 2. Bên ghi không có sv (bản cũ) thì chỉ cộng thêm, không xóa gì. */
-const SV = 2;
+const SV = 3; // 3 (v0.4.0): hoạt động có mã riêng và thời điểm sửa; bản ghi sv khác được gộp kiểu cộng thêm
 let lastRaw = rawSaved, oldWriterSeen = 0;
 // Đồng bộ giữa các thiết bị (v0.4.0, xem phần ĐỒNG BỘ ở cuối tệp)
 let sb = null, sbUser = null, sbLoading = null, cloudChan = null;
@@ -1752,26 +1753,98 @@ let cloudBusy = false, cloudAgain = false, cloudT = null, cloudApplying = false,
 let cloud = { st: "off", n: 0, at: 0, msg: "" }; // st: off · sync · ok · wait · offline · auth · setup · err
 function readDisk() { try { return localStorage.getItem("lc2"); } catch (e) { return null; } }
 const evKey = e => [e.t, e.s, e.h, e.c, e.m, e.r || "", e.demo ? 1 : 0, e.tk || ""].join("|");
+const evCore = e => [e.t, e.s, e.h, e.c, e.m, e.r || "", e.tk || "", e.demo ? 1 : 0].join("|");
+// Mã cho hoạt động có từ trước v0.4.0: suy từ ngày + nội dung + thứ tự trong các bản giống hệt, nên mọi máy
+// cấp ra cùng một mã cho cùng một hoạt động. Hoạt động mới được cấp mã ngẫu nhiên khi lưu (stampEdits).
+function fnv(str) { let h = 0x811c9dc5; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); } return (h >>> 0).toString(36); }
+function giveIds(ev) {
+  Object.keys(ev).forEach(k => {
+    const seen = {};
+    ev[k].forEach(e => {
+      if (e.id) return;
+      // không dùng evKey: cleanState (gọi hàm này) chạy lúc mở app, trước khi các hằng phía dưới được khai báo
+      const key = [e.t, e.s, e.h, e.c, e.m, e.r || "", e.demo ? 1 : 0, e.tk || ""].join("|"), n = seen[key] = (seen[key] || 0) + 1;
+      e.id = "h" + fnv(k + "|" + key) + "_" + n;
+    });
+  });
+}
+// Trước mỗi lần lưu: so với bản tab này đọc/ghi gần nhất (lastRaw), hoạt động hay việc nào đổi nội dung
+// thì ghi thời điểm sửa; hoạt động mới (hoặc trùng mã do sao chép) được cấp mã mới.
+let stampRaw, stampEv = new Map(), stampTk = new Map();
+const taskSig = t => JSON.stringify({ ...t, mt: 0 });
+// Mốc so sánh = dữ liệu tab này đang có ngay sau khi đọc, ghi hoặc nhận từ nơi khác (tab khác, máy khác).
+// Nhờ vậy thay đổi nhận về không bị tính là “máy này vừa sửa”.
+function stampBase(st) {
+  stampRaw = lastRaw;
+  stampEv = new Map(); stampTk = new Map();
+  if (!st) return;
+  Object.keys(st.ev).forEach(k => st.ev[k].forEach(e => { if (e.id) stampEv.set(e.id, k + "|" + evCore(e)); }));
+  st.tasks.forEach(t => stampTk.set(t.id, taskSig(t)));
+}
+function stampEdits() {
+  if (stampRaw !== lastRaw) {
+    let b = null;
+    try { b = lastRaw ? cleanState(JSON.parse(lastRaw)) : null; } catch (e) {}
+    stampBase(b);
+  }
+  const now = Date.now(), ids = new Set();
+  Object.keys(S.ev).forEach(k => S.ev[k].forEach(e => {
+    if (!e.id || ids.has(e.id)) { e.id = "e" + now.toString(36) + Math.random().toString(36).slice(2, 7); e.mt = now; }
+    else if (stampEv.get(e.id) !== k + "|" + evCore(e)) e.mt = now;
+    ids.add(e.id);
+  }));
+  S.tasks.forEach(t => { if (stampTk.get(t.id) !== taskSig(t)) t.mt = now; });
+}
 const sameJ = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+// Gộp hoạt động theo mã (v0.4.0):
+// - Chỉ một bên sửa so với gốc chung: lấy bên đã sửa. Cả hai cùng sửa: bản có thời điểm sửa (mt) sau cùng thắng.
+// - Một bên xóa (trust, có trong gốc): xóa, trừ khi bên kia đã sửa nó sau gốc chung (giữ bản đã sửa).
+// - Không trust (lần đầu gộp với tài khoản, bản ghi kiểu cũ): cộng hai bên, hoạt động giống hệt trong cùng ngày chỉ giữ một.
+function mergeEv(base, mine, theirs, trust) {
+  const idx = st => { const m = new Map(); if (st) Object.keys(st.ev).forEach(k => st.ev[k].forEach(e => { if (e.id) m.set(e.id, [k, e]); })); return m; };
+  const B = idx(base), M = idx(mine), T = idx(theirs), out = {};
+  const same = (a, b) => !!a && !!b && a[0] === b[0] && evCore(a[1]) === evCore(b[1]);
+  const put = ([k, e]) => (out[k] = out[k] || []).push(e);
+  // hoạt động chưa có mã (vừa tạo, chưa lưu) giữ nguyên
+  [mine, theirs].forEach(st => Object.keys(st.ev).forEach(k => st.ev[k].forEach(e => { if (!e.id && st === mine) put([k, e]); })));
+  new Set([...M.keys(), ...T.keys()]).forEach(id => {
+    const b = B.get(id), m = M.get(id), t = T.get(id);
+    if (m && t) {
+      let w;
+      if (same(m, t)) w = m;
+      else if (trust && same(m, b)) w = t;      // chỉ bên kia sửa
+      else if (trust && same(t, b)) w = m;      // chỉ máy này sửa
+      else w = (t[1].mt || 0) > (m[1].mt || 0) ? t : m;
+      const o = w === m ? t : m;
+      if (!w[1].gid && o[1].gid) w[1].gid = o[1].gid; // giữ liên kết Google, tránh tạo bản trùng
+      if (!w[1].gi && o[1].gi) w[1].gi = o[1].gi;
+      put(w);
+      return;
+    }
+    const x = m || t;
+    if (trust && b && same(x, b)) return; // bên kia đã xóa, bên này không sửa gì: xóa theo
+    put(x);
+  });
+  Object.keys(out).forEach(k => {
+    let L = out[k];
+    if (!trust) {
+      // Bỏ bản trùng giữa hai bên nhưng giữ số lượng lớn nhất một bên đang có (hai “Họp” giống hệt nhau là hai buổi thật)
+      const cnt = (st, key) => ((st.ev[k] || []).filter(e => evCore(e) === key).length);
+      const kept = new Map();
+      L = [...L].sort((a, b) => (b.gid ? 1 : 0) - (a.gid ? 1 : 0)).filter(e => {
+        const key = evCore(e), n = kept.get(key) || 0;
+        if (n >= Math.max(cnt(mine, key), cnt(theirs, key))) return false;
+        kept.set(key, n + 1);
+        return true;
+      });
+    }
+    out[k] = sortL(L);
+  });
+  return out;
+}
 // trust = bên kia là bản mới và có gốc chung: việc nó xóa là thật. Không trust: hợp hai bên, không xóa gì.
 function mergeStates(base, mine, theirs, trust) {
-  const ev = {};
-  const days = new Set([...Object.keys(mine.ev), ...Object.keys(theirs.ev), ...(base ? Object.keys(base.ev) : [])]);
-  days.forEach(k => {
-    const B = (base && base.ev[k]) || [], M = mine.ev[k] || [], T = theirs.ev[k] || [], L = [];
-    new Set([...M, ...T].map(evKey)).forEach(g => {
-      const m = M.filter(e => evKey(e) === g), t = T.filter(e => evKey(e) === g);
-      const cb = B.filter(e => evKey(e) === g).length;
-      const pool = m.concat(t.slice(m.length));
-      const n = Math.min(pool.length, trust ? Math.max(0, m.length + t.length - cb) : pool.length);
-      for (let i = 0; i < n; i++) {
-        const e = pool[i], twin = i < m.length ? t[i] : null;
-        if (twin && twin.gid && !e.gid) e.gid = twin.gid; // giữ liên kết Google, tránh tạo bản trùng
-        L.push(e);
-      }
-    });
-    if (L.length) ev[k] = sortL(L);
-  });
+  const ev = mergeEv(base, mine, theirs, trust);
   const used = new Set(Object.values(ev).flat().map(e => e.c));
   const cap = st => new Map(((st && st.caps) || []).map(c => [c.k, c]));
   const cB = cap(base), cM = cap(mine), cT = cap(theirs), caps = [];
@@ -1789,8 +1862,8 @@ function mergeStates(base, mine, theirs, trust) {
   [...new Set([...(mine.tasks || []).map(t => t.id), ...(theirs.tasks || []).map(t => t.id)])].forEach(id => {
     const b = tB.get(id), m = tM.get(id), t = tT.get(id);
     let x;
-    if (m && t) x = trust && b && sameJ(m, b) ? t : m;
-    else x = trust && b ? null : (m || t);
+    if (m && t) x = sameJ(m, t) ? m : trust && b && sameJ(m, b) ? t : trust && b && sameJ(t, b) ? m : (t.mt || 0) > (m.mt || 0) ? t : m;
+    else x = trust && b && sameJ(m || t, b) ? null : (m || t); // một bên xóa: xóa theo, trừ khi bên kia đã sửa
     if (x) tasks.push(x);
   });
   return {
@@ -1813,6 +1886,7 @@ function absorb(raw) {
   const fresh = parsed.sv === SV;
   S = mergeStates(base, S, theirs, fresh && !!base);
   lastRaw = raw;
+  stampBase(S); // phần vừa gộp từ nơi khác không tính là sửa trên tab này
   if (!fresh && !oldWriterSeen) oldWriterSeen = 1;
   return true;
 }
@@ -4705,6 +4779,8 @@ function cleanCap(c) {
 function cleanEv(e) {
   if (!e || typeof e.t !== "string" || !(+e.h > 0 && +e.h <= 24) || !SAFE_K.test(e.c || "")) return null;
   return {
+    ...(SAFE_K.test(e.id || "") ? { id: e.id } : {}),            // mã riêng (v0.4.0), thiếu thì cleanState cấp
+    ...(Number.isFinite(+e.mt) && +e.mt > 0 ? { mt: +e.mt } : {}), // lần sửa gần nhất, để bản sửa sau cùng thắng
     t: e.t.slice(0, 120), c: e.c, m: e.m === "d" ? "d" : "u", h: +e.h,
     s: /^([01]\d|2[0-3]):[0-5]\d$/.test(e.s || "") ? e.s : "",
     ...(SAFE_K.test(e.r || "") ? { r: e.r } : {}),
@@ -4722,6 +4798,7 @@ function cleanState(d) {
   if (!caps.length) caps = DCAP.map(c => ({ k: c[0], n: c[1], c: c[2], tg: c[3], kw: [...c[4]] }));
   const ev = {}, bl = {}, mem = {};
   Object.keys(d.ev).forEach(k => { if (/^\d{4}-\d\d-\d\d$/.test(k) && Array.isArray(d.ev[k])) { const l = d.ev[k].map(cleanEv).filter(Boolean); if (l.length) ev[k] = l; } });
+  giveIds(ev);
   Object.keys(d.bl || {}).forEach(k => { if (SAFE_K.test(k) && d.bl[k]) bl[k] = { u: Math.max(0, +d.bl[k].u || 0), d: Math.max(0, +d.bl[k].d || 0) }; });
   Object.keys(d.mem || {}).forEach(k => { if (k !== "__proto__" && d.mem[k] && SAFE_K.test(d.mem[k].c || "")) mem[k.slice(0, 120)] = { c: d.mem[k].c }; });
   const cl = (v, lo, hi, def) => { v = +v; return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : def; };
@@ -5022,7 +5099,8 @@ function cleanTask(x) {
   return {
     id: x.id, t: x.t.slice(0, 160), c: SAFE_K.test(x.c || "") ? x.c : "sk", m: x.m === "d" ? "d" : "u",
     subs: Array.isArray(x.subs) ? x.subs.map(cleanSub).filter(Boolean).slice(0, 100) : [],
-    ...(x.done ? { done: 1 } : {}), ...(x.demo ? { demo: 1 } : {})
+    ...(x.done ? { done: 1 } : {}), ...(x.demo ? { demo: 1 } : {}),
+    ...(Number.isFinite(+x.mt) && +x.mt > 0 ? { mt: +x.mt } : {})
   };
 }
 
@@ -5661,7 +5739,7 @@ function cloudKeep(meta, baseRaw) {
 // xếp theo giờ rồi theo nội dung. Hai máy có cùng dữ liệu luôn cho ra cùng một chuỗi, nên không gửi qua lại vô ích.
 function canonState(st) {
   const c = cleanState(JSON.parse(JSON.stringify(st)));
-  Object.values(c.ev).forEach(l => l.sort((a, b) => cmp(a, b) || evKey(a).localeCompare(evKey(b))));
+  Object.values(c.ev).forEach(l => l.sort((a, b) => cmp(a, b) || evKey(a).localeCompare(evKey(b)) || String(a.id).localeCompare(String(b.id))));
   c.gdel.sort();
   const sortKeys = v => Array.isArray(v) ? v.map(sortKeys)
     : v && typeof v === "object" ? Object.keys(v).sort().reduce((o, k) => { o[k] = sortKeys(v[k]); return o; }, {}) : v;
@@ -5713,6 +5791,7 @@ function cloudSoon(ms = 2000) {
 function cloudApply(next) {
   S = next;
   Object.values(S.ev).forEach(sortL);
+  stampBase(S); // dữ liệu nhận từ máy khác không tính là sửa trên máy này
   cloudApplying = true;
   try { save(); } finally { cloudApplying = false; }
   hvEdit = null;
