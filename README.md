@@ -303,6 +303,8 @@ Dưới đây là mã nguồn độc lập đầy đủ (Full Standalone Source 
 }
 
 *, *::before, *::after { box-sizing: border-box; }
+button, input, select, textarea { font-family: inherit; }
+b, strong { font-weight: 600; }
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
@@ -788,8 +790,8 @@ input[type="time"] { min-width: 105px; }
   justify-content: space-between;
   align-items: center;
 }
-.event-mode-up { color: var(--ok-text); font-weight: 700; }
-.event-mode-down { color: var(--bad); font-weight: 700; }
+.event-mode-up { color: var(--ok-text); font-weight: 600; }
+.event-mode-down { color: var(--bad); font-weight: 600; }
 
 /* Dòng thời gian 24h */
 .timeline-container {
@@ -916,7 +918,7 @@ tr.current-week td {
   background: color-mix(in srgb, var(--ac) 8%, var(--card));
 }
 tr.current-week td:first-child, tr.current-week td:nth-child(2) {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--ac-text);
 }
 tr.past-week td {
@@ -1143,7 +1145,7 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
 [hidden] { display: none !important; }
 .save-alert { background: var(--bad-soft); border-color: var(--bad); color: var(--tx); }
 :focus-visible { outline: 2px solid var(--ac); outline-offset: 2px; }
-.chg { font-weight: 700; background: var(--ac-soft); border-radius: 4px; padding: 0 3px; box-shadow: 0 0 0 1px var(--ac); }
+.chg { font-weight: 600; background: var(--ac-soft); border-radius: 4px; padding: 0 3px; box-shadow: 0 0 0 1px var(--ac); }
 /* Hộp việc chờ (v0.2.0) */
 .cal-with-inbox { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 14px; align-items: start; }
 .cal-with-inbox .week-cards-grid { grid-template-columns: repeat(4, 1fr); }
@@ -1182,14 +1184,14 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
 .hv-sched { font-weight: 600; }
 .hv-done-toggle { align-self: flex-start; }
 .hv-over { outline: 2px dashed var(--ac); outline-offset: 2px; background: color-mix(in srgb, var(--ac) 8%, var(--card)); }
-.hv-ghost { position: absolute; left: 0; right: 0; border: 2px dashed var(--ac-text); background: color-mix(in srgb, var(--ac) 22%, transparent); border-radius: var(--radius-sm); font-size: 12px; font-weight: 700; color: var(--tx); padding: 2px 8px; pointer-events: none; z-index: 5; }
+.hv-ghost { position: absolute; left: 0; right: 0; border: 2px dashed var(--ac-text); background: color-mix(in srgb, var(--ac) 22%, transparent); border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; color: var(--tx); padding: 2px 8px; pointer-events: none; z-index: 5; }
 body.hv-dragging .day-card { border-style: dashed; }
-.hv-slot.on { border-color: var(--ac); background: var(--ac-soft); font-weight: 700; }
+.hv-slot.on { border-color: var(--ac); background: var(--ac-soft); font-weight: 600; }
 .hv-plan { display: flex; flex-direction: column; gap: 4px; padding: 8px 10px; border: 1px solid var(--bd); border-radius: var(--radius-sm); background: var(--card-subtle); }
 .hv-plan-row { display: flex; gap: 10px; font-size: 13px; align-items: baseline; flex-wrap: wrap; }
 .hv-plan-row b { font-variant-numeric: tabular-nums; min-width: 92px; }
 .hv-plan-row.over { color: var(--mu); text-decoration: line-through; }
-.ev-linked { font-size: 11px; margin-right: 3px; }
+.ev-linked { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--ac); margin-right: 5px; vertical-align: middle; }
 /* Cột bên lịch hẹp: bỏ nút lên/xuống (đổi thứ tự bằng kéo, hoặc ở tab Hộp việc), gom mỗi việc nhỏ về một dòng */
 .hv-box.panel .hv-mv { display: none; }
 .hv-box.panel .hv-sub { flex-wrap: nowrap; }
@@ -1255,7 +1257,7 @@ nav.main-nav { flex-direction: column; position: static; background: transparent
 nav.main-nav button { justify-content: flex-start; width: 100%; border: 0; background: transparent; box-shadow: none; border-radius: 12px; padding: 10px 12px; font-size: 14px; color: var(--tx-sec); }
 nav.main-nav button:hover { background: var(--glass-hi); color: var(--tx); border: 0; }
 nav.main-nav button.active { background: var(--glass-hi); color: var(--tx); border: 0; font-weight: 600; box-shadow: inset 3px 0 0 var(--ac), var(--glass-shadow); }
-.nav-count { margin-left: auto; font-size: 11px; font-weight: 700; background: var(--ac); color: var(--on-ac); border-radius: 99px; padding: 0 7px; line-height: 18px; }
+.nav-count { margin-left: auto; font-size: 11px; font-weight: 600; background: var(--ac); color: var(--on-ac); border-radius: 99px; padding: 0 7px; line-height: 18px; }
 .lb-short { display: none; }
 .sidebar-settings { margin-top: auto; width: 100%; justify-content: flex-start; border-radius: 12px; }
 .app-header { padding: 14px 20px; border-bottom: 0; margin-bottom: 14px; align-items: center; }
@@ -1293,7 +1295,7 @@ nav.main-nav button.active { background: var(--glass-hi); color: var(--tx); bord
 /* Hàng số liệu tuần */
 .stat-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px; }
 .stat-tile { background: var(--glass-hi); border-radius: 16px; padding: 10px 14px; display: flex; flex-direction: column; align-items: center; gap: 2px; }
-.stat-tile span { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tx-sec); }
+.stat-tile span { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tx-sec); }
 .stat-tile b { font: 600 20px/1.2 var(--font-ui); font-variant-numeric: tabular-nums; color: var(--tx); }
 .stat-tile.up b { color: var(--ok-text); }
 .stat-tile.down b { color: var(--bad); }
@@ -1420,16 +1422,20 @@ table.calendar-table th { background: var(--sheen), var(--glass-hi); color: var(
 .bg-range { width: 180px; accent-color: var(--ac); }
 .bg-range:disabled { opacity: 0.45; }
 body.bg-peek .modal-sheet, body.bg-peek .modal-sheet * { transition: none !important; }
+html.bg-peek, html.bg-peek * { scrollbar-color: transparent transparent; }
+@supports not (scrollbar-color: auto) {
+  html.bg-peek ::-webkit-scrollbar, html.bg-peek::-webkit-scrollbar { width: 0; height: 0; background: transparent; }
+}
 body.bg-peek .modal-overlay { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
 body.bg-peek .modal-sheet { background: transparent; border-color: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
 body.bg-peek .modal-sheet .modal-header, body.bg-peek .modal-body > *:not(.set-bg), body.bg-peek .set-bg > *:not(.bg-blur-row) { visibility: hidden; }
 body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(--glass-hi); border: 1px solid var(--glass-bd); border-radius: 14px; padding: 8px 12px; box-shadow: var(--glass-shadow); }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
-.chg { font-weight: 700; background: color-mix(in srgb, var(--ac) 22%, transparent); border-radius: 4px; padding: 0 3px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ac) 45%, transparent); }
+.chg { font-weight: 600; background: color-mix(in srgb, var(--ac) 22%, transparent); border-radius: 4px; padding: 0 3px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ac) 45%, transparent); }
 .set-sec { padding: 14px 0; border-bottom: 1px solid var(--bd); }
 .set-sec:first-child { padding-top: 0; }
 .set-sec:last-child { border-bottom: none; padding-bottom: 0; }
-.set-h { margin: 0 0 6px; font-size: 11.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--mu); }
+.set-h { margin: 0 0 6px; font-size: 11.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--mu); }
 .set-danger .set-h { color: var(--bad); }
 .set-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 6px 0; }
 .set-lbl { display: flex; flex-direction: column; gap: 2px; font-size: 13.5px; color: var(--tx); }
@@ -1481,16 +1487,15 @@ body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(-
       <button type="button" class="btn btn-sm" id="syncBadge" hidden></button>
       <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(sel)" title="Xem tổng kết thành tích theo tuần">Tổng kết</button>
       <button class="btn btn-sm btn-primary" onclick="openEditor(tk)">Thêm</button>
-      <button class="btn btn-sm" id="settingsBtn" onclick="openSettingsModal()" title="Cài đặt & Dữ liệu" style="font-size:15px; padding:6px 10px;">Cài đặt</button>
+      <button class="btn btn-sm" id="settingsBtn" onclick="openSettingsModal()" title="Cài đặt">Cài đặt</button>
     </div>
   </header>
 
   <!-- Tính năng 4: Natural Language Quick Command Bar -->
   <div class="quick-capture-box">
     <div class="quick-capture-row">
-      <span style="font-size:16px;">⚡</span>
       <input id="nlpInput" class="quick-capture-input"
-             placeholder="Ghi nhanh: vd 'Mai 18h đánh cầu lông 2 tiếng' hoặc 'Hôm nay 20h đọc sách 1.5h'..."
+             placeholder="Ghi nhanh, vd: Mai 18h cầu lông 2 tiếng"
              oninput="handleNLPInput(this.value)"
              onkeydown="handleNLPKeydown(event)">
       <button class="btn btn-sm btn-primary" onclick="executeNLP()">Ghi</button>
@@ -1520,7 +1525,7 @@ body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(-
 <div class="modal-overlay" id="reviewModalOverlay" onclick="handleReviewBackdropClick(event)">
   <div class="modal-sheet" id="reviewModalSheet" style="max-width:720px;" role="dialog" aria-modal="true" aria-labelledby="reviewSheetTitle">
     <div class="modal-header">
-      <h3 class="modal-title" id="reviewSheetTitle">🏆 Tổng kết Tuần</h3>
+      <h3 class="modal-title" id="reviewSheetTitle">Tổng kết tuần</h3>
       <button class="btn btn-sm btn-ghost" onclick="closeReviewModal()" title="Đóng (ESC)">✕</button>
     </div>
     <div class="modal-body" id="reviewSheetBody"></div>
@@ -1651,7 +1656,7 @@ function loadDemo() {
   }
   save();
   draw();
-  showToast("Đã thêm dữ liệu mẫu vào tuần đang xem", "ok");
+  showToast("Đã thêm dữ liệu mẫu", "ok");
 }
 
 function clearDemo() {
@@ -1745,7 +1750,7 @@ const save = () => {
   }
   if (oldWriterSeen === 1) {
     oldWriterSeen = 2;
-    showToast("Một cửa sổ Life Capital bản cũ vừa lưu đè dữ liệu. App đã gộp lại, không mất gì. Hãy tải lại hoặc đóng các tab Life Capital khác.", "bad");
+    showToast("Một tab cũ vừa ghi đè dữ liệu. Đã gộp lại, không mất gì. Hãy tải lại các tab khác.", "bad");
   }
 };
 
@@ -1840,7 +1845,7 @@ function freeSpace() {
 function restoreSnapshot(key) {
   let d = null;
   try { d = cleanState(JSON.parse(localStorage.getItem(key))); } catch (e) {}
-  if (!d) { showToast("Không đọc được bản tự lưu này", "bad"); return; }
+  if (!d) { showToast("Không đọc được bản tự lưu", "bad"); return; }
   Object.values(d.ev).forEach(sortL);
   const before = Object.values(S.ev).flat().length;
   S = mergeStates(null, S, d, false);
@@ -1848,15 +1853,15 @@ function restoreSnapshot(key) {
   draw();
   renderSettingsModal();
   const n = Object.values(S.ev).flat().length - before;
-  showToast(n ? `Đã khôi phục ${n} hoạt động từ bản tự lưu ${key.slice(SNAP.length)}` : "Không có hoạt động nào bị thiếu so với bản tự lưu này", "ok");
+  showToast(n ? `Đã khôi phục ${n} hoạt động` : "Không thiếu hoạt động nào", "ok");
 }
 // Đọc lại dữ liệu khi quay lại tab (trình duyệt có thể đã tạm dừng tab và bỏ lỡ thay đổi từ tab khác)
 function pullDisk() {
   if (!absorb(readDisk())) return;
   if (oldWriterSeen === 1) save(); // bản cũ vừa ghi đè: ghi lại bản đã gộp ngay
   hvEdit = null;
-  if (ed) { closeEditor(); showToast("Dữ liệu vừa thay đổi ở tab khác, đã tải lại.", "bad"); }
-  if (sch) { closeSched(); showToast("Dữ liệu vừa thay đổi ở tab khác, đã tải lại.", "bad"); }
+  if (ed) { closeEditor(); showToast("Đã cập nhật từ tab khác", "bad"); }
+  if (sch) { closeSched(); showToast("Đã cập nhật từ tab khác", "bad"); }
   if ($("settingsModalOverlay").classList.contains("open")) renderSettingsModal();
   draw();
 }
@@ -1881,8 +1886,8 @@ function renderSaveAlert() {
   el.hidden = !saveFailed;
   el.innerHTML = saveFailed ? `
     <div>
-      <b>⚠ Không lưu được dữ liệu vào trình duyệt</b>
-      <div style="font-size:12px; margin-top:2px;">Bộ nhớ có thể đã đầy hoặc trình duyệt đang chặn lưu trữ. Các thay đổi gần đây sẽ mất nếu đóng trang. Hãy tải tệp sao lưu ngay.</div>
+      <b>Không lưu được dữ liệu</b>
+      <div style="font-size:12px; margin-top:2px;">Bộ nhớ có thể đã đầy. Hãy sao lưu ngay để không mất thay đổi.</div>
     </div>
     <button type="button" class="btn btn-sm btn-danger" onclick="exportData('json')">Sao lưu</button>` : "";
 }
@@ -1899,7 +1904,7 @@ const wkNow = () => {
   return i >= 0 && i < W.length ? i : -1;
 };
 let CW = wkNow(), lt = tk, sel = CW;
-let cur = "ca"; // Tabs: "ca" (Lịch tuần), "su" (Hiệu suất 168h), "set" (Cài đặt vốn), "bak" (Sao lưu)
+let cur = "ca"; // Tabs: "ca" (Lịch tuần), "su" (Tổng quan), "set" (Cài đặt vốn), "bak" (Sao lưu)
 let calSubView = "focus"; // "focus" (Tuần chi tiết), "timeline" (Dòng thời gian 24h), "year" (Lưới 53 tuần)
 let timelineDayIdx = (new Date().getDay() + 6) % 7; // 0 = T2 .. 6 = CN; mặc định là hôm nay
 let N = 4;
@@ -1944,11 +1949,11 @@ function getDayBattery(dateStr) {
   } else if (net > 0) {
     fillPercent = Math.min(100, 50 + net * 12);
     statusClass = "positive";
-    label = `+${r1(net)}h Nạp`;
+    label = `+${r1(net)}h`;
   } else if (net < 0) {
     fillPercent = Math.max(10, 50 + net * 10);
     statusClass = "negative";
-    label = `${r1(net)}h Rút`;
+    label = `${r1(net)}h`;
   } else {
     fillPercent = 50;
     statusClass = "balanced";
@@ -2008,7 +2013,7 @@ const WB = p => new RegExp("(?<![\\p{L}\\p{N}])(?:" + p + ")(?![\\p{L}\\p{N}])",
 
 // Kiểm tra giờ/thời lượng/trùng giờ — dùng chung cho modal, ghi nhanh và chuỗi lặp
 function chkEvent(date, s, h, skip) {
-  if (!(h > 0 && h <= 24)) return { err: "Số giờ phải lớn hơn 0 và tối đa 24." };
+  if (!(h > 0 && h <= 24)) return { err: "Thời lượng từ 0 đến 24 giờ" };
   if (!s) return {};
   const mn = toMin(s);
   if (mn + h * 60 > 1440) return { err: "Hoạt động vượt quá nửa đêm. Hãy tách thành hai hoạt động." };
@@ -2211,10 +2216,10 @@ function handleNLPInput(val) {
     const p = $("nlpPreview"), t = val.slice(plus[0].length).trim(), cap = CM(guess(t)), md = guessMode(t);
     p.style.display = "flex";
     p.innerHTML = t ? `
-      <span class="pill pill-cyan">📥 → Hộp việc (chưa có ngày giờ)</span>
+      <span class="pill pill-cyan">Vào Hộp việc</span>
       <span class="pill ${md === "u" ? "pill-ok" : "pill-bad"}">${md === "u" ? "▲ Nạp" : "▼ Tiêu"}</span>
-      <span class="pill" style="${capInk(cap.c)}">🏷️ ${esc(cap.n)}</span>
-      <span style="font-weight:600; color:var(--tx); margin-left:4px;">"${esc(t)}"</span>` : `<span class="pill pill-cyan">📥 Gõ tên việc sau dấu + để ghi vào Hộp việc</span>`;
+      <span class="pill" style="${capInk(cap.c)}">${esc(cap.n)}</span>
+      <span style="font-weight:600; color:var(--tx); margin-left:4px;">"${esc(t)}"</span>` : `<span class="pill pill-cyan">Gõ tên việc sau dấu +</span>`;
     return;
   }
   parsedNLP = parseNLPText(val);
@@ -2223,12 +2228,12 @@ function handleNLPInput(val) {
   const r = parsedNLP, cap = CM(r.capKey);
   p.style.display = "flex";
   p.innerHTML = `
-    <span class="pill pill-cyan">📅 ${esc(r.dateDesc)}</span>
+    <span class="pill pill-cyan">${esc(r.dateDesc)}</span>
     <span class="pill pill-neutral">⏰ ${r.startTime} – ${tt(r.startTime, r.duration)} (${r1(r.duration)}h)</span>
     <span class="pill ${r.mode === "u" ? "pill-ok" : "pill-bad"}">${r.mode === "u" ? "▲ Nạp" : "▼ Tiêu"}</span>
-    <span class="pill" style="${capInk(cap.c)}">🏷️ ${esc(cap.n)}</span>
+    <span class="pill" style="${capInk(cap.c)}">${esc(cap.n)}</span>
     <span style="font-weight:600; color:var(--tx); margin-left:4px;">"${esc(r.title)}"</span>
-    ${r.err ? `<span class="pill pill-bad">⚠ ${esc(r.err)}</span>` : r.hit ? `<span class="pill pill-bad">⚠ Trùng giờ với "${esc(r.hit.t)}"</span>` : ""}`;
+    ${r.err ? `<span class="pill pill-bad">${esc(r.err)}</span>` : r.hit ? `<span class="pill pill-bad">Trùng "${esc(r.hit.t)}"</span>` : ""}`;
 }
 
 // Gõ tiếng Việt có dấu: một lần Enter vừa chốt chữ vừa thực hiện (ghi nhanh / chuyển ô trong popup).
@@ -2274,7 +2279,7 @@ function executeNLP() {
     return;
   }
   const r = parseNLPText(input.value);
-  if (!r) { showToast("Vui lòng nhập nội dung!", "bad"); return; }
+  if (!r) { showToast("Nhập nội dung", "bad"); return; }
   if (r.err) { showToast(r.err, "bad"); return; }
   if (r.hit && !confirm(`Trùng giờ với "${r.hit.t}" (${r.hit.s}). Vẫn thêm?`)) return;
   const L = S.ev[r.targetDate] = S.ev[r.targetDate] || [];
@@ -2307,7 +2312,7 @@ function executeNLP() {
   timelineDayIdx = (dObj.getDay() + 6) % 7;
 
   draw();
-  showToast(`Đã thêm: "${r.title}" vào ${r.dateDesc}`, "ok");
+  showToast(`Đã thêm "${r.title}" · ${r.dateDesc}`, "ok");
 }
 
 /* ==========================================================================
@@ -2316,7 +2321,7 @@ function executeNLP() {
 function renderRadarChartSVG(weekIdx) {
   const caps = S.caps;
   const numCaps = caps.length;
-  if (numCaps < 3) return `<p style="color:var(--mu); text-align:center; padding:20px;">Cần ít nhất 3 loại vốn để vẽ biểu đồ radar.</p>`;
+  if (numCaps < 3) return `<p style="color:var(--mu); text-align:center; padding:20px;">Cần ít nhất 3 loại vốn để vẽ bánh xe.</p>`;
 
   const VB = 560, cx = 280, cy = 160, r = 95;
   const angles = caps.map((_, i) => -Math.PI / 2 + (i * 2 * Math.PI / numCaps));
@@ -2370,12 +2375,12 @@ function renderRadarChartSVG(weekIdx) {
   const tg = stats.filter(s => s.has);
   let balanceHtml;
   if (!tg.length) {
-    balanceHtml = `<span class="pill pill-blush">🎯 Chưa đặt mục tiêu tuần</span>
-      <span style="color:var(--mu); font-size:12px;">Đặt số giờ ▲ Nạp mong muốn mỗi tuần cho từng loại vốn để bánh xe tính được điểm cân bằng.</span>
+    balanceHtml = `<span class="pill pill-blush">Chưa đặt mục tiêu tuần</span>
+      <span style="color:var(--mu); font-size:12px;">Đặt số giờ ▲ Nạp mỗi tuần cho từng loại vốn.</span>
       <button type="button" class="btn btn-sm btn-primary" onclick="goToTargets()">Đặt mục tiêu</button>`;
   } else if (stats.every(s => s.u === 0)) {
     // Chưa có giờ Nạp nào: chấm 0% và kết luận "bánh xe bị méo" là sai
-    balanceHtml = `<span class="pill pill-blush">🎯 Chưa có dữ liệu để tính điểm</span>
+    balanceHtml = `<span class="pill pill-blush">Chưa đủ dữ liệu</span>
       <span style="color:var(--mu); font-size:12px;">Tuần này chưa ghi giờ ▲ Nạp nào.</span>`;
   } else {
     const ratios = tg.map(s => Math.min(1, s.u / s.c.tg));
@@ -2383,7 +2388,7 @@ function renderRadarChartSVG(weekIdx) {
     const score = Math.round((avgR * 0.6 + minR * 0.4) * 100);
     const label = score >= 80 ? "Bánh xe rất tròn và cân đối" : score >= 50 ? "Khá cân đối, cần nạp thêm vốn còn thiếu" : "Bánh xe bị méo, cần tái cân bằng";
     const weakest = tg[ratios.indexOf(minR)];
-    balanceHtml = `<span class="pill pill-blush">🎯 Điểm cân bằng bánh xe: <b>${score}%</b></span>
+    balanceHtml = `<span class="pill pill-blush">Điểm cân bằng: <b>${score}%</b></span>
       <span style="color:var(--mu); font-size:12px;">${label}.${score < 80 ? ` Yếu nhất: <b>${esc(weakest.c.n)}</b> (${Math.round(minR * 100)}%).` : ""}${tg.length < stats.length ? ` Chưa tính ${stats.length - tg.length} vốn không có mục tiêu.` : ""}</span>`;
   }
 
@@ -2398,7 +2403,7 @@ function renderRadarChartSVG(weekIdx) {
         ${dots}
         ${labels}
       </svg>
-      <div style="font-size:11.5px; color:var(--mu); text-align:center;">Điểm nằm trên vòng 100% là đã đạt mục tiêu (có viền xanh nếu đạt hoặc vượt) · chấm rỗng: chưa đặt mục tiêu</div>
+      <div style="font-size:11.5px; color:var(--mu); text-align:center;">Vòng 100% = đạt mục tiêu · chấm rỗng = chưa đặt</div>
       <div style="display:flex; justify-content:center; align-items:center; gap:12px; font-size:12.5px; margin-top:6px; flex-wrap:wrap; text-align:center;">
         ${balanceHtml}
       </div>
@@ -2427,7 +2432,7 @@ function openWeeklyReviewModal(wIdx = sel) {
   const wEnd = ad(wStart, 6);
   const rangeStr = `Tuần W${wIdx + 1} (${wStart.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" })} – ${wEnd.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric", year: "numeric" })})`;
 
-  $("reviewSheetTitle").innerHTML = `<span>🏆 Báo Cáo Tổng Kết Tuần W${wIdx + 1}</span>`;
+  $("reviewSheetTitle").innerHTML = `<span>Tổng kết tuần W${wIdx + 1}</span>`;
 
   let totalU = 0, totalD = 0;
   S.caps.forEach(c => {
@@ -2469,27 +2474,27 @@ function openWeeklyReviewModal(wIdx = sel) {
   // Nhận định Cán cân năng lượng
   let energyInsight = "";
   if (noData) {
-    energyInsight = "Chưa có hoạt động nào được ghi nhận trong tuần này. Hãy ghi lại các thói quen hàng ngày để ứng dụng đo lường và đưa ra nhận định chính xác.";
+    energyInsight = "Tuần này chưa có hoạt động.";
   } else if (netEnergy >= 4) {
-    energyInsight = `<b>Tái tạo năng lượng xuất sắc (Thặng dư +${r1(netEnergy)}h):</b> Tổng nạp (${r1(totalU)}h) vượt trội hoàn toàn so với tiêu hao (${r1(totalD)}h). Bạn đang có mức tích lũy pin sinh học dồi dào, tâm lý tích cực và thể lực vững vàng.`;
+    energyInsight = `<b>Dư năng lượng (+${r1(netEnergy)}h):</b> nạp ${r1(totalU)}h, tiêu ${r1(totalD)}h. Bạn đang hồi phục tốt.`;
   } else if (netEnergy >= 0) {
-    energyInsight = `<b>Cán cân năng lượng cân bằng lành mạnh (+${r1(netEnergy)}h):</b> Hoạt động tái tạo (${r1(totalU)}h) vừa đủ bù đắp năng lượng tiêu hao (${r1(totalD)}h). Cơ thể ở trạng thái ổn định, không có tích tụ kiệt sức.`;
+    energyInsight = `<b>Cân bằng (+${r1(netEnergy)}h):</b> nạp ${r1(totalU)}h, tiêu ${r1(totalD)}h. Nhịp độ ổn định.`;
   } else if (netEnergy >= -4) {
-    energyInsight = `<b>Thâm hụt năng lượng nhẹ (${r1(netEnergy)}h):</b> Tiêu hao (${r1(totalD)}h) bắt đầu vượt lượng nạp (${r1(totalU)}h). Hãy chủ động tăng thời lượng ngủ và thư giãn để tránh mệt mỏi tích lũy.`;
+    energyInsight = `<b>Thâm hụt nhẹ (${r1(netEnergy)}h):</b> tiêu ${r1(totalD)}h, nạp ${r1(totalU)}h. Nên tăng giờ ngủ và nghỉ ngơi.`;
   } else {
-    energyInsight = `<b>Cảnh báo mức độ kiệt sức cao (-${r1(Math.abs(netEnergy))}h):</b> Áp lực và năng lượng tiêu hao (${r1(totalD)}h) quá nặng nề so với phục hồi (${r1(totalU)}h). Nguy cơ kiệt sức sinh học (burnout) rất cao nếu tiếp tục duy trì nhịp độ này.`;
+    energyInsight = `<b>Nguy cơ kiệt sức (-${r1(Math.abs(netEnergy))}h):</b> tiêu ${r1(totalD)}h, nạp ${r1(totalU)}h. Giữ nhịp này dễ dẫn tới kiệt sức.`;
   }
 
   // Nhận định Quỹ 168 giờ
   let timeInsight = "";
   if (noData) {
-    timeInsight = "Quỹ 168 giờ hoàn toàn trống.";
+    timeInsight = "Chưa ghi giờ nào.";
   } else if (totalAlloc > 168) {
-    timeInsight = `<b>Quá tải quỹ thời gian (+${r1(totalAlloc - 168)}h):</b> Bạn đã phân bổ ${r1(totalAlloc)}h / 168h (${Math.round(totalAlloc/168*100)}%). Lịch trình đang bị dồn ép quá mức, lấn chiếm vào thời gian nghỉ ngơi và sinh hoạt cơ bản.`;
+    timeInsight = `<b>Quá tải (+${r1(totalAlloc - 168)}h):</b> đã ghi ${r1(totalAlloc)}h, vượt tổng giờ của tuần. Lịch đang lấn vào giờ nghỉ.`;
   } else if (totalAlloc >= 110) {
-    timeInsight = `<b>Kiểm soát quỹ thời gian tối ưu (${r1(totalAlloc)}h / 168h):</b> Lịch trình được tổ chức chặt chẽ (${Math.round(totalAlloc/168*100)}%), đồng thời vẫn giữ được ${r1(freeTime)}h vùng đệm tự do cho sinh hoạt cá nhân.`;
+    timeInsight = `<b>Lịch kín (${Math.round(totalAlloc/168*100)}%):</b> đã ghi ${r1(totalAlloc)}h, còn ${r1(freeTime)}h trống.`;
   } else {
-    timeInsight = `<b>Quỹ thời gian rất thông thoáng (${r1(totalAlloc)}h / 168h):</b> Bạn còn ${r1(freeTime)}h chưa phân bổ (${Math.round(freeTime/168*100)}%). Bạn hoàn toàn có thể chủ động thêm các mục tiêu phát triển chuyên môn hoặc rèn luyện thể chất.`;
+    timeInsight = `<b>Còn nhiều giờ trống:</b> đã ghi ${r1(totalAlloc)}h, còn ${r1(freeTime)}h (${Math.round(freeTime/168*100)}%). Có thể thêm mục tiêu học tập hoặc vận động.`;
   }
 
   const html = `
@@ -2517,34 +2522,34 @@ function openWeeklyReviewModal(wIdx = sel) {
       <!-- 3 THẺ CHỈ SỐ CỐT LÕI -->
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
         <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
-          <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Tổng Nạp / Tiêu</div>
+          <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Nạp / Tiêu</div>
           <div style="font:600 19px var(--font-ui); margin-top:4px;">
             <span style="color: var(--ok-text)">▲${r1(totalU)}h</span> · <span style="color:var(--bad)">▼${r1(totalD)}h</span>
           </div>
           <small style="color:var(--tx-sec)">Cán cân: <b>${netEnergy >= 0 ? '+' : ''}${r1(netEnergy)}h</b></small>
         </div>
         <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
-          <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Quỹ 168 Giờ</div>
+          <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Giờ đã ghi</div>
           <div style="font:600 19px var(--font-ui); margin-top:4px;">
             ${r1(totalAlloc)}h <span style="font-size:13px; font-weight:400; color:var(--mu);">(${Math.round(totalAlloc/168*100)}%)</span>
           </div>
           <small style="color:${totalAlloc > 168 ? 'var(--bad)' : 'var(--ok-text)'}">
-            ${totalAlloc > 168 ? 'Vượt giới hạn 168h!' : `Còn ${r1(freeTime)}h tự do`}
+            ${totalAlloc > 168 ? 'Vượt tổng giờ của tuần' : `Còn ${r1(freeTime)}h trống`}
           </small>
         </div>
         <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
-          <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Đánh giá pin tuần</div>
+          <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Pin tuần</div>
           <div style="font:600 19px var(--font-ui); margin-top:4px; color:${noData ? 'var(--mu)' : netEnergy >= 0 ? 'var(--ok-text)' : 'var(--bad)'}">
-            ${noData ? '— Chưa có dữ liệu' : netEnergy >= 4 ? '🔋 Nạp pin xuất sắc' : netEnergy >= 0 ? '🔋 Pin ổn định' : '🪫 Thâm hụt pin'}
+            ${noData ? 'Chưa có dữ liệu' : netEnergy >= 4 ? 'Dồi dào' : netEnergy >= 0 ? 'Ổn định' : 'Thâm hụt'}
           </div>
-          <small style="color:var(--tx-sec)">${noData ? 'Ghi hoạt động để đánh giá' : netEnergy >= 0 ? 'Cân bằng phục hồi tốt' : 'Cần bù đắp nghỉ ngơi tuần tới'}</small>
+          <small style="color:var(--tx-sec)">${noData ? 'Ghi hoạt động để đánh giá' : netEnergy >= 0 ? 'Hồi phục tốt' : 'Cần nghỉ bù tuần tới'}</small>
         </div>
       </div>
 
       <!-- BÁNH XE CUỘC ĐỜI CỦA TUẦN ĐÓ -->
       <div style="border:1px solid var(--bd); border-radius:var(--radius-md); padding:12px; background:var(--card);">
         <div style="font-weight:600; font-size:14px; margin-bottom:4px; text-align:center;">
-          Bánh Xe Cuộc Đời · Tuần W${wIdx + 1}
+          Bánh xe cuộc đời
         </div>
         ${renderRadarChartSVG(wIdx)}
       </div>
@@ -2552,8 +2557,8 @@ function openWeeklyReviewModal(wIdx = sel) {
       ${noData ? `
       <!-- Tuần chưa có hoạt động: không đưa nhận định hay khuyến nghị dựa trên dữ liệu rỗng -->
       <div style="padding:16px; background:var(--card-subtle); border-radius:var(--radius-md); border:1px dashed var(--bd); display:flex; flex-direction:column; gap:8px; align-items:flex-start;">
-        <b style="font-size:14px;">📭 Tuần W${wIdx + 1} chưa có hoạt động nào</b>
-        <span style="font-size:13px; color:var(--tx-sec); line-height:1.5;">Ghi lại các hoạt động trong tuần bằng thanh ghi nhanh hoặc nút “+ Thêm” để nhận nhận định về cán cân năng lượng, quỹ 168 giờ và kế hoạch cho tuần tới.</span>
+        <b style="font-size:14px;">Tuần W${wIdx + 1} chưa có hoạt động</b>
+        <span style="font-size:13px; color:var(--tx-sec); line-height:1.5;">Ghi hoạt động để xem cán cân năng lượng và gợi ý cho tuần tới.</span>
         <button type="button" class="btn btn-sm btn-primary" onclick="goToQuickCapture()">Ghi hoạt động</button>
       </div>
       ` : `
@@ -2562,17 +2567,17 @@ function openWeeklyReviewModal(wIdx = sel) {
         <!-- Insight 1: Cán cân năng lượng -->
         <div style="padding:12px 14px; background:var(--card-subtle); border-radius:var(--radius-md); border:1px solid var(--bd); border-left:4px solid ${netEnergy >= 0 ? 'var(--ok)' : 'var(--bad)'};">
           <div style="font-weight:600; font-size:13.5px; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
-            <span>${netEnergy >= 0 ? '🔋' : '⚡'} Cán Cân Sinh Học & Nguy Cơ Kiệt Sức</span>
+            <span>Cán cân năng lượng</span>
           </div>
           <div style="color:var(--tx); line-height:1.5;">${energyInsight}</div>
-          ${peakDrain && peakDrain.dd > 2 ? `<div style="font-size:12px; color:var(--mu); margin-top:6px;">• Ngày chịu áp lực lớn nhất: <b>${peakDrain.dayName}</b> (tiêu hao ${r1(peakDrain.dd)}h).</div>` : ''}
-          ${peakRecharge && peakRecharge.du > 2 ? `<div style="font-size:12px; color:var(--mu); margin-top:2px;">• Ngày tái tạo năng lượng tốt nhất: <b>${peakRecharge.dayName}</b> (nạp +${r1(peakRecharge.du)}h).</div>` : ''}
+          ${peakDrain && peakDrain.dd > 2 ? `<div style="font-size:12px; color:var(--mu); margin-top:6px;">• Ngày nặng nhất: <b>${peakDrain.dayName}</b> (tiêu ${r1(peakDrain.dd)}h).</div>` : ''}
+          ${peakRecharge && peakRecharge.du > 2 ? `<div style="font-size:12px; color:var(--mu); margin-top:2px;">• Ngày nạp tốt nhất: <b>${peakRecharge.dayName}</b> (nạp +${r1(peakRecharge.du)}h).</div>` : ''}
         </div>
 
-        <!-- Insight 2: Quỹ 168h -->
+        <!-- Insight 2: Giờ trong tuần -->
         <div style="padding:12px 14px; background:var(--card-subtle); border-radius:var(--radius-md); border:1px solid var(--bd); border-left:4px solid var(--c-cyan);">
           <div style="font-weight:600; font-size:13.5px; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
-            <span>⏳ Quản Trị Quỹ 168 Giờ</span>
+            <span>Giờ trong tuần</span>
           </div>
           <div style="color:var(--tx); line-height:1.5;">${timeInsight}</div>
         </div>
@@ -2581,36 +2586,36 @@ function openWeeklyReviewModal(wIdx = sel) {
         <div style="display:flex; flex-direction:column; gap:6px;">
           ${starCap ? `
             <div style="padding:10px 14px; background:var(--ok-soft); border-radius:var(--radius-md); border-left:4px solid var(--ok);">
-              ⭐ <b>Điểm sáng của tuần:</b> Vốn <b>${esc(starCap.c.n)}</b> đạt <b>${r1(starCap.u)}h</b>${starCap.target ? ' (hoàn thành ' + Math.round(starCap.ratio*100) + '% mục tiêu)' : ''} — là nguồn cảm hứng bồi đắp lớn nhất tuần này.
+              <b>Điểm sáng:</b> <b>${esc(starCap.c.n)}</b> đạt ${r1(starCap.u)}h${starCap.target ? ' (' + Math.round(starCap.ratio*100) + '% mục tiêu)' : ''}.
             </div>
           ` : ''}
           ${laggingCap && laggingCap.diff < 0 ? `
             <div style="padding:10px 14px; background:var(--bad-soft); border-radius:var(--radius-md); border-left:4px solid var(--bad);">
-              ⚠️ <b>Cần tiếp sức khẩn cấp:</b> Vốn <b>${esc(laggingCap.c.n)}</b> chỉ đạt <b>${r1(laggingCap.u)}h</b> / ${r1(laggingCap.target)}h (thiếu hụt <b>${r1(Math.abs(laggingCap.diff))}h</b>). Trục này đang làm bánh xe cuộc đời bị lệch.
+              <b>Cần bù:</b> <b>${esc(laggingCap.c.n)}</b> đạt ${r1(laggingCap.u)}h / ${r1(laggingCap.target)}h, thiếu ${r1(Math.abs(laggingCap.diff))}h.
             </div>
           ` : ''}
           ${drainExceedingCaps.length ? `
             <div style="padding:10px 14px; background:var(--wa-soft); border-radius:var(--radius-md); border-left:4px solid var(--wa);">
-              ⚡ <b>Vốn chịu tải cao (Tiêu > Nạp):</b> <b>${drainExceedingCaps.map(x => esc(x.c.n) + ' (tiêu ' + r1(x.d) + 'h > nạp ' + r1(x.u) + 'h)').join(', ')}</b>.
+              <b>Tiêu nhiều hơn nạp:</b> ${drainExceedingCaps.map(x => '<b>' + esc(x.c.n) + '</b> (tiêu ' + r1(x.d) + 'h, nạp ' + r1(x.u) + 'h)').join(', ')}.
             </div>
           ` : ''}
           ${neglectedCaps.length ? `
             <div style="padding:8px 12px; background:var(--card-subtle); border-radius:var(--radius-md); border:1px solid var(--bd); font-size:12.5px; color:var(--mu);">
-              💤 <b>Chưa phân bổ thời gian:</b> Tuần này bạn chưa dành thời lượng cho <b>${neglectedCaps.map(x => esc(x.c.n)).join(', ')}</b>.
+              <b>Chưa có giờ:</b> ${neglectedCaps.map(x => esc(x.c.n)).join(', ')}.
             </div>
           ` : ''}
         </div>
       </div>
 
       <!-- Insight 4: Kế hoạch hành động cụ thể cho tuần tới -->
-      <div style="padding:14px; background:var(--c-blush); border-radius:var(--radius-md); font-size:13px; color:var(--on-blush); border:1px solid var(--ac);">
-        <div style="font-weight:700; font-size:13.5px; margin-bottom:6px; display:flex; align-items:center; gap:6px;">
-          <span>🎯 Kế Hoạch Hành Động Tuần Tới</span>
+      <div style="padding:14px; background:linear-gradient(135deg, var(--pill-sheen), color-mix(in srgb, var(--c-blush) var(--pill-mix), transparent)); border-radius:var(--radius-md); font-size:13px; color:var(--tx); border:1px solid color-mix(in srgb, var(--ac) 40%, transparent);">
+        <div style="font-weight:600; font-size:13.5px; margin-bottom:6px; display:flex; align-items:center; gap:6px;">
+          <span>Gợi ý tuần tới</span>
         </div>
         <div style="display:flex; flex-direction:column; gap:4px; line-height:1.5;">
-          <div>1. <b>Ưu tiên nguồn vốn yếu:</b> Lên lịch ngay 1–2 buổi cho <b>${laggingCap ? esc(laggingCap.c.n) : 'hoạt động phục hồi'}</b> vào Thứ 3 hoặc Thứ 5.</div>
-          <div>2. <b>Bảo vệ năng lượng:</b> ${peakDrain && peakDrain.dd > 3 ? `Nếu <b>${peakDrain.dayName}</b> tiếp tục là ngày bận rộn, hãy chủ động nghỉ ngơi sớm vào tối hôm đó.` : 'Giữ thói quen ngủ đủ giấc để duy trì pin năng lượng dương.'}</div>
-          <div>3. <b>Giữ vững đà tăng trưởng:</b> Tiếp tục phát huy thế mạnh ở vốn <b>${starCap ? esc(starCap.c.n) : 'chủ lực'}</b>.</div>
+          <div>1. Xếp 1–2 buổi <b>${laggingCap ? esc(laggingCap.c.n) : 'phục hồi'}</b> vào Thứ 3 hoặc Thứ 5.</div>
+          <div>2. ${peakDrain && peakDrain.dd > 3 ? `Nếu <b>${peakDrain.dayName}</b> vẫn bận, nghỉ sớm tối hôm đó.` : 'Giữ giấc ngủ đều.'}</div>
+          <div>3. Giữ đà ở <b>${starCap ? esc(starCap.c.n) : 'vốn mạnh nhất'}</b>.</div>
         </div>
       </div>
       `}
@@ -2633,9 +2638,9 @@ function copyReviewToClipboard(wIdx) {
     totalU += w.u;
     totalD += w.d;
   });
-  const text = `🏆 [Life Capital] Tổng kết Tuần W${wIdx + 1}: Nạp ▲${r1(totalU)}h | Tiêu ▼${r1(totalD)}h | Cán cân: ${totalU - totalD >= 0 ? '+' : ''}${r1(totalU - totalD)}h. Quỹ 168h: ${r1(al(wIdx))}h.`;
+  const text = `Life Capital · Tuần W${wIdx + 1}: Nạp ▲${r1(totalU)}h | Tiêu ▼${r1(totalD)}h | Cán cân ${totalU - totalD >= 0 ? '+' : ''}${r1(totalU - totalD)}h | Đã ghi ${r1(al(wIdx))}h.`;
   navigator.clipboard.writeText(text).then(() => {
-    showToast("Đã sao chép tóm tắt vào bộ nhớ tạm!", "ok");
+    showToast("Đã sao chép", "ok");
   });
 }
 
@@ -2643,10 +2648,10 @@ function copyReviewToClipboard(wIdx) {
    7. NAVIGATION
    ========================================================================== */
 const TABS = [
-  { id: "ca", label: "Lịch biểu", short: "Lịch", icon: "📅", sub: "Sắp xếp và ghi lại thời gian, năng lượng mỗi tuần" },
-  { id: "hv", label: "Hộp việc", short: "Hộp việc", icon: "📥", sub: "Việc chưa có ngày giờ: chia nhỏ rồi xếp vào lịch" },
-  { id: "su", label: "Tổng quan & 168h", short: "Tổng quan", icon: "📊", sub: "Cán cân năng lượng và 168 giờ của tuần" },
-  { id: "set", label: "Danh mục vốn", short: "Vốn", icon: "🏷️", sub: "Loại vốn, mục tiêu tuần và từ khóa nhận diện" }
+  { id: "ca", label: "Lịch biểu", short: "Lịch", icon: "📅", sub: "Thời gian và năng lượng trong tuần" },
+  { id: "hv", label: "Hộp việc", short: "Hộp việc", icon: "📥", sub: "Việc chưa có lịch: chia nhỏ rồi xếp" },
+  { id: "su", label: "Tổng quan", short: "Tổng quan", icon: "📊", sub: "Cán cân năng lượng trong tuần" },
+  { id: "set", label: "Danh mục vốn", short: "Vốn", icon: "🏷️", sub: "Loại vốn, mục tiêu và từ khóa" }
 ];
 
 // Mở chế độ Ngày: đang xem tuần hiện tại thì nhảy thẳng tới hôm nay
@@ -2736,7 +2741,7 @@ function setDefaultDuration(val) {
   S.cfg = S.cfg || {};
   S.cfg.defDuration = Math.max(0.5, Math.min(24, val));
   save();
-  showToast(`Đã lưu thời lượng mặc định: ${val}h`, "ok");
+  showToast("Đã lưu", "ok");
 }
 
 function setBurnoutThreshold(val) {
@@ -2744,12 +2749,12 @@ function setBurnoutThreshold(val) {
   S.cfg.burnoutHours = Math.max(1, Math.min(24, val));
   save();
   draw();
-  showToast(`Đã lưu ngưỡng cảnh báo kiệt sức: ${val}h`, "ok");
+  showToast("Đã lưu", "ok");
 }
 
 function resetToDefaultData() {
-  if (!confirm("⚠️ CẢNH BÁO NGUY HIỂM:\nBạn có chắc chắn muốn xóa TOÀN BỘ dữ liệu đã ghi và đưa ứng dụng về trạng thái ban đầu?\n\nKhuyến nghị: Hãy nhấn 'Xuất tệp sao lưu (.json)' trước khi xóa!")) return;
-  if (!confirm("Xác nhận lần cuối: Mọi hoạt động ghi chép sẽ bị xóa vĩnh viễn trên thiết bị này. Tiếp tục?")) return;
+  if (!confirm("Xóa toàn bộ dữ liệu trên máy này?\nNên sao lưu trước.")) return;
+  if (!confirm("Xóa vĩnh viễn, không hoàn tác được. Tiếp tục?")) return;
   const keepLb = S.lb, keepGdel = S.gdel || [], oldCfg = S.cfg || {};
   S = defState();
   S.ev = {};
@@ -2761,7 +2766,7 @@ function resetToDefaultData() {
   save();
   draw(true);
   closeSettingsModal();
-  showToast("Đã xóa toàn bộ hoạt động. Danh mục vốn được đặt lại mặc định.", "ok");
+  showToast("Đã xóa dữ liệu", "ok");
 }
 
 /* ==========================================================================
@@ -2813,11 +2818,11 @@ function clearGCalToken() {
 function initGCalTokenClient(onSuccess) {
   const clientId = (S.cfg && S.cfg.gcalClientId) || localStorage.getItem("gcal_client_id") || "";
   if (!clientId) {
-    showToast("Vui lòng nhập Google Client ID trước khi kết nối!", "bad");
+    showToast("Nhập Client ID trước", "bad");
     return false;
   }
   if (typeof google === "undefined" || !google.accounts || !google.accounts.oauth2) {
-    showToast("Thư viện Google Identity chưa sẵn sàng. Vui lòng thử lại sau vài giây!", "bad");
+    showToast("Google chưa tải xong, thử lại sau vài giây", "bad");
     return false;
   }
   try {
@@ -2843,7 +2848,7 @@ function initGCalTokenClient(onSuccess) {
           localStorage.setItem("gcal_token", resp.access_token);
           localStorage.setItem("gcal_token_exp", String(expTime));
           localStorage.setItem("gcal_linked", "1");
-          showToast("✓ Đã kết nối Google Calendar thành công!", "ok");
+          showToast("Đã kết nối Google Calendar", "ok");
           renderSettingsModal();
           if (onSuccess) onSuccess();
           gcalFlush({ report: true });
@@ -2886,7 +2891,7 @@ function toggleGCalAutoSync(enabled) {
   S.cfg = S.cfg || {};
   S.cfg.gcalAutoSync = enabled;
   save();
-  showToast(enabled ? "Đã bật tự động đồng bộ sang Google Calendar" : "Đã tắt tự động đồng bộ", "ok");
+  showToast(enabled ? "Đã bật tự động đồng bộ" : "Đã tắt tự động đồng bộ", "ok");
   updateSyncBadge();
   if (enabled) gcalFlush();
 }
@@ -3081,13 +3086,13 @@ async function gcalFlushRun(token, opts) {
     showToast(gcalConfigErr, "bad");
   } else if (stop === "auth") {
     clearGCalToken();
-    showToast("Phiên Google Calendar đã hết hạn. Bấm 'Kết nối lại' trên thanh tiêu đề để đẩy các thay đổi đang chờ.", "bad");
+    showToast("Phiên Google hết hạn. Bấm Kết nối lại GCal để gửi tiếp.", "bad");
   } else if (stop === "retry") {
     gcalRetryT = setTimeout(() => gcalFlush(), 30000);
-    if (opts.report) showToast(`Mất mạng hoặc Google đang giới hạn tần suất. Còn ${gcalPendingCount()} thay đổi chờ, sẽ tự thử lại.`, "bad");
+    if (opts.report) showToast(`Chưa gửi được ${gcalPendingCount()} thay đổi, sẽ tự thử lại`, "bad");
   }
-  if (failed.length) showToast(`Google Calendar từ chối ${failed.length} hoạt động (${gcalLastFail || "không rõ lý do"}): ${failed.slice(0, 3).join(", ")}${failed.length > 3 ? "…" : ""}`, "bad");
-  if (opts.report && !stop && !failed.length) showToast(ok ? `✓ Đã đồng bộ ${ok} thay đổi lên Google Calendar` : "✓ Google Calendar đã cập nhật", "ok");
+  if (failed.length) showToast(`Google từ chối ${failed.length} hoạt động (${gcalLastFail || "không rõ lý do"}): ${failed.slice(0, 3).join(", ")}${failed.length > 3 ? "…" : ""}`, "bad");
+  if (opts.report && !stop && !failed.length) showToast(ok ? `Đã gửi ${ok} thay đổi lên Google Calendar` : "Google Calendar đã cập nhật", "ok");
   updateSyncBadge();
   // Có thay đổi mới trong lúc đang gửi: gửi tiếp ngay khi vẫn giữ khóa (không nhả rồi tranh lại)
   if (gcalRerun && !stop) {
@@ -3098,7 +3103,7 @@ async function gcalFlushRun(token, opts) {
 
 async function gcalSyncWeek(wIdx) {
   if (!getGCalToken()) {
-    showToast("Chưa kết nối Google Calendar!", "bad");
+    showToast("Chưa kết nối Google Calendar", "bad");
     return;
   }
   wIdx = (typeof wIdx === "number") ? wIdx : sel;
@@ -3109,9 +3114,9 @@ async function gcalSyncWeek(wIdx) {
       if (!e.demo) { e.ds = (e.ds || 0) + 1; n++; }
     });
   }
-  if (!n) { showToast(`Tuần W${wIdx + 1} chưa có hoạt động nào để đồng bộ.`, "ok"); return; }
+  if (!n) { showToast(`Tuần W${wIdx + 1} chưa có hoạt động`, "ok"); return; }
   save();
-  showToast(`Đang đồng bộ ${n} hoạt động tuần W${wIdx + 1} lên Google Calendar...`, "ok");
+  showToast(`Đang gửi ${n} hoạt động…`, "ok");
   await gcalFlush({ force: true, report: true });
 }
 
@@ -3151,17 +3156,17 @@ function renderSettingsModal() {
   const burnH = (S.cfg && S.cfg.burnoutHours) || 6;
   const opt = (v, cur, label) => `<option value="${v}" ${cur === v ? "selected" : ""}>${label}</option>`;
   const seg = (v, label) => `<button type="button" class="${curTheme === v ? "on" : ""}" aria-pressed="${curTheme === v}" onclick="setThemePreference('${v}')">${label}</button>`;
-  const backup = S.lb ? `sao lưu gần nhất ${new Date(S.lb).toLocaleString("vi-VN")}` : `<span style="color:var(--bad)">chưa sao lưu lần nào</span>`;
+  const backup = S.lb ? `sao lưu ${new Date(S.lb).toLocaleString("vi-VN", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "2-digit" })}` : `<span style="color:var(--bad)">chưa sao lưu</span>`;
 
   $("settingsSheetBody").innerHTML = `
     <section class="set-sec set-bg">
       <h4 class="set-h">Giao diện</h4>
       <div class="set-row">
-        <span class="set-lbl">Chế độ hiển thị</span>
+        <span class="set-lbl">Chế độ</span>
         <div class="set-seg">${seg("light", "Sáng")}${seg("dark", "Tối")}${seg("auto", "Theo máy")}</div>
       </div>
       <div class="set-row">
-        <span class="set-lbl">Ảnh nền<small>Lưu trên máy này, không đồng bộ sang máy khác</small></span>
+        <span class="set-lbl">Ảnh nền<small>Chỉ lưu trên máy này</small></span>
         <div class="set-inline">
           <button type="button" class="btn btn-sm" onclick="$('bgFile').click()">${document.body.classList.contains("has-bg") ? "Đổi ảnh" : "Chọn ảnh"}</button>
           ${document.body.classList.contains("has-bg") ? `<button type="button" class="btn btn-sm btn-ghost" onclick="removeBg()">Bỏ ảnh</button>` : ""}
@@ -3169,7 +3174,7 @@ function renderSettingsModal() {
         </div>
       </div>
       <div class="set-row bg-blur-row">
-        <label class="set-lbl" for="bgBlurRange">Độ mờ nền<small>${document.body.classList.contains("has-bg") ? "Kéo sang phải cho nền dịu hơn" : "Chọn ảnh nền để chỉnh độ mờ"}</small></label>
+        <label class="set-lbl" for="bgBlurRange">Độ mờ nền<small>${document.body.classList.contains("has-bg") ? "Kéo phải để mờ hơn" : "Cần chọn ảnh nền"}</small></label>
         <input id="bgBlurRange" class="bg-range" type="range" min="0" max="40" step="1" value="${bgBlur()}" ${document.body.classList.contains("has-bg") ? "" : "disabled"}
                oninput="setBgBlur(this.value, false)" onchange="setBgBlur(this.value)"
                onpointerdown="bgPeek(true)" onpointerup="bgPeek(false)" onpointercancel="bgPeek(false)" onfocus="bgPeek(true)" onblur="bgPeek(false)">
@@ -3179,13 +3184,13 @@ function renderSettingsModal() {
     <section class="set-sec">
       <h4 class="set-h">Mặc định</h4>
       <div class="set-row">
-        <label class="set-lbl" for="setDur">Thời lượng hoạt động mới</label>
+        <label class="set-lbl" for="setDur">Thời lượng mặc định</label>
         <select id="setDur" onchange="setDefaultDuration(+this.value)">
           ${opt(0.5, defDur, "30 phút")}${opt(1, defDur, "1 giờ")}${opt(1.5, defDur, "1,5 giờ")}${opt(2, defDur, "2 giờ")}${opt(3, defDur, "3 giờ")}
         </select>
       </div>
       <div class="set-row">
-        <label class="set-lbl" for="setBurn">Cảnh báo kiệt sức<small>Khi một ngày tiêu hao từ mức này trở lên</small></label>
+        <label class="set-lbl" for="setBurn">Ngưỡng kiệt sức<small>Giờ tiêu hao mỗi ngày</small></label>
         <select id="setBurn" onchange="setBurnoutThreshold(+this.value)">
           ${opt(5, burnH, "5 giờ")}${opt(6, burnH, "6 giờ")}${opt(7, burnH, "7 giờ")}${opt(8, burnH, "8 giờ")}
         </select>
@@ -3200,18 +3205,18 @@ function renderSettingsModal() {
         <button type="button" class="btn btn-sm" onclick="exportData('csv')">Xuất CSV</button>
       </div>
       <div class="set-row">
-        <label class="set-lbl" for="importModeSelect">Khôi phục từ tệp sao lưu</label>
+        <label class="set-lbl" for="importModeSelect">Khôi phục</label>
         <div class="set-inline">
           <select id="importModeSelect">
-            <option value="merge">Gộp vào dữ liệu hiện có</option>
-            <option value="replace">Ghi đè toàn bộ</option>
+            <option value="merge">Gộp</option>
+            <option value="replace">Ghi đè</option>
           </select>
           <button type="button" class="btn btn-sm" onclick="$('setFile').click()">Chọn tệp</button>
           <input id="setFile" type="file" accept=".json,application/json" onchange="importData(this)" style="display:none">
         </div>
       </div>
       <div class="set-row" style="align-items:flex-start;">
-        <span class="set-lbl">Bản tự lưu hằng ngày<small>App tự giữ một bản đầu mỗi ngày, 7 ngày gần nhất, trên máy này. Gộp lại chỉ thêm những hoạt động đang thiếu, không xóa gì.</small></span>
+        <span class="set-lbl">Bản tự lưu<small>Mỗi ngày một bản, giữ 7 ngày. Gộp lại chỉ thêm phần thiếu.</small></span>
         <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-end;">
           ${snapKeys().reverse().map(k => {
             let n = "?";
@@ -3225,20 +3230,20 @@ function renderSettingsModal() {
 
     <section class="set-sec">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <h4 class="set-h" style="margin-bottom:0;">📅 Đồng bộ Google Calendar</h4>
+        <h4 class="set-h" style="margin-bottom:0;">Google Calendar</h4>
         <span class="pill ${isGCalConnected() ? 'pill-ok' : 'pill-neutral'}" style="font-size:11px;">
-          ${isGCalConnected() ? '✓ Đã kết nối' : 'Chưa kết nối'}
+          ${isGCalConnected() ? 'Đã kết nối' : 'Chưa kết nối'}
         </span>
       </div>
-      ${gcalConfigErr ? `<p class="set-note" style="color:var(--bad);" role="alert">⚠ ${esc(gcalConfigErr)}</p>` : ""}
+      ${gcalConfigErr ? `<p class="set-note" style="color:var(--bad);" role="alert">${esc(gcalConfigErr)}</p>` : ""}
       <p style="font-size:12px; color:var(--tx-sec); margin-bottom:12px; line-height:1.45;">
-        Tự động đẩy (một chiều) các hoạt động khi Thêm, Sửa, Xóa sang Google Calendar, màu theo 5 loại vốn. Sửa trên Google Calendar không cập nhật ngược về app.
+        Gửi một chiều khi thêm, sửa, xóa. Sửa trên Google không cập nhật về app.
       </p>
 
       <div class="set-row">
         <label class="set-lbl" for="inpGCalClientId">
           Google Client ID
-          <small>Tạo từ Google Cloud Console (OAuth 2.0 Web Client)</small>
+          <small>Từ Google Cloud Console</small>
         </label>
         <input id="inpGCalClientId" type="text"
                placeholder="xxxxxx.apps.googleusercontent.com"
@@ -3249,8 +3254,8 @@ function renderSettingsModal() {
 
       <div class="set-row">
         <span class="set-lbl">
-          Tự động đồng bộ thời gian thực
-          <small>Gọi API cập nhật ngay khi Thêm / Sửa / Xóa</small>
+          Tự động đồng bộ
+          <small>Gửi ngay khi có thay đổi</small>
         </span>
         <label class="row" style="gap:6px; cursor:pointer;">
           <input type="checkbox" id="chkGCalAutoSync"
@@ -3265,7 +3270,7 @@ function renderSettingsModal() {
           <button type="button" class="btn btn-primary btn-sm" onclick="connectGoogleCalendar()">Kết nối</button>
         ` : `
           <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="disconnectGoogleCalendar()">Ngắt</button>
-          <button type="button" class="btn btn-sm" onclick="gcalSyncWeek(sel)" title="Đồng bộ tất cả hoạt động trong tuần đang xem">Đồng bộ tuần</button>
+          <button type="button" class="btn btn-sm" onclick="gcalSyncWeek(sel)" title="Gửi lại mọi hoạt động của tuần đang xem">Đồng bộ tuần</button>
         `}
       </div>
     </section>
@@ -3273,7 +3278,7 @@ function renderSettingsModal() {
     <section class="set-sec set-danger">
       <h4 class="set-h">Xóa dữ liệu</h4>
       <div class="set-row">
-        <span class="set-lbl">Xóa toàn bộ hoạt động và đặt lại danh mục vốn<small>Không thể hoàn tác. Hãy sao lưu trước.</small></span>
+        <span class="set-lbl">Xóa mọi hoạt động, đặt lại loại vốn<small>Không hoàn tác được. Nên sao lưu trước.</small></span>
         <button type="button" class="btn btn-sm btn-danger" onclick="resetToDefaultData()">Xóa hết</button>
       </div>
     </section>
@@ -3297,8 +3302,8 @@ function backupNotice() {
   return `
     <div class="review-prompt-banner">
       <div>
-        <b>💾 ${days === null ? "Bạn chưa sao lưu dữ liệu lần nào" : `Đã ${days} ngày chưa sao lưu`}</b>
-        <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Dữ liệu chỉ nằm trong trình duyệt này. Safari có thể tự xóa dữ liệu của trang web nếu bạn không mở trong 7 ngày (trừ khi đã "Thêm vào Màn hình chính").</div>
+        <b>${days === null ? "Chưa sao lưu lần nào" : `${days} ngày chưa sao lưu`}</b>
+        <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Dữ liệu chỉ nằm trên trình duyệt này; Safari có thể xóa nếu 7 ngày không mở.</div>
       </div>
       <div class="row" style="gap:6px;">
         <button type="button" class="btn btn-sm btn-ghost" onclick="snoozeBackup()">Để sau</button>
@@ -3317,8 +3322,8 @@ function startOrDemoNotice() {
     return `
       <div class="review-prompt-banner">
         <div>
-          <b>👋 Bắt đầu với Life Capital</b>
-          <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Gõ vào thanh ghi nhanh phía trên, ví dụ <i>"Mai 18h đánh cầu lông 2 tiếng"</i>, hoặc bấm "Thêm" ở một ngày bất kỳ.</div>
+          <b>Bắt đầu</b>
+          <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Gõ vào ô ghi nhanh, vd <i>Mai 18h cầu lông 2 tiếng</i>, hoặc bấm Thêm ở một ngày.</div>
         </div>
         <button type="button" class="btn btn-sm" onclick="loadDemo()">Dùng thử</button>
       </div>`;
@@ -3327,8 +3332,8 @@ function startOrDemoNotice() {
     return `
       <div class="review-prompt-banner">
         <div>
-          <b>🧪 Đang dùng dữ liệu mẫu</b>
-          <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Dữ liệu mẫu không được đẩy lên Google Calendar. Hoạt động mẫu bạn đã sửa sẽ được giữ lại như dữ liệu thật.</div>
+          <b>Đang dùng dữ liệu mẫu</b>
+          <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Không đồng bộ lên Google Calendar. Mục nào bạn sửa sẽ thành dữ liệu thật.</div>
         </div>
         <button type="button" class="btn btn-sm btn-danger" onclick="clearDemo()">Xóa mẫu</button>
       </div>`;
@@ -3348,8 +3353,8 @@ const V = {
     const reviewPrompt = showReviewPrompt ? `
       <div class="review-prompt-banner">
         <div>
-          <b>🌟 Đã đến lúc tổng kết tuần!</b>
-          <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Xem lại cán cân năng lượng và bánh xe cuộc đời tuần này.</div>
+          <b>Đến lúc tổng kết tuần</b>
+          <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Xem lại cán cân năng lượng tuần này.</div>
         </div>
         <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(${sel})">Xem</button>
       </div>
@@ -3400,16 +3405,16 @@ const V = {
                 <span class="battery-icon"><span class="battery-fill" style="width:${bat.fillPercent}%"></span></span>
                 ${bat.label}
               </span>
-              ${bat.isBurnout ? `<span class="pill pill-bad" style="font-size:10px; padding:1px 5px;" title="Cảnh báo kiệt sức năng lượng!">Kiệt sức</span>` : ''}
+              ${bat.isBurnout ? `<span class="pill pill-bad" style="font-size:10px; padding:1px 5px;" title="Tiêu hao vượt ngưỡng">Kiệt sức</span>` : ''}
             </div>
             <div class="day-events-list">
-              ${es.length === 0 ? `<div style="color:var(--mu); font-size:12px; text-align:center; margin:auto 0; padding:12px 0;">Chưa có hoạt động</div>` : ""}
+              ${es.length === 0 ? `<div style="color:var(--mu); font-size:12px; text-align:center; margin:auto 0; padding:12px 0;">Trống</div>` : ""}
               ${es.map((e, idx) => {
                 const cap = CM(e.c);
                 return `
                   <div class="event-item" style="--cap: ${cap.c}" onclick="openEditor('${k}', ${idx})">
                     <div class="event-item-top">
-                      <span class="event-title" title="${esc(e.t)}">${e.tk ? '<span class="ev-linked" title="Từ Hộp việc">📥</span>' : ""}${esc(e.t)}</span>
+                      <span class="event-title" title="${esc(e.t)}">${e.tk ? '<span class="ev-linked" title="Từ Hộp việc"></span>' : ""}${esc(e.t)}</span>
                       <span class="${e.m === 'u' ? 'event-mode-up' : 'event-mode-down'}">${e.m === 'u' ? '▲' : '▼'}</span>
                     </div>
                     <div class="event-meta">
@@ -3483,7 +3488,7 @@ const V = {
         const curHr = now.getHours() + (now.getMinutes() / 60);
         if (curHr >= 6 && curHr <= 24) {
           const topNow = (curHr - 6) * 48;
-          timeNowIndicator = `<div style="position:absolute; left:0; right:0; top:${topNow}px; height:2px; background:var(--bad); z-index:4; pointer-events:none;"><span style="position:absolute; right:4px; top:-9px; font-size:10px; font-weight:700; background:var(--bad); color:#fff; padding:1px 4px; border-radius:3px;">${pad(now.getHours())}:${pad(now.getMinutes())}</span></div>`;
+          timeNowIndicator = `<div style="position:absolute; left:0; right:0; top:${topNow}px; height:2px; background:var(--bad); z-index:4; pointer-events:none;"><span style="position:absolute; right:4px; top:-9px; font-size:10px; font-weight:600; background:var(--bad); color:#fff; padding:1px 4px; border-radius:3px;">${pad(now.getHours())}:${pad(now.getMinutes())}</span></div>`;
         }
       }
 
@@ -3533,7 +3538,7 @@ const V = {
           <th style="width:50px">Năm</th>
           <th style="width:55px">Tuần</th>
           ${DN_SHORT.map(d => `<th>${d}</th>`).join("")}
-          <th style="width:130px">▲ / ▼ · Tổng</th>
+          <th style="width:130px">▲ / ▼ · Giờ</th>
         </tr>
       </thead>
       <tbody>`;
@@ -3574,7 +3579,7 @@ const V = {
         <span class="pill pill-ok" style="padding:1px 5px; font-size:11px">▲${r1(u)}</span>
         <span class="pill pill-bad" style="padding:1px 5px; font-size:11px">▼${r1(d)}</span><br>
         <span style="font-weight:600; color:${tot > 168 ? 'var(--bad)' : 'var(--tx-sec)'}; margin-top:3px; display:inline-block;">
-          Σ ${r1(tot)}/168h
+          ${r1(tot)}h
         </span>
       </td></tr>`;
     }
@@ -3631,7 +3636,7 @@ const V = {
           <div class="row">
             <button class="btn btn-sm" onclick="sel=Math.max(0, sel-1); draw()">◀</button>
             <select onchange="sel=+this.value; draw()" style="font-weight:600">
-              ${W.map((m, i) => `<option value="${i}" ${i === sel ? 'selected' : ''}>Tuần W${i + 1} (${m.toLocaleDateString("vi-VN", { month: "numeric", day: "numeric" })})${i === CW ? ' - Hiện tại' : ''}</option>`).join("")}
+              ${W.map((m, i) => `<option value="${i}" ${i === sel ? 'selected' : ''}>Tuần W${i + 1} (${m.toLocaleDateString("vi-VN", { month: "numeric", day: "numeric" })})${i === CW ? ' · Hiện tại' : ''}</option>`).join("")}
             </select>
             <button class="btn btn-sm" onclick="sel=Math.min(W.length - 1, sel + 1); draw()">▶</button>
             ${CW >= 0 && sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=Math.max(0, CW); draw()">Tuần này</button>` : ""}
@@ -3658,21 +3663,21 @@ const V = {
     const insightCard = `
       <div class="card">
         <div class="card-header">
-          <h2 class="card-title">💡 Nhận Định & Tình Trạng Các Loại Vốn</h2>
+          <h2 class="card-title">Nhận định</h2>
         </div>
         <p style="margin:4px 0 10px; font-size:13.5px; color:var(--tx-sec);">
-          ${T.length ? `Đã có <b>${okCount}/${T.length}</b> nguồn vốn đạt mục tiêu tuần (trung bình ${nn} tuần gần nhất đến W${sel + 1}).` : `Chưa đặt mục tiêu tuần cho loại vốn nào, nên chưa đánh giá được mức đạt. <button type="button" class="btn btn-sm btn-primary" onclick="goToTargets()">Đặt mục tiêu</button>`}
-          ${CW >= 0 && sel > CW ? " <i>(Đang xem kế hoạch tuần tương lai).</i>" : ""}
+          ${T.length ? `Đã có <b>${okCount}/${T.length}</b> nguồn vốn đạt mục tiêu tuần (trung bình ${nn} tuần gần nhất đến W${sel + 1}).` : `Chưa đặt mục tiêu tuần nên chưa đánh giá được. <button type="button" class="btn btn-sm btn-primary" onclick="goToTargets()">Đặt mục tiêu</button>`}
+          ${CW >= 0 && sel > CW ? " <i>(Tuần tương lai.)</i>" : ""}
         </p>
         <div style="display:flex; flex-direction:column; gap:6px; font-size:13px;">
           ${worst ? `
             <div style="padding:8px 12px; background:var(--bad-soft); border-radius:var(--radius-sm); border-left:3.5px solid var(--bad);">
-              ⚠️ <b>Cần bổ sung nhiều nhất:</b> Vốn <b>${esc(worst.c.n)}</b> chỉ đạt trung bình ${r1(worst.au)}h / ${r1(worst.c.tg)}h (thiếu <b>${r1(worst.c.tg - worst.au)}h/tuần</b>).
+              <b>Thiếu nhiều nhất:</b> <b>${esc(worst.c.n)}</b> trung bình ${r1(worst.au)}h / ${r1(worst.c.tg)}h (thiếu ${r1(worst.c.tg - worst.au)}h/tuần).
             </div>
           ` : ''}
           ${drain.length ? `
             <div style="padding:8px 12px; background:var(--wa-soft); border-radius:var(--radius-sm); border-left:3.5px solid var(--wa);">
-              ⚡ <b>Đang tiêu hao nhiều hơn nạp:</b> ${drain.map(x => `<b>${esc(x.c.n)}</b> (tiêu ${r1(x.ad)}h > nạp ${r1(x.au)}h)`).join(", ")}.
+              <b>Tiêu nhiều hơn nạp:</b> ${drain.map(x => `<b>${esc(x.c.n)}</b> (tiêu ${r1(x.ad)}h > nạp ${r1(x.au)}h)`).join(", ")}.
             </div>
           ` : ''}
         </div>
@@ -3686,8 +3691,8 @@ const V = {
       <div class="card">
         <div class="card-header">
           <div>
-            <h2 class="card-title">Bánh Xe Cuộc Đời (Wheel of Life)</h2>
-            <div class="card-sub">Trực quan hóa mức độ tròn trịa và cân bằng giữa ${S.caps.length} loại vốn trong tuần W${sel + 1}.</div>
+            <h2 class="card-title">Bánh xe cuộc đời</h2>
+            <div class="card-sub">Mức cân bằng giữa các loại vốn · W${sel + 1}</div>
           </div>
         </div>
         ${renderRadarChartSVG(sel)}
@@ -3699,21 +3704,21 @@ const V = {
       <div class="card">
         <div class="card-header">
           <div>
-            <h2 class="card-title">Khung 168 Giờ · Tuần W${sel + 1}</h2>
-            <div class="card-sub">Tổng quỹ chuẩn: 168h (24 giờ × 7 ngày)</div>
+            <h2 class="card-title">Giờ trong tuần · W${sel + 1}</h2>
+            <div class="card-sub">Giờ đã ghi so với tổng giờ của tuần</div>
           </div>
         </div>
 
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:10px; margin-bottom:12px;">
           <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
-            <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Đã phân bổ</div>
+            <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Đã ghi</div>
             <div style="font:600 20px var(--font-ui); margin-top:2px;">${r1(A)}h <span style="font-size:13px; font-weight:400; color:var(--mu);">(${pc(A)}%)</span></div>
           </div>
           <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
-            <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">${A > 168 ? 'Quá tải (Vượt)' : 'Chưa phân bổ'}</div>
+            <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">${A > 168 ? 'Quá tải' : 'Còn trống'}</div>
             <div style="font:600 20px var(--font-ui); margin-top:2px; color:${A > 168 ? 'var(--bad)' : 'var(--ok-text)'}">
               ${A > 168 ? '+' + r1(A - 168) + 'h' : r1(free) + 'h'}
-              <span style="font-size:13px; font-weight:400; color:var(--mu);">${A > 168 ? '(vượt mức)' : `(${pc(free)}%)`}</span>
+              <span style="font-size:13px; font-weight:400; color:var(--mu);">${A > 168 ? '' : `(${pc(free)}%)`}</span>
             </div>
           </div>
         </div>
@@ -3723,7 +3728,7 @@ const V = {
         </div>
         <div style="display:flex; flex-wrap:wrap; gap:10px 14px; font-size:12.5px;">
           ${sg.map(x => `<span class="row" style="gap:4px;"><span class="dot" style="background:${x.c.c}"></span><b>${esc(x.c.n)}</b>: ${r1(x.h)}h</span>`).join("")}
-          <span class="row" style="gap:4px; color:var(--mu);"><span class="dot" style="background:var(--bar); border:1px solid var(--bd)"></span>Chưa phân bổ: ${r1(free)}h</span>
+          <span class="row" style="gap:4px; color:var(--mu);"><span class="dot" style="background:var(--bar); border:1px solid var(--bd)"></span>Còn trống: ${r1(free)}h</span>
         </div>
       </div>
     `;
@@ -3768,7 +3773,7 @@ const V = {
 
     const reportTable = `
       <div class="card">
-        <h2 class="card-title">Báo Cáo Giờ Theo Loại Vốn</h2>
+        <h2 class="card-title">Giờ theo loại vốn</h2>
         <div style="overflow-x:auto; margin-top:12px;">
           <table class="sum-table">
             <thead>
@@ -3830,8 +3835,8 @@ const V = {
       <div class="card" style="margin-top:16px;">
         <div class="card-header">
           <div>
-            <h2 class="card-title">🏷️ Từ Khóa Nhận Diện Tự Động (Auto-tagging Keywords)</h2>
-            <div class="card-sub">Khi bạn nhập trên thanh ghi nhanh (ví dụ: 'Mai 18h đá bóng 2 tiếng'), ứng dụng sẽ tìm các từ khóa này để tự động gán đúng loại vốn. Phân tách các từ bằng dấu phẩy.</div>
+            <h2 class="card-title">Từ khóa nhận diện</h2>
+            <div class="card-sub">Ô ghi nhanh dùng các từ khóa này để tự gán loại vốn. Phân cách bằng dấu phẩy.</div>
           </div>
         </div>
         <div style="display:flex; flex-direction:column; gap:12px;">
@@ -3848,7 +3853,7 @@ const V = {
               <input type="text"
                      value="${esc((c.kw || []).join(', '))}"
                      onchange="updateCapKeywords('${c.k}', this.value)"
-                     placeholder="Nhập các từ khóa phân cách bằng dấu phẩy (vd: gym, bơi, chạy bộ...)"
+                     placeholder="vd: gym, bơi, chạy bộ"
                      style="width:100%; font-size:13px; background:var(--card);">
             </div>
           `).join("")}
@@ -3860,8 +3865,8 @@ const V = {
       <div class="card">
         <div class="card-header">
           <div>
-            <h2 class="card-title">Cài Đặt Loại Vốn & Giờ Cố Định</h2>
-            <div class="card-sub">Tùy biến tên, màu sắc, mục tiêu nạp và giờ cố định lặp mỗi tuần (Baseline).</div>
+            <h2 class="card-title">Loại vốn</h2>
+            <div class="card-sub">Tên, màu, mục tiêu và giờ cố định mỗi tuần</div>
           </div>
           <button class="btn btn-primary btn-sm" onclick="addCap()">Thêm vốn</button>
         </div>
@@ -3870,10 +3875,10 @@ const V = {
           <table class="sum-table">
             <thead>
               <tr>
-                <th style="text-align:left">Tên vốn & Màu sắc</th>
-                <th>Mục tiêu nạp ▲<br><small style="color:var(--mu); font-weight:400;">giờ/tuần</small></th>
-                <th>Cố định nạp ▲<br><small style="color:var(--mu); font-weight:400;">(vd: thể thao 6h)</small></th>
-                <th>Cố định tiêu ▼<br><small style="color:var(--mu); font-weight:400;">(vd: làm việc 40h)</small></th>
+                <th style="text-align:left">Tên và màu</th>
+                <th>Mục tiêu ▲<br><small style="color:var(--mu); font-weight:400;">giờ/tuần</small></th>
+                <th>Cố định ▲<br><small style="color:var(--mu); font-weight:400;">giờ/tuần</small></th>
+                <th>Cố định ▼<br><small style="color:var(--mu); font-weight:400;">giờ/tuần</small></th>
                 <th style="width:60px"></th>
               </tr>
             </thead>
@@ -3936,7 +3941,7 @@ function handleBackdropClick(e) {
 
 function deleteCurrentEvent() {
   if (ei == null || !ed || !S.ev[ed] || !S.ev[ed][ei]) return;
-  if (!confirm("Bạn có chắc chắn muốn xóa hoạt động này?")) return;
+  if (!confirm("Xóa hoạt động này?")) return;
   const delEv = S.ev[ed][ei];
   const delTitle = delEv.t;
   queueDelete(delEv.gid);
@@ -3988,11 +3993,11 @@ function rep(date, o, rp, end, r = "r" + Date.now().toString(36), skipFirst = fa
     }
   }
   if (!days.length) {
-    showToast("Không tạo được chuỗi lặp: hãy kiểm tra ngày kết thúc (phải sau ngày của hoạt động).", "bad");
+    showToast("Ngày kết thúc phải sau ngày bắt đầu", "bad");
     return 0;
   }
   const bad = o.s ? days.filter(k => chkEvent(k, o.s, o.h, -1).hit).length : 0;
-  if (bad && !confirm(`${bad} ngày trong chuỗi bị trùng giờ với hoạt động khác. Vẫn tạo chuỗi?`)) return 0;
+  if (bad && !confirm(`${bad} ngày trong chuỗi bị trùng giờ. Vẫn tạo?`)) return 0;
   days.forEach(k => {
     S.ev[k] = S.ev[k] || [];
     const item = { ...o, r };
@@ -4014,8 +4019,8 @@ function delSeries(i, mode = "future") {
   const kept = total - count;
   const day = ed.slice(8, 10) + "/" + ed.slice(5, 7);
   const question = mode === "all"
-    ? `Xóa toàn bộ ${total} buổi của chuỗi "${t}"?`
-    : `Xóa ${count} buổi của chuỗi "${t}" từ ${day} trở về sau?` + (kept ? ` ${kept} buổi trước ${day} vẫn được giữ.` : "");
+    ? `Xóa cả ${total} buổi "${t}"?`
+    : `Xóa ${count} buổi "${t}" từ ${day}?` + (kept ? ` Giữ ${kept} buổi trước đó.` : "");
   if (!confirm(question)) return;
   Object.keys(S.ev).forEach(k => {
     if (inScope(k)) {
@@ -4029,7 +4034,7 @@ function delSeries(i, mode = "future") {
   gcalFlush();
   draw();
   closeEditor();
-  showToast(mode === "all" ? `Đã xóa toàn bộ chuỗi "${t}" (${count} buổi)` : `Đã xóa ${count} buổi của chuỗi "${t}" từ ${day} trở về sau`, "ok");
+  showToast(mode === "all" ? `Đã xóa ${count} buổi "${t}"` : `Đã xóa ${count} buổi "${t}" từ ${day}`, "ok");
 }
 
 // Popup thêm/sửa: Enter chuyển lần lượt qua từng ô, Enter ở ô cuối cùng thì lưu.
@@ -4085,7 +4090,7 @@ function renderEditorSheet() {
 
   const dateObj = new Date(ed + "T00:00");
   const dateFormatted = dateObj.toLocaleDateString("vi-VN", { weekday: "long", day: "numeric", month: "numeric", year: "numeric" });
-  $("sheetTitle").innerHTML = `<span>${X ? '✏️ Chỉnh sửa hoạt động' : '+ Thêm hoạt động mới'} · ${dateFormatted}</span>`;
+  $("sheetTitle").innerHTML = `<span>${X ? 'Sửa hoạt động' : 'Thêm hoạt động'} · ${dateFormatted}</span>`;
 
   const quickTpls = !X ? tpls() : [];
   TPL = quickTpls;
@@ -4094,7 +4099,7 @@ function renderEditorSheet() {
     <div style="display:flex; flex-direction:column; gap:12px;">
       ${!X && quickTpls.length > 0 ? `
         <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center; padding:6px 10px; background:var(--card-subtle); border-radius:var(--radius-sm); border:1px solid var(--bd);">
-          <span style="font-size:11.5px; color:var(--mu); font-weight:600;">Gợi ý nhanh:</span>
+          <span style="font-size:11.5px; color:var(--mu); font-weight:600;">Gợi ý:</span>
           ${quickTpls.map((p, idx) => `
             <button type="button" class="btn btn-sm btn-ghost"
                     style="border:1px solid var(--bd); padding:2px 8px; font-size:11.5px; background:var(--card);"
@@ -4108,13 +4113,13 @@ function renderEditorSheet() {
       ${X && X.tk ? (() => {
         const f = findSub(X.tk), owner = f ? f.task : findTask(X.tk);
         return owner ? `<div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; padding:6px 10px; background:var(--card-subtle); border-radius:var(--radius-sm); border:1px solid var(--bd); font-size:12.5px;">
-          <span>📥 Thuộc việc: <b>${esc(owner.t)}</b></span>
+          <span>Thuộc việc: <b>${esc(owner.t)}</b></span>
           <button type="button" class="btn btn-sm" onclick="returnToInbox()" title="Gỡ khỏi lịch, việc nhỏ trở lại Chưa xếp">Về hộp việc</button>
         </div>` : "";
       })() : ""}
       <div class="form-group">
         <label class="form-label" for="inpTitle">Tên hoạt động <span style="color:var(--bad)">*</span></label>
-        <input id="inpTitle" placeholder="Ví dụ: Đánh cầu lông, Đọc sách, Họp nhóm, Chạy bộ..."
+        <input id="inpTitle" placeholder="vd: Đọc sách"
                value="${X ? esc(X.t) : ''}"
                oninput="handleTitleInput(this.value)">
       </div>
@@ -4128,10 +4133,10 @@ function renderEditorSheet() {
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="inpMode">Tác động năng lượng</label>
+          <label class="form-label" for="inpMode">Tác động</label>
           <select id="inpMode">
-            <option value="u" ${!X || X.m === 'u' ? 'selected' : ''}>▲ Nạp / Tái tạo vốn</option>
-            <option value="d" ${X && X.m === 'd' ? 'selected' : ''}>▼ Tiêu / Rút vốn</option>
+            <option value="u" ${!X || X.m === 'u' ? 'selected' : ''}>▲ Nạp</option>
+            <option value="d" ${X && X.m === 'd' ? 'selected' : ''}>▼ Tiêu</option>
           </select>
         </div>
       </div>
@@ -4156,22 +4161,22 @@ function renderEditorSheet() {
         <div style="padding:6px 10px; background:var(--card-subtle); border-radius:var(--radius-sm); border:1px solid var(--bd);">
           <label style="font-size:12.5px; display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
             <input type="checkbox" id="inpSeries">
-            <b>Áp dụng thay đổi cho cả chuỗi</b> từ ngày này trở đi
+            <b>Áp dụng cho cả chuỗi</b> từ ngày này
           </label>
         </div>
       ` : `
         <div class="form-row" style="background:var(--card-subtle); padding:8px 10px; border-radius:var(--radius-sm); border:1px solid var(--bd);">
           <div class="form-group">
-            <label class="form-label" for="inpRepeat">${X ? "Lặp lại từ ngày này" : "Lặp lại định kỳ"}</label>
+            <label class="form-label" for="inpRepeat">${X ? "Lặp lại từ ngày này" : "Lặp lại"}</label>
             <select id="inpRepeat">
-              <option value="">Không lặp (Một lần)</option>
-              <option value="w">Hằng tuần (cùng thứ)</option>
-              <option value="wd">Thứ 2 – Thứ 6 (Ngày làm việc)</option>
-              <option value="d">Hằng ngày (Mọi ngày)</option>
+              <option value="">Không lặp</option>
+              <option value="w">Hằng tuần</option>
+              <option value="wd">Thứ 2 – Thứ 6</option>
+              <option value="d">Hằng ngày</option>
             </select>
           </div>
           <div class="form-group">
-            <label class="form-label" for="inpRepeatEnd">Đến hết ngày</label>
+            <label class="form-label" for="inpRepeatEnd">Đến ngày</label>
             <input id="inpRepeatEnd" type="date" value="${activeYear}-12-31">
           </div>
         </div>
@@ -4206,7 +4211,7 @@ function renderEditorSheet() {
 
 function saveEventFromForm(keepOpen) {
   const title = $("inpTitle").value.trim(), hours = +$("inpHours").value, start = $("inpStart").value;
-  if (!title) { showToast("Vui lòng nhập tên hoạt động!", "bad"); $("inpTitle").focus(); return; }
+  if (!title) { showToast("Nhập tên hoạt động", "bad"); $("inpTitle").focus(); return; }
   const c = chkEvent(ed, start, hours, ei);
   if (c.err) { showToast(c.err, "bad"); return; }
   const o = { t: title, c: $("inpCap").value, m: $("inpMode").value, h: hours, s: start };
@@ -4242,7 +4247,7 @@ function saveEventFromForm(keepOpen) {
         Object.assign(L[ei], o, { r });
         delete L[ei].demo;
         markPending(L[ei]);
-        showToast(`Đã chuyển "${title}" thành chuỗi ${n + 1} hoạt động`, "ok");
+        showToast(`Đã tạo chuỗi ${n + 1} buổi "${title}"`, "ok");
       } else {
         Object.assign(L[ei], o);
         delete L[ei].demo;
@@ -4255,11 +4260,11 @@ function saveEventFromForm(keepOpen) {
     if (rp) {
       const n = rep(ed, o, rp, $("inpRepeatEnd").value);
       if (!n) { if (!L.length) delete S.ev[ed]; return; }
-      showToast(`Đã tạo chuỗi ${n} hoạt động "${title}"`, "ok");
+      showToast(`Đã tạo chuỗi ${n} buổi "${title}"`, "ok");
     } else {
       L.push(o);
       markPending(o);
-      showToast(`Đã thêm "${title}" vào lịch`, "ok");
+      showToast(`Đã thêm "${title}"`, "ok");
     }
   }
 
@@ -4313,7 +4318,7 @@ function updateCapKeywords(k, val) {
   cap.kw = String(val || "").split(/[,;\n]+/).map(s => s.trim().toLowerCase()).filter(Boolean);
   save();
   draw();
-  showToast(`Đã lưu ${cap.kw.length} từ khóa cho "${cap.n}"`, "ok");
+  showToast(`Đã lưu ${cap.kw.length} từ khóa`, "ok");
 }
 
 function resetCapKeywords(k) {
@@ -4323,7 +4328,7 @@ function resetCapKeywords(k) {
   cap.kw = def && def[4] ? [...def[4]] : [];
   save();
   draw();
-  showToast(`Đã khôi phục từ khóa mặc định cho "${cap.n}"`, "ok");
+  showToast("Đã khôi phục từ khóa", "ok");
 }
 
 function addCap() {
@@ -4337,16 +4342,16 @@ function addCap() {
   });
   save();
   draw();
-  showToast("Đã thêm loại vốn mới", "ok");
+  showToast("Đã thêm loại vốn", "ok");
 }
 
 function deleteCap(k) {
   if (S.caps.length <= 1) {
-    showToast("Phải giữ lại ít nhất một loại vốn!", "bad");
+    showToast("Cần giữ ít nhất một loại vốn", "bad");
     return;
   }
-  if (Object.values(S.ev).flat().some(e => e.c === k)) { showToast("Loại vốn này đang có hoạt động trong lịch. Hãy xóa hoặc đổi các hoạt động đó trước.", "bad"); return; }
-  if (!confirm("Bạn có chắc muốn xóa loại vốn này?")) return;
+  if (Object.values(S.ev).flat().some(e => e.c === k)) { showToast("Loại vốn đang được dùng. Đổi hoặc xóa các hoạt động trước.", "bad"); return; }
+  if (!confirm("Xóa loại vốn này?")) return;
   S.caps = S.caps.filter(c => c.k !== k);
   delete S.bl[k];
   save();
@@ -4449,10 +4454,10 @@ function importData(inputEl) {
       const n = Object.values(d.ev).flat().length;
       const mode = ($("importModeSelect") || {}).value || "merge";
       if (mode === "replace") {
-        if (!confirm(`Thay thế TOÀN BỘ dữ liệu hiện tại bằng tệp này (${n} hoạt động)? Nên xuất sao lưu hiện tại trước.`)) return;
+        if (!confirm(`Thay toàn bộ dữ liệu bằng tệp này (${n} hoạt động)? Nên sao lưu trước.`)) return;
         d.lb = S.lb || 0; S = d;
       } else {
-        if (!confirm(`Gộp ${n} hoạt động từ tệp vào dữ liệu hiện tại?`)) return;
+        if (!confirm(`Gộp ${n} hoạt động từ tệp?`)) return;
         d.caps.forEach(c => { if (!S.caps.some(x => x.k === c.k)) S.caps.push(c); });
         Object.keys(d.bl).forEach(k => { if (!S.bl[k]) S.bl[k] = d.bl[k]; });
         S.mem = Object.assign({}, d.mem, S.mem);
@@ -4461,7 +4466,7 @@ function importData(inputEl) {
         Object.keys(d.ev).forEach(k => { const L = S.ev[k] = S.ev[k] || []; d.ev[k].forEach(e => { if (!L.some(y => sg(y) === sg(e))) L.push(e); }); sortL(L); });
       }
       save(); draw(true);
-      showToast("Khôi phục dữ liệu thành công!", "ok");
+      showToast("Đã khôi phục", "ok");
     } catch (err) {
       showToast("Tệp sao lưu không hợp lệ: " + err.message, "bad");
     } finally { inputEl.value = ""; }
@@ -4487,7 +4492,7 @@ const mark = () => document.querySelectorAll("[data-k]").forEach(e => e.classLis
 function draw(jump) {
   const badge = $("brandYearBadge");
   if (badge) badge.textContent = activeYear;
-  document.title = `Life Capital · Quản trị Năng lượng & Thời gian ${activeYear}`;
+  document.title = "Life Capital";
   renderNav();
   updateSyncBadge();
 
@@ -4514,7 +4519,7 @@ function draw(jump) {
   if (cur === "ca" && calSubView === "timeline") {
     const k = ky(ad(W[sel], timelineDayIdx));
     const hid = (S.ev[k] || []).filter(e => !e.s || +e.s.slice(0, 2) < 6).length;
-    if (hid) $("v").insertAdjacentHTML("beforeend", `<p style="font-size:12.5px; color:var(--mu); margin-top:8px;">⚠ ${hid} hoạt động không hiển thị trên dòng thời gian (chưa có giờ bắt đầu hoặc trước 06:00). Xem ở chế độ Tuần.</p>`);
+    if (hid) $("v").insertAdjacentHTML("beforeend", `<p style="font-size:12.5px; color:var(--mu); margin-top:8px;">${hid} hoạt động chưa có giờ hoặc trước 06:00, xem ở chế độ Tuần.</p>`);
     layoutTimeline();
   }
   // Đánh dấu các số vừa thay đổi sau chỉnh sửa gần nhất
@@ -4525,7 +4530,7 @@ function draw(jump) {
     dirty = false;
   }
   PV = nv;
-  if (cur === "su" && CH.size) $("v").insertAdjacentHTML("afterbegin", '<div style="margin-bottom:10px;font-size:12.5px;color:var(--mu)">Số <b class="chg">in đậm có nền</b> là số vừa thay đổi sau chỉnh sửa gần nhất. <button class="btn btn-sm btn-ghost" onclick="CH=new Set();draw()">Bỏ đánh dấu</button></div>');
+  if (cur === "su" && CH.size) $("v").insertAdjacentHTML("afterbegin", '<div style="margin-bottom:10px;font-size:12.5px;color:var(--mu)">Số <b class="chg">tô nền</b> vừa thay đổi. <button class="btn btn-sm btn-ghost" onclick="CH=new Set();draw()">Bỏ đánh dấu</button></div>');
   mark();
   TABDIR = 0;
   // Giữ con trỏ khi vẽ lại (Tab / Shift+Tab sang ô kế tiếp)
@@ -4565,8 +4570,8 @@ window.addEventListener("storage", e => {
   if (!absorb(e.newValue)) return;
   if (oldWriterSeen === 1) save(); // bản cũ vừa ghi đè: ghi lại bản đã gộp ngay
   hvEdit = null;
-  if (ed) { closeEditor(); showToast("Dữ liệu vừa thay đổi ở tab khác, đã tải lại.", "bad"); }
-  if (sch) { closeSched(); showToast("Dữ liệu vừa thay đổi ở tab khác, đã tải lại.", "bad"); }
+  if (ed) { closeEditor(); showToast("Đã cập nhật từ tab khác", "bad"); }
+  if (sch) { closeSched(); showToast("Đã cập nhật từ tab khác", "bad"); }
   if ($("settingsModalOverlay").classList.contains("open")) renderSettingsModal();
   draw();
   gcalFlush(); // có thể tab kia đã đóng hoặc đang giữ khóa: tab này cũng thử gửi các thay đổi chờ
@@ -4698,7 +4703,7 @@ const whenLabel = p => {
   return `${DN_SHORT[(d.getDay() + 6) % 7]} ${pad(d.getDate())}/${pad(d.getMonth() + 1)}${p.s ? " " + p.s : ""}`;
 };
 
-// Thời lượng viết kiểu thanh ⚡: "30p", "1h30", "2 tiếng", "một tiếng rưỡi"; còn lại là tên
+// Thời lượng viết kiểu ô ghi nhanh: "30p", "1h30", "2 tiếng", "một tiếng rưỡi"; còn lại là tên
 function parseSubText(str) {
   let w = " " + normalizeViNumbers(String(str || "").trim().normalize("NFC")) + " ", h = null, m;
   const cut = re => { const x = w.match(re); if (x) w = w.slice(0, x.index) + " " + w.slice(x.index + x[0].length); return x; };
@@ -4820,7 +4825,7 @@ function deleteSub(id) {
   const f = findSub(id);
   if (!f || !confirm(`Xóa việc nhỏ "${f.sub.t}"?`)) return;
   const sched = schedMap().has(id);
-  if (sched) unschedule([id], !confirm(`"${f.sub.t}" đang nằm trên lịch.\n\nOK: xóa luôn hoạt động trên lịch.\nHủy: giữ hoạt động trên lịch.`));
+  if (sched) unschedule([id], !confirm(`"${f.sub.t}" đang trên lịch.\nOK: xóa cả trên lịch · Hủy: giữ trên lịch`));
   f.task.subs = f.task.subs.filter(s => s.id !== id);
   save(); gcalFlush(); draw();
   showToast(`Đã xóa "${f.sub.t}"`, "ok");
@@ -4829,7 +4834,7 @@ function deleteTask(id) {
   const t = findTask(id);
   if (!t || !confirm(`Xóa việc "${t.t}" cùng ${t.subs.length} việc nhỏ?`)) return;
   const m = schedMap(), tks = units(t).map(u => u.tk).filter(k => m.has(k));
-  if (tks.length) unschedule(tks, !confirm(`${tks.length} việc nhỏ của "${t.t}" đang nằm trên lịch.\n\nOK: xóa luôn các hoạt động đó.\nHủy: giữ các hoạt động trên lịch.`));
+  if (tks.length) unschedule(tks, !confirm(`${tks.length} việc nhỏ của "${t.t}" đang trên lịch.\nOK: xóa cả trên lịch · Hủy: giữ trên lịch`));
   S.tasks = S.tasks.filter(x => x.id !== id);
   openTasks.delete(id);
   save(); gcalFlush(); draw();
@@ -4930,7 +4935,7 @@ function openSched(kind, id, date, start) {
   sch = { kind, id, date: date || tk, start: start || "" };
   const tg = schedTarget();
   if (!tg) { sch = null; return; }
-  if (tg.whole && !tg.list.length) { sch = null; showToast("Mọi việc nhỏ của việc này đã được xếp hoặc đã xong", "bad"); return; }
+  if (tg.whole && !tg.list.length) { sch = null; showToast("Không còn việc nhỏ để xếp", "bad"); return; }
   if (!sch.start) sch.start = defaultStart(sch.date, tg.whole ? tg.list.reduce((a, u) => a + u.h, 0) : tg.list[0].h);
   LF = document.activeElement;
   renderSched();
@@ -4953,12 +4958,12 @@ function renderSched() {
   const tg = schedTarget();
   if (!tg) { closeSched(); return; }
   const total = tg.list.reduce((a, u) => a + u.h, 0), tmr = ky(ad(new Date(tk + "T00:00"), 1));
-  $("schedTitle").textContent = tg.whole ? `Xếp cả việc: ${tg.task.t}` : `Xếp lịch: ${tg.list[0].t}`;
+  $("schedTitle").textContent = tg.whole ? `Xếp hết: ${tg.task.t}` : `Xếp: ${tg.list[0].t}`;
   const slots = freeStarts(sch.date, tg.whole ? total : tg.list[0].h, 360, 1380, 3);
   const plan = planUnits(sch.date, sch.start, tg.list), over = plan.filter(p => p.over).length;
   $("schedBody").innerHTML = `
     <div style="display:flex; flex-direction:column; gap:12px;">
-      <div style="font-size:13px; color:var(--tx-sec);">${tg.whole ? `${tg.list.length} việc nhỏ chưa xếp · tổng ${hrs(total)} · xếp liền nhau theo thứ tự` : `Thời lượng ${hrs(tg.list[0].h)}${tg.moving ? ` · đang ở ${whenLabel(tg.moving)}, lưu sẽ dời sang giờ mới` : ""}`}</div>
+      <div style="font-size:13px; color:var(--tx-sec);">${tg.whole ? `${tg.list.length} việc nhỏ · ${hrs(total)} · liền nhau theo thứ tự` : `${hrs(tg.list[0].h)}${tg.moving ? ` · đang ở ${whenLabel(tg.moving)}` : ""}`}</div>
       <div class="form-group">
         <span class="form-label">Ngày</span>
         <div class="row" style="gap:6px;">
@@ -4972,7 +4977,7 @@ function renderSched() {
         <label class="form-label" for="schedStart">Giờ bắt đầu</label>
         <input id="schedStart" type="time" step="900" value="${sch.start}" onchange="schedSet('start', this.value)">
         <div class="row" style="gap:6px; margin-top:4px;">
-          <span style="font-size:12px; color:var(--mu);">${slots.length ? "Khung trống:" : "Không còn khung trống đủ dài trong ngày (06:00–23:00)"}</span>
+          <span style="font-size:12px; color:var(--mu);">${slots.length ? "Khung trống:" : "Không còn khung trống đủ dài"}</span>
           ${slots.map(m => `<button type="button" class="btn btn-sm btn-ghost hv-slot ${hmOf(m) === sch.start ? "on" : ""}" onclick="schedSet('start','${hmOf(m)}')">${hmOf(m)}</button>`).join("")}
         </div>
       </div>
@@ -4981,8 +4986,8 @@ function renderSched() {
           <span class="form-label">Xem trước</span>
           ${plan.map(p => p.over
             ? `<div class="hv-plan-row over"><span>Không vừa trong ngày</span><span>${esc(p.t)} · ${hrs(p.h)}</span></div>`
-            : `<div class="hv-plan-row"><b>${p.s}–${tt(p.s, p.h)}</b><span>${esc(p.t)}${p.hit ? ` <span class="pill pill-bad">⚠ trùng "${esc(p.hit.t)}"</span>` : ""}</span></div>`).join("")}
-          ${over ? `<div style="font-size:12.5px; color:var(--wa-text);">${over} việc nhỏ không vừa trước 24:00, được giữ lại trong hộp.</div>` : ""}
+            : `<div class="hv-plan-row"><b>${p.s}–${tt(p.s, p.h)}</b><span>${esc(p.t)}${p.hit ? ` <span class="pill pill-bad">trùng "${esc(p.hit.t)}"</span>` : ""}</span></div>`).join("")}
+          ${over ? `<div style="font-size:12.5px; color:var(--wa-text);">${over} việc không vừa trong ngày, giữ lại trong hộp.</div>` : ""}
         </div>` : ""}
       <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:4px;">
         <button type="button" class="btn btn-ghost" onclick="closeSched()">Hủy</button>
@@ -5000,7 +5005,7 @@ function confirmSched() {
   const plan = planUnits(sch.date, st, tg.list), n = createEvents(tg.task, sch.date, plan), date = sch.date;
   closeSched();
   draw();
-  showToast(`Đã xếp ${n} việc nhỏ của "${tg.task.t}" vào ${dayDesc(date)}${plan.length > n ? `; ${plan.length - n} việc còn trong hộp` : ""}`, "ok");
+  showToast(`Đã xếp ${n} việc vào ${dayDesc(date)}${plan.length > n ? ` · ${plan.length - n} việc còn trong hộp` : ""}`, "ok");
 }
 
 /* ---------- Kéo thả (chỉ trên máy tính có chuột) ---------- */
@@ -5036,7 +5041,7 @@ function tlOver(e, date) {
   if (!g) { g = document.createElement("div"); g.id = "hvGhost"; g.className = "hv-ghost"; area.appendChild(g); }
   g.style.top = (m - 360) / 60 * 48 + "px";
   g.style.height = Math.max(24, h * 48) + "px";
-  g.textContent = `${hmOf(m)} – ${tt(hmOf(m), h)}${dragItem.kind === "task" ? " · cả việc" : ""}`;
+  g.textContent = `${hmOf(m)} – ${tt(hmOf(m), h)}${dragItem.kind === "task" ? " · xếp hết" : ""}`;
 }
 function tlLeave(e) {
   if (e.currentTarget.contains(e.relatedTarget)) return;
@@ -5138,16 +5143,16 @@ function inboxHTML(where) {
         </div>
         ${open ? `
           <ul class="hv-subs">${t.subs.map((s, j) => sub(t, s, j)).join("")}</ul>
-          <input id="hvSub-${P}-${t.id}" class="hv-add-sub" data-hv="sub" data-task="${t.id}" placeholder="+ Thêm việc nhỏ… vd: Đặt vé xe 30p" onkeydown="hvKeydown(event)" aria-label="Thêm việc nhỏ cho ${esc(t.t)}">
+          <input id="hvSub-${P}-${t.id}" class="hv-add-sub" data-hv="sub" data-task="${t.id}" placeholder="Thêm việc nhỏ, vd: Đặt vé 30p" onkeydown="hvKeydown(event)" aria-label="Thêm việc nhỏ cho ${esc(t.t)}">
         ` : ""}
       </div>`;
   };
   return `
     <div class="hv-box ${where}">
-      ${where === "panel" ? `<div class="hv-panel-head"><b>📥 Hộp việc</b><button type="button" class="btn btn-sm btn-ghost" onclick="toggleInboxPanel()" title="Ẩn cột hộp việc">Ẩn</button></div>
-        <div class="hv-hint">Kéo một việc nhỏ vào ${calSubView === "timeline" ? "khung giờ" : "một ngày"}; kéo dòng tên việc để xếp cả việc.</div>` : ""}
-      <input id="hvTask-${P}" class="hv-add" data-hv="task" placeholder="+ Thêm việc… (Enter)" onkeydown="hvKeydown(event)" aria-label="Thêm việc vào hộp">
-      ${active.length ? active.map((t, i) => card(t, i, active)).join("") : `<div class="hv-empty">${S.tasks.length ? "Mọi việc đã xong 🎉" : "Chưa có việc nào. Ghi những việc còn mơ hồ vào đây, chia nhỏ khi nghĩ ra, rồi xếp vào lịch khi biết lúc nào làm."}</div>`}
+      ${where === "panel" ? `<div class="hv-panel-head"><b>Hộp việc</b><button type="button" class="btn btn-sm btn-ghost" onclick="toggleInboxPanel()" title="Ẩn cột hộp việc">Ẩn</button></div>
+        <div class="hv-hint">Kéo việc nhỏ vào ${calSubView === "timeline" ? "khung giờ" : "một ngày"}; kéo tên việc để xếp hết.</div>` : ""}
+      <input id="hvTask-${P}" class="hv-add" data-hv="task" placeholder="Thêm việc" onkeydown="hvKeydown(event)" aria-label="Thêm việc vào hộp">
+      ${active.length ? active.map((t, i) => card(t, i, active)).join("") : `<div class="hv-empty">${S.tasks.length ? "Mọi việc đã xong" : "Chưa có việc. Ghi việc chưa rõ lúc làm, chia nhỏ, rồi xếp vào lịch."}</div>`}
       ${done.length ? `
         <button type="button" class="btn btn-sm btn-ghost hv-done-toggle" onclick="hvShowDone=!hvShowDone; draw()" aria-expanded="${hvShowDone}">${hvShowDone ? "▾" : "▸"} Đã xong (${done.length})</button>
         ${hvShowDone ? done.map(t => card(t, 0, null)).join("") : ""}` : ""}
@@ -5157,10 +5162,9 @@ V.hv = function () {
   return `
     <div class="card" style="padding:14px 16px; max-width:760px; margin:0 auto;">
       <div class="card-header" style="margin-bottom:8px;">
-        <h2 style="font-size:17px; margin:0;">📥 Hộp việc chờ</h2>
-        <span style="font-size:12.5px; color:var(--mu);">${inboxCount()} việc chưa xếp</span>
+                <span style="font-size:12.5px; color:var(--mu);">${inboxCount()} việc chưa xếp</span>
       </div>
-      <p style="font-size:13px; color:var(--tx-sec); margin:0 0 10px;">Mẹo: gõ <b>+</b> ở đầu thanh ⚡ để ghi thẳng vào hộp, vd <code>+ Chuẩn bị chuyến đi Đà Lạt</code>.</p>
+      <p style="font-size:13px; color:var(--tx-sec); margin:0 0 10px;">Mẹo: gõ <b>+</b> ở đầu ô ghi nhanh để thêm vào đây.</p>
       ${inboxHTML("tab")}
     </div>`;
 };
@@ -5216,7 +5220,7 @@ function setBgBlur(v, persist) {
   if (persist !== false) { try { localStorage.setItem("lc_bg_blur", String(bgBlurNext)); } catch (e) {} }
 }
 // Trong lúc kéo: popup Cài đặt tạm trong suốt, chỉ còn thanh trượt, để thấy nền đổi ngay
-function bgPeek(on) { document.body.classList.toggle("bg-peek", !!on); }
+function bgPeek(on) { document.body.classList.toggle("bg-peek", !!on); document.documentElement.classList.toggle("bg-peek", !!on); }
 const loadImg = f => window.createImageBitmap ? createImageBitmap(f)
   : new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = URL.createObjectURL(f); });
 // Thu ảnh về tối đa 2400px để nhẹ và nhanh, lưu dạng JPEG
@@ -5224,7 +5228,7 @@ async function chooseBg(input) {
   const f = input.files && input.files[0];
   input.value = "";
   if (!f) return;
-  if (!/^image\//.test(f.type)) { showToast("Hãy chọn một tệp ảnh", "bad"); return; }
+  if (!/^image\//.test(f.type)) { showToast("Chọn một tệp ảnh", "bad"); return; }
   try {
     const img = await loadImg(f);
     const k = Math.min(1, 2400 / Math.max(img.width, img.height));
@@ -5238,7 +5242,7 @@ async function chooseBg(input) {
     renderSettingsModal();
     showToast("Đã đổi ảnh nền", "ok");
   } catch (e) {
-    showToast("Không đọc được ảnh này. Hãy thử một ảnh JPG hoặc PNG khác.", "bad");
+    showToast("Không đọc được ảnh. Thử JPG hoặc PNG khác.", "bad");
   }
 }
 async function removeBg() {
