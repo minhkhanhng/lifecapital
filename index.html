@@ -1134,7 +1134,6 @@ nav.main-nav button.active { background: var(--glass-hi); color: var(--tx); bord
 .timeline-days-nav, .timeline-container > div[style*="background:var(--card)"] { background: transparent !important; }
 .modal-sheet { background: var(--glass-hi); -webkit-backdrop-filter: blur(24px) saturate(160%); backdrop-filter: blur(24px) saturate(160%); border: 1px solid var(--glass-bd); }
 .btn { border-radius: 12px; }
-.btn:not(.btn-primary):not(.btn-accent-olive):not(.btn-ghost) { background: var(--glass-hi); border-color: var(--glass-bd); }
 .segmented-control { background: var(--glass); border: 1px solid var(--glass-bd); border-radius: 12px; }
 .segmented-control button { border-radius: 9px; }
 .segmented-control button.active { background: var(--ac); color: var(--on-ac); box-shadow: 0 2px 8px var(--ac-soft); }
@@ -1169,6 +1168,93 @@ nav.main-nav button.active { background: var(--glass-hi); color: var(--tx); bord
   .stat-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
   .toast-container { bottom: calc(92px + env(safe-area-inset-bottom, 0px)) !important; }
 }
+/* ===== Giọt nước: kính trong veo có vệt sáng, nút kính loang màu, không mảng màu đặc ===== */
+:root {
+  --glass: rgba(255, 255, 255, 0.30);
+  --glass-hi: rgba(255, 255, 255, 0.46);
+  --glass-bd: rgba(255, 255, 255, 0.62);
+  --sheen: linear-gradient(135deg, rgba(255, 255, 255, 0.58) 0%, rgba(255, 255, 255, 0.16) 42%, rgba(255, 255, 255, 0.05) 100%);
+  --glass-shadow: 0 8px 32px rgba(100, 40, 65, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.75), inset 0 -1px 1px rgba(255, 255, 255, 0.18);
+  --blur: blur(22px) saturate(170%);
+  --pill-sheen: rgba(255, 255, 255, 0.62);
+  --pill-mix: 50%;
+  --veil: rgba(255, 255, 255, 0.18);
+  --field: rgba(255, 255, 255, 0.42);
+  --overlay: rgba(60, 30, 45, 0.14);
+  --card: rgba(255, 255, 255, 0.40);
+  --card-subtle: rgba(255, 255, 255, 0.26);
+  --bar: rgba(255, 255, 255, 0.34);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --glass: rgba(28, 22, 25, 0.36); --glass-hi: rgba(34, 27, 31, 0.55); --glass-bd: rgba(255, 255, 255, 0.10);
+    --sheen: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 45%, rgba(255, 255, 255, 0) 100%);
+    --glass-shadow: 0 10px 32px rgba(0, 0, 0, 0.40), inset 0 1px 1px rgba(255, 255, 255, 0.08);
+    --pill-sheen: rgba(255, 255, 255, 0.07); --pill-mix: 42%; --veil: rgba(16, 11, 14, 0.45); --field: rgba(0, 0, 0, 0.22); --overlay: rgba(0, 0, 0, 0.35);
+    --card: rgba(36, 29, 33, 0.45); --card-subtle: rgba(255, 255, 255, 0.05); --bar: rgba(255, 255, 255, 0.07);
+  }
+}
+:root[data-theme="dark"] {
+  --glass: rgba(28, 22, 25, 0.36); --glass-hi: rgba(34, 27, 31, 0.55); --glass-bd: rgba(255, 255, 255, 0.10);
+  --sheen: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 45%, rgba(255, 255, 255, 0) 100%);
+  --glass-shadow: 0 10px 32px rgba(0, 0, 0, 0.40), inset 0 1px 1px rgba(255, 255, 255, 0.08);
+  --pill-sheen: rgba(255, 255, 255, 0.07); --pill-mix: 42%; --veil: rgba(16, 11, 14, 0.45); --field: rgba(0, 0, 0, 0.22); --overlay: rgba(0, 0, 0, 0.35);
+    --card: rgba(36, 29, 33, 0.45); --card-subtle: rgba(255, 255, 255, 0.05); --bar: rgba(255, 255, 255, 0.07);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root { --glass: rgba(255, 255, 255, 0.86); --glass-hi: rgba(255, 255, 255, 0.94); }
+}
+
+/* Ảnh nền riêng: phủ một lớp mờ cho dịu, các tấm kính làm mờ thêm lần nữa */
+body::before { filter: blur(var(--bg-blur, 8px)); }
+body.has-bg::before { background: linear-gradient(var(--veil), var(--veil)), var(--bg-img) center / cover no-repeat, var(--bg); }
+
+.card, .quick-capture-box, .app-header, .sidebar, .day-card, .timeline-container, .stat-tile, .inbox-aside, .table-wrapper, .review-prompt-banner, .modal-sheet, .toast, .hv-task {
+  background: var(--sheen), var(--glass);
+  -webkit-backdrop-filter: var(--blur);
+  backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-bd);
+  box-shadow: var(--glass-shadow);
+}
+.stat-tile, .hv-task, .toast { background: var(--sheen), var(--glass-hi); }
+.modal-sheet { background: var(--sheen), var(--glass-hi); -webkit-backdrop-filter: blur(30px) saturate(170%); backdrop-filter: blur(30px) saturate(170%); }
+.modal-overlay { background: var(--overlay); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.modal-header { background: transparent; border-bottom-color: var(--glass-bd); }
+.day-card.today { background: linear-gradient(135deg, var(--pill-sheen), color-mix(in srgb, var(--ac) 20%, transparent)), var(--glass); }
+.day-card.today .day-card-header { background: linear-gradient(135deg, var(--pill-sheen), color-mix(in srgb, var(--ac) 60%, transparent)); }
+@media (max-width: 899px) { .sidebar { background: var(--sheen), var(--glass-hi); } }
+
+/* Nút: kính trong, loang từ trắng sang màu của nút */
+.btn {
+  background: linear-gradient(135deg, var(--pill-sheen), rgba(255, 255, 255, 0.14));
+  border: 1px solid var(--glass-bd);
+  color: var(--tx);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  backdrop-filter: blur(12px) saturate(160%);
+  box-shadow: 0 2px 10px rgba(100, 40, 65, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+}
+.btn:hover { background: linear-gradient(135deg, var(--pill-sheen), color-mix(in srgb, var(--ac) 22%, transparent)); border-color: var(--glass-bd); }
+.btn.btn-primary { background: linear-gradient(135deg, var(--pill-sheen) 0%, color-mix(in srgb, var(--ac) 88%, transparent) 100%); color: var(--on-ac); border-color: color-mix(in srgb, var(--ac) 55%, transparent); }
+.btn.btn-accent-olive { background: linear-gradient(135deg, var(--pill-sheen) 0%, color-mix(in srgb, var(--c-olive) 86%, transparent) 100%); color: var(--on-olive); border-color: color-mix(in srgb, var(--c-olive) 55%, transparent); }
+.btn.btn-primary:hover, .btn.btn-accent-olive:hover { filter: saturate(1.15) brightness(1.03); box-shadow: 0 4px 14px rgba(100, 40, 65, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.6); }
+.btn.btn-ghost { background: transparent; border-color: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.btn.btn-ghost:hover { background: linear-gradient(135deg, var(--pill-sheen), rgba(255, 255, 255, 0.10)); border-color: var(--glass-bd); }
+.segmented-control { background: var(--sheen), var(--glass); }
+.segmented-control button.active, .set-seg button.on { background: linear-gradient(135deg, var(--pill-sheen) 0%, color-mix(in srgb, var(--ac) 88%, transparent) 100%); color: var(--on-ac); box-shadow: 0 2px 8px var(--ac-soft), inset 0 1px 1px rgba(255, 255, 255, 0.5); }
+nav.main-nav button.active { background: var(--sheen), var(--glass-hi); }
+.nav-count { background: linear-gradient(135deg, var(--pill-sheen), var(--ac)); }
+
+/* Ô nhập */
+input, select, textarea { background: var(--field); border-color: var(--glass-bd); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+input:focus, select:focus, textarea:focus { border-color: var(--ac); box-shadow: 0 0 0 3px var(--ac-soft); }
+.quick-capture-input { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
+
+/* Hoạt động và nhãn loại vốn: kính loang màu, chữ theo màu chữ giao diện */
+.event-item { background: linear-gradient(135deg, var(--pill-sheen), color-mix(in srgb, var(--cap) var(--pill-mix), transparent)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cap) 35%, transparent), inset 0 1px 1px rgba(255, 255, 255, 0.45); }
+.timeline-event-block { border: 1px solid color-mix(in srgb, var(--cap, #888888) 40%, transparent); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); box-shadow: 0 2px 10px rgba(100, 40, 65, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.4); }
+table.calendar-table th { background: var(--sheen), var(--glass-hi); color: var(--tx); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); }
+.save-alert { background: linear-gradient(135deg, var(--pill-sheen), color-mix(in srgb, var(--bad) 35%, transparent)), var(--glass); }
+.bg-range { width: 160px; accent-color: var(--ac); }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 .chg { font-weight: 700; background: color-mix(in srgb, var(--ac) 22%, transparent); border-radius: 4px; padding: 0 3px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ac) 45%, transparent); }
 .set-sec { padding: 14px 0; border-bottom: 1px solid var(--bd); }
@@ -1464,25 +1550,10 @@ const lumHex = hex => {
   const c = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16) / 255).map(v => v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
   return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
 };
-const INK = new Map();
+// Nhãn và khối theo loại vốn: kính loang từ trắng sang màu loại vốn, chữ dùng màu chữ của giao diện để luôn đọc rõ
 function capInk(hex) {
   if (!/^#[0-9a-f]{6}$/i.test(hex || "")) hex = "#888888";
-  if (INK.has(hex)) return INK.get(hex);
-  const L = lumHex(hex), onDark = (L + 0.05) / (lumHex(DARK_INK) + 0.05), onWhite = 1.05 / (L + 0.05);
-  let out;
-  if (onDark >= 4.5 && onDark >= onWhite) out = `background:${hex}; color:${DARK_INK};`;
-  else if (onWhite >= 4.5) out = `background:${hex}; color:#fff;`;
-  else {
-    // Màu tầm trung: làm tối nền dần cho tới khi chữ trắng đạt chuẩn
-    let rgb = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16)), bg = hex;
-    while (1.05 / (lumHex(bg) + 0.05) < 4.5) {
-      rgb = rgb.map(v => Math.floor(v * 0.94));
-      bg = "#" + rgb.map(v => v.toString(16).padStart(2, "0")).join("");
-    }
-    out = `background:${bg}; color:#fff;`;
-  }
-  INK.set(hex, out);
-  return out;
+  return `--cap:${hex}; background: linear-gradient(135deg, var(--pill-sheen) 0%, color-mix(in srgb, ${hex} var(--pill-mix), transparent) 100%); color: var(--tx); border-color: color-mix(in srgb, ${hex} 40%, transparent);`;
 }
 const r1 = n => (Math.round((n || 0) * 10) / 10).toString();
 const pad = n => String(n).padStart(2, "0");
@@ -2921,6 +2992,18 @@ function renderSettingsModal() {
         <span class="set-lbl">Chế độ hiển thị</span>
         <div class="set-seg">${seg("light", "Sáng")}${seg("dark", "Tối")}${seg("auto", "Theo hệ thống")}</div>
       </div>
+      <div class="set-row">
+        <span class="set-lbl">Ảnh nền<small>Lưu trên máy này, không đồng bộ sang máy khác</small></span>
+        <div class="set-inline">
+          <button type="button" class="btn btn-sm" onclick="$('bgFile').click()">${document.body.classList.contains("has-bg") ? "Đổi ảnh…" : "Chọn ảnh…"}</button>
+          ${document.body.classList.contains("has-bg") ? `<button type="button" class="btn btn-sm btn-ghost" onclick="removeBg()">Bỏ ảnh nền</button>` : ""}
+          <input id="bgFile" type="file" accept="image/*" onchange="chooseBg(this)" style="display:none">
+        </div>
+      </div>
+      <div class="set-row">
+        <label class="set-lbl" for="bgBlurRange">Độ mờ nền<small>Kéo sang phải cho nền dịu hơn</small></label>
+        <input id="bgBlurRange" class="bg-range" type="range" min="0" max="30" step="1" value="${bgBlur()}" oninput="setBgBlur(this.value)">
+      </div>
     </section>
 
     <section class="set-sec">
@@ -3239,7 +3322,7 @@ const V = {
         const curHr = now.getHours() + (now.getMinutes() / 60);
         if (curHr >= 6 && curHr <= 24) {
           const topNow = (curHr - 6) * 48;
-          timeNowIndicator = `<div style="position:absolute; left:0; right:0; top:${topNow}px; height:2px; background:var(--bad); z-index:4; pointer-events:none;"><span style="position:absolute; right:4px; top:-9px; font-size:10px; font-weight:700; background:var(--bad); color:var(--card); padding:1px 4px; border-radius:3px;">${pad(now.getHours())}:${pad(now.getMinutes())}</span></div>`;
+          timeNowIndicator = `<div style="position:absolute; left:0; right:0; top:${topNow}px; height:2px; background:var(--bad); z-index:4; pointer-events:none;"><span style="position:absolute; right:4px; top:-9px; font-size:10px; font-weight:700; background:var(--bad); color:#fff; padding:1px 4px; border-radius:3px;">${pad(now.getHours())}:${pad(now.getMinutes())}</span></div>`;
         }
       }
 
@@ -4933,6 +5016,79 @@ function withInbox(h) {
   if (!inboxPanel) return h;
   return `<div class="cal-with-inbox"><div style="min-width:0">${h}</div><aside class="inbox-aside" aria-label="Hộp việc">${inboxHTML("panel")}</aside></div>`;
 }
+
+
+/* ---- Ảnh nền riêng (giao diện kính mờ): lưu trong IndexedDB của máy này, không nằm trong dữ liệu lịch ---- */
+let bgURL = null;
+function bgDB() {
+  return new Promise((res, rej) => {
+    const r = indexedDB.open("lc_media", 1);
+    r.onupgradeneeded = () => r.result.createObjectStore("kv");
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
+  });
+}
+async function bgGet() {
+  const db = await bgDB();
+  return new Promise(res => { const q = db.transaction("kv").objectStore("kv").get("bg"); q.onsuccess = () => res(q.result || null); q.onerror = () => res(null); });
+}
+async function bgPut(blob) {
+  const db = await bgDB();
+  return new Promise((res, rej) => {
+    const t = db.transaction("kv", "readwrite"), st = t.objectStore("kv");
+    if (blob) st.put(blob, "bg"); else st.delete("bg");
+    t.oncomplete = () => res(); t.onerror = () => rej(t.error);
+  });
+}
+function applyBg(blob) {
+  if (bgURL) URL.revokeObjectURL(bgURL);
+  bgURL = null;
+  const root = document.documentElement;
+  if (blob) { bgURL = URL.createObjectURL(blob); root.style.setProperty("--bg-img", `url("${bgURL}")`); document.body.classList.add("has-bg"); }
+  else { root.style.removeProperty("--bg-img"); document.body.classList.remove("has-bg"); }
+}
+function bgBlur() {
+  let v = 8;
+  try { const x = parseInt(localStorage.getItem("lc_bg_blur"), 10); if (x >= 0 && x <= 30) v = x; } catch (e) {}
+  return v;
+}
+function setBgBlur(v) {
+  v = Math.max(0, Math.min(30, parseInt(v, 10) || 0));
+  try { localStorage.setItem("lc_bg_blur", String(v)); } catch (e) {}
+  document.documentElement.style.setProperty("--bg-blur", v + "px");
+}
+const loadImg = f => window.createImageBitmap ? createImageBitmap(f)
+  : new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = URL.createObjectURL(f); });
+// Thu ảnh về tối đa 2400px để nhẹ và nhanh, lưu dạng JPEG
+async function chooseBg(input) {
+  const f = input.files && input.files[0];
+  input.value = "";
+  if (!f) return;
+  if (!/^image\//.test(f.type)) { showToast("Hãy chọn một tệp ảnh", "bad"); return; }
+  try {
+    const img = await loadImg(f);
+    const k = Math.min(1, 2400 / Math.max(img.width, img.height));
+    const c = document.createElement("canvas");
+    c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+    c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+    const blob = await new Promise(r => c.toBlob(r, "image/jpeg", 0.85));
+    if (!blob) throw new Error("encode");
+    await bgPut(blob);
+    applyBg(blob);
+    renderSettingsModal();
+    showToast("Đã đổi ảnh nền", "ok");
+  } catch (e) {
+    showToast("Không đọc được ảnh này. Hãy thử một ảnh JPG hoặc PNG khác.", "bad");
+  }
+}
+async function removeBg() {
+  try { await bgPut(null); } catch (e) {}
+  applyBg(null);
+  renderSettingsModal();
+  showToast("Đã bỏ ảnh nền", "ok");
+}
+setBgBlur(bgBlur());
+try { bgGet().then(b => { if (b) applyBg(b); }).catch(() => {}); } catch (e) {}
 
 // Khởi chạy ứng dụng
 draw(true);
