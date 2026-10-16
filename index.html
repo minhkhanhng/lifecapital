@@ -160,7 +160,7 @@ body {
   margin: 0;
   background: var(--bg-color-mixed, var(--bg));
   color: var(--tx);
-  font: 14px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font: 14px/1.5 ui-rounded, "SF Pro Rounded", "Helvetica Neue", Helvetica, "Segoe UI", Arial, sans-serif;
   font-variant-numeric: tabular-nums;
   padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
   min-height: 100vh;
@@ -190,7 +190,7 @@ body {
   gap: 10px;
 }
 .brand-title {
-  font: 700 24px/1.2 Georgia, "Times New Roman", serif;
+  font: 600 20px/1.2 var(--font-ui); letter-spacing: -0.2px;
   margin: 0;
   color: var(--tx);
   letter-spacing: -0.5px;
@@ -313,7 +313,7 @@ nav.main-nav button.active {
 }
 .card-title {
   margin: 0;
-  font: 600 17px/1.3 Georgia, serif;
+  font: 600 16px/1.3 var(--font-ui);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -907,7 +907,7 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
   background: var(--card);
 }
 .modal-title {
-  font: 600 17px Georgia, serif;
+  font: 600 16px var(--font-ui);
   margin: 0;
   display: flex;
   align-items: center;
@@ -1110,7 +1110,7 @@ nav.main-nav button.active { background: var(--glass-hi); color: var(--tx); bord
 .app-header { padding: 14px 20px; border-bottom: 0; margin-bottom: 14px; align-items: center; }
 .page-head { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .page-title-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.page-title { margin: 0; font: 700 24px/1.2 Georgia, "Times New Roman", serif; letter-spacing: -0.3px; color: var(--tx); }
+.page-title { margin: 0; font: 600 22px/1.2 var(--font-ui); letter-spacing: -0.3px; color: var(--tx); }
 .page-sub { margin: 0; color: var(--tx-sec); font-size: 13px; }
 .year-row { display: inline-flex; align-items: center; gap: 2px; }
 .app-header #settingsBtn { display: none; }
@@ -1143,7 +1143,7 @@ nav.main-nav button.active { background: var(--glass-hi); color: var(--tx); bord
 .stat-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px; }
 .stat-tile { background: var(--glass-hi); border-radius: 16px; padding: 10px 14px; display: flex; flex-direction: column; align-items: center; gap: 2px; }
 .stat-tile span { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tx-sec); }
-.stat-tile b { font: 700 22px/1.2 Georgia, "Times New Roman", serif; font-variant-numeric: tabular-nums; color: var(--tx); }
+.stat-tile b { font: 600 20px/1.2 var(--font-ui); font-variant-numeric: tabular-nums; color: var(--tx); }
 .stat-tile.up b { color: var(--ok-text); }
 .stat-tile.down b { color: var(--bad); }
 
@@ -1175,10 +1175,11 @@ nav.main-nav button.active { background: var(--glass-hi); color: var(--tx); bord
   --glass-bd: rgba(255, 255, 255, 0.62);
   --sheen: linear-gradient(135deg, rgba(255, 255, 255, 0.58) 0%, rgba(255, 255, 255, 0.16) 42%, rgba(255, 255, 255, 0.05) 100%);
   --glass-shadow: 0 8px 32px rgba(100, 40, 65, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.75), inset 0 -1px 1px rgba(255, 255, 255, 0.18);
-  --blur: blur(22px) saturate(170%);
+  --blur: blur(calc(8px + var(--bg-blur, 8px) * 0.6)) saturate(170%);
   --pill-sheen: rgba(255, 255, 255, 0.62);
   --pill-mix: 50%;
   --veil: rgba(255, 255, 255, 0.18);
+  --font-ui: ui-rounded, "SF Pro Rounded", "Helvetica Neue", Helvetica, "Segoe UI", Arial, sans-serif;
   --field: rgba(255, 255, 255, 0.42);
   --overlay: rgba(60, 30, 45, 0.14);
   --card: rgba(255, 255, 255, 0.40);
@@ -1265,7 +1266,13 @@ input:focus, select:focus, textarea:focus { border-color: var(--ac); box-shadow:
 .timeline-event-block { border: 1px solid color-mix(in srgb, var(--cap, #888888) 40%, transparent); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); box-shadow: 0 2px 10px rgba(100, 40, 65, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.4); }
 table.calendar-table th { background: var(--sheen), var(--glass-hi); color: var(--tx); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); }
 .save-alert { background: linear-gradient(135deg, var(--pill-sheen), color-mix(in srgb, var(--bad) 35%, transparent)), var(--glass); }
-.bg-range { width: 160px; accent-color: var(--ac); }
+.bg-range { width: 180px; accent-color: var(--ac); }
+.bg-range:disabled { opacity: 0.45; }
+body.bg-peek .modal-sheet, body.bg-peek .modal-sheet * { transition: none !important; }
+body.bg-peek .modal-overlay { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
+body.bg-peek .modal-sheet { background: transparent; border-color: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+body.bg-peek .modal-sheet .modal-header, body.bg-peek .modal-body > *:not(.set-bg), body.bg-peek .set-bg > *:not(.bg-blur-row) { visibility: hidden; }
+body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(--glass-hi); border: 1px solid var(--glass-bd); border-radius: 14px; padding: 8px 12px; box-shadow: var(--glass-shadow); }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 .chg { font-weight: 700; background: color-mix(in srgb, var(--ac) 22%, transparent); border-radius: 4px; padding: 0 3px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ac) 45%, transparent); }
 .set-sec { padding: 14px 0; border-bottom: 1px solid var(--bd); }
@@ -1302,7 +1309,7 @@ table.calendar-table th { background: var(--sheen), var(--glass-hi); color: var(
   </div>
   <!-- Navigation Tabs -->
   <nav class="main-nav" id="nav"></nav>
-  <button type="button" class="btn btn-sm sidebar-settings" onclick="openSettingsModal()">⚙️ Cài đặt &amp; Dữ liệu</button>
+  <button type="button" class="btn btn-sm sidebar-settings" onclick="openSettingsModal()">Cài đặt</button>
 </aside>
 
 <div class="app-container">
@@ -1321,15 +1328,9 @@ table.calendar-table th { background: var(--sheen), var(--glass-hi); color: var(
     </div>
     <div class="header-actions">
       <button type="button" class="btn btn-sm" id="syncBadge" hidden></button>
-      <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(sel)" title="Xem tổng kết thành tích theo tuần">
-        🏆 Tổng kết tuần
-      </button>
-      <button class="btn btn-sm btn-primary" onclick="openEditor(tk)">
-        + Thêm hôm nay
-      </button>
-      <button class="btn btn-sm btn-ghost" id="settingsBtn" onclick="openSettingsModal()" title="Cài đặt & Dữ liệu" style="font-size:15px; padding:6px 10px;">
-        ⚙️
-      </button>
+      <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(sel)" title="Xem tổng kết thành tích theo tuần">Tổng kết</button>
+      <button class="btn btn-sm btn-primary" onclick="openEditor(tk)">Thêm</button>
+      <button class="btn btn-sm" id="settingsBtn" onclick="openSettingsModal()" title="Cài đặt & Dữ liệu" style="font-size:15px; padding:6px 10px;">Cài đặt</button>
     </div>
   </header>
 
@@ -1341,7 +1342,7 @@ table.calendar-table th { background: var(--sheen), var(--glass-hi); color: var(
              placeholder="Ghi nhanh: vd 'Mai 18h đánh cầu lông 2 tiếng' hoặc 'Hôm nay 20h đọc sách 1.5h'..."
              oninput="handleNLPInput(this.value)"
              onkeydown="handleNLPKeydown(event)">
-      <button class="btn btn-sm btn-primary" onclick="executeNLP()">Ghi ngay</button>
+      <button class="btn btn-sm btn-primary" onclick="executeNLP()">Ghi</button>
     </div>
     <div class="quick-preview-bar" id="nlpPreview" style="display:none;"></div>
   </div>
@@ -1732,7 +1733,7 @@ function renderSaveAlert() {
       <b>⚠ Không lưu được dữ liệu vào trình duyệt</b>
       <div style="font-size:12px; margin-top:2px;">Bộ nhớ có thể đã đầy hoặc trình duyệt đang chặn lưu trữ. Các thay đổi gần đây sẽ mất nếu đóng trang. Hãy tải tệp sao lưu ngay.</div>
     </div>
-    <button type="button" class="btn btn-sm btn-danger" onclick="exportData('json')">Sao lưu (.json)</button>` : "";
+    <button type="button" class="btn btn-sm btn-danger" onclick="exportData('json')">Sao lưu</button>` : "";
 }
 
 /* ==========================================================================
@@ -1749,7 +1750,7 @@ const wkNow = () => {
 let CW = wkNow(), lt = tk, sel = CW;
 let cur = "ca"; // Tabs: "ca" (Lịch tuần), "su" (Hiệu suất 168h), "set" (Cài đặt vốn), "bak" (Sao lưu)
 let calSubView = "focus"; // "focus" (Tuần chi tiết), "timeline" (Dòng thời gian 24h), "year" (Lưới 53 tuần)
-let timelineDayIdx = 0; // 0 = T2 .. 6 = CN
+let timelineDayIdx = (new Date().getDay() + 6) % 7; // 0 = T2 .. 6 = CN; mặc định là hôm nay
 let N = 4;
 let ed = null, ei = null;
 
@@ -2357,9 +2358,7 @@ function openWeeklyReviewModal(wIdx = sel) {
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
           ${CW >= 0 && wIdx !== CW ? `
-            <button type="button" class="btn btn-sm btn-ghost" onclick="openWeeklyReviewModal(CW)" style="color:var(--ac-text); font-weight:600; font-size:12px;">
-              Về tuần hiện tại (W${CW + 1})
-            </button>
+            <button type="button" class="btn btn-sm btn-ghost" onclick="openWeeklyReviewModal(CW)" style="color:var(--ac-text); font-weight:600; font-size:12px;">Tuần này</button>
           ` : wIdx === CW ? `<span class="pill pill-ok" style="font-size:11px;">Tuần hiện tại</span>` : ""}
         </div>
       </div>
@@ -2368,14 +2367,14 @@ function openWeeklyReviewModal(wIdx = sel) {
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
         <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
           <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Tổng Nạp / Tiêu</div>
-          <div style="font:700 20px Georgia, serif; margin-top:4px;">
+          <div style="font:600 19px var(--font-ui); margin-top:4px;">
             <span style="color: var(--ok-text)">▲${r1(totalU)}h</span> · <span style="color:var(--bad)">▼${r1(totalD)}h</span>
           </div>
           <small style="color:var(--tx-sec)">Cán cân: <b>${netEnergy >= 0 ? '+' : ''}${r1(netEnergy)}h</b></small>
         </div>
         <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
           <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Quỹ 168 Giờ</div>
-          <div style="font:700 20px Georgia, serif; margin-top:4px;">
+          <div style="font:600 19px var(--font-ui); margin-top:4px;">
             ${r1(totalAlloc)}h <span style="font-size:13px; font-weight:400; color:var(--mu);">(${Math.round(totalAlloc/168*100)}%)</span>
           </div>
           <small style="color:${totalAlloc > 168 ? 'var(--bad)' : 'var(--ok-text)'}">
@@ -2384,7 +2383,7 @@ function openWeeklyReviewModal(wIdx = sel) {
         </div>
         <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
           <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Đánh giá pin tuần</div>
-          <div style="font:700 20px Georgia, serif; margin-top:4px; color:${noData ? 'var(--mu)' : netEnergy >= 0 ? 'var(--ok-text)' : 'var(--bad)'}">
+          <div style="font:600 19px var(--font-ui); margin-top:4px; color:${noData ? 'var(--mu)' : netEnergy >= 0 ? 'var(--ok-text)' : 'var(--bad)'}">
             ${noData ? '— Chưa có dữ liệu' : netEnergy >= 4 ? '🔋 Nạp pin xuất sắc' : netEnergy >= 0 ? '🔋 Pin ổn định' : '🪫 Thâm hụt pin'}
           </div>
           <small style="color:var(--tx-sec)">${noData ? 'Ghi hoạt động để đánh giá' : netEnergy >= 0 ? 'Cân bằng phục hồi tốt' : 'Cần bù đắp nghỉ ngơi tuần tới'}</small>
@@ -2466,7 +2465,7 @@ function openWeeklyReviewModal(wIdx = sel) {
       `}
 
       <div style="display:flex; justify-content:flex-end; gap:8px;">
-        <button type="button" class="btn" onclick="copyReviewToClipboard(${wIdx})">📋 Sao chép tóm tắt</button>
+        <button type="button" class="btn" onclick="copyReviewToClipboard(${wIdx})">Sao chép</button>
         <button type="button" class="btn btn-primary" onclick="closeReviewModal()">Đóng</button>
       </div>
     </div>
@@ -2499,6 +2498,13 @@ const TABS = [
   { id: "set", label: "Danh mục vốn", short: "Vốn", icon: "🏷️", sub: "Loại vốn, mục tiêu tuần và từ khóa nhận diện" }
 ];
 
+// Mở chế độ Ngày: đang xem tuần hiện tại thì nhảy thẳng tới hôm nay
+function openDayView() {
+  if (sel === CW) timelineDayIdx = (new Date().getDay() + 6) % 7;
+  calSubView = "timeline";
+  draw();
+}
+
 // Số liệu tuần đang xem: số hoạt động, tổng giờ, giờ nạp, giờ tiêu
 function weekStatsHTML(ws) {
   let n = 0, h = 0, up = 0, dn = 0;
@@ -2511,7 +2517,7 @@ function renderNav() {
   const n = inboxCount();
   $("nav").innerHTML = TABS.map(t =>
     `<button class="${t.id === cur ? "active" : ""}" aria-current="${t.id === cur ? "page" : "false"}" onclick="switchTab('${t.id}')" aria-label="${t.label}${t.id === "hv" && n ? `, ${n} việc chưa xếp` : ""}">
-      <span aria-hidden="true">${t.icon}</span> <span class="lb-full">${t.label}</span><span class="lb-short">${t.short}</span>${t.id === "hv" && n ? `<span class="nav-count">${n}</span>` : ""}
+      <span>${t.short}</span>${t.id === "hv" && n ? `<span class="nav-count">${n}</span>` : ""}
     </button>`
   ).join("");
   const t = TABS.find(x => x.id === cur) || TABS[0];
@@ -2967,17 +2973,17 @@ function updateSyncBadge() {
   if (!linked || (tokenOk && !n) || (!active && !n)) { b.hidden = true; return; }
   b.hidden = false;
   if (!tokenOk) {
-    b.textContent = n ? `⚠ GCal · Kết nối lại (${n} chờ)` : "GCal · Kết nối lại";
+    b.textContent = n ? `Kết nối lại GCal (${n})` : "Kết nối lại GCal";
     b.className = n ? "btn btn-sm btn-danger" : "btn btn-sm btn-ghost";
     b.title = gcalConfigErr || "Phiên Google Calendar hết hạn sau 1 giờ. Bấm để kết nối lại và đẩy các thay đổi đang chờ.";
     b.onclick = connectGoogleCalendar;
   } else if (gcalConfigErr && !gcalFlushing) {
-    b.textContent = `⚠ GCal · Lỗi cấu hình (${n} chờ)`;
+    b.textContent = `Lỗi GCal (${n})`;
     b.className = "btn btn-sm btn-danger";
     b.title = gcalConfigErr + " Bấm để thử gửi lại.";
     b.onclick = () => gcalFlush({ report: true });
   } else {
-    b.textContent = gcalFlushing ? `⏳ Đang đồng bộ ${n}…` : active ? `⏳ ${n} chờ đồng bộ` : `⏳ ${n} chờ đồng bộ (tự động đang tắt)`;
+    b.textContent = gcalFlushing ? `Đang gửi ${n}…` : active ? `${n} chờ gửi` : `${n} chờ gửi (tự động tắt)`;
     b.className = "btn btn-sm";
     b.title = active ? "Bấm để đẩy ngay các thay đổi đang chờ lên Google Calendar"
       : "Tự động đồng bộ đang tắt. Bấm để gửi các thay đổi đang chờ (vd lệnh xóa) lên Google Calendar.";
@@ -2997,23 +3003,25 @@ function renderSettingsModal() {
   const backup = S.lb ? `sao lưu gần nhất ${new Date(S.lb).toLocaleString("vi-VN")}` : `<span style="color:var(--bad)">chưa sao lưu lần nào</span>`;
 
   $("settingsSheetBody").innerHTML = `
-    <section class="set-sec">
+    <section class="set-sec set-bg">
       <h4 class="set-h">Giao diện</h4>
       <div class="set-row">
         <span class="set-lbl">Chế độ hiển thị</span>
-        <div class="set-seg">${seg("light", "Sáng")}${seg("dark", "Tối")}${seg("auto", "Theo hệ thống")}</div>
+        <div class="set-seg">${seg("light", "Sáng")}${seg("dark", "Tối")}${seg("auto", "Theo máy")}</div>
       </div>
       <div class="set-row">
         <span class="set-lbl">Ảnh nền<small>Lưu trên máy này, không đồng bộ sang máy khác</small></span>
         <div class="set-inline">
-          <button type="button" class="btn btn-sm" onclick="$('bgFile').click()">${document.body.classList.contains("has-bg") ? "Đổi ảnh…" : "Chọn ảnh…"}</button>
-          ${document.body.classList.contains("has-bg") ? `<button type="button" class="btn btn-sm btn-ghost" onclick="removeBg()">Bỏ ảnh nền</button>` : ""}
+          <button type="button" class="btn btn-sm" onclick="$('bgFile').click()">${document.body.classList.contains("has-bg") ? "Đổi ảnh" : "Chọn ảnh"}</button>
+          ${document.body.classList.contains("has-bg") ? `<button type="button" class="btn btn-sm btn-ghost" onclick="removeBg()">Bỏ ảnh</button>` : ""}
           <input id="bgFile" type="file" accept="image/*" onchange="chooseBg(this)" style="display:none">
         </div>
       </div>
-      <div class="set-row">
-        <label class="set-lbl" for="bgBlurRange">Độ mờ nền<small>Kéo sang phải cho nền dịu hơn</small></label>
-        <input id="bgBlurRange" class="bg-range" type="range" min="0" max="30" step="1" value="${bgBlur()}" oninput="setBgBlur(this.value)">
+      <div class="set-row bg-blur-row">
+        <label class="set-lbl" for="bgBlurRange">Độ mờ nền<small>${document.body.classList.contains("has-bg") ? "Kéo sang phải cho nền dịu hơn" : "Chọn ảnh nền để chỉnh độ mờ"}</small></label>
+        <input id="bgBlurRange" class="bg-range" type="range" min="0" max="40" step="1" value="${bgBlur()}" ${document.body.classList.contains("has-bg") ? "" : "disabled"}
+               oninput="setBgBlur(this.value, false)" onchange="setBgBlur(this.value)"
+               onpointerdown="bgPeek(true)" onpointerup="bgPeek(false)" onpointercancel="bgPeek(false)" onfocus="bgPeek(true)" onblur="bgPeek(false)">
       </div>
     </section>
 
@@ -3037,8 +3045,8 @@ function renderSettingsModal() {
       <h4 class="set-h">Dữ liệu</h4>
       <p class="set-note">${total} hoạt động · ${kb} KB · ${backup}</p>
       <div class="set-actions">
-        <button type="button" class="btn btn-primary btn-sm" onclick="exportData('json')">Sao lưu (.json)</button>
-        <button type="button" class="btn btn-sm" onclick="exportData('csv')">Xuất lịch (.csv)</button>
+        <button type="button" class="btn btn-primary btn-sm" onclick="exportData('json')">Sao lưu</button>
+        <button type="button" class="btn btn-sm" onclick="exportData('csv')">Xuất CSV</button>
       </div>
       <div class="set-row">
         <label class="set-lbl" for="importModeSelect">Khôi phục từ tệp sao lưu</label>
@@ -3047,7 +3055,7 @@ function renderSettingsModal() {
             <option value="merge">Gộp vào dữ liệu hiện có</option>
             <option value="replace">Ghi đè toàn bộ</option>
           </select>
-          <button type="button" class="btn btn-sm" onclick="$('setFile').click()">Chọn tệp…</button>
+          <button type="button" class="btn btn-sm" onclick="$('setFile').click()">Chọn tệp</button>
           <input id="setFile" type="file" accept=".json,application/json" onchange="importData(this)" style="display:none">
         </div>
       </div>
@@ -3103,16 +3111,10 @@ function renderSettingsModal() {
 
       <div class="set-actions" style="margin-top:12px; align-items:center;">
         ${!isGCalConnected() ? `
-          <button type="button" class="btn btn-primary btn-sm" onclick="connectGoogleCalendar()">
-            🔗 Kết nối Google Calendar
-          </button>
+          <button type="button" class="btn btn-primary btn-sm" onclick="connectGoogleCalendar()">Kết nối</button>
         ` : `
-          <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="disconnectGoogleCalendar()">
-            Ngắt kết nối
-          </button>
-          <button type="button" class="btn btn-sm" onclick="gcalSyncWeek(sel)" title="Đồng bộ tất cả hoạt động trong tuần đang xem">
-            ⟳ Đồng bộ tuần này (W${sel + 1})
-          </button>
+          <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="disconnectGoogleCalendar()">Ngắt</button>
+          <button type="button" class="btn btn-sm" onclick="gcalSyncWeek(sel)" title="Đồng bộ tất cả hoạt động trong tuần đang xem">Đồng bộ tuần</button>
         `}
       </div>
     </section>
@@ -3121,7 +3123,7 @@ function renderSettingsModal() {
       <h4 class="set-h">Xóa dữ liệu</h4>
       <div class="set-row">
         <span class="set-lbl">Xóa toàn bộ hoạt động và đặt lại danh mục vốn<small>Không thể hoàn tác. Hãy sao lưu trước.</small></span>
-        <button type="button" class="btn btn-sm btn-danger" onclick="resetToDefaultData()">Xóa dữ liệu</button>
+        <button type="button" class="btn btn-sm btn-danger" onclick="resetToDefaultData()">Xóa hết</button>
       </div>
     </section>
   `;
@@ -3149,7 +3151,7 @@ function backupNotice() {
       </div>
       <div class="row" style="gap:6px;">
         <button type="button" class="btn btn-sm btn-ghost" onclick="snoozeBackup()">Để sau</button>
-        <button type="button" class="btn btn-sm btn-primary" onclick="exportData('json')">Sao lưu ngay</button>
+        <button type="button" class="btn btn-sm btn-primary" onclick="exportData('json')">Sao lưu</button>
       </div>
     </div>`;
 }
@@ -3165,9 +3167,9 @@ function startOrDemoNotice() {
       <div class="review-prompt-banner">
         <div>
           <b>👋 Bắt đầu với Life Capital</b>
-          <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Gõ vào thanh ghi nhanh phía trên, ví dụ <i>"Mai 18h đánh cầu lông 2 tiếng"</i>, hoặc bấm "+ Thêm" ở một ngày bất kỳ.</div>
+          <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Gõ vào thanh ghi nhanh phía trên, ví dụ <i>"Mai 18h đánh cầu lông 2 tiếng"</i>, hoặc bấm "Thêm" ở một ngày bất kỳ.</div>
         </div>
-        <button type="button" class="btn btn-sm" onclick="loadDemo()">Thử với dữ liệu mẫu</button>
+        <button type="button" class="btn btn-sm" onclick="loadDemo()">Dùng thử</button>
       </div>`;
   }
   if (hasDemo()) {
@@ -3177,7 +3179,7 @@ function startOrDemoNotice() {
           <b>🧪 Đang dùng dữ liệu mẫu</b>
           <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Dữ liệu mẫu không được đẩy lên Google Calendar. Hoạt động mẫu bạn đã sửa sẽ được giữ lại như dữ liệu thật.</div>
         </div>
-        <button type="button" class="btn btn-sm btn-danger" onclick="clearDemo()">Xóa dữ liệu mẫu</button>
+        <button type="button" class="btn btn-sm btn-danger" onclick="clearDemo()">Xóa mẫu</button>
       </div>`;
   }
   return "";
@@ -3198,7 +3200,7 @@ const V = {
           <b>🌟 Đã đến lúc tổng kết tuần!</b>
           <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Xem lại cán cân năng lượng và bánh xe cuộc đời tuần này.</div>
         </div>
-        <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(${sel})">Xem tổng kết ngay</button>
+        <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(${sel})">Xem</button>
       </div>
     ` : '';
 
@@ -3213,13 +3215,13 @@ const V = {
               Tuần W${sel + 1} <span style="font-weight:400; color:var(--mu);">(${dateRangeStr})</span>
             </label>
             <button class="btn btn-sm" onclick="sel=Math.min(W.length - 1, sel + 1); draw()" title="Tuần sau">▶</button>
-            ${CW >= 0 && sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=Math.max(0, CW); draw()">Về tuần này (W${CW+1})</button>` : sel === CW ? `<span class="pill pill-ok">Tuần hiện tại</span>` : ""}
+            ${CW >= 0 && sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=Math.max(0, CW); draw()">Tuần này</button>` : sel === CW ? `<span class="pill pill-ok">Tuần hiện tại</span>` : ""}
           </div>
           <div class="row">
             <div class="segmented-control">
-              <button class="${calSubView === 'focus' ? 'active' : ''}" onclick="calSubView='focus'; draw()">Tuần chi tiết</button>
-              <button class="${calSubView === 'timeline' ? 'active' : ''}" onclick="calSubView='timeline'; draw()">Dòng thời gian 24h</button>
-              <button class="${calSubView === 'year' ? 'active' : ''}" onclick="calSubView='year'; draw(true)">Lưới 53 tuần</button>
+              <button class="${calSubView === 'focus' ? 'active' : ''}" onclick="calSubView='focus'; draw()">Tuần</button>
+              <button class="${calSubView === 'timeline' ? 'active' : ''}" onclick="openDayView()">Ngày</button>
+              <button class="${calSubView === 'year' ? 'active' : ''}" onclick="calSubView='year'; draw(true)">Năm</button>
             </div>
           </div>
         </div>
@@ -3267,9 +3269,7 @@ const V = {
                 `;
               }).join("")}
             </div>
-            <button class="day-card-add-btn" onclick="openEditor('${k}')">
-              + Thêm
-            </button>
+            <button class="day-card-add-btn" onclick="openEditor('${k}')">Thêm</button>
           </div>
         `;
       }
@@ -3347,7 +3347,7 @@ const V = {
                 ${bat.label}
               </span>
             </div>
-            <button class="btn btn-sm btn-primary" onclick="openEditor('${activeDate}')">+ Thêm hoạt động</button>
+            <button class="btn btn-sm btn-primary" onclick="openEditor('${activeDate}')">Thêm</button>
           </div>
           <div class="timeline-grid" onclick="handleTimelineGridClick(event, '${activeDate}')" ondragover="tlOver(event, '${activeDate}')" ondragleave="tlLeave(event)" ondrop="tlDrop(event, '${activeDate}')">
             ${hourMarkers}
@@ -3368,11 +3368,11 @@ const V = {
       <div class="row" style="margin-bottom:12px; gap:8px;">
         <span style="font-size:12px; color:var(--mu);">Hiển thị:</span>
         <div class="segmented-control">
-          ${[["0", "Từ tuần này"], ["4", "+ 4 tuần gần nhất"], ["all", "Tất cả " + W.length + " tuần"]].map(o =>
+          ${[["0", "Từ nay"], ["4", "4 tuần trước"], ["all", "Cả năm"]].map(o =>
             `<button class="${pm === o[0] ? 'active' : ''}" onclick="S.pm='${o[0]}'; save(); draw(); scrollToCurrentWeek();">${o[1]}</button>`
           ).join("")}
         </div>
-        ${CW >= 0 ? `<button class="btn btn-sm btn-ghost" onclick="scrollToCurrentWeek()">⟲ Về tuần hiện tại (W${CW + 1})</button>` : ""}
+        ${CW >= 0 ? `<button class="btn btn-sm btn-ghost" onclick="scrollToCurrentWeek()">Tuần này</button>` : ""}
       </div>
     `;
 
@@ -3483,10 +3483,10 @@ const V = {
               ${W.map((m, i) => `<option value="${i}" ${i === sel ? 'selected' : ''}>Tuần W${i + 1} (${m.toLocaleDateString("vi-VN", { month: "numeric", day: "numeric" })})${i === CW ? ' - Hiện tại' : ''}</option>`).join("")}
             </select>
             <button class="btn btn-sm" onclick="sel=Math.min(W.length - 1, sel + 1); draw()">▶</button>
-            ${CW >= 0 && sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=Math.max(0, CW); draw()">Về tuần này</button>` : ""}
+            ${CW >= 0 && sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=Math.max(0, CW); draw()">Tuần này</button>` : ""}
           </div>
           <div class="row">
-            <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(${sel})">🏆 Báo cáo tổng kết tuần</button>
+            <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(${sel})">Tổng kết</button>
             <select onchange="N=+this.value; draw()">
               <option value="4" ${N === 4 ? 'selected' : ''}>TB 4 tuần</option>
               <option value="8" ${N === 8 ? 'selected' : ''}>TB 8 tuần</option>
@@ -3556,11 +3556,11 @@ const V = {
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:10px; margin-bottom:12px;">
           <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
             <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Đã phân bổ</div>
-            <div style="font:700 22px Georgia, serif; margin-top:2px;">${r1(A)}h <span style="font-size:13px; font-weight:400; color:var(--mu);">(${pc(A)}%)</span></div>
+            <div style="font:600 20px var(--font-ui); margin-top:2px;">${r1(A)}h <span style="font-size:13px; font-weight:400; color:var(--mu);">(${pc(A)}%)</span></div>
           </div>
           <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
             <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">${A > 168 ? 'Quá tải (Vượt)' : 'Chưa phân bổ'}</div>
-            <div style="font:700 22px Georgia, serif; margin-top:2px; color:${A > 168 ? 'var(--bad)' : 'var(--ok-text)'}">
+            <div style="font:600 20px var(--font-ui); margin-top:2px; color:${A > 168 ? 'var(--bad)' : 'var(--ok-text)'}">
               ${A > 168 ? '+' + r1(A - 168) + 'h' : r1(free) + 'h'}
               <span style="font-size:13px; font-weight:400; color:var(--mu);">${A > 168 ? '(vượt mức)' : `(${pc(free)}%)`}</span>
             </div>
@@ -3692,9 +3692,7 @@ const V = {
                   <b style="font-size:13.5px;">${esc(c.n)}</b>
                   <span class="pill pill-cyan" style="font-size:11px;">${(c.kw || []).length} từ khóa</span>
                 </div>
-                <button type="button" class="btn btn-sm btn-ghost" onclick="resetCapKeywords('${c.k}')" style="font-size:11.5px; color:var(--tx-sec);">
-                  ⟲ Khôi phục mặc định
-                </button>
+                <button type="button" class="btn btn-sm btn-ghost" onclick="resetCapKeywords('${c.k}')" style="font-size:11.5px; color:var(--tx-sec);">Mặc định</button>
               </div>
               <input type="text"
                      value="${esc((c.kw || []).join(', '))}"
@@ -3714,7 +3712,7 @@ const V = {
             <h2 class="card-title">Cài Đặt Loại Vốn & Giờ Cố Định</h2>
             <div class="card-sub">Tùy biến tên, màu sắc, mục tiêu nạp và giờ cố định lặp mỗi tuần (Baseline).</div>
           </div>
-          <button class="btn btn-primary btn-sm" onclick="addCap()">+ Thêm loại vốn</button>
+          <button class="btn btn-primary btn-sm" onclick="addCap()">Thêm vốn</button>
         </div>
 
         <div style="overflow-x:auto;">
@@ -3950,7 +3948,7 @@ function renderEditorSheet() {
             <button type="button" class="btn btn-sm btn-ghost"
                     style="border:1px solid var(--bd); padding:2px 8px; font-size:11.5px; background:var(--card);"
                     onclick="fillTpl(${idx})">
-              <span class="dot" style="background:${CM(p.c).c}; width:6px; height:6px;"></span> ${esc(p.t)}
+              ${esc(p.t)}
             </button>
           `).join("")}
         </div>
@@ -3960,7 +3958,7 @@ function renderEditorSheet() {
         const f = findSub(X.tk), owner = f ? f.task : findTask(X.tk);
         return owner ? `<div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; padding:6px 10px; background:var(--card-subtle); border-radius:var(--radius-sm); border:1px solid var(--bd); font-size:12.5px;">
           <span>📥 Thuộc việc: <b>${esc(owner.t)}</b></span>
-          <button type="button" class="btn btn-sm" onclick="returnToInbox()" title="Gỡ khỏi lịch, việc nhỏ trở lại Chưa xếp">↩ Đưa về hộp việc</button>
+          <button type="button" class="btn btn-sm" onclick="returnToInbox()" title="Gỡ khỏi lịch, việc nhỏ trở lại Chưa xếp">Về hộp việc</button>
         </div>` : "";
       })() : ""}
       <div class="form-group">
@@ -4032,21 +4030,15 @@ function renderEditorSheet() {
       ${X ? `
         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; gap:8px; flex-wrap:wrap;">
           <div class="row" style="gap:6px;">
-            <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="deleteCurrentEvent()">
-              🗑️ Xóa hoạt động
-            </button>
+            <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="deleteCurrentEvent()">Xóa</button>
             ${X.r ? `
-              <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="delSeries(${ei}, 'future')" title="Giữ lại các buổi trước ngày này">
-                Xóa từ ngày này về sau
-              </button>
-              <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="delSeries(${ei}, 'all')" title="Xóa mọi buổi của chuỗi, kể cả các ngày trước">
-                Xóa toàn bộ chuỗi
-              </button>
+              <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="delSeries(${ei}, 'future')" title="Giữ lại các buổi trước ngày này">Xóa từ đây</button>
+              <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="delSeries(${ei}, 'all')" title="Xóa mọi buổi của chuỗi, kể cả các ngày trước">Xóa chuỗi</button>
             ` : ''}
           </div>
           <div class="row" style="gap:8px;">
             <button type="button" class="btn btn-ghost" onclick="closeEditor()">Hủy</button>
-            <button type="button" class="btn btn-primary" onclick="saveEventFromForm()">Lưu thay đổi</button>
+            <button type="button" class="btn btn-primary" onclick="saveEventFromForm()">Lưu</button>
           </div>
         </div>
       ` : `
@@ -4371,7 +4363,7 @@ function draw(jump) {
   if (cur === "ca" && calSubView === "timeline") {
     const k = ky(ad(W[sel], timelineDayIdx));
     const hid = (S.ev[k] || []).filter(e => !e.s || +e.s.slice(0, 2) < 6).length;
-    if (hid) $("v").insertAdjacentHTML("beforeend", `<p style="font-size:12.5px; color:var(--mu); margin-top:8px;">⚠ ${hid} hoạt động không hiển thị trên dòng thời gian (chưa có giờ bắt đầu hoặc trước 06:00). Xem ở chế độ "Tuần chi tiết".</p>`);
+    if (hid) $("v").insertAdjacentHTML("beforeend", `<p style="font-size:12.5px; color:var(--mu); margin-top:8px;">⚠ ${hid} hoạt động không hiển thị trên dòng thời gian (chưa có giờ bắt đầu hoặc trước 06:00). Xem ở chế độ Tuần.</p>`);
     layoutTimeline();
   }
   // Đánh dấu các số vừa thay đổi sau chỉnh sửa gần nhất
@@ -4957,9 +4949,9 @@ function inboxHTML(where) {
         <input type="checkbox" ${s.done ? "checked" : ""} onchange="toggleDone('sub','${s.id}')" aria-label="Xong: ${esc(s.t)}">
         <button type="button" class="hv-name" onclick="startHvEdit('sub','${s.id}')" title="Bấm để sửa">${esc(s.t)}</button>
         <span class="hv-dur">${hrs(s.h)}</span>
-        ${p ? `<button type="button" class="hv-when" onclick="openEditor('${p.date}', ${p.idx})" title="Đã xếp · ${whenLabel(p)} · bấm để mở hoạt động">${where === "panel" ? whenLabel(p).replace(/ \d\d\/\d\d/, "") : "Đã xếp · " + whenLabel(p)}</button>` : ""}
+        ${p ? `<button type="button" class="hv-when" onclick="openEditor('${p.date}', ${p.idx})" title="Đã xếp · ${whenLabel(p)} · bấm để mở hoạt động">${where === "panel" ? whenLabel(p).replace(/ \d\d\/\d\d/, "") : whenLabel(p)}</button>` : ""}
         <span class="hv-acts">
-          ${s.done ? "" : `<button type="button" class="btn btn-sm hv-sched" onclick="openSched('sub','${s.id}')" title="${p ? "Dời sang ngày giờ khác" : "Chọn ngày giờ"}" aria-label="${p ? "Dời" : "Xếp lịch"} ${esc(s.t)}">${where === "panel" ? "🗓" : p ? "Dời" : "Xếp lịch"}</button>`}
+          ${s.done ? "" : `<button type="button" class="btn btn-sm hv-sched" onclick="openSched('sub','${s.id}')" title="${p ? "Dời sang ngày giờ khác" : "Chọn ngày giờ"}" aria-label="${p ? "Dời" : "Xếp lịch"} ${esc(s.t)}">${p ? "Dời" : "Xếp"}</button>`}
           <button type="button" class="btn btn-sm btn-ghost hv-mv" onclick="moveItem('sub','${s.id}',-1)" ${i ? "" : "disabled"} aria-label="Lên">↑</button>
           <button type="button" class="btn btn-sm btn-ghost hv-mv" onclick="moveItem('sub','${s.id}',1)" ${i < t.subs.length - 1 ? "" : "disabled"} aria-label="Xuống">↓</button>
           <button type="button" class="btn btn-sm btn-ghost hv-del" onclick="deleteSub('${s.id}')" aria-label="Xóa ${esc(s.t)}">✕</button>
@@ -4987,7 +4979,7 @@ function inboxHTML(where) {
           </select>
           <button type="button" class="hv-mini ${t.m === "u" ? "up" : "down"}" onclick="setTaskField('${t.id}','m','${t.m === "u" ? "d" : "u"}')" title="Đổi tác động">${t.m === "u" ? "▲ Nạp" : "▼ Tiêu"}</button>
           <span class="hv-acts">
-            ${taskDone(t) ? "" : `<button type="button" class="btn btn-sm hv-sched" onclick="openSched('task','${t.id}')">${t.subs.length ? "Xếp cả việc" : selfP ? "Dời" : "Xếp lịch"}</button>`}
+            ${taskDone(t) ? "" : `<button type="button" class="btn btn-sm hv-sched" onclick="openSched('task','${t.id}')">${t.subs.length ? "Xếp hết" : selfP ? "Dời" : "Xếp"}</button>`}
             ${list ? `<button type="button" class="btn btn-sm btn-ghost hv-mv" onclick="moveItem('task','${t.id}',-1)" ${i ? "" : "disabled"} aria-label="Lên">↑</button>
             <button type="button" class="btn btn-sm btn-ghost hv-mv" onclick="moveItem('task','${t.id}',1)" ${i < list.length - 1 ? "" : "disabled"} aria-label="Xuống">↓</button>` : ""}
             <button type="button" class="btn btn-sm btn-ghost hv-del" onclick="deleteTask('${t.id}')" aria-label="Xóa việc ${esc(t.t)}">✕</button>
@@ -5025,7 +5017,7 @@ V.hv = function () {
 function withInbox(h) {
   if (!inboxPanel) {
     const n = inboxCount();
-    return `<div class="cal-with-inbox collapsed"><div style="min-width:0">${h}</div><button type="button" class="inbox-rail" onclick="toggleInboxPanel()" title="Hiện cột Hộp việc để kéo việc vào lịch" aria-label="Hiện cột Hộp việc${n ? `, ${n} việc chưa xếp` : ""}"><span aria-hidden="true">📥</span>${n ? `<span class="nav-count">${n}</span>` : ""}<span class="rail-lb">Hộp việc</span></button></div>`;
+    return `<div class="cal-with-inbox collapsed"><div style="min-width:0">${h}</div><button type="button" class="inbox-rail" onclick="toggleInboxPanel()" title="Hiện cột Hộp việc để kéo việc vào lịch" aria-label="Hiện cột Hộp việc${n ? `, ${n} việc chưa xếp` : ""}">${n ? `<span class="nav-count">${n}</span>` : ""}<span class="rail-lb">Hộp việc</span></button></div>`;
   }
   return `<div class="cal-with-inbox"><div style="min-width:0">${h}</div><aside class="inbox-aside" aria-label="Hộp việc">${inboxHTML("panel")}</aside></div>`;
 }
@@ -5062,14 +5054,18 @@ function applyBg(blob) {
 }
 function bgBlur() {
   let v = 8;
-  try { const x = parseInt(localStorage.getItem("lc_bg_blur"), 10); if (x >= 0 && x <= 30) v = x; } catch (e) {}
+  try { const x = parseInt(localStorage.getItem("lc_bg_blur"), 10); if (x >= 0 && x <= 40) v = x; } catch (e) {}
   return v;
 }
-function setBgBlur(v) {
-  v = Math.max(0, Math.min(30, parseInt(v, 10) || 0));
-  try { localStorage.setItem("lc_bg_blur", String(v)); } catch (e) {}
-  document.documentElement.style.setProperty("--bg-blur", v + "px");
+// Cập nhật theo nhịp vẽ của màn hình (không vẽ lại nền mờ ở mỗi sự kiện kéo); chỉ lưu khi thả tay
+let bgBlurRAF = 0, bgBlurNext = 8;
+function setBgBlur(v, persist) {
+  bgBlurNext = Math.max(0, Math.min(40, parseInt(v, 10) || 0));
+  if (!bgBlurRAF) bgBlurRAF = requestAnimationFrame(() => { bgBlurRAF = 0; document.documentElement.style.setProperty("--bg-blur", bgBlurNext + "px"); });
+  if (persist !== false) { try { localStorage.setItem("lc_bg_blur", String(bgBlurNext)); } catch (e) {} }
 }
+// Trong lúc kéo: popup Cài đặt tạm trong suốt, chỉ còn thanh trượt, để thấy nền đổi ngay
+function bgPeek(on) { document.body.classList.toggle("bg-peek", !!on); }
 const loadImg = f => window.createImageBitmap ? createImageBitmap(f)
   : new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = URL.createObjectURL(f); });
 // Thu ảnh về tối đa 2400px để nhẹ và nhanh, lưu dạng JPEG
