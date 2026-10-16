@@ -1175,17 +1175,24 @@ body[data-tab="su"] #addBtn, body[data-tab="set"] #addBtn { display: none; }
 @media (max-width: 899px) {
   .app-shell { display: block; padding: 12px 12px calc(92px + env(safe-area-inset-bottom, 0px)); }
   .sidebar { position: fixed; left: 10px; right: 10px; top: auto; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); height: auto; z-index: 60; padding: 6px; border-radius: 20px; flex-direction: row; gap: 0; background: var(--glass-hi); }
-  .sidebar .brand-area, .sidebar-settings { display: none; }
-  nav.main-nav { flex-direction: row; width: 100%; justify-content: space-around; }
+  .sidebar .brand-area { display: none; }
+  nav.main-nav { flex-direction: row; flex: 4 1 0; min-width: 0; width: auto; justify-content: space-around; }
+  /* Cài đặt là ô thứ năm của thanh tab dưới: trong tầm ngón cái, cùng kiểu với các tab */
+  .sidebar .sidebar-settings { display: flex; flex: 1 1 0; min-width: 0; width: auto; margin: 0; flex-direction: column; justify-content: center; gap: 2px; min-height: 52px; padding: 6px 2px; border: 0; background: transparent; box-shadow: none; font-size: 14px; font-weight: 500; white-space: nowrap; color: var(--tx-sec); border-radius: 12px; }
+  .sidebar .sidebar-settings:hover { background: var(--glass-hi); color: var(--tx); }
+  body.settings-open .sidebar .sidebar-settings { background: var(--sheen), var(--glass-hi); color: var(--tx); font-weight: 600; box-shadow: inset 0 -3px 0 var(--ac), var(--glass-shadow); }
   nav.main-nav button { flex: 1; flex-direction: column; gap: 2px; font-size: 14px; font-weight: 500; white-space: nowrap; padding: 6px 2px; justify-content: center; min-height: 52px; position: relative; }
   nav.main-nav button.active { box-shadow: inset 0 -3px 0 var(--ac), var(--glass-shadow); }
   .lb-full { display: none; }
   .lb-short { display: inline; }
   .nav-count { position: absolute; top: 3px; right: 18%; margin: 0; }
   .app-header { padding: 12px 14px; }
-  .app-header #settingsBtn { display: inline-flex; }
+  .app-header #settingsBtn { display: none; } /* đã có ở thanh tab dưới */
   .page-title { font-size: 21px; }
-  .stat-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .stat-row { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-bottom: 10px; }
+  .stat-tile { padding: 7px 4px; border-radius: 12px; gap: 0; }
+  .stat-tile span { font-size: 10px; letter-spacing: 0.02em; white-space: nowrap; }
+  .stat-tile b { font-size: 16px; }
   .toast-container { bottom: calc(146px + env(safe-area-inset-bottom, 0px)) !important; }
   /* Ô ghi nhanh nổi ngay trên thanh tab; bàn phím mở thì nằm sát trên bàn phím và ẩn thanh tab */
   .app-shell { padding-bottom: calc(150px + env(safe-area-inset-bottom, 0px)); }
@@ -1194,7 +1201,8 @@ body[data-tab="su"] #addBtn, body[data-tab="set"] #addBtn { display: none; }
   .quick-capture-box:focus-within { bottom: calc(max(var(--kb, 0px), env(safe-area-inset-bottom, 0px)) + 8px); }
   body:has(.quick-capture-box:focus-within) .sidebar { display: none; }
 }
-@media (max-width: 359px) { nav.main-nav button { font-size: 13px; } }
+@media (max-width: 400px) { nav.main-nav button, .sidebar .sidebar-settings { font-size: 13px; } }
+@media (max-width: 359px) { nav.main-nav button, .sidebar .sidebar-settings { font-size: 12px; } .sidebar { left: 6px; right: 6px; padding: 4px; } }
 .header-actions .btn.btn-sm { font-size: 13px; padding: 6px 12px; }
 /* Chế độ Ngày: vuốt ngang để đổi ngày */
 .timeline-container { touch-action: pan-y; }
@@ -1311,7 +1319,16 @@ input:focus, select:focus, textarea:focus { border-color: var(--ac); box-shadow:
 .timeline-event-block { border: 1px solid color-mix(in srgb, var(--cap, #888888) 40%, transparent); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); box-shadow: 0 2px 10px rgba(100, 40, 65, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.4); }
 table.calendar-table th { background: var(--sheen), var(--glass-hi); color: var(--tx); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); }
 .save-alert { background: linear-gradient(135deg, var(--pill-sheen), color-mix(in srgb, var(--bad) 35%, transparent)), var(--glass); }
-.bg-range { width: 180px; accent-color: var(--ac); }
+/* Thanh kéo độ mờ: tự vẽ để nút kéo đủ lớn cho ngón tay; touch-action none để iPhone không cuộn bảng khi kéo */
+.bg-range { -webkit-appearance: none; appearance: none; flex: 1 1 150px; min-width: 120px; max-width: 220px; height: 32px; margin: 0; background: transparent; touch-action: none; cursor: pointer; }
+.bg-range::-webkit-slider-runnable-track { height: 6px; border-radius: 99px; background: linear-gradient(90deg, color-mix(in srgb, var(--ac) 70%, transparent), color-mix(in srgb, var(--tx) 22%, transparent)); }
+.bg-range::-webkit-slider-thumb { -webkit-appearance: none; width: 26px; height: 26px; margin-top: -10px; border-radius: 50%; background: #fff; border: 1px solid color-mix(in srgb, var(--tx) 18%, transparent); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22); }
+.bg-range::-moz-range-track { height: 6px; border-radius: 99px; background: color-mix(in srgb, var(--tx) 22%, transparent); }
+.bg-range::-moz-range-progress { height: 6px; border-radius: 99px; background: color-mix(in srgb, var(--ac) 70%, transparent); }
+.bg-range::-moz-range-thumb { width: 26px; height: 26px; border-radius: 50%; background: #fff; border: 1px solid color-mix(in srgb, var(--tx) 18%, transparent); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22); }
+.bg-range:focus-visible { outline: 2px solid var(--ac); outline-offset: 4px; border-radius: 99px; }
+/* Hàng chứa thanh kéo luôn có sẵn đệm và viền trong suốt: lúc kéo chỉ đổi màu, không xê dịch dưới ngón tay */
+.set-row.bg-blur-row { margin-inline: -13px; padding: 8px 12px; border: 1px solid transparent; border-radius: 14px; }
 .bg-range:disabled { opacity: 0.45; }
 body.bg-peek .modal-sheet, body.bg-peek .modal-sheet * { transition: none !important; }
 html.bg-peek, html.bg-peek * { scrollbar-color: transparent transparent; }
@@ -1321,7 +1338,7 @@ html.bg-peek, html.bg-peek * { scrollbar-color: transparent transparent; }
 body.bg-peek .modal-overlay { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
 body.bg-peek .modal-sheet { background: transparent; border-color: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
 body.bg-peek .modal-sheet .modal-header, body.bg-peek .modal-body > *:not(.set-bg), body.bg-peek .set-bg > *:not(.bg-blur-row) { visibility: hidden; }
-body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(--glass-hi); border: 1px solid var(--glass-bd); border-radius: 14px; padding: 8px 12px; box-shadow: var(--glass-shadow); }
+body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(--glass-hi); border-color: var(--glass-bd); box-shadow: var(--glass-shadow); }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 .chg { font-weight: 600; background: color-mix(in srgb, var(--ac) 22%, transparent); border-radius: 4px; padding: 0 3px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ac) 45%, transparent); }
 .set-sec { padding: 14px 0; border-bottom: 1px solid var(--bd); }
@@ -1408,6 +1425,7 @@ body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(-
 /* Thanh “Có bản mới” */
 .update-bar { position: fixed; left: 0; right: 0; margin: 0 auto; width: max-content; max-width: calc(100% - 24px); top: calc(10px + env(safe-area-inset-top, 0px)); z-index: 950; display: flex; align-items: center; gap: 12px; padding: 6px 6px 6px 16px; border-radius: 999px; background: var(--sheen), var(--glass-hi); border: 1px solid var(--glass-bd); box-shadow: var(--glass-shadow); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); font-size: 14px; font-weight: 600; }
 .set-row > .btn { flex: none; white-space: nowrap; }
+@media (max-width: 899px) { .update-bar { top: auto; bottom: calc(146px + env(safe-area-inset-bottom, 0px)); } }
 .inst-steps { margin: 6px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
 </style>
 <script>
@@ -2665,9 +2683,9 @@ function openWeeklyReviewModal(wIdx = sel) {
     <div style="display:flex; flex-direction:column; gap:14px;">
       <!-- BỘ CHỌN TUẦN TỔNG KẾT LINH HOẠT -->
       <div style="display:flex; justify-content:space-between; align-items:center; background:var(--card-subtle); padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--bd); flex-wrap:wrap; gap:8px;">
-        <div style="display:flex; align-items:center; gap:6px;">
+        <div style="display:flex; align-items:center; gap:6px; flex:1 1 220px; min-width:0;">
           <button type="button" class="btn btn-sm" onclick="openWeeklyReviewModal(Math.max(0, ${wIdx} - 1))" title="Xem tuần trước">◀</button>
-          <select onchange="openWeeklyReviewModal(+this.value)" style="font-weight:600; padding:5px 10px; font-size:13px; border-radius:var(--radius-sm); border:1px solid var(--bd); background:var(--card); color:var(--tx); cursor:pointer;">
+          <select onchange="openWeeklyReviewModal(+this.value)" style="flex:1; min-width:0; text-overflow:ellipsis; font-weight:600; padding:5px 10px; font-size:13px; border-radius:var(--radius-sm); border:1px solid var(--bd); background:var(--card); color:var(--tx); cursor:pointer;">
             ${W.map((m, i) => {
               const mEnd = ad(m, 6);
               const rStr = `${m.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" })} – ${mEnd.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" })}`;
@@ -2898,11 +2916,14 @@ function openSettingsModal() {
   LF = document.activeElement;
   renderSettingsModal();
   $("settingsModalOverlay").classList.add("open");
+  document.body.classList.add("settings-open");
 }
 
 function closeSettingsModal() {
   const ov = $("settingsModalOverlay"), wasOpen = ov.classList.contains("open");
   ov.classList.remove("open");
+  document.body.classList.remove("settings-open");
+  bgPeek(false);
   if (wasOpen && LF && LF.focus) {
     try { LF.focus(); } catch (e) {}
   }
@@ -3378,7 +3399,7 @@ function renderSettingsModal() {
   const burnH = (S.cfg && S.cfg.burnoutHours) || 6;
   const opt = (v, cur, label) => `<option value="${v}" ${cur === v ? "selected" : ""}>${label}</option>`;
   const seg = (v, label) => `<button type="button" class="${curTheme === v ? "on" : ""}" aria-pressed="${curTheme === v}" onclick="setThemePreference('${v}')">${label}</button>`;
-  const backup = S.lb ? `sao lưu ${new Date(S.lb).toLocaleString("vi-VN", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "2-digit" })}` : `<span style="color:var(--bad)">chưa sao lưu</span>`;
+  const backup = S.lb ? `sao lưu ${new Date(S.lb).toLocaleString("vi-VN", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "2-digit" })}` : sbUser ? "có bản trên tài khoản" : `<span style="color:var(--bad)">chưa sao lưu</span>`;
 
   $("settingsSheetBody").innerHTML = `
     <details class="set-sec set-bg" ${setSecOpen("ui")} ontoggle="setSecToggle('ui', this.open)">
@@ -3403,7 +3424,7 @@ function renderSettingsModal() {
         <label class="set-lbl" for="bgBlurRange">Độ mờ nền<small>${document.body.classList.contains("has-bg") ? "Kéo phải để mờ hơn" : "Cần chọn ảnh nền"}</small></label>
         <input id="bgBlurRange" class="bg-range" type="range" min="0" max="40" step="1" value="${bgBlur()}" ${document.body.classList.contains("has-bg") ? "" : "disabled"}
                oninput="setBgBlur(this.value, false)" onchange="setBgBlur(this.value)"
-               onpointerdown="bgPeek(true)" onpointerup="bgPeek(false)" onpointercancel="bgPeek(false)" onfocus="bgPeek(true)" onblur="bgPeek(false)">
+               onpointerdown="bgPeek(true)" onpointerup="bgPeek(false)" onpointercancel="bgPeek(false)" onkeydown="bgPeek(true)" onkeyup="bgPeek(false)" onblur="bgPeek(false)">
       </div>
     </details>
 
@@ -3433,7 +3454,7 @@ function renderSettingsModal() {
     </details>
 
     <details class="set-sec" ${setSecOpen("data")} ontoggle="setSecToggle('data', this.open)">
-      <summary class="set-h">Dữ liệu<span class="set-sum">${S.lb ? total + " hoạt động" : `<span style="color:var(--bad)">chưa sao lưu</span>`}</span></summary>
+      <summary class="set-h">Dữ liệu<span class="set-sum">${S.lb || sbUser ? total + " hoạt động" : `<span style="color:var(--bad)">chưa sao lưu</span>`}</span></summary>
       <p class="set-note">${total} hoạt động · ${kb} KB · ${backup}</p>
       <div class="set-actions">
         <button type="button" class="btn btn-primary btn-sm" onclick="exportData('json')">Sao lưu</button>
@@ -3764,7 +3785,8 @@ const V = {
   ca() {
     const selWeekStart = W[sel];
     const selWeekEnd = ad(selWeekStart, 6);
-    const dateRangeStr = `${selWeekStart.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" })} – ${selWeekEnd.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric", year: "numeric" })}`;
+    // Năm đã có ở tiêu đề trang; bỏ năm để hàng chọn tuần vừa một dòng trên điện thoại
+    const dateRangeStr = `${selWeekStart.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" })} – ${selWeekEnd.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" })}`;
 
     const headerBar = `
       ${calendarNotices()}
@@ -3772,7 +3794,7 @@ const V = {
         <div class="card-header" style="margin-bottom:0">
           <div class="row">
             <button class="btn btn-sm" onclick="sel=Math.max(0, sel-1); draw()" title="Tuần trước">◀</button>
-            <label style="font-weight:600; font-size:14px;">
+            <label style="font-weight:600; font-size:14px; white-space:nowrap;">
               Tuần W${sel + 1} <span style="font-weight:400; color:var(--mu);">(${dateRangeStr})</span>
             </label>
             <button class="btn btn-sm" onclick="sel=Math.min(W.length - 1, sel + 1); draw()" title="Tuần sau">▶</button>
@@ -4047,11 +4069,10 @@ const V = {
             ${CW >= 0 && sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=Math.max(0, CW); draw()">Tuần này</button>` : ""}
           </div>
           <div class="row">
-            <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(${sel})">Tổng kết</button>
-            <select onchange="N=+this.value; draw()">
-              <option value="4" ${N === 4 ? 'selected' : ''}>TB 4 tuần</option>
-              <option value="8" ${N === 8 ? 'selected' : ''}>TB 8 tuần</option>
-              <option value="0" ${N === 0 ? 'selected' : ''}>Tất cả tuần</option>
+            <select onchange="N=+this.value; draw()" aria-label="Khoảng so sánh">
+              <option value="4" ${N === 4 ? 'selected' : ''}>So với TB 4 tuần</option>
+              <option value="8" ${N === 8 ? 'selected' : ''}>So với TB 8 tuần</option>
+              <option value="0" ${N === 0 ? 'selected' : ''}>So với mọi tuần</option>
             </select>
           </div>
         </div>
@@ -5672,6 +5693,8 @@ function setBgBlur(v, persist) {
 }
 // Trong lúc kéo: popup Cài đặt tạm trong suốt, chỉ còn thanh trượt, để thấy nền đổi ngay
 function bgPeek(on) { document.body.classList.toggle("bg-peek", !!on); document.documentElement.classList.toggle("bg-peek", !!on); }
+["pointerup", "pointercancel", "touchend", "touchcancel"].forEach(t => document.addEventListener(t, () => { if (document.body.classList.contains("bg-peek")) requestAnimationFrame(() => bgPeek(false)); }, true));
+window.addEventListener("blur", () => bgPeek(false));
 const loadImg = f => window.createImageBitmap ? createImageBitmap(f)
   : new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = URL.createObjectURL(f); });
 // Thu ảnh về tối đa 2400px để nhẹ và nhanh, lưu dạng JPEG
@@ -6025,7 +6048,7 @@ function wipeLocal() {
 }
 
 async function cloudDeleteServer() {
-  const a = await ask({ title: "Xóa dữ liệu trên máy chủ?", msg: "Xóa hẳn tài khoản và mọi dữ liệu đã đồng bộ. Các máy khác sẽ bị đăng xuất. Dữ liệu trên máy này vẫn giữ.", ok: "Xóa trên máy chủ", danger: true });
+  const a = await ask({ title: "Xóa dữ liệu trên máy chủ?", msg: "Xóa hẳn tài khoản và mọi dữ liệu đã đồng bộ. Các máy khác ngừng đồng bộ ngay và bị đăng xuất chậm nhất sau 1 giờ. Dữ liệu trên máy này vẫn giữ.", ok: "Xóa trên máy chủ", danger: true });
   if (a !== "ok") return;
   const b = await ask({ title: "Chắc chắn xóa?", msg: "Không khôi phục được. Nên Sao lưu (.json) trước.", ok: "Xóa vĩnh viễn", alt: "Sao lưu trước", danger: true });
   if (b === "alt") { exportData("json"); return; }
@@ -6163,7 +6186,11 @@ async function installApp() {
     });
     return;
   }
-  ask({ title: "Cài app", msg: "Mở trang này bằng Chrome hoặc Edge trên máy tính, rồi bấm biểu tượng cài đặt ở cuối thanh địa chỉ.", ok: "Đã hiểu", cancel: "" });
+  if (/Android/i.test(navigator.userAgent)) {
+    ask({ title: "Cài app trên Android", msg: "Mở trang này bằng Chrome, bấm nút ⋮ ở góc trên rồi chọn Cài đặt ứng dụng (hoặc Thêm vào Màn hình chính).", ok: "Đã hiểu", cancel: "" });
+    return;
+  }
+  ask({ title: "Cài app", msg: "Mở trang này bằng Chrome hoặc Edge trên máy tính, rồi bấm biểu tượng cài đặt ở cuối thanh địa chỉ. Đã cài rồi thì mở app từ Dock hoặc menu Start.", ok: "Đã hiểu", cancel: "" });
 }
 
 /* ---- Bản mới: service worker tải bản mới xong thì hiện thanh “Có bản mới · Tải lại” ---- */
