@@ -976,6 +976,8 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 .toast.toast-ok { border-left: 4px solid var(--c-olive); }
+.toast span { flex: 1; min-width: 0; }
+.toast .toast-act { margin-left: 6px; padding: 3px 10px; white-space: nowrap; flex-shrink: 0; }
 .toast.toast-bad { border-left: 4px solid var(--bad); }
 
 /* Banner Thông báo tổng kết tuần */
@@ -1115,6 +1117,18 @@ nav.main-nav button.active { background: var(--glass-hi); color: var(--tx); bord
 .page-title { margin: 0; font: 600 22px/1.2 var(--font-ui); letter-spacing: -0.3px; color: var(--tx); }
 .page-sub { margin: 0; color: var(--tx-sec); font-size: 13px; }
 .year-row { display: inline-flex; align-items: center; gap: 2px; }
+/* Header theo tab: chỉ hiện nút có tác dụng ở tab đang mở */
+body[data-tab="hv"] .year-row, body[data-tab="set"] .year-row,
+body[data-tab="hv"] #reviewBtn, body[data-tab="set"] #reviewBtn,
+body[data-tab="su"] #addBtn, body[data-tab="set"] #addBtn { display: none; }
+/* Hộp thoại xác nhận */
+.modal-overlay.ask-overlay { z-index: 1500; align-items: center; padding: 20px; }
+.ask-overlay .ask-sheet { max-width: 380px; border-radius: var(--radius-lg); padding: 18px 18px 16px; transform: scale(0.96); }
+.ask-overlay.open .ask-sheet { transform: none; }
+.ask-title { margin: 0; font-size: 16px; font-weight: 600; }
+.ask-msg { margin: 6px 0 0; font-size: 13.5px; line-height: 1.5; color: var(--tx-sec); }
+.ask-acts { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+@media (max-width: 480px) { .ask-acts .btn { flex: 1 1 auto; min-height: 44px; } }
 .app-header #settingsBtn { display: none; }
 
 /* Chất liệu kính */
@@ -1334,8 +1348,8 @@ body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(-
     </div>
     <div class="header-actions">
       <button type="button" class="btn btn-sm" id="syncBadge" hidden></button>
-      <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(sel)" title="Xem tổng kết thành tích theo tuần">Tổng kết</button>
-      <button class="btn btn-sm btn-primary" onclick="openEditor(tk)">Thêm</button>
+      <button class="btn btn-sm btn-accent-olive" id="reviewBtn" onclick="openWeeklyReviewModal(sel)" title="Tổng kết tuần">Tổng kết</button>
+      <button class="btn btn-sm btn-primary" id="addBtn" onclick="headerAdd()">Thêm</button>
       <button class="btn btn-sm" id="settingsBtn" onclick="openSettingsModal()" title="Cài đặt">Cài đặt</button>
     </div>
   </header>
@@ -1400,6 +1414,15 @@ body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(-
       <button type="button" class="btn btn-sm btn-ghost" onclick="closeSched()" title="Đóng (ESC)" aria-label="Đóng">✕</button>
     </div>
     <div class="modal-body" id="schedBody" onkeydown="if (event.key === 'Enter' && event.target.tagName !== 'BUTTON') { event.preventDefault(); confirmSched(); }"></div>
+  </div>
+</div>
+
+<!-- Hộp thoại xác nhận (thay confirm() của trình duyệt) -->
+<div class="modal-overlay ask-overlay" id="askOverlay" onclick="if (event.target.id === 'askOverlay') askDone(null)">
+  <div class="modal-sheet ask-sheet" role="alertdialog" aria-modal="true" aria-labelledby="askTitle" aria-describedby="askMsg">
+    <h3 class="ask-title" id="askTitle"></h3>
+    <p class="ask-msg" id="askMsg"></p>
+    <div class="ask-acts" id="askActs" onclick="const b = event.target.closest('[data-a]'); if (b) askDone(b.dataset.a);"></div>
   </div>
 </div>
 
@@ -1837,19 +1860,111 @@ function guess(t) {
 /* ==========================================================================
    3. TOAST NOTIFICATIONS
    ========================================================================== */
-function showToast(msg, type = "ok") {
+function showToast(msg, type = "ok", act) {
   const c = $("toastContainer");
-  if (!c) return;
+  if (!c) return null;
   const t = document.createElement("div");
   t.className = `toast toast-${type}`;
   t.innerHTML = `${type === "ok" ? "✓" : "⚠"} <span>${esc(msg)}</span>`;
+  if (act) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "btn btn-sm toast-act";
+    b.textContent = act.label;
+    b.onclick = act.fn;
+    t.appendChild(b);
+  }
   c.appendChild(t);
-  setTimeout(() => {
+  t.hide = () => {
+    if (!t.isConnected) return;
     t.style.opacity = "0";
     t.style.transform = "translateY(10px)";
     t.style.transition = "all 0.2s ease";
     setTimeout(() => t.remove(), 200);
-  }, 2600);
+  };
+  setTimeout(t.hide, act ? UNDO_MS : 2600);
+  return t;
+}
+
+// Hộp thoại xác nhận dạng kính. Trả về "ok", "alt" hoặc null (hủy).
+// Hành động nguy hiểm đặt sẵn con trỏ ở Hủy để Enter không xóa nhầm.
+let askState = null;
+function ask({ title, msg = "", ok = "Đồng ý", alt = "", cancel = "Hủy", danger = false }) {
+  if (askState) askDone(null);
+  return new Promise(res => {
+    askState = { res, back: document.activeElement };
+    $("askTitle").textContent = title;
+    $("askMsg").textContent = msg;
+    $("askMsg").hidden = !msg;
+    $("askActs").innerHTML = `<button type="button" class="btn btn-sm btn-ghost" data-a="">${esc(cancel)}</button>`
+      + (alt ? `<button type="button" class="btn btn-sm" data-a="alt">${esc(alt)}</button>` : "")
+      + `<button type="button" class="btn btn-sm ${danger ? "btn-danger" : "btn-primary"}" data-a="ok">${esc(ok)}</button>`;
+    $("askOverlay").classList.add("open");
+    // Chờ phím Enter vừa mở hộp thoại kết thúc rồi mới đặt con trỏ, tránh tự bấm luôn
+    setTimeout(() => { if (askState) { const b = $("askActs").querySelector(danger ? '[data-a=""]' : '[data-a="ok"]'); if (b) b.focus(); } }, 30);
+  });
+}
+function askDone(a) {
+  if (!askState) return;
+  const { res, back } = askState;
+  askState = null;
+  $("askOverlay").classList.remove("open");
+  if (back && back.focus && document.contains(back)) back.focus();
+  res(a || null);
+}
+
+/* Hoàn tác khi xóa: trong UNDO_MS, lệnh xóa trên Google Calendar được giữ lại (đã ghi vào S.gdel
+   nên đóng trang giữa chừng vẫn xóa đúng ở lần mở sau). Hoàn tác thì trả lại dữ liệu và bỏ lệnh xóa. */
+const UNDO_MS = 6000;
+let undoCur = null;
+const undoHold = new Set();
+function offerUndo(msg, restore, evs) {
+  undoCommit();
+  const gids = (evs || []).map(x => x[1].gid).filter(g => g && S.gdel.includes(g));
+  gids.forEach(g => undoHold.add(g));
+  const u = { restore, gids };
+  u.toast = showToast(msg, "ok", { label: "Hoàn tác", fn: undoRun });
+  u.timer = setTimeout(undoCommit, UNDO_MS);
+  undoCur = u;
+}
+function undoCommit() {
+  const u = undoCur;
+  if (!u) return;
+  undoCur = null;
+  clearTimeout(u.timer);
+  u.gids.forEach(g => undoHold.delete(g));
+  if (u.gids.length) gcalFlush();
+}
+function undoRun() {
+  const u = undoCur;
+  if (!u) return;
+  undoCur = null;
+  clearTimeout(u.timer);
+  u.gids.forEach(g => undoHold.delete(g));
+  S.gdel = S.gdel.filter(g => !u.gids.includes(g));
+  u.restore();
+  save(); gcalFlush(); draw();
+  if (u.toast) u.toast.hide();
+  showToast("Đã hoàn tác", "ok");
+}
+window.addEventListener("pagehide", undoCommit);
+// Gỡ các hoạt động thỏa điều kiện khỏi lịch (kèm lệnh xóa trên Google); trả về [[ngày, hoạt động]] để hoàn tác
+function pullEvents(pred) {
+  const out = [];
+  Object.keys(S.ev).forEach(k => {
+    S.ev[k] = S.ev[k].filter(e => {
+      if (!pred(e, k)) return true;
+      queueDelete(e.gid);
+      out.push([k, e]);
+      return false;
+    });
+    if (!S.ev[k].length) delete S.ev[k];
+  });
+  return out;
+}
+function putEvents(list) {
+  list.forEach(([k, e]) => { (S.ev[k] = S.ev[k] || []).push(e); });
+  new Set(list.map(x => x[0])).forEach(k => sortL(S.ev[k]));
 }
 
 /* ==========================================================================
@@ -2115,7 +2230,7 @@ function handleNLPKeydown(e) {
   executeNLP();
 }
 
-function executeNLP() {
+async function executeNLP() {
   const input = $("nlpInput");
   const plus = /^\s*\+\s*/.exec(input.value);
   if (plus) {
@@ -2130,7 +2245,7 @@ function executeNLP() {
   const r = parseNLPText(input.value);
   if (!r) { showToast("Nhập nội dung", "bad"); return; }
   if (r.err) { showToast(r.err, "bad"); return; }
-  if (r.hit && !confirm(`Trùng giờ với "${r.hit.t}" (${r.hit.s}). Vẫn thêm?`)) return;
+  if (r.hit && !(await ask({ title: "Trùng giờ", msg: `Trùng với "${r.hit.t}" lúc ${r.hit.s}.`, ok: "Vẫn thêm" }))) return;
   const L = S.ev[r.targetDate] = S.ev[r.targetDate] || [];
   const newEvt = { t: r.title, c: r.capKey, m: r.mode, h: r.duration, s: r.startTime };
   L.push(newEvt);
@@ -2528,6 +2643,17 @@ function renderNav() {
   const t = TABS.find(x => x.id === cur) || TABS[0];
   $("pageTitle").textContent = t.label;
   $("pageSub").textContent = t.sub;
+  document.body.dataset.tab = cur;
+  $("addBtn").title = cur === "hv" ? "Thêm việc vào hộp" : "Thêm hoạt động hôm nay";
+}
+
+// Nút Thêm trên header: ở Hộp việc thì thêm việc, ở Lịch thì thêm hoạt động
+function headerAdd() {
+  if (cur === "hv") {
+    const i = document.querySelector("#v .hv-add");
+    if (i) { i.scrollIntoView({ block: "center", behavior: "smooth" }); i.focus(); return; }
+  }
+  openEditor(tk);
 }
 
 function switchTab(tabId) {
@@ -2601,9 +2727,10 @@ function setBurnoutThreshold(val) {
   showToast("Đã lưu", "ok");
 }
 
-function resetToDefaultData() {
-  if (!confirm("Xóa toàn bộ dữ liệu trên máy này?\nNên sao lưu trước.")) return;
-  if (!confirm("Xóa vĩnh viễn, không hoàn tác được. Tiếp tục?")) return;
+async function resetToDefaultData() {
+  const a = await ask({ title: "Xóa toàn bộ dữ liệu?", msg: "Mọi hoạt động trên máy này sẽ mất và không hoàn tác được.", ok: "Xóa hết", alt: "Sao lưu trước", danger: true });
+  if (a === "alt") { exportData("json"); return; }
+  if (a !== "ok") return;
   const keepLb = S.lb, keepGdel = S.gdel || [], oldCfg = S.cfg || {};
   S = defState();
   S.ev = {};
@@ -2907,6 +3034,7 @@ async function gcalFlushRun(token, opts) {
   const failed = [];
   try {
     for (const gid of [...S.gdel]) {
+      if (undoHold.has(gid)) continue;
       const o = await gcalDeleteEvent(gid, token);
       if (o === "auth" || o === "retry" || o === "config") { stop = o; break; }
       S.gdel = S.gdel.filter(g => g !== gid);
@@ -3137,9 +3265,33 @@ function renderSettingsModal() {
 /* ==========================================================================
    8. MAIN VIEWS
    ========================================================================== */
-// Thông báo đầu tab Lịch biểu: bắt đầu sử dụng, dữ liệu mẫu, nhắc sao lưu
+// Đầu tab Lịch chỉ hiện một thông báo, theo thứ tự ưu tiên: sao lưu, tổng kết tuần, dữ liệu mẫu, bắt đầu
 function calendarNotices() {
-  return startOrDemoNotice() + backupNotice();
+  return backupNotice() || reviewNotice() || startOrDemoNotice();
+}
+
+// Chủ nhật nhắc tổng kết tuần này, thứ 2 nhắc tuần vừa qua. "Để sau" ẩn đến tuần sau.
+function reviewNotice() {
+  const d = new Date().getDay(), wk = d === 0 ? CW : d === 1 ? CW - 1 : -1;
+  if (wk < 0 || (sel !== CW && sel !== wk)) return "";
+  let skip = "";
+  try { skip = localStorage.getItem("lc_rv_skip") || ""; } catch (e) {}
+  if (skip === activeYear + "-" + wk) return "";
+  return `
+    <div class="review-prompt-banner">
+      <div>
+        <b>Tổng kết tuần W${wk + 1}</b>
+        <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Xem lại cán cân năng lượng của tuần.</div>
+      </div>
+      <div class="row" style="gap:6px;">
+        <button type="button" class="btn btn-sm btn-ghost" onclick="skipReview(${wk})">Để sau</button>
+        <button type="button" class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(${wk})">Xem</button>
+      </div>
+    </div>`;
+}
+function skipReview(wk) {
+  try { localStorage.setItem("lc_rv_skip", activeYear + "-" + wk); } catch (e) {}
+  draw();
 }
 
 function backupNotice() {
@@ -3196,22 +3348,8 @@ const V = {
     const selWeekEnd = ad(selWeekStart, 6);
     const dateRangeStr = `${selWeekStart.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" })} – ${selWeekEnd.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric", year: "numeric" })}`;
 
-    const dayOfWeek = new Date().getDay();
-    const showReviewPrompt = (dayOfWeek === 0 || dayOfWeek === 1) && sel === CW;
-
-    const reviewPrompt = showReviewPrompt ? `
-      <div class="review-prompt-banner">
-        <div>
-          <b>Đến lúc tổng kết tuần</b>
-          <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Xem lại cán cân năng lượng tuần này.</div>
-        </div>
-        <button class="btn btn-sm btn-accent-olive" onclick="openWeeklyReviewModal(${sel})">Xem</button>
-      </div>
-    ` : '';
-
     const headerBar = `
       ${calendarNotices()}
-      ${reviewPrompt}
       <div class="card" style="margin-bottom:12px; padding:12px 16px;">
         <div class="card-header" style="margin-bottom:0">
           <div class="row">
@@ -3790,18 +3928,14 @@ function handleBackdropClick(e) {
 
 function deleteCurrentEvent() {
   if (ei == null || !ed || !S.ev[ed] || !S.ev[ed][ei]) return;
-  if (!confirm("Xóa hoạt động này?")) return;
   const delEv = S.ev[ed][ei];
-  const delTitle = delEv.t;
-  queueDelete(delEv.gid);
-  S.ev[ed].splice(ei, 1);
-  if (!S.ev[ed].length) delete S.ev[ed];
+  const gone = pullEvents((e, k) => e === delEv && k === ed);
   ei = null;
   save();
   gcalFlush();
   draw();
   closeEditor();
-  showToast(`Đã xóa "${delTitle}"`, "ok");
+  offerUndo(`Đã xóa "${delEv.t}"`, () => putEvents(gone), gone);
 }
 
 function tpls() {
@@ -3831,22 +3965,22 @@ function fillTpl(i) {
 
 // Tạo chuỗi lặp từ ngày `date` tới `end`. Khi biến một hoạt động lẻ thành chuỗi: truyền `r` của
 // chuỗi và `skipFirst` để không tạo trùng ngày của chính hoạt động đó.
-function rep(date, o, rp, end, r = "r" + Date.now().toString(36), skipFirst = false) {
+function repDays(date, rp, end, skipFirst) {
   const a = new Date(date + "T00:00");
   const z = new Date((end || activeYear + "-12-31") + "T00:00");
   const days = [];
   for (let d = skipFirst ? ad(a, 1) : a; d <= z && days.length < 400; d = ad(d, 1)) {
     const g = d.getDay();
-    if (rp === "d" || (rp === "wd" && g > 0 && g < 6) || (rp === "w" && g === a.getDay())) {
-      days.push(ky(d));
-    }
+    if (rp === "d" || (rp === "wd" && g > 0 && g < 6) || (rp === "w" && g === a.getDay())) days.push(ky(d));
   }
+  return days;
+}
+function rep(date, o, rp, end, r = "r" + Date.now().toString(36), skipFirst = false) {
+  const days = repDays(date, rp, end, skipFirst);
   if (!days.length) {
     showToast("Ngày kết thúc phải sau ngày bắt đầu", "bad");
     return 0;
   }
-  const bad = o.s ? days.filter(k => chkEvent(k, o.s, o.h, -1).hit).length : 0;
-  if (bad && !confirm(`${bad} ngày trong chuỗi bị trùng giờ. Vẫn tạo?`)) return 0;
   days.forEach(k => {
     S.ev[k] = S.ev[k] || [];
     const item = { ...o, r };
@@ -3863,27 +3997,15 @@ function delSeries(i, mode = "future") {
   const { r, t } = S.ev[ed][i];
   if (!r) return;
   const inScope = k => mode === "all" || k >= ed;
-  const total = Object.keys(S.ev).reduce((n, k) => n + S.ev[k].filter(e => e.r === r).length, 0);
   const count = Object.keys(S.ev).filter(inScope).reduce((n, k) => n + S.ev[k].filter(e => e.r === r).length, 0);
-  const kept = total - count;
   const day = ed.slice(8, 10) + "/" + ed.slice(5, 7);
-  const question = mode === "all"
-    ? `Xóa cả ${total} buổi "${t}"?`
-    : `Xóa ${count} buổi "${t}" từ ${day}?` + (kept ? ` Giữ ${kept} buổi trước đó.` : "");
-  if (!confirm(question)) return;
-  Object.keys(S.ev).forEach(k => {
-    if (inScope(k)) {
-      S.ev[k].forEach(e => { if (e.r === r) queueDelete(e.gid); });
-      S.ev[k] = S.ev[k].filter(e => e.r !== r);
-      if (!S.ev[k].length) delete S.ev[k];
-    }
-  });
+  const gone = pullEvents((e, k) => e.r === r && inScope(k));
   ei = null;
   save();
   gcalFlush();
   draw();
   closeEditor();
-  showToast(mode === "all" ? `Đã xóa ${count} buổi "${t}"` : `Đã xóa ${count} buổi "${t}" từ ${day}`, "ok");
+  offerUndo(mode === "all" ? `Đã xóa ${count} buổi "${t}"` : `Đã xóa ${count} buổi "${t}" từ ${day}`, () => putEvents(gone), gone);
 }
 
 // Popup thêm/sửa: Enter chuyển lần lượt qua từng ô, Enter ở ô cuối cùng thì lưu.
@@ -4058,15 +4180,22 @@ function renderEditorSheet() {
   $("sheetBody").innerHTML = html;
 }
 
-function saveEventFromForm(keepOpen) {
+async function saveEventFromForm(keepOpen) {
   const title = $("inpTitle").value.trim(), hours = +$("inpHours").value, start = $("inpStart").value;
   if (!title) { showToast("Nhập tên hoạt động", "bad"); $("inpTitle").focus(); return; }
   const c = chkEvent(ed, start, hours, ei);
   if (c.err) { showToast(c.err, "bad"); return; }
   const o = { t: title, c: $("inpCap").value, m: $("inpMode").value, h: hours, s: start };
+  const cur0 = ei != null ? (S.ev[ed] || [])[ei] : null;
+  const ser = $("inpSeries"), applySeries = !!(cur0 && cur0.r && ser && ser.checked);
+  const rp0 = !applySeries && $("inpRepeat") ? $("inpRepeat").value : "";
+  if (rp0 && start) {
+    // Chuỗi lặp: hỏi một lần cho cả chuỗi (gồm cả ngày đang mở)
+    const bad = repDays(ed, rp0, $("inpRepeatEnd").value, ei != null).filter(k => chkEvent(k, start, hours, -1).hit).length + (ei != null && c.hit ? 1 : 0);
+    if (bad && !(await ask({ title: "Trùng giờ", msg: `${bad} ngày trong chuỗi bị trùng giờ với hoạt động khác.`, ok: "Vẫn tạo" }))) return;
+  } else if (c.hit && !applySeries && !(await ask({ title: "Trùng giờ", msg: `Trùng với "${c.hit.t}" lúc ${c.hit.s}.`, ok: "Vẫn lưu" }))) return;
+  if (ed == null || (ei != null && !(S.ev[ed] || [])[ei])) return; // popup đã đóng hoặc dữ liệu đổi trong lúc hỏi
   const L = S.ev[ed] = S.ev[ed] || [];
-  const ser = $("inpSeries"), applySeries = ei != null && L[ei] && L[ei].r && ser && ser.checked;
-  if (c.hit && !applySeries && !confirm(`Trùng giờ với "${c.hit.t}" (${c.hit.s}). Vẫn lưu?`)) return;
 
   S.mem[title.normalize("NFC").toLowerCase()] = { c: o.c };
   const wasEdit = ei != null;
@@ -4200,12 +4329,17 @@ function deleteCap(k) {
     return;
   }
   if (Object.values(S.ev).flat().some(e => e.c === k)) { showToast("Loại vốn đang được dùng. Đổi hoặc xóa các hoạt động trước.", "bad"); return; }
-  if (!confirm("Xóa loại vốn này?")) return;
-  S.caps = S.caps.filter(c => c.k !== k);
+  const i = S.caps.findIndex(c => c.k === k), cap = S.caps[i], bl = S.bl[k];
+  if (!cap) return;
+  S.caps.splice(i, 1);
   delete S.bl[k];
   save();
   draw();
-  showToast("Đã xóa loại vốn", "ok");
+  offerUndo(`Đã xóa "${cap.n}"`, () => {
+    if (S.caps.some(c => c.k === k)) return;
+    S.caps.splice(Math.min(i, S.caps.length), 0, cap);
+    if (bl) S.bl[k] = bl;
+  });
 }
 
 
@@ -4294,7 +4428,7 @@ function importData(inputEl) {
   const file = inputEl.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = () => {
+  reader.onload = async () => {
     try {
       const parsed = JSON.parse(reader.result);
       if (!parsed || parsed.app !== "life-capital") throw new Error("Tệp không đúng định dạng Life Capital");
@@ -4303,10 +4437,10 @@ function importData(inputEl) {
       const n = Object.values(d.ev).flat().length;
       const mode = ($("importModeSelect") || {}).value || "merge";
       if (mode === "replace") {
-        if (!confirm(`Thay toàn bộ dữ liệu bằng tệp này (${n} hoạt động)? Nên sao lưu trước.`)) return;
+        if (!(await ask({ title: "Ghi đè dữ liệu?", msg: `Thay toàn bộ dữ liệu hiện có bằng tệp này (${n} hoạt động). Không hoàn tác được.`, ok: "Ghi đè", danger: true }))) return;
         d.lb = S.lb || 0; S = d;
       } else {
-        if (!confirm(`Gộp ${n} hoạt động từ tệp?`)) return;
+        if (!(await ask({ title: "Gộp dữ liệu?", msg: `Thêm ${n} hoạt động từ tệp, bỏ qua mục đã có.`, ok: "Gộp" }))) return;
         d.caps.forEach(c => { if (!S.caps.some(x => x.k === c.k)) S.caps.push(c); });
         Object.keys(d.bl).forEach(k => { if (!S.bl[k]) S.bl[k] = d.bl[k]; });
         S.mem = Object.assign({}, d.mem, S.mem);
@@ -4433,6 +4567,20 @@ document.addEventListener("keydown", e => { TABDIR = e.key === "Tab" ? (e.shiftK
 
 // Xử lý phím tắt
 document.addEventListener("keydown", e => {
+  if (askState) {
+    if (e.key === "Escape") { e.preventDefault(); askDone(null); }
+    if (e.key === "Tab") {
+      const f = [...$("askActs").querySelectorAll("button")], i = f.indexOf(document.activeElement);
+      e.preventDefault();
+      f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus();
+    }
+    return;
+  }
+  if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === "z" && undoCur && !/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) {
+    e.preventDefault();
+    undoRun();
+    return;
+  }
   if (e.key === "Escape") {
     if (ed) closeEditor();
     closeSched();
@@ -4657,37 +4805,65 @@ function moveItem(kind, id, delta) {
   save();
   draw();
 }
-// Gỡ các hoạt động đã xếp của những tk này khỏi lịch (kèm lệnh xóa trên Google)
+// Gỡ các hoạt động đã xếp của những tk này khỏi lịch (kèm lệnh xóa trên Google).
+// keep: giữ hoạt động trên lịch, chỉ bỏ liên kết. Trả về bản ghi để hoàn tác.
 function unschedule(tks, keep) {
-  let n = 0;
-  Object.keys(S.ev).forEach(k => {
-    S.ev[k] = S.ev[k].filter(e => {
-      if (!e.tk || !tks.includes(e.tk)) return true;
-      if (keep) { delete e.tk; return true; }
-      queueDelete(e.gid); n++; return false;
-    });
-    if (!S.ev[k].length) delete S.ev[k];
+  const untag = [];
+  if (keep) {
+    Object.keys(S.ev).forEach(k => S.ev[k].forEach(e => { if (e.tk && tks.includes(e.tk)) { untag.push([k, e, e.tk]); delete e.tk; } }));
+    return { gone: [], untag };
+  }
+  return { gone: pullEvents(e => e.tk && tks.includes(e.tk)), untag };
+}
+function reschedule(un) {
+  putEvents(un.gone);
+  un.untag.forEach(([k, e, tk]) => {
+    const L = S.ev[k] || [];
+    const x = L.find(y => y === e) || L.find(y => !y.tk && y.t === e.t && y.s === e.s && y.h === e.h);
+    if (x) x.tk = tk;
   });
-  return n;
 }
-function deleteSub(id) {
-  const f = findSub(id);
-  if (!f || !confirm(`Xóa việc nhỏ "${f.sub.t}"?`)) return;
-  const sched = schedMap().has(id);
-  if (sched) unschedule([id], !confirm(`"${f.sub.t}" đang trên lịch.\nOK: xóa cả trên lịch · Hủy: giữ trên lịch`));
-  f.task.subs = f.task.subs.filter(s => s.id !== id);
+// Việc đang có trên lịch: hỏi xóa luôn trên lịch hay giữ lại. Trả về true (giữ), false (xóa) hoặc null (hủy).
+async function askKeepOnCal(title, n) {
+  const a = await ask({ title: `Xóa "${title}"?`, msg: n ? `${n} việc nhỏ đang có trên lịch.` : "Việc này đang có trên lịch.", ok: "Xóa cả trên lịch", alt: "Giữ trên lịch" });
+  return a ? a === "alt" : null;
+}
+async function deleteSub(id) {
+  let f = findSub(id);
+  if (!f) return;
+  let keep = true;
+  if (schedMap().has(id)) {
+    keep = await askKeepOnCal(f.sub.t, 0);
+    if (keep === null || !(f = findSub(id))) return;
+  }
+  const task = f.task, sub = f.sub, i = task.subs.indexOf(sub);
+  const un = unschedule([id], keep);
+  task.subs.splice(i, 1);
   save(); gcalFlush(); draw();
-  showToast(`Đã xóa "${f.sub.t}"`, "ok");
+  offerUndo(`Đã xóa "${sub.t}"`, () => {
+    const t = findTask(task.id);
+    if (t && !t.subs.some(s => s.id === id)) t.subs.splice(Math.min(i, t.subs.length), 0, sub);
+    reschedule(un);
+  }, un.gone);
 }
-function deleteTask(id) {
-  const t = findTask(id);
-  if (!t || !confirm(`Xóa việc "${t.t}" cùng ${t.subs.length} việc nhỏ?`)) return;
+async function deleteTask(id) {
+  let t = findTask(id);
+  if (!t) return;
   const m = schedMap(), tks = units(t).map(u => u.tk).filter(k => m.has(k));
-  if (tks.length) unschedule(tks, !confirm(`${tks.length} việc nhỏ của "${t.t}" đang trên lịch.\nOK: xóa cả trên lịch · Hủy: giữ trên lịch`));
-  S.tasks = S.tasks.filter(x => x.id !== id);
+  let keep = true;
+  if (tks.length) {
+    keep = await askKeepOnCal(t.t, tks.length);
+    if (keep === null || !(t = findTask(id))) return;
+  }
+  const i = S.tasks.indexOf(t);
+  const un = unschedule(tks, keep);
+  S.tasks.splice(i, 1);
   openTasks.delete(id);
   save(); gcalFlush(); draw();
-  showToast(`Đã xóa việc "${t.t}"`, "ok");
+  offerUndo(`Đã xóa "${t.t}"`, () => {
+    if (!S.tasks.some(x => x.id === id)) S.tasks.splice(Math.min(i, S.tasks.length), 0, t);
+    reschedule(un);
+  }, un.gone);
 }
 // Từ popup hoạt động: đưa việc nhỏ về hộp
 function returnToInbox() {
@@ -4752,13 +4928,13 @@ function createEvents(task, date, plan) {
 }
 const dayDesc = date => describeDate(new Date(date + "T00:00"));
 // Xếp một việc nhỏ vào ngày giờ cho trước (thả trên dòng thời gian, hoặc bấm Lưu trong bảng)
-function scheduleSub(tk, date, start) {
+async function scheduleSub(tk, date, start) {
   const f = findSub(tk), task = f ? f.task : findTask(tk);
   if (!task) return false;
   const u = f ? { tk, t: f.sub.t, h: f.sub.h } : { tk, t: task.t, h: SUB_DEF_H };
   const c = chkEvent(date, start, u.h, -1);
   if (c.err) { showToast(c.err, "bad"); return false; }
-  if (c.hit && !confirm(`Trùng giờ với "${c.hit.t}" (${c.hit.s}). Vẫn thêm?`)) return false;
+  if (c.hit && !(await ask({ title: "Trùng giờ", msg: `Trùng với "${c.hit.t}" lúc ${c.hit.s}.`, ok: "Vẫn xếp" }))) return false;
   if (schedMap().has(tk)) unschedule([tk], false); // xếp lại: bỏ chỗ cũ
   createEvents(task, date, [{ ...u, s: start }]);
   draw();
@@ -4844,13 +5020,13 @@ function renderSched() {
       </div>
     </div>`;
 }
-function confirmSched() {
+async function confirmSched() {
   const tg = schedTarget();
   if (!tg) return;
   const st = $("schedStart") ? $("schedStart").value : sch.start;
   if (!st) { showToast("Chọn giờ bắt đầu", "bad"); return; }
   sch.start = st;
-  if (!tg.whole) { if (scheduleSub(tg.list[0].tk, sch.date, st)) closeSched(); return; }
+  if (!tg.whole) { if (await scheduleSub(tg.list[0].tk, sch.date, st)) closeSched(); return; }
   const plan = planUnits(sch.date, st, tg.list), n = createEvents(tg.task, sch.date, plan), date = sch.date;
   closeSched();
   draw();
@@ -5010,9 +5186,7 @@ function inboxHTML(where) {
 V.hv = function () {
   return `
     <div class="card" style="padding:14px 16px; max-width:760px; margin:0 auto;">
-      <div class="card-header" style="margin-bottom:8px;">
-                <span style="font-size:12.5px; color:var(--mu);">${inboxCount()} việc chưa xếp</span>
-      </div>
+      ${inboxCount() ? `<div class="card-header" style="margin-bottom:8px;"><span style="font-size:12.5px; color:var(--mu);">${inboxCount()} việc chưa xếp</span></div>` : ""}
       <p style="font-size:13px; color:var(--tx-sec); margin:0 0 10px;">Mẹo: gõ <b>+</b> ở đầu ô ghi nhanh để thêm vào đây.</p>
       ${inboxHTML("tab")}
     </div>`;
