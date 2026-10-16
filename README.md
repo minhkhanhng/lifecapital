@@ -1335,6 +1335,8 @@ nav.main-nav button.active { background: var(--glass-hi); color: var(--tx); bord
   --card: rgba(255, 255, 255, 0.40);
   --card-subtle: rgba(255, 255, 255, 0.26);
   --bar: rgba(255, 255, 255, 0.34);
+  --btn-mix: 88%; --today-mix: 60%;
+  --btn-ink: var(--on-ac); --olive-ink: var(--on-olive);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -1343,6 +1345,7 @@ nav.main-nav button.active { background: var(--glass-hi); color: var(--tx); bord
     --glass-shadow: 0 10px 32px rgba(0, 0, 0, 0.40), inset 0 1px 1px rgba(255, 255, 255, 0.08);
     --pill-sheen: rgba(255, 255, 255, 0.07); --pill-mix: 42%; --veil: rgba(16, 11, 14, 0.45); --field: rgba(0, 0, 0, 0.22); --overlay: rgba(0, 0, 0, 0.35);
     --card: rgba(36, 29, 33, 0.45); --card-subtle: rgba(255, 255, 255, 0.05); --bar: rgba(255, 255, 255, 0.07);
+    --btn-mix: 46%; --today-mix: 40%; --btn-ink: var(--tx); --olive-ink: var(--tx);
   }
 }
 :root[data-theme="dark"] {
@@ -1351,6 +1354,7 @@ nav.main-nav button.active { background: var(--glass-hi); color: var(--tx); bord
   --glass-shadow: 0 10px 32px rgba(0, 0, 0, 0.40), inset 0 1px 1px rgba(255, 255, 255, 0.08);
   --pill-sheen: rgba(255, 255, 255, 0.07); --pill-mix: 42%; --veil: rgba(16, 11, 14, 0.45); --field: rgba(0, 0, 0, 0.22); --overlay: rgba(0, 0, 0, 0.35);
     --card: rgba(36, 29, 33, 0.45); --card-subtle: rgba(255, 255, 255, 0.05); --bar: rgba(255, 255, 255, 0.07);
+    --btn-mix: 46%; --today-mix: 40%; --btn-ink: var(--tx); --olive-ink: var(--tx);
 }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   :root { --glass: rgba(255, 255, 255, 0.86); --glass-hi: rgba(255, 255, 255, 0.94); }
@@ -1372,7 +1376,14 @@ body.has-bg::before { background: linear-gradient(var(--veil), var(--veil)), var
 .modal-overlay { background: var(--overlay); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
 .modal-header { background: transparent; border-bottom-color: var(--glass-bd); }
 .day-card.today { background: linear-gradient(135deg, var(--pill-sheen), color-mix(in srgb, var(--ac) 20%, transparent)), var(--glass); }
-.day-card.today .day-card-header { background: linear-gradient(135deg, var(--pill-sheen), color-mix(in srgb, var(--ac) 60%, transparent)); }
+.day-card.today .day-card-header { background: linear-gradient(135deg, var(--pill-sheen), color-mix(in srgb, var(--ac) var(--today-mix), transparent)); }
+.day-card.today .day-card-header, .day-card.today .day-card-header .day-name, .day-card.today .day-card-header .day-date { color: var(--btn-ink); }
+.cal-with-inbox.collapsed { grid-template-columns: minmax(0, 1fr) 52px; }
+.inbox-rail { position: sticky; top: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 0; border-radius: 16px; border: 1px solid var(--glass-bd); background: var(--sheen), var(--glass); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); box-shadow: var(--glass-shadow); color: var(--tx-sec); cursor: pointer; font: inherit; font-size: 12px; }
+.inbox-rail:hover { color: var(--tx); border-color: color-mix(in srgb, var(--ac) 60%, transparent); }
+.inbox-rail .nav-count { margin: 0; }
+.rail-lb { writing-mode: vertical-rl; letter-spacing: 0.04em; }
+@media (max-width: 1023px) { .cal-with-inbox.collapsed { grid-template-columns: minmax(0, 1fr); } .inbox-rail { display: none; } }
 @media (max-width: 899px) { .sidebar { background: var(--sheen), var(--glass-hi); } }
 
 /* Nút: kính trong, loang từ trắng sang màu của nút */
@@ -1385,15 +1396,15 @@ body.has-bg::before { background: linear-gradient(var(--veil), var(--veil)), var
   box-shadow: 0 2px 10px rgba(100, 40, 65, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.6);
 }
 .btn:hover { background: linear-gradient(135deg, var(--pill-sheen), color-mix(in srgb, var(--ac) 22%, transparent)); border-color: var(--glass-bd); }
-.btn.btn-primary { background: linear-gradient(135deg, var(--pill-sheen) 0%, color-mix(in srgb, var(--ac) 88%, transparent) 100%); color: var(--on-ac); border-color: color-mix(in srgb, var(--ac) 55%, transparent); }
-.btn.btn-accent-olive { background: linear-gradient(135deg, var(--pill-sheen) 0%, color-mix(in srgb, var(--c-olive) 86%, transparent) 100%); color: var(--on-olive); border-color: color-mix(in srgb, var(--c-olive) 55%, transparent); }
+.btn.btn-primary { background: linear-gradient(135deg, var(--pill-sheen) 0%, color-mix(in srgb, var(--ac) var(--btn-mix), transparent) 100%); color: var(--btn-ink); border-color: color-mix(in srgb, var(--ac) 55%, transparent); }
+.btn.btn-accent-olive { background: linear-gradient(135deg, var(--pill-sheen) 0%, color-mix(in srgb, var(--c-olive) var(--btn-mix), transparent) 100%); color: var(--olive-ink); border-color: color-mix(in srgb, var(--c-olive) 55%, transparent); }
 .btn.btn-primary:hover, .btn.btn-accent-olive:hover { filter: saturate(1.15) brightness(1.03); box-shadow: 0 4px 14px rgba(100, 40, 65, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.6); }
 .btn.btn-ghost { background: transparent; border-color: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
 .btn.btn-ghost:hover { background: linear-gradient(135deg, var(--pill-sheen), rgba(255, 255, 255, 0.10)); border-color: var(--glass-bd); }
 .segmented-control { background: var(--sheen), var(--glass); }
-.segmented-control button.active, .set-seg button.on { background: linear-gradient(135deg, var(--pill-sheen) 0%, color-mix(in srgb, var(--ac) 88%, transparent) 100%); color: var(--on-ac); box-shadow: 0 2px 8px var(--ac-soft), inset 0 1px 1px rgba(255, 255, 255, 0.5); }
+.segmented-control button.active, .set-seg button.on { background: linear-gradient(135deg, var(--pill-sheen) 0%, color-mix(in srgb, var(--ac) var(--btn-mix), transparent) 100%); color: var(--btn-ink); box-shadow: 0 2px 8px var(--ac-soft), inset 0 1px 1px rgba(255, 255, 255, 0.5); }
 nav.main-nav button.active { background: var(--sheen), var(--glass-hi); }
-.nav-count { background: linear-gradient(135deg, var(--pill-sheen), var(--ac)); }
+.nav-count { background: linear-gradient(135deg, var(--pill-sheen), color-mix(in srgb, var(--ac) var(--btn-mix), transparent)); color: var(--btn-ink); }
 
 /* Ô nhập */
 input, select, textarea { background: var(--field); border-color: var(--glass-bd); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
@@ -1420,9 +1431,9 @@ table.calendar-table th { background: var(--sheen), var(--glass-hi); color: var(
 .set-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
 .set-inline { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
 .set-row select { min-width: 0; width: auto; }
-.set-seg { display: inline-flex; border: 1px solid var(--bd); border-radius: var(--radius-full); overflow: hidden; }
+.set-seg { display: inline-flex; border: 1px solid var(--glass-bd); border-radius: var(--radius-full); overflow: hidden; }
 .set-seg button { border: 0; background: transparent; color: var(--tx); padding: 6px 12px; font: inherit; font-size: 13px; cursor: pointer; }
-.set-seg button.on { background: var(--ac); color: var(--on-ac); font-weight: 600; }
+.set-seg button.on { background: linear-gradient(135deg, var(--pill-sheen) 0%, color-mix(in srgb, var(--ac) var(--btn-mix), transparent) 100%); color: var(--btn-ink); font-weight: 600; }
 </style>
 <script>
   try {
@@ -3356,7 +3367,6 @@ const V = {
             ${CW >= 0 && sel !== CW ? `<button class="btn btn-sm btn-ghost" onclick="sel=Math.max(0, CW); draw()">Về tuần này (W${CW+1})</button>` : sel === CW ? `<span class="pill pill-ok">Tuần hiện tại</span>` : ""}
           </div>
           <div class="row">
-            ${calSubView !== "year" ? `<button class="btn btn-sm ${inboxPanel ? "btn-ghost" : ""} hv-toggle-btn" onclick="toggleInboxPanel()" title="Hiện hoặc ẩn cột Hộp việc để kéo việc vào lịch">📥 Hộp việc${inboxCount() ? ` (${inboxCount()})` : ""}</button>` : ""}
             <div class="segmented-control">
               <button class="${calSubView === 'focus' ? 'active' : ''}" onclick="calSubView='focus'; draw()">Tuần chi tiết</button>
               <button class="${calSubView === 'timeline' ? 'active' : ''}" onclick="calSubView='timeline'; draw()">Dòng thời gian 24h</button>
@@ -5164,7 +5174,10 @@ V.hv = function () {
 };
 
 function withInbox(h) {
-  if (!inboxPanel) return h;
+  if (!inboxPanel) {
+    const n = inboxCount();
+    return `<div class="cal-with-inbox collapsed"><div style="min-width:0">${h}</div><button type="button" class="inbox-rail" onclick="toggleInboxPanel()" title="Hiện cột Hộp việc để kéo việc vào lịch" aria-label="Hiện cột Hộp việc${n ? `, ${n} việc chưa xếp` : ""}"><span aria-hidden="true">📥</span>${n ? `<span class="nav-count">${n}</span>` : ""}<span class="rail-lb">Hộp việc</span></button></div>`;
+  }
   return `<div class="cal-with-inbox"><div style="min-width:0">${h}</div><aside class="inbox-aside" aria-label="Hộp việc">${inboxHTML("panel")}</aside></div>`;
 }
 
