@@ -1148,6 +1148,7 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
 .cal-with-inbox { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 14px; align-items: start; }
 .cal-with-inbox .week-cards-grid { grid-template-columns: repeat(4, 1fr); }
 @media (min-width: 1440px) { .cal-with-inbox .week-cards-grid { grid-template-columns: repeat(7, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .cal-with-inbox .week-cards-grid { grid-template-columns: minmax(0, 1fr); } } /* iPhone: một cột như trước khi có Hộp việc */
 .inbox-aside { position: sticky; top: 12px; max-height: calc(100vh - 24px); overflow-y: auto; background: var(--card); border: 1px solid var(--bd); border-radius: var(--radius-lg); padding: 12px; }
 @media (max-width: 1023px) { .cal-with-inbox { grid-template-columns: minmax(0, 1fr); } .inbox-aside { display: none; } }
 .hv-box { display: flex; flex-direction: column; gap: 8px; }
@@ -1202,6 +1203,123 @@ body.hv-dragging .day-card { border-style: dashed; }
   .hv-sub input[type="checkbox"], .hv-head input[type="checkbox"] { width: 22px; height: 22px; }
   .hv-add, .hv-add-sub { min-height: 44px; font-size: 16px; }
 }
+/* ===== Giao diện kính mờ (v0.3.0): giữ bảng màu, đổi chất liệu và bố cục ===== */
+:root {
+  --glass: rgba(255, 255, 255, 0.56);
+  --glass-hi: rgba(255, 255, 255, 0.76);
+  --glass-bd: rgba(255, 255, 255, 0.72);
+  --glass-shadow: 0 10px 30px rgba(100, 40, 65, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  --blur: blur(18px) saturate(160%);
+  --r-xl: 22px;
+  --blob-1: rgba(224, 163, 187, 0.55);
+  --blob-2: rgba(197, 204, 130, 0.50);
+  --blob-3: rgba(214, 230, 231, 0.90);
+  --blob-4: rgba(244, 223, 230, 0.95);
+  --blob-5: rgba(151, 161, 59, 0.20);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --glass: rgba(31, 25, 28, 0.58); --glass-hi: rgba(40, 32, 36, 0.80); --glass-bd: rgba(255, 255, 255, 0.09);
+    --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    --blob-1: rgba(224, 163, 187, 0.24); --blob-2: rgba(151, 161, 59, 0.22); --blob-3: rgba(74, 133, 156, 0.22); --blob-4: rgba(100, 40, 65, 0.40); --blob-5: rgba(197, 204, 130, 0.10);
+  }
+}
+:root[data-theme="dark"] {
+  --glass: rgba(31, 25, 28, 0.58); --glass-hi: rgba(40, 32, 36, 0.80); --glass-bd: rgba(255, 255, 255, 0.09);
+  --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --blob-1: rgba(224, 163, 187, 0.24); --blob-2: rgba(151, 161, 59, 0.22); --blob-3: rgba(74, 133, 156, 0.22); --blob-4: rgba(100, 40, 65, 0.40); --blob-5: rgba(197, 204, 130, 0.10);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root { --glass: rgba(255, 255, 255, 0.90); --glass-hi: rgba(255, 255, 255, 0.96); }
+}
+body { background: var(--bg); padding-bottom: 0; }
+body::before {
+  content: ""; position: fixed; inset: -8%; z-index: -1; pointer-events: none; filter: blur(24px);
+  background:
+    radial-gradient(38% 42% at 10% 12%, var(--blob-1), transparent 70%),
+    radial-gradient(34% 40% at 88% 6%, var(--blob-2), transparent 70%),
+    radial-gradient(44% 50% at 84% 88%, var(--blob-3), transparent 70%),
+    radial-gradient(40% 46% at 16% 92%, var(--blob-4), transparent 70%),
+    radial-gradient(30% 34% at 52% 46%, var(--blob-5), transparent 70%),
+    var(--bg);
+}
+
+/* Bố cục: thanh bên trái + cột nội dung */
+.app-shell { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 18px; max-width: 1480px; margin: 0 auto; padding: 16px; align-items: start; }
+.app-container { max-width: none; margin: 0; padding: 0; min-width: 0; }
+.sidebar { position: sticky; top: 16px; height: calc(100vh - 32px); display: flex; flex-direction: column; gap: 14px; padding: 16px 12px; }
+.sidebar .brand-area { display: flex; align-items: center; gap: 10px; padding: 2px 6px 14px; border-bottom: 1px solid var(--glass-bd); }
+.brand-logo { width: 38px; height: 38px; border-radius: 12px; background: var(--glass-hi); padding: 5px; box-shadow: var(--glass-shadow); }
+.brand-title { font-size: 20px; }
+nav.main-nav { flex-direction: column; position: static; background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; padding: 0; gap: 4px; overflow: visible; }
+nav.main-nav button { justify-content: flex-start; width: 100%; border: 0; background: transparent; box-shadow: none; border-radius: 12px; padding: 10px 12px; font-size: 14px; color: var(--tx-sec); }
+nav.main-nav button:hover { background: var(--glass-hi); color: var(--tx); border: 0; }
+nav.main-nav button.active { background: var(--glass-hi); color: var(--tx); border: 0; font-weight: 600; box-shadow: inset 3px 0 0 var(--ac), var(--glass-shadow); }
+.nav-count { margin-left: auto; font-size: 11px; font-weight: 700; background: var(--ac); color: var(--on-ac); border-radius: 99px; padding: 0 7px; line-height: 18px; }
+.lb-short { display: none; }
+.sidebar-settings { margin-top: auto; width: 100%; justify-content: flex-start; border-radius: 12px; }
+.app-header { padding: 14px 20px; border-bottom: 0; margin-bottom: 14px; align-items: center; }
+.page-head { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.page-title-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.page-title { margin: 0; font: 700 24px/1.2 Georgia, "Times New Roman", serif; letter-spacing: -0.3px; color: var(--tx); }
+.page-sub { margin: 0; color: var(--tx-sec); font-size: 13px; }
+.year-row { display: inline-flex; align-items: center; gap: 2px; }
+.app-header #settingsBtn { display: none; }
+
+/* Chất liệu kính */
+.card, .quick-capture-box, .app-header, .sidebar, .day-card, .timeline-container, .stat-tile, .inbox-aside, .table-wrapper, .review-prompt-banner {
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--blur);
+  backdrop-filter: var(--blur);
+  border: 1px solid var(--glass-bd);
+  box-shadow: var(--glass-shadow);
+}
+.card, .quick-capture-box, .app-header, .sidebar, .timeline-container, .inbox-aside, .table-wrapper, .review-prompt-banner { border-radius: var(--r-xl); }
+.quick-capture-box { box-shadow: var(--glass-shadow), 0 0 0 1.5px color-mix(in srgb, var(--ac) 65%, transparent); }
+.day-card { border-radius: 18px; }
+.day-card:hover { border-color: color-mix(in srgb, var(--ac) 70%, transparent); }
+.day-card-header { background: transparent; border-bottom: 1px solid var(--glass-bd); }
+.day-card.today { background: color-mix(in srgb, var(--ac) 16%, var(--glass-hi)); border: 1.5px solid var(--ac); }
+.day-card.today .day-card-header { background: color-mix(in srgb, var(--ac) 75%, transparent); }
+.day-card-add-btn { background: transparent; }
+.timeline-days-nav, .timeline-container > div[style*="background:var(--card)"] { background: transparent !important; }
+.modal-sheet { background: var(--glass-hi); -webkit-backdrop-filter: blur(24px) saturate(160%); backdrop-filter: blur(24px) saturate(160%); border: 1px solid var(--glass-bd); }
+.btn { border-radius: 12px; }
+.btn:not(.btn-primary):not(.btn-accent-olive):not(.btn-ghost) { background: var(--glass-hi); border-color: var(--glass-bd); }
+.segmented-control { background: var(--glass); border: 1px solid var(--glass-bd); border-radius: 12px; }
+.segmented-control button { border-radius: 9px; }
+.segmented-control button.active { background: var(--ac); color: var(--on-ac); box-shadow: 0 2px 8px var(--ac-soft); }
+.hv-task { background: var(--glass-hi); border-color: var(--glass-bd); border-radius: 14px; }
+
+/* Hàng số liệu tuần */
+.stat-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px; }
+.stat-tile { background: var(--glass-hi); border-radius: 16px; padding: 10px 14px; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.stat-tile span { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tx-sec); }
+.stat-tile b { font: 700 22px/1.2 Georgia, "Times New Roman", serif; font-variant-numeric: tabular-nums; color: var(--tx); }
+.stat-tile.up b { color: var(--ok-text); }
+.stat-tile.down b { color: var(--bad); }
+
+/* Hoạt động dạng viên, tô theo màu loại vốn */
+.event-item { --cap: var(--ac); border-left: 0; border-radius: 10px; padding: 6px 9px; background: color-mix(in srgb, var(--cap) 30%, var(--glass-hi)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cap) 40%, transparent); }
+.event-meta { color: var(--tx-sec); }
+.timeline-event-block { border-radius: 10px; }
+
+@media (max-width: 899px) {
+  .app-shell { display: block; padding: 12px 12px calc(92px + env(safe-area-inset-bottom, 0px)); }
+  .sidebar { position: fixed; left: 10px; right: 10px; top: auto; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); height: auto; z-index: 60; padding: 6px; border-radius: 20px; flex-direction: row; gap: 0; background: var(--glass-hi); }
+  .sidebar .brand-area, .sidebar-settings { display: none; }
+  nav.main-nav { flex-direction: row; width: 100%; justify-content: space-around; }
+  nav.main-nav button { flex: 1; flex-direction: column; gap: 2px; font-size: 11px; padding: 6px 2px; justify-content: center; min-height: 52px; position: relative; }
+  nav.main-nav button.active { box-shadow: inset 0 -3px 0 var(--ac), var(--glass-shadow); }
+  .lb-full { display: none; }
+  .lb-short { display: inline; }
+  .nav-count { position: absolute; top: 3px; right: 18%; margin: 0; }
+  .app-header { padding: 12px 14px; }
+  .app-header #settingsBtn { display: inline-flex; }
+  .page-title { font-size: 21px; }
+  .stat-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .toast-container { bottom: calc(92px + env(safe-area-inset-bottom, 0px)) !important; }
+}
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 .chg { font-weight: 700; background: color-mix(in srgb, var(--ac) 22%, transparent); border-radius: 4px; padding: 0 3px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ac) 45%, transparent); }
 .set-sec { padding: 14px 0; border-bottom: 1px solid var(--bd); }
@@ -1230,16 +1348,30 @@ body.hv-dragging .day-card { border-style: dashed; }
 </head>
 <body>
 
+<div class="app-shell">
+<aside class="sidebar" aria-label="Điều hướng">
+  <div class="brand-area">
+    <img class="brand-logo" src="icon.svg" alt="">
+    <h1 class="brand-title">Life Capital</h1>
+  </div>
+  <!-- Navigation Tabs -->
+  <nav class="main-nav" id="nav"></nav>
+  <button type="button" class="btn btn-sm sidebar-settings" onclick="openSettingsModal()">⚙️ Cài đặt &amp; Dữ liệu</button>
+</aside>
+
 <div class="app-container">
   <!-- Header -->
   <header class="app-header">
-    <div class="brand-area">
-      <h1 class="brand-title">Life Capital</h1>
-      <div class="row" style="gap:4px; align-items:center;">
-        <span class="brand-badge" id="brandYearBadge">2026</span>
-        <button class="btn btn-sm btn-ghost" onclick="changeYear(-1)" title="Xem năm trước" style="padding:2px 6px; font-size:11px;">◀</button>
-        <button class="btn btn-sm btn-ghost" onclick="changeYear(1)" title="Xem năm sau" style="padding:2px 6px; font-size:11px;">▶</button>
+    <div class="page-head">
+      <div class="page-title-row">
+        <h2 class="page-title" id="pageTitle">Lịch biểu</h2>
+        <span class="year-row">
+          <button class="btn btn-sm btn-ghost" onclick="changeYear(-1)" title="Xem năm trước" aria-label="Năm trước" style="padding:2px 6px; font-size:11px;">◀</button>
+          <span class="brand-badge" id="brandYearBadge">2026</span>
+          <button class="btn btn-sm btn-ghost" onclick="changeYear(1)" title="Xem năm sau" aria-label="Năm sau" style="padding:2px 6px; font-size:11px;">▶</button>
+        </span>
       </div>
+      <p class="page-sub" id="pageSub"></p>
     </div>
     <div class="header-actions">
       <button type="button" class="btn btn-sm" id="syncBadge" hidden></button>
@@ -1270,11 +1402,9 @@ body.hv-dragging .day-card { border-style: dashed; }
 
   <div class="review-prompt-banner save-alert" id="saveAlert" role="alert" hidden></div>
 
-  <!-- Navigation Tabs -->
-  <nav class="main-nav" id="nav"></nav>
-
   <!-- Main View Area -->
   <main id="v"></main>
+</div>
 </div>
 
 <!-- Modal Editor Sheet -->
@@ -2432,18 +2562,30 @@ function copyReviewToClipboard(wIdx) {
    7. NAVIGATION
    ========================================================================== */
 const TABS = [
-  { id: "ca", label: "Lịch biểu", icon: "📅" },
-  { id: "hv", label: "Hộp việc", icon: "📥" },
-  { id: "su", label: "Tổng quan & 168h", icon: "📊" },
-  { id: "set", label: "Danh mục vốn", icon: "🏷️" }
+  { id: "ca", label: "Lịch biểu", short: "Lịch", icon: "📅", sub: "Sắp xếp và ghi lại thời gian, năng lượng mỗi tuần" },
+  { id: "hv", label: "Hộp việc", short: "Hộp việc", icon: "📥", sub: "Việc chưa có ngày giờ: chia nhỏ rồi xếp vào lịch" },
+  { id: "su", label: "Tổng quan & 168h", short: "Tổng quan", icon: "📊", sub: "Cán cân năng lượng và 168 giờ của tuần" },
+  { id: "set", label: "Danh mục vốn", short: "Vốn", icon: "🏷️", sub: "Loại vốn, mục tiêu tuần và từ khóa nhận diện" }
 ];
 
+// Số liệu tuần đang xem: số hoạt động, tổng giờ, giờ nạp, giờ tiêu
+function weekStatsHTML(ws) {
+  let n = 0, h = 0, up = 0, dn = 0;
+  for (let i = 0; i < 7; i++) (S.ev[ky(ad(ws, i))] || []).forEach(e => { n++; h += e.h; if (e.m === "u") up += e.h; else dn += e.h; });
+  const tile = (lb, v, cls) => `<div class="stat-tile ${cls || ""}"><span>${lb}</span><b>${v}</b></div>`;
+  return `<div class="stat-row" aria-label="Số liệu tuần">${tile("Hoạt động", n)}${tile("Tổng giờ", r1(h))}${tile("▲ Nạp", r1(up) + "h", "up")}${tile("▼ Tiêu", r1(dn) + "h", "down")}</div>`;
+}
+
 function renderNav() {
+  const n = inboxCount();
   $("nav").innerHTML = TABS.map(t =>
-    `<button class="${t.id === cur ? "active" : ""}" aria-current="${t.id === cur ? "page" : "false"}" onclick="switchTab('${t.id}')">
-      <span>${t.icon}</span> <span>${t.label}${t.id === "hv" && inboxCount() ? ` · ${inboxCount()}` : ""}</span>
+    `<button class="${t.id === cur ? "active" : ""}" aria-current="${t.id === cur ? "page" : "false"}" onclick="switchTab('${t.id}')" aria-label="${t.label}${t.id === "hv" && n ? `, ${n} việc chưa xếp` : ""}">
+      <span aria-hidden="true">${t.icon}</span> <span class="lb-full">${t.label}</span><span class="lb-short">${t.short}</span>${t.id === "hv" && n ? `<span class="nav-count">${n}</span>` : ""}
     </button>`
   ).join("");
+  const t = TABS.find(x => x.id === cur) || TABS[0];
+  $("pageTitle").textContent = t.label;
+  $("pageSub").textContent = t.sub;
 }
 
 function switchTab(tabId) {
@@ -3170,7 +3312,7 @@ const V = {
               ${es.map((e, idx) => {
                 const cap = CM(e.c);
                 return `
-                  <div class="event-item" style="border-left-color: ${cap.c}" onclick="openEditor('${k}', ${idx})">
+                  <div class="event-item" style="--cap: ${cap.c}" onclick="openEditor('${k}', ${idx})">
                     <div class="event-item-top">
                       <span class="event-title" title="${esc(e.t)}">${e.tk ? '<span class="ev-linked" title="Từ Hộp việc">📥</span>' : ""}${esc(e.t)}</span>
                       <span class="${e.m === 'u' ? 'event-mode-up' : 'event-mode-down'}">${e.m === 'u' ? '▲' : '▼'}</span>
@@ -3190,7 +3332,7 @@ const V = {
         `;
       }
       cards += '</div>';
-      return headerBar + withInbox(cards);
+      return headerBar + weekStatsHTML(selWeekStart) + withInbox(cards);
     }
 
     // 2. Chế độ DÒNG THỜI GIAN 24H
@@ -3252,7 +3394,7 @@ const V = {
         }
       }
 
-      return headerBar + withInbox(`
+      return headerBar + weekStatsHTML(selWeekStart) + withInbox(`
         <div class="timeline-container">
           ${dayNav}
           <div style="padding:10px 14px; background:var(--card); display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--bd);">
