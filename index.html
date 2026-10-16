@@ -6,8 +6,9 @@
 <title>Life Capital · Quản trị Năng lượng & Thời gian 2026</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
-<link rel="apple-touch-icon" href="icon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Life Capital">
 <meta name="theme-color" content="#E0A3BB">
@@ -1390,6 +1391,24 @@ body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(-
   :root.lite:not([data-theme="light"]) { --glass: rgba(30, 24, 27, 0.94); --glass-hi: rgba(38, 30, 34, 0.96); --card: rgba(36, 29, 33, 0.94); --overlay: rgba(0, 0, 0, 0.55); }
 }
 :root.lite[data-theme="dark"] { --glass: rgba(30, 24, 27, 0.94); --glass-hi: rgba(38, 30, 34, 0.96); --card: rgba(36, 29, 33, 0.94); --overlay: rgba(0, 0, 0, 0.55); }
+/* Đồng bộ giữa các thiết bị: huy hiệu trên thanh tiêu đề (điện thoại: chỉ chấm màu và số thay đổi chờ) */
+.cloud-badge { gap: 6px; }
+.cloud-badge .cb-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--mu); flex: none; }
+.cloud-badge[data-st="ok"] .cb-dot { background: var(--ok); }
+.cloud-badge[data-st="sync"] .cb-dot { background: var(--ac); animation: cbPulse 0.9s ease-in-out infinite alternate; }
+.cloud-badge[data-st="wait"] .cb-dot, .cloud-badge[data-st="offline"] .cb-dot { background: #d79b2b; }
+.cloud-badge[data-st="auth"] .cb-dot, .cloud-badge[data-st="err"] .cb-dot, .cloud-badge[data-st="setup"] .cb-dot { background: var(--bad); }
+.cloud-badge .cb-n { font-variant-numeric: tabular-nums; font-weight: 600; }
+@keyframes cbPulse { to { opacity: 0.3; } }
+@media (max-width: 640px) {
+  .cloud-badge[data-st="ok"] .cb-txt, .cloud-badge[data-st="sync"] .cb-txt, .cloud-badge[data-st="wait"] .cb-txt, .cloud-badge[data-st="offline"] .cb-txt { display: none; }
+  .cloud-badge { min-width: 34px; justify-content: center; }
+}
+@media (max-width: 359px) { .cloud-badge { min-width: 26px; padding-inline: 6px; } .header-actions { gap: 6px; } }
+/* Thanh “Có bản mới” */
+.update-bar { position: fixed; left: 0; right: 0; margin: 0 auto; width: max-content; max-width: calc(100% - 24px); top: calc(10px + env(safe-area-inset-top, 0px)); z-index: 950; display: flex; align-items: center; gap: 12px; padding: 6px 6px 6px 16px; border-radius: 999px; background: var(--sheen), var(--glass-hi); border: 1px solid var(--glass-bd); box-shadow: var(--glass-shadow); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); font-size: 14px; font-weight: 600; }
+.set-row > .btn { flex: none; white-space: nowrap; }
+.inst-steps { margin: 6px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
 </style>
 <script>
   try {
@@ -1430,6 +1449,7 @@ body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(-
       <p class="page-sub" id="pageSub"></p>
     </div>
     <div class="header-actions">
+      <button type="button" class="btn btn-sm cloud-badge" id="cloudBadge" hidden onclick="cloudBadgeClick()"></button>
       <button type="button" class="btn btn-sm" id="syncBadge" hidden></button>
       <button class="btn btn-sm btn-accent-olive" id="reviewBtn" onclick="openWeeklyReviewModal(sel)" title="Tổng kết tuần">Tổng kết</button>
       <button class="btn btn-sm btn-primary" id="addBtn" onclick="headerAdd()">Thêm</button>
@@ -1519,6 +1539,7 @@ body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(-
 
 <!-- Toast Container -->
 <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+<div class="update-bar" id="updateBar" role="status" hidden><span>Có bản mới</span><button type="button" class="btn btn-sm btn-primary" onclick="applyUpdate()">Tải lại</button></div>
 
 <script>
 /* ==========================================================================
@@ -1707,6 +1728,7 @@ const save = () => {
     lastRaw = out;
     try { localStorage.setItem("lc2_mine", out); } catch (e) {}
     if (saveFailed) { saveFailed = false; renderSaveAlert(); }
+    if (!cloudApplying) cloudSoon(); // đã đăng nhập: gửi lên tài khoản sau 2 giây
   } catch (e) {
     // Giữ cảnh báo cố định (không chỉ toast): đóng tab lúc này là mất các thay đổi chưa lưu
     if (!saveFailed) { saveFailed = true; renderSaveAlert(); }
@@ -1724,6 +1746,10 @@ const save = () => {
    Dữ liệu do bản này ghi có sv = 2. Bên ghi không có sv (bản cũ) thì chỉ cộng thêm, không xóa gì. */
 const SV = 2;
 let lastRaw = rawSaved, oldWriterSeen = 0;
+// Đồng bộ giữa các thiết bị (v0.4.0, xem phần ĐỒNG BỘ ở cuối tệp)
+let sb = null, sbUser = null, sbLoading = null, cloudChan = null;
+let cloudBusy = false, cloudAgain = false, cloudT = null, cloudApplying = false, cloudFails = 0;
+let cloud = { st: "off", n: 0, at: 0, msg: "" }; // st: off · sync · ok · wait · offline · auth · setup · err
 function readDisk() { try { return localStorage.getItem("lc2"); } catch (e) { return null; } }
 const evKey = e => [e.t, e.s, e.h, e.c, e.m, e.r || "", e.demo ? 1 : 0, e.tk || ""].join("|");
 const sameJ = (a, b) => JSON.stringify(a) === JSON.stringify(b);
@@ -3007,13 +3033,16 @@ function buildGCalEventPayload(eventObj, dateStr) {
    S.gdel: gid đang chờ DELETE */
 let gcalFlushing = false, gcalRerun = false, gcalRetryT = null, gcalLockRetryT = null;
 
+// Đã đăng nhập đồng bộ và tài khoản có dùng Google Calendar (Client ID đi theo dữ liệu): đánh dấu cả khi máy này
+// chưa kết nối Google, để máy đã kết nối gửi giúp. Mã định sẵn gi giúp hai máy không tạo hai bản trên Google.
+const gcalShared = () => !!(sbUser && S.cfg && S.cfg.gcalClientId && S.cfg.gcalAutoSync !== false);
 function markPending(e) {
-  if (e && !e.demo && gcalActive()) e.ds = (e.ds || 0) + 1;
+  if (e && !e.demo && (gcalActive() || gcalShared())) e.ds = (e.ds || 0) + 1;
 }
 // Lệnh xóa luôn được ghi lại khi đã liên kết, kể cả khi tự động đồng bộ đang tắt:
 // nếu không, sự kiện trên Google Calendar sẽ nằm lại vĩnh viễn (lỗi UAT xóa chuỗi)
 function queueDelete(gid) {
-  if (gid && gcalLinked() && !S.gdel.includes(gid)) S.gdel.push(gid);
+  if (gid && (gcalLinked() || gcalShared()) && !S.gdel.includes(gid)) S.gdel.push(gid);
 }
 function gcalPendingCount() {
   return S.gdel.length + Object.values(S.ev).reduce((n, l) => n + l.filter(e => e.ds).length, 0);
@@ -3069,19 +3098,32 @@ function gcalOutcome(r) {
   return "fail";
 }
 
+const gcalNewId = () => Array.from(crypto.getRandomValues(new Uint8Array(26)), b => "0123456789abcdefghijklmnopqrstuv"[b & 31]).join("");
 async function gcalCreateEvent(e, dateStr, token) {
-  const r = await gcalFetch("POST", "", token, buildGCalEventPayload(e, dateStr));
+  if (!e.gi) e.gi = gcalNewId();
+  const r = await gcalFetch("POST", "", token, { ...buildGCalEventPayload(e, dateStr), id: e.gi });
   if (r.ok && r.data && r.data.id) e.gid = r.data.id;
+  else if (r.status === 409) {
+    // Máy khác đã tạo sự kiện này với cùng mã: nhận lấy rồi cập nhật nội dung, không tạo bản thứ hai
+    e.gid = e.gi;
+    return gcalUpdateEvent(e, dateStr, token, true);
+  }
   return gcalOutcome(r);
 }
 
-async function gcalUpdateEvent(e, dateStr, token) {
+async function gcalUpdateEvent(e, dateStr, token, adopt) {
   const p = buildGCalEventPayload(e, dateStr);
+  if (adopt) p.status = "confirmed";
   // PATCH gộp các object con: xóa trường cũ khi đổi giữa sự kiện cả ngày và sự kiện có giờ
   if (p.start.date) { p.start.dateTime = p.end.dateTime = p.start.timeZone = p.end.timeZone = null; }
   else { p.start.date = p.end.date = null; p.transparency = "opaque"; }
   const r = await gcalFetch("PATCH", "/" + encodeURIComponent(e.gid), token, p);
-  if (r.status === 404 || r.status === 410) { delete e.gid; return gcalCreateEvent(e, dateStr, token); }
+  if (r.status === 404 || r.status === 410) {
+    if (adopt) return gcalOutcome(r);
+    delete e.gid;
+    e.gi = gcalNewId(); // mã cũ đã bị xóa trên Google, không dùng lại được
+    return gcalCreateEvent(e, dateStr, token);
+  }
   return gcalOutcome(r);
 }
 
@@ -3305,6 +3347,15 @@ function renderSettingsModal() {
           ${opt(5, burnH, "5 giờ")}${opt(6, burnH, "6 giờ")}${opt(7, burnH, "7 giờ")}${opt(8, burnH, "8 giờ")}
         </select>
       </div>
+    </details>
+
+    <details class="set-sec" ${setSecOpen("sync") || (cloud.st === "auth" || cloud.st === "setup" ? "open" : "")} ontoggle="setSecToggle('sync', this.open)">
+      <summary class="set-h">Đồng bộ<span class="set-sum">${cloudSummary()}</span></summary>
+      <div id="cloudSec">${cloudSecHTML()}</div>
+      ${isStandalone() ? "" : `<div class="set-row">
+        <span class="set-lbl">Cài app<small>Mở từ biểu tượng như một app, dùng được khi mất mạng</small></span>
+        <button type="button" class="btn btn-sm" onclick="installApp()">Cài app</button>
+      </div>`}
     </details>
 
     <details class="set-sec" ${setSecOpen("data")} ontoggle="setSecToggle('data', this.open)">
@@ -3556,7 +3607,7 @@ function shiftDay(d) {
 
 // Đầu tab Lịch chỉ hiện một thông báo, theo thứ tự ưu tiên: sao lưu, tổng kết tuần, dữ liệu mẫu, bắt đầu
 function calendarNotices() {
-  return backupNotice() || reviewNotice() || startOrDemoNotice();
+  return backupNotice() || reviewNotice() || cloudInviteNotice() || startOrDemoNotice();
 }
 
 // Chủ nhật nhắc tổng kết tuần này, thứ 2 nhắc tuần vừa qua. "Để sau" ẩn đến tuần sau.
@@ -3588,6 +3639,7 @@ function backupNotice() {
   let snooze = 0;
   try { snooze = +localStorage.getItem("lc_bk_snooze") || 0; } catch (e) {}
   const days = S.lb ? Math.floor((Date.now() - S.lb) / 864e5) : null;
+  if (sbUser && cloud.st !== "auth") return ""; // đã có bản trên tài khoản
   if (real < 10 || (days !== null && days < 14) || Date.now() < snooze) return "";
   return `
     <div class="review-prompt-banner">
@@ -4658,6 +4710,7 @@ function cleanEv(e) {
     ...(SAFE_K.test(e.r || "") ? { r: e.r } : {}),
     ...(SAFE_K.test(e.tk || "") ? { tk: e.tk } : {}), // liên kết tới việc nhỏ trong Hộp việc
     ...(typeof e.gid === "string" && GID.test(e.gid) ? { gid: e.gid } : {}),
+    ...(typeof e.gi === "string" && /^[0-9a-v]{20,64}$/.test(e.gi) ? { gi: e.gi } : {}), // mã định sẵn cho Google Calendar
     ...(e.ds ? { ds: 1 } : {}),     // đang chờ đẩy lên Google Calendar
     ...(e.demo ? { demo: 1 } : {})  // dữ liệu mẫu, không đẩy lên Google Calendar
   };
@@ -4819,6 +4872,7 @@ function draw(jump) {
 // Tự động chuyển tuần khi sang thứ Hai mới
 function tick() {
   pullDisk();
+  if (sbUser && !cloudBusy && cloud.st !== "auth" && cloud.st !== "setup") cloudSoon(0); // phòng khi lỡ tín hiệu thời gian thực
   snapshotDaily();
   updateSyncBadge(); // token Google hết hạn sau 1 giờ
   if (ed) return;
@@ -4828,11 +4882,12 @@ function tick() {
 }
 setInterval(tick, 60000);
 document.addEventListener("visibilitychange", () => {
-  if (!document.hidden) { tick(); gcalFlush(); }
+  if (!document.hidden) { tick(); gcalFlush(); if (swReg) swReg.update().catch(() => {}); }
 });
 window.addEventListener("focus", tick);
 window.addEventListener("pageshow", e => { if (e.persisted) pullDisk(); });
-window.addEventListener("online", () => gcalFlush());
+window.addEventListener("online", () => { gcalFlush(); cloudSoon(0); });
+window.addEventListener("offline", () => { if (sbUser) cloudSet("offline"); });
 
 // Tab khác vừa lưu: nạp lại để không ghi đè dữ liệu của tab đó bằng bản cũ trong bộ nhớ
 window.addEventListener("storage", e => {
@@ -5572,9 +5627,495 @@ async function removeBg() {
 setBgBlur(bgBlur());
 try { bgGet().then(b => { if (b) applyBg(b); }).catch(() => {}); } catch (e) {}
 
+/* ==========================================================================
+   ĐỒNG BỘ GIỮA CÁC THIẾT BỊ (v0.4.0): Supabase + đăng nhập Google, không bắt buộc
+   Máy này vẫn là nơi ghi đầu tiên (localStorage, như trước). Đã đăng nhập thì sau mỗi lần lưu
+   khoảng 2 giây, app gửi toàn bộ dữ liệu lên dòng của tài khoản (bảng lc_state) qua hàm lc_push.
+   Máy chủ chỉ nhận khi số phiên bản (rev) khớp bản máy này thấy lần trước. Lệch nghĩa là máy khác
+   vừa gửi: tải bản đó về, gộp ba bên bằng mergeStates (gốc chung = bản đồng bộ gần nhất, lưu ở
+   lc_sync_base), rồi gửi lại. Máy kia nhận tín hiệu qua lc_ping (thời gian thực) và tự tải về.
+   ========================================================================== */
+const SB_URL = "https://bvuvgjiufpjsidyyigkb.supabase.co";
+const SB_KEY = "sb_publishable_L5otbMIzkhWqwOJeRFd2AQ_ml3vz10c"; // khóa công khai, an toàn khi nằm trong app
+const SB_LIB = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.0/+esm";
+const SB_AUTH = "lc_sb_auth";
+const DEV = (() => {
+  try {
+    let d = localStorage.getItem("lc_dev");
+    if (!d) { d = Math.random().toString(36).slice(2, 10); localStorage.setItem("lc_dev", d); }
+    return d;
+  } catch (e) { return "x"; }
+})();
+// Biến trạng thái đồng bộ (sb, sbUser, cloud…) khai báo cạnh lastRaw: save() dùng tới ngay lúc khởi động
+
+function cloudMeta() { try { return JSON.parse(localStorage.getItem("lc_sync") || "null"); } catch (e) { return null; } }
+function cloudBaseRaw() { try { return localStorage.getItem("lc_sync_base"); } catch (e) { return null; } }
+function cloudKeep(meta, baseRaw) {
+  try {
+    if (meta) localStorage.setItem("lc_sync", JSON.stringify(meta)); else localStorage.removeItem("lc_sync");
+    if (baseRaw) localStorage.setItem("lc_sync_base", baseRaw); else localStorage.removeItem("lc_sync_base");
+  } catch (e) {}
+}
+
+// Dạng chuẩn để so sánh và gửi: đã làm sạch như khi đọc, khóa theo thứ tự chữ cái, hoạt động trong ngày
+// xếp theo giờ rồi theo nội dung. Hai máy có cùng dữ liệu luôn cho ra cùng một chuỗi, nên không gửi qua lại vô ích.
+function canonState(st) {
+  const c = cleanState(JSON.parse(JSON.stringify(st)));
+  Object.values(c.ev).forEach(l => l.sort((a, b) => cmp(a, b) || evKey(a).localeCompare(evKey(b))));
+  c.gdel.sort();
+  const sortKeys = v => Array.isArray(v) ? v.map(sortKeys)
+    : v && typeof v === "object" ? Object.keys(v).sort().reduce((o, k) => { o[k] = sortKeys(v[k]); return o; }, {}) : v;
+  return JSON.stringify(sortKeys(c));
+}
+
+// Số thay đổi chưa gửi: hoạt động thêm/bớt/sửa theo từng ngày, việc trong Hộp việc, và phần còn lại (vốn, cài đặt)
+function cloudPendingCount() {
+  const raw = cloudBaseRaw(), meta = cloudMeta();
+  if (!sbUser || !meta || meta.uid !== sbUser.id) return 0;
+  let base = null;
+  try { base = raw ? JSON.parse(raw) : null; } catch (e) {}
+  const cur = JSON.parse(canonState(S));
+  if (!base) return Object.values(cur.ev).flat().length + cur.tasks.length || 1;
+  let n = 0;
+  new Set([...Object.keys(cur.ev), ...Object.keys(base.ev)]).forEach(k => {
+    const a = (cur.ev[k] || []).map(evKey), b = (base.ev[k] || []).map(evKey);
+    const left = [...b];
+    let add = 0;
+    a.forEach(x => { const i = left.indexOf(x); if (i >= 0) left.splice(i, 1); else add++; });
+    n += Math.max(add, left.length); // sửa một hoạt động = bớt bản cũ + thêm bản mới, tính là 1
+  });
+  const tb = new Map(base.tasks.map(t => [t.id, JSON.stringify(t)]));
+  cur.tasks.forEach(t => { if (tb.get(t.id) !== JSON.stringify(t)) n++; tb.delete(t.id); });
+  n += tb.size;
+  const rest = o => JSON.stringify({ ...o, ev: 0, tasks: 0, gdel: 0, lb: 0 });
+  if (rest(cur) !== rest(base)) n++;
+  return n;
+}
+
+function cloudSet(st, msg) {
+  cloud.st = st;
+  cloud.msg = msg || "";
+  if (st === "ok") cloud.at = Date.now();
+  cloud.n = st === "ok" || st === "off" ? 0 : cloudPendingCount();
+  renderCloud();
+}
+
+// Gọi sau mỗi lần lưu: gom các thay đổi liên tiếp, 2 giây sau mới gửi
+function cloudSoon(ms = 2000) {
+  if (!sbUser) return;
+  clearTimeout(cloudT);
+  if (!navigator.onLine) { cloudSet("offline"); return; }
+  if (cloud.st === "ok" || cloud.st === "wait") cloudSet("wait");
+  cloudT = setTimeout(cloudSync, ms);
+}
+
+// Thay dữ liệu đang dùng bằng bản đã gộp, lưu xuống máy và vẽ lại (giống khi nhận thay đổi từ tab khác)
+function cloudApply(next) {
+  S = next;
+  Object.values(S.ev).forEach(sortL);
+  cloudApplying = true;
+  try { save(); } finally { cloudApplying = false; }
+  hvEdit = null;
+  if ($("settingsModalOverlay").classList.contains("open")) renderSettingsModal();
+  draw();
+}
+
+async function cloudSync() {
+  if (!sb || !sbUser) return;
+  if (cloudBusy) { cloudAgain = true; return; }
+  if (!navigator.onLine) { cloudSet("offline"); return; }
+  // Đang sửa một hoạt động hoặc đang xếp lịch: chờ đóng bảng rồi mới nhận dữ liệu từ máy khác
+  if (ed || sch) { clearTimeout(cloudT); cloudT = setTimeout(cloudSync, 3000); return; }
+  cloudBusy = true;
+  cloudAgain = false;
+  clearTimeout(cloudT);
+  const uid = sbUser.id;
+  try {
+    for (let round = 0; round < 4; round++) {
+      cloudSet("sync");
+      let meta = cloudMeta();
+      if (!meta || meta.uid !== uid) meta = null;
+      const head = await sb.from("lc_state").select("rev").eq("user_id", uid).maybeSingle();
+      if (head.error) throw head.error;
+      let srvRev = head.data ? head.data.rev : 0;
+      if (!meta || srvRev !== meta.rev) {
+        // Máy chủ có bản mới hơn (hoặc lần đầu trên máy này): tải về và gộp
+        let theirs = null, theirsRaw = null;
+        if (srvRev) {
+          const full = await sb.from("lc_state").select("rev, data").eq("user_id", uid).single();
+          if (full.error) throw full.error;
+          srvRev = full.data.rev;
+          theirs = cleanState(full.data.data);
+          if (!theirs) throw new Error("Dữ liệu trên máy chủ không đọc được");
+          Object.values(theirs.ev).forEach(sortL);
+          theirsRaw = canonState(theirs);
+        }
+        if (uid !== (sbUser && sbUser.id)) return; // vừa đăng xuất giữa chừng
+        const baseRaw = meta ? cloudBaseRaw() : null;
+        if (theirs) {
+          const blank = !Object.keys(S.ev).length && !S.tasks.length;
+          if ((baseRaw && canonState(S) === baseRaw) || (!baseRaw && blank)) {
+            cloudApply(theirs); // máy này không đổi gì (hoặc chưa có dữ liệu): nhận nguyên bản trên máy chủ
+          } else {
+            if (!baseRaw) snapshotNow("dang-nhap"); // lần đầu gộp với tài khoản: lưu một bản trên máy trước
+            const base = baseRaw ? cleanState(JSON.parse(baseRaw)) : null;
+            if (base) Object.values(base.ev).forEach(sortL);
+            // Lần đầu (chưa có gốc chung): cộng mọi hoạt động và việc của hai bên; cài đặt, mục tiêu và loại vốn
+            // trùng mã thì theo tài khoản. Đã có gốc chung: gộp ba bên như giữa các tab.
+            const merged = base ? mergeStates(base, S, theirs, true) : mergeStates(null, theirs, S, false);
+            if (canonState(merged) !== canonState(S)) cloudApply(merged);
+          }
+        }
+        meta = { uid, rev: srvRev };
+        cloudKeep(meta, theirsRaw);
+      }
+      // Máy này có thay đổi chưa gửi thì gửi lên
+      const cur = canonState(S);
+      if (srvRev && cur === cloudBaseRaw()) { cloudFails = 0; cloudSet("ok"); break; }
+      const push = await sb.rpc("lc_push", { p_base: srvRev, p_data: JSON.parse(cur), p_device: DEV });
+      if (push.error) throw push.error;
+      if (push.data > 0) {
+        cloudKeep({ uid, rev: push.data }, cur);
+        cloudFails = 0;
+        cloudSet(canonState(S) === cur ? "ok" : "wait");
+        if (cloud.st === "wait") cloudAgain = true; // có thay đổi mới trong lúc đang gửi
+        break;
+      }
+      // -1: máy khác vừa gửi trước, vòng sau tải về rồi gộp tiếp
+      if (round === 3) throw new Error("Máy chủ đang bận, sẽ thử lại");
+    }
+  } catch (e) {
+    cloudFail(e);
+  } finally {
+    cloudBusy = false;
+    if (cloudAgain && sbUser) cloudSoon(300);
+  }
+}
+
+function cloudFail(e) {
+  const code = (e && (e.code || e.status)) || "", text = String((e && e.message) || e || "");
+  console.warn("Đồng bộ lỗi:", e);
+  if (!navigator.onLine || /Failed to fetch|NetworkError|Load failed/i.test(text)) { cloudSet("offline"); return; }
+  if (code === "42P01" || code === "PGRST202" || code === "PGRST205" || /lc_state|lc_push/.test(text) && /not exist|schema cache|could not find/i.test(text)) {
+    cloudSet("setup", "Máy chủ chưa được cài bảng dữ liệu (chạy tệp supabase/schema.sql).");
+    return;
+  }
+  if (code === 401 || code === "PGRST301" || code === "28000" || /JWT|token|not authenticated|Chưa đăng nhập/i.test(text)) {
+    cloudSet("auth", "Phiên đăng nhập đã hết hạn.");
+    return;
+  }
+  cloudFails++;
+  cloudSet("err", text.slice(0, 160));
+  clearTimeout(cloudT);
+  cloudT = setTimeout(cloudSync, Math.min(300000, 15000 * 2 ** (cloudFails - 1))); // 15 giây, 30 giây… tối đa 5 phút
+}
+
+// Bản tự lưu có nhãn, nằm cùng danh sách “Bản tự lưu” trong Cài đặt → Dữ liệu
+function snapshotNow(tag) {
+  try {
+    const raw = localStorage.getItem("lc2");
+    if (!raw) return;
+    localStorage.setItem(SNAP + ky(new Date()) + "-" + tag, raw);
+    snapKeys().slice(0, -7).forEach(k => localStorage.removeItem(k));
+  } catch (e) {}
+}
+
+// Chỉ tải thư viện Supabase khi cần: đã từng đăng nhập, đang quay về từ trang Google, hoặc vừa bấm Đăng nhập
+function cloudWanted() {
+  try { if (localStorage.getItem(SB_AUTH) || localStorage.getItem("lc_sync")) return true; } catch (e) {}
+  return /[?&](code|error)=/.test(location.search);
+}
+function cloudLoad() {
+  if (sb) return Promise.resolve(sb);
+  if (sbLoading) return sbLoading;
+  sbLoading = import(SB_LIB).then(({ createClient }) => {
+    sb = createClient(SB_URL, SB_KEY, {
+      auth: { flowType: "pkce", storageKey: SB_AUTH, persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+    });
+    sb.auth.onAuthStateChange((ev, session) => setTimeout(() => cloudAuth(ev, session), 0));
+    return sb;
+  }).catch(e => { sbLoading = null; throw e; });
+  return sbLoading;
+}
+
+async function cloudInit() {
+  if (!cloudWanted()) { renderCloud(); return; }
+  const q = new URLSearchParams(location.search);
+  const back = q.has("code") || q.has("error");
+  try {
+    await cloudLoad();
+    const { data } = await sb.auth.getSession();
+    if (data && data.session) cloudAuth("INITIAL_SESSION", data.session);
+    else if (cloudMeta()) cloudSet("auth", "Phiên đăng nhập đã hết hạn."); // từng đăng nhập trên máy này
+  } catch (e) {
+    console.warn("Không tải được phần đồng bộ:", e);
+    if (cloudMeta()) cloudSet(navigator.onLine ? "err" : "offline", "Không tải được phần đồng bộ");
+  }
+  if (back) {
+    if (q.has("error")) showToast("Chưa đăng nhập được: " + (q.get("error_description") || q.get("error")).slice(0, 120), "bad");
+    history.replaceState(null, "", location.pathname + location.hash); // bỏ mã đăng nhập khỏi địa chỉ
+  }
+}
+
+function cloudAuth(ev, session) {
+  const u = session && session.user;
+  if (u) {
+    const first = !sbUser || sbUser.id !== u.id;
+    sbUser = u;
+    if (first) {
+      if (ev === "SIGNED_IN" && /[?&]code=/.test(location.search)) showToast("Đã đăng nhập: " + (u.email || ""), "ok");
+      cloudListen();
+      cloudSync();
+    }
+    renderCloud();
+    return;
+  }
+  if (ev === "SIGNED_OUT") {
+    // Tự đăng xuất thì sbUser đã được bỏ trước; còn sbUser nghĩa là phiên hết hạn hoặc bị thu hồi
+    const was = !!sbUser;
+    cloudStop();
+    if (was) cloudSet("auth", "Phiên đăng nhập đã hết hạn.");
+    else renderCloud();
+  }
+}
+
+function cloudStop() {
+  sbUser = null;
+  clearTimeout(cloudT);
+  if (cloudChan) { try { sb.removeChannel(cloudChan); } catch (e) {} cloudChan = null; }
+}
+
+// Tín hiệu thời gian thực: máy khác vừa gửi bản mới → tải về
+function cloudListen() {
+  if (!sb || !sbUser) return;
+  if (cloudChan) { try { sb.removeChannel(cloudChan); } catch (e) {} }
+  cloudChan = sb.channel("lc-ping-" + sbUser.id)
+    .on("postgres_changes", { event: "*", schema: "public", table: "lc_ping", filter: "user_id=eq." + sbUser.id }, p => {
+      const r = p.new || {}, meta = cloudMeta();
+      if (r.device !== DEV && (!meta || r.rev !== meta.rev)) cloudSoon(200);
+    })
+    .subscribe();
+}
+
+async function cloudLogin() {
+  try {
+    await cloudLoad();
+    const { error } = await sb.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: location.origin + location.pathname, queryParams: { prompt: "select_account" } }
+    });
+    if (error) throw error;
+  } catch (e) {
+    showToast(navigator.onLine ? "Chưa mở được trang đăng nhập Google. Thử lại sau." : "Cần có mạng để đăng nhập", "bad");
+  }
+}
+
+async function cloudLogout() {
+  const a = await ask({
+    title: "Đăng xuất",
+    msg: "Máy này sẽ ngừng đồng bộ. Dữ liệu trên tài khoản vẫn còn nguyên.",
+    ok: "Giữ dữ liệu trên máy này", alt: "Xóa khỏi máy này", cancel: "Hủy"
+  });
+  if (!a) return;
+  if (cloudPendingCount() && navigator.onLine) await cloudSync(); // gửi nốt thay đổi chưa đồng bộ
+  if (cloudPendingCount() && a === "alt") {
+    const go = await ask({ title: "Còn thay đổi chưa đồng bộ", msg: "Xóa khỏi máy này lúc này sẽ mất các thay đổi chưa lên tài khoản.", ok: "Vẫn xóa", cancel: "Để sau", danger: true });
+    if (go !== "ok") return;
+  }
+  cloudStop();
+  cloudKeep(null, null);
+  try { await sb.auth.signOut({ scope: "local" }); } catch (e) {}
+  if (a === "alt") wipeLocal();
+  cloudSet("off");
+  renderSettingsModal();
+  showToast(a === "alt" ? "Đã đăng xuất và xóa dữ liệu khỏi máy này" : "Đã đăng xuất", "ok");
+}
+
+// Xóa dữ liệu của app trên trình duyệt này (máy dùng chung). Không đụng tới tài khoản.
+function wipeLocal() {
+  S = defState();
+  S.sv = SV;
+  const out = JSON.stringify(S);
+  try {
+    localStorage.setItem("lc2", out);
+    ["lc2_mine", "lc2_unreadable"].forEach(k => localStorage.removeItem(k));
+    snapKeys().forEach(k => localStorage.removeItem(k));
+  } catch (e) {}
+  lastRaw = out;
+  draw(true);
+}
+
+async function cloudDeleteServer() {
+  const a = await ask({ title: "Xóa dữ liệu trên máy chủ?", msg: "Xóa hẳn tài khoản và mọi dữ liệu đã đồng bộ. Các máy khác sẽ bị đăng xuất. Dữ liệu trên máy này vẫn giữ.", ok: "Xóa trên máy chủ", danger: true });
+  if (a !== "ok") return;
+  const b = await ask({ title: "Chắc chắn xóa?", msg: "Không khôi phục được. Nên Sao lưu (.json) trước.", ok: "Xóa vĩnh viễn", alt: "Sao lưu trước", danger: true });
+  if (b === "alt") { exportData("json"); return; }
+  if (b !== "ok") return;
+  const r = await sb.rpc("lc_delete_me");
+  if (r.error) { showToast("Chưa xóa được: " + String(r.error.message || "").slice(0, 100), "bad"); return; }
+  cloudStop();
+  cloudKeep(null, null);
+  try { await sb.auth.signOut({ scope: "local" }); } catch (e) {}
+  cloudSet("off");
+  renderSettingsModal();
+  showToast("Đã xóa dữ liệu trên máy chủ", "ok");
+}
+
+const CLOUD_TXT = {
+  sync: "Đang đồng bộ…", ok: "Đã đồng bộ", wait: "Chờ đồng bộ", offline: "Ngoại tuyến",
+  auth: "Đăng nhập lại", setup: "Chưa cài máy chủ", err: "Lỗi đồng bộ"
+};
+const timeAgo = t => {
+  if (!t) return "chưa có";
+  const m = Math.round((Date.now() - t) / 60000);
+  return m < 1 ? "vừa xong" : m < 60 ? `${m} phút trước` : new Date(t).toLocaleString("vi-VN", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "2-digit" });
+};
+
+// Huy hiệu trên thanh tiêu đề: chấm màu + chữ; điện thoại chỉ còn chấm và số thay đổi chờ
+function renderCloud() {
+  const b = $("cloudBadge");
+  if (b) {
+    const on = !!sbUser || cloud.st === "auth";
+    b.hidden = !on;
+    if (on) {
+      const st = cloud.st === "off" ? "sync" : cloud.st;
+      b.dataset.st = st;
+      const n = st === "wait" || st === "offline" ? cloud.n : 0;
+      b.innerHTML = `<span class="cb-dot" aria-hidden="true"></span><span class="cb-txt">${CLOUD_TXT[st]}</span>${n ? `<span class="cb-n">${n}</span>` : ""}`;
+      b.title = `${CLOUD_TXT[st]}${n ? ` · ${n} thay đổi chưa gửi` : ""} · lần gần nhất: ${timeAgo(cloud.at)}`;
+      b.setAttribute("aria-label", b.title);
+    }
+  }
+  const sec = $("cloudSec");
+  if (sec) sec.innerHTML = cloudSecHTML();
+}
+
+async function cloudBadgeClick() {
+  if (cloud.st === "auth") { cloudLogin(); return; }
+  const n = cloudPendingCount();
+  const a = await ask({
+    title: CLOUD_TXT[cloud.st] || "Đồng bộ",
+    html: `<span style="display:block">${esc((sbUser && sbUser.email) || "")}</span>
+      <span style="display:block">Lần đồng bộ gần nhất: ${timeAgo(cloud.at)}</span>
+      ${n ? `<span style="display:block">${n} thay đổi đang chờ gửi; dữ liệu vẫn an toàn trên máy này.</span>` : ""}
+      ${cloud.msg ? `<span style="display:block; color:var(--bad)">${esc(cloud.msg)}</span>` : ""}`,
+    ok: "Đồng bộ ngay", cancel: "Đóng"
+  });
+  if (a === "ok") { cloudFails = 0; cloudSync(); }
+}
+
+function cloudSecHTML() {
+  if (!sbUser) {
+    return `
+      <p class="set-note">Đăng nhập để dùng chung dữ liệu giữa iPhone và máy tính, và không mất dữ liệu khi đổi máy. Không đăng nhập vẫn dùng bình thường.</p>
+      ${cloud.st === "auth" ? `<p class="set-note" style="color:var(--bad)">Phiên đăng nhập đã hết hạn. Các thay đổi vẫn nằm trên máy này, đăng nhập lại để gửi tiếp.</p>` : ""}
+      <div class="set-actions"><button type="button" class="btn btn-primary btn-sm" onclick="cloudLogin()">Đăng nhập bằng Google</button></div>`;
+  }
+  const n = cloudPendingCount();
+  return `
+    <div class="set-row"><span class="set-lbl">Tài khoản</span><span class="set-val">${esc(sbUser.email || "")}</span></div>
+    <div class="set-row"><span class="set-lbl">Trạng thái<small>${n ? n + " thay đổi chờ gửi" : "Lần gần nhất: " + timeAgo(cloud.at)}</small></span>
+      <button type="button" class="btn btn-sm" onclick="cloudFails = 0; cloudSync()">Đồng bộ ngay</button></div>
+    ${cloud.msg ? `<p class="set-note" style="color:var(--bad)">${esc(cloud.msg)}</p>` : ""}
+    <div class="set-actions">
+      <button type="button" class="btn btn-sm" onclick="cloudLogout()">Đăng xuất</button>
+      <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad)" onclick="cloudDeleteServer()">Xóa dữ liệu trên máy chủ</button>
+    </div>`;
+}
+function cloudSummary() {
+  if (sbUser) return `<span class="pill ${cloud.st === "ok" ? "pill-ok" : "pill-neutral"}" style="font-size:11px;">${CLOUD_TXT[cloud.st] || "Đã đăng nhập"}</span>`;
+  return cloud.st === "auth" ? `<span style="color:var(--bad)">cần đăng nhập lại</span>` : "chưa đăng nhập";
+}
+
+// Lời mời đăng nhập trên tab Lịch: chỉ khi đã có dữ liệu thật, bấm Để sau là không hiện lại
+function cloudInviteNotice() {
+  if (sbUser || cloudMeta()) return "";
+  const real = Object.values(S.ev).reduce((n, l) => n + l.filter(e => !e.demo).length, 0);
+  if (real < 3) return "";
+  // Chỉ mời một lần: hiện trong ngày đầu tiên, sau đó (hoặc khi bấm Để sau) chỉ còn trong Cài đặt
+  let seen = "";
+  try {
+    seen = localStorage.getItem("lc_sync_invite") || "";
+    if (!seen) { seen = ky(new Date()); localStorage.setItem("lc_sync_invite", seen); }
+  } catch (e) { return ""; }
+  if (seen !== ky(new Date())) return "";
+  return `
+    <div class="review-prompt-banner">
+      <div>
+        <b>Dùng trên cả iPhone và máy tính</b>
+        <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Đăng nhập Google để dữ liệu tự đồng bộ và không mất khi đổi máy. Không bắt buộc.</div>
+      </div>
+      <div class="row" style="gap:6px;">
+        <button type="button" class="btn btn-sm btn-ghost" onclick="cloudInviteOff()">Để sau</button>
+        <button type="button" class="btn btn-sm btn-primary" onclick="cloudLogin()">Đăng nhập</button>
+      </div>
+    </div>`;
+}
+function cloudInviteOff() {
+  try { localStorage.setItem("lc_sync_invite", "off"); } catch (e) {}
+  draw();
+}
+
+/* ---- Cài thành app (PWA) ---- */
+let installEvt = null;
+const isStandalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const isIOS = () => /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; if ($("settingsModalOverlay").classList.contains("open")) renderSettingsModal(); });
+window.addEventListener("appinstalled", () => { installEvt = null; showToast("Đã cài Life Capital", "ok"); });
+
+async function installApp() {
+  if (installEvt) {
+    installEvt.prompt();
+    try { await installEvt.userChoice; } catch (e) {}
+    installEvt = null;
+    renderSettingsModal();
+    return;
+  }
+  if (isIOS()) {
+    ask({
+      title: "Cài app trên iPhone",
+      html: `<ol class="inst-steps">
+        <li>Mở trang này bằng <b>Safari</b>.</li>
+        <li>Bấm nút <b>Chia sẻ</b> (ô vuông có mũi tên lên) ở thanh dưới.</li>
+        <li>Chọn <b>Thêm vào MH chính</b>, rồi bấm <b>Thêm</b>.</li>
+      </ol>
+      <span style="display:block; margin-top:6px;">App mở từ màn hình chính có dữ liệu riêng với Safari. Đăng nhập trong app để dữ liệu giống nhau.</span>`,
+      ok: "Đã hiểu", cancel: ""
+    });
+    return;
+  }
+  ask({ title: "Cài app", msg: "Mở trang này bằng Chrome hoặc Edge trên máy tính, rồi bấm biểu tượng cài đặt ở cuối thanh địa chỉ.", ok: "Đã hiểu", cancel: "" });
+}
+
+/* ---- Bản mới: service worker tải bản mới xong thì hiện thanh “Có bản mới · Tải lại” ---- */
+let swReg = null, swReloading = false;
+function showUpdateBar() {
+  const bar = $("updateBar");
+  if (bar) bar.hidden = false;
+}
+function applyUpdate() {
+  const w = swReg && swReg.waiting;
+  if (!w) { location.reload(); return; }
+  swReloading = true;
+  w.postMessage("skip-waiting");
+}
+if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+  navigator.serviceWorker.register("sw.js").then(reg => {
+    swReg = reg;
+    if (reg.waiting && navigator.serviceWorker.controller) showUpdateBar();
+    reg.addEventListener("updatefound", () => {
+      const w = reg.installing;
+      if (w) w.addEventListener("statechange", () => { if (w.state === "installed" && navigator.serviceWorker.controller) showUpdateBar(); });
+    });
+    setInterval(() => reg.update().catch(() => {}), 30 * 60000);
+  }).catch(() => {});
+  navigator.serviceWorker.addEventListener("controllerchange", () => { if (swReloading) location.reload(); });
+}
+
 // Khởi chạy ứng dụng
 draw(true);
 gcalFlush(); // đẩy các thay đổi còn chờ từ lần mở trước
+cloudInit(); // đã đăng nhập đồng bộ: tải thư viện, nhận phiên, đồng bộ lần đầu
 try {
   if (!localStorage.getItem("lc_onb") && !Object.keys(S.ev).length && !S.tasks.length) setTimeout(onbStart, 500);
 } catch (e) {}

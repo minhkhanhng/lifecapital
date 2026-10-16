@@ -1,3 +1,4 @@
-# Chỉ deploy app (index.html, manifest.json, icon.svg); tài liệu giữ trên GitHub
+# Chỉ deploy app (index.html, sw.js, manifest.json, biểu tượng); tài liệu và SQL giữ trên GitHub
 *.md
 .claude/
+supabase/
