@@ -1482,13 +1482,67 @@ body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(-
 .set-inline { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
 .set-row select { min-width: 0; width: auto; }
 .set-seg { display: inline-flex; border: 1px solid var(--glass-bd); border-radius: var(--radius-full); overflow: hidden; }
-.set-seg button { border: 0; background: transparent; color: var(--tx); padding: 6px 12px; font: inherit; font-size: 13px; cursor: pointer; }
+.set-seg button { border: 0; background: transparent; color: var(--tx); padding: 6px 12px; font: inherit; font-size: 13px; cursor: pointer; white-space: nowrap; }
+.set-seg { flex: none; }
+@media (max-width: 480px) { .set-row:has(> .set-seg) { flex-wrap: wrap; gap: 8px; } .set-row:has(> .set-seg) .set-lbl { flex: 1 1 100%; } }
 .set-seg button.on { background: linear-gradient(135deg, var(--pill-sheen) 0%, color-mix(in srgb, var(--ac) var(--btn-mix), transparent) 100%); color: var(--btn-ink); font-weight: 600; }
+
+/* Phím tắt */
+.sidebar-keys { width: 100%; justify-content: flex-start; border-radius: 12px; margin-top: auto; }
+.sidebar-keys + .sidebar-settings { margin-top: 6px; }
+@media (hover: none), (pointer: coarse) { .sidebar-keys { display: none; } .sidebar-keys + .sidebar-settings { margin-top: auto; } }
+.keys { display: grid; grid-template-columns: auto 1fr; gap: 8px 14px; margin: 10px 0 0; font-size: 13.5px; color: var(--tx); }
+.keys kbd { font: 600 12px var(--font-ui); min-width: 26px; text-align: center; padding: 3px 7px; border-radius: 7px; border: 1px solid var(--glass-bd); background: var(--sheen), var(--glass-hi); box-shadow: var(--glass-shadow); justify-self: start; }
+.ask-msg.ask-html { color: var(--tx); }
+
+/* Lưới năm trên điện thoại: bản đồ nhiệt, vuốt ngang theo quý */
+.yr-mobile { display: none; }
+@media (max-width: 640px) {
+  .yr-mobile { display: block; }
+  .yr-desk { display: none; }
+}
+.yr-tabs { display: flex; gap: 6px; margin-bottom: 10px; }
+.yr-tabs button { flex: 1; }
+.yr-quarters { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.yr-quarters::-webkit-scrollbar { display: none; }
+.yr-q { flex: 0 0 100%; scroll-snap-align: start; padding: 12px; }
+.yr-q h3 { margin: 0 0 8px; font-size: 14px; font-weight: 600; }
+.yr-row { display: grid; grid-template-columns: 38px repeat(7, minmax(0, 1fr)) 44px; gap: 4px; align-items: center; margin-bottom: 4px; }
+.yr-row.hd { font-size: 10.5px; font-weight: 600; color: var(--mu); text-align: center; margin-bottom: 6px; }
+.yr-wk { font-size: 11.5px; font-weight: 600; color: var(--tx-sec); }
+.yr-row.cur .yr-wk { color: var(--ac-text); }
+.yr-day { aspect-ratio: 1; border: 1px solid var(--glass-bd); border-radius: 8px; background: var(--card-subtle); color: var(--tx); font: 500 11px var(--font-ui); padding: 0; cursor: pointer; }
+.yr-day.today { outline: 2px solid var(--ac); outline-offset: 1px; font-weight: 600; }
+.yr-day.out { opacity: 0.35; }
+.yr-net { font-size: 11px; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+.yr-net.up { color: var(--ok-text); } .yr-net.down { color: var(--bad); }
+.yr-legend { font-size: 11.5px; color: var(--mu); margin-top: 8px; line-height: 1.5; }
+
+/* Hướng dẫn lần đầu */
+.onb { position: fixed; left: 0; right: 0; margin: 0 auto; bottom: 24px; width: min(380px, calc(100vw - 32px)); z-index: 900; padding: 16px 18px 14px; border-radius: var(--radius-lg); background: var(--sheen), var(--glass-hi); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); border: 1px solid var(--glass-bd); box-shadow: var(--glass-shadow), 0 18px 48px rgba(0, 0, 0, 0.18); animation: toastIn 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+.onb[hidden] { display: none; }
+.onb-step { font-size: 11.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--mu); }
+.onb h3 { margin: 4px 0 4px; font-size: 16px; font-weight: 600; }
+.onb p { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--tx-sec); }
+.onb-acts { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+@keyframes onbPulse { 0%, 100% { box-shadow: 0 0 0 3px var(--ac), 0 0 0 7px color-mix(in srgb, var(--ac) 22%, transparent); } 50% { box-shadow: 0 0 0 3px var(--ac), 0 0 0 12px color-mix(in srgb, var(--ac) 8%, transparent); } }
+.onb-target { animation: onbPulse 1.6s ease-in-out infinite; }
+@media (max-width: 899px) { .onb { bottom: calc(144px + env(safe-area-inset-bottom, 0px)); } }
+
+/* Giảm hiệu ứng: bỏ kính mờ và chuyển động, kính đục hơn để chữ vẫn rõ */
+:root.lite *, :root.lite *::before, :root.lite *::after { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+:root.lite:not([data-theme="dark"]) { --glass: rgba(255, 252, 253, 0.90); --glass-hi: rgba(255, 252, 253, 0.95); --card: rgba(255, 252, 253, 0.92); --overlay: rgba(60, 30, 45, 0.30); }
+@media (prefers-color-scheme: dark) {
+  :root.lite:not([data-theme="light"]) { --glass: rgba(30, 24, 27, 0.94); --glass-hi: rgba(38, 30, 34, 0.96); --card: rgba(36, 29, 33, 0.94); --overlay: rgba(0, 0, 0, 0.55); }
+}
+:root.lite[data-theme="dark"] { --glass: rgba(30, 24, 27, 0.94); --glass-hi: rgba(38, 30, 34, 0.96); --card: rgba(36, 29, 33, 0.94); --overlay: rgba(0, 0, 0, 0.55); }
 </style>
 <script>
   try {
     const t = localStorage.getItem("lc_theme");
     if (t) document.documentElement.setAttribute("data-theme", t);
+    const l = localStorage.getItem("lc_lite") || "auto", mq = q => window.matchMedia && matchMedia(q).matches;
+    if (l === "on" || (l === "auto" && (mq("(prefers-reduced-motion: reduce)") || mq("(prefers-reduced-transparency: reduce)")))) document.documentElement.classList.add("lite");
   } catch(e) {}
 </script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -1503,6 +1557,7 @@ body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(-
   </div>
   <!-- Navigation Tabs -->
   <nav class="main-nav" id="nav"></nav>
+  <button type="button" class="btn btn-sm btn-ghost sidebar-keys" onclick="showShortcuts()" title="Phím tắt (?)">Phím tắt</button>
   <button type="button" class="btn btn-sm sidebar-settings" onclick="openSettingsModal()">Cài đặt</button>
 </aside>
 
@@ -1598,6 +1653,14 @@ body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(-
     <p class="ask-msg" id="askMsg"></p>
     <div class="ask-acts" id="askActs" onclick="const b = event.target.closest('[data-a]'); if (b) askDone(b.dataset.a);"></div>
   </div>
+</div>
+
+<!-- Hướng dẫn lần đầu -->
+<div class="onb" id="onb" role="dialog" aria-labelledby="onbTitle" aria-describedby="onbText" hidden>
+  <div class="onb-step" id="onbStep"></div>
+  <h3 id="onbTitle"></h3>
+  <p id="onbText"></p>
+  <div class="onb-acts" id="onbActs"></div>
 </div>
 
 <!-- Toast Container -->
@@ -2064,14 +2127,15 @@ function showToast(msg, type = "ok", act) {
 // Hộp thoại xác nhận dạng kính. Trả về "ok", "alt" hoặc null (hủy).
 // Hành động nguy hiểm đặt sẵn con trỏ ở Hủy để Enter không xóa nhầm.
 let askState = null;
-function ask({ title, msg = "", ok = "Đồng ý", alt = "", cancel = "Hủy", danger = false }) {
+function ask({ title, msg = "", html = "", ok = "Đồng ý", alt = "", cancel = "Hủy", danger = false }) {
   if (askState) askDone(null);
   return new Promise(res => {
     askState = { res, back: document.activeElement };
     $("askTitle").textContent = title;
-    $("askMsg").textContent = msg;
-    $("askMsg").hidden = !msg;
-    $("askActs").innerHTML = `<button type="button" class="btn btn-sm btn-ghost" data-a="">${esc(cancel)}</button>`
+    if (html) $("askMsg").innerHTML = html; else $("askMsg").textContent = msg; // html: chỉ nội dung tĩnh của app
+    $("askMsg").classList.toggle("ask-html", !!html);
+    $("askMsg").hidden = !msg && !html;
+    $("askActs").innerHTML = (cancel ? `<button type="button" class="btn btn-sm btn-ghost" data-a="">${esc(cancel)}</button>` : "")
       + (alt ? `<button type="button" class="btn btn-sm" data-a="alt">${esc(alt)}</button>` : "")
       + `<button type="button" class="btn btn-sm ${danger ? "btn-danger" : "btn-primary"}" data-a="ok">${esc(ok)}</button>`;
     $("askOverlay").classList.add("open");
@@ -2826,7 +2890,7 @@ function renderNav() {
   $("pageTitle").textContent = t.label;
   $("pageSub").textContent = t.sub;
   document.body.dataset.tab = cur;
-  $("addBtn").title = cur === "hv" ? "Thêm việc vào hộp" : "Thêm hoạt động hôm nay";
+  $("addBtn").title = cur === "hv" ? "Thêm việc vào hộp (N)" : "Thêm hoạt động hôm nay (N)";
 }
 
 // Nút Thêm trên header: ở Hộp việc thì thêm việc, ở Lịch thì thêm hoạt động
@@ -3306,6 +3370,24 @@ function updateSyncBadge() {
   }
 }
 
+// Giảm hiệu ứng: "auto" theo cài đặt máy (giảm chuyển động / giảm độ trong suốt), "on", "off"
+function liteMode() { try { return localStorage.getItem("lc_lite") || "auto"; } catch (e) { return "auto"; } }
+function applyLite() {
+  const m = liteMode(), mq = q => window.matchMedia && matchMedia(q).matches;
+  document.documentElement.classList.toggle("lite", m === "on" || (m === "auto" && (mq("(prefers-reduced-motion: reduce)") || mq("(prefers-reduced-transparency: reduce)"))));
+}
+function setLite(v) {
+  try { localStorage.setItem("lc_lite", v); } catch (e) {}
+  applyLite();
+  renderSettingsModal();
+}
+try {
+  ["(prefers-reduced-motion: reduce)", "(prefers-reduced-transparency: reduce)"].forEach(q => {
+    const m = window.matchMedia && matchMedia(q);
+    if (m && m.addEventListener) m.addEventListener("change", applyLite);
+  });
+} catch (e) {}
+
 // Mục nào trong Cài đặt đang mở (nhớ giữa các lần mở)
 let setOpen = null;
 function setSecOpen(id) {
@@ -3330,7 +3412,7 @@ function renderSettingsModal() {
 
   $("settingsSheetBody").innerHTML = `
     <details class="set-sec set-bg" ${setSecOpen("ui")} ontoggle="setSecToggle('ui', this.open)">
-      <summary class="set-h">Giao diện<span class="set-sum">${{ light: "Sáng", dark: "Tối", auto: "Theo máy" }[curTheme] || ""}${document.body.classList.contains("has-bg") ? " · có ảnh nền" : ""}</span></summary>
+      <summary class="set-h">Giao diện<span class="set-sum">${{ light: "Sáng", dark: "Tối", auto: "Theo máy" }[curTheme] || ""}${document.body.classList.contains("has-bg") ? " · có ảnh nền" : ""}${document.documentElement.classList.contains("lite") ? " · giảm hiệu ứng" : ""}</span></summary>
       <div class="set-row">
         <span class="set-lbl">Chế độ</span>
         <div class="set-seg">${seg("light", "Sáng")}${seg("dark", "Tối")}${seg("auto", "Theo máy")}</div>
@@ -3342,6 +3424,10 @@ function renderSettingsModal() {
           ${document.body.classList.contains("has-bg") ? `<button type="button" class="btn btn-sm btn-ghost" onclick="removeBg()">Bỏ ảnh</button>` : ""}
           <input id="bgFile" type="file" accept="image/*" onchange="chooseBg(this)" style="display:none">
         </div>
+      </div>
+      <div class="set-row">
+        <span class="set-lbl">Giảm hiệu ứng<small>Bỏ kính mờ và chuyển động, mượt hơn trên máy cũ</small></span>
+        <div class="set-seg">${["auto", "on", "off"].map(v => `<button type="button" class="${liteMode() === v ? "on" : ""}" aria-pressed="${liteMode() === v}" onclick="setLite('${v}')">${{ auto: "Tự động", on: "Bật", off: "Tắt" }[v]}</button>`).join("")}</div>
       </div>
       <div class="set-row bg-blur-row">
         <label class="set-lbl" for="bgBlurRange">Độ mờ nền<small>${document.body.classList.contains("has-bg") ? "Kéo phải để mờ hơn" : "Cần chọn ảnh nền"}</small></label>
@@ -3453,6 +3539,142 @@ function renderSettingsModal() {
 /* ==========================================================================
    8. MAIN VIEWS
    ========================================================================== */
+/* Phím tắt (máy tính). Không chạy khi đang gõ chữ, đang mở popup hoặc có phím Ctrl/Cmd/Alt. */
+const KEYS = [
+  ["N", "Thêm hoạt động (ở Hộp việc: thêm việc)"],
+  ["/", "Ghi nhanh"],
+  ["← →", "Tuần trước, tuần sau (chế độ Ngày: ngày trước, ngày sau)"],
+  ["T", "Về hôm nay"],
+  ["1 – 4", "Lịch, Hộp việc, Tổng quan, Vốn"],
+  ["Esc", "Đóng popup"],
+  ["⌘Z", "Hoàn tác khi vừa xóa"],
+  ["?", "Xem phím tắt"]
+];
+function showShortcuts() {
+  ask({ title: "Phím tắt", html: `<div class="keys">${KEYS.map(([k, d]) => `<kbd>${k}</kbd><span>${d}</span>`).join("")}</div>`, ok: "Đóng", cancel: "" });
+}
+function goToday() {
+  const y = new Date().getFullYear();
+  if (y !== activeYear) changeYear(y - activeYear);
+  sel = Math.max(0, CW);
+  timelineDayIdx = (new Date().getDay() + 6) % 7;
+  draw(true);
+}
+function shortcut(e) {
+  const tg = e.target;
+  if (e.ctrlKey || e.metaKey || e.altKey || onbIdx >= 0) return false;
+  if (tg && (/^(INPUT|TEXTAREA|SELECT)$/.test(tg.tagName) || tg.isContentEditable)) return false;
+  if (document.querySelector(".modal-overlay.open")) return false;
+  const k = e.key;
+  if (k === "/") { $("nlpInput").focus(); return true; }
+  if (k === "n" || k === "N") { headerAdd(); return true; }
+  if (k === "t" || k === "T") { goToday(); return true; }
+  if (k === "?") { showShortcuts(); return true; }
+  if (/^[1-4]$/.test(k)) { switchTab(TABS[+k - 1].id); return true; }
+  if ((k === "ArrowLeft" || k === "ArrowRight") && (cur === "ca" || cur === "su") && !(tg && tg.closest && tg.closest(".table-wrapper, .yr-quarters, .timeline-days-nav"))) {
+    const d = k === "ArrowLeft" ? -1 : 1;
+    if (cur === "ca" && calSubView === "timeline") shiftDay(d);
+    else { sel = Math.min(W.length - 1, Math.max(0, sel + d)); draw(); }
+    return true;
+  }
+  return false;
+}
+
+/* Lưới năm trên điện thoại: mỗi quý một trang, vuốt ngang. Ô ngày tô theo cán cân Nạp/Tiêu,
+   càng nhiều giờ càng đậm. Chạm một ngày để mở chế độ Ngày. */
+let yrQ = null;
+const quarterOf = i => { const th = ad(W[i], 3); return th.getFullYear() < activeYear ? 0 : th.getFullYear() > activeYear ? 3 : Math.floor(th.getMonth() / 3); };
+function yearMobileHTML() {
+  if (yrQ === null) yrQ = CW >= 0 ? quarterOf(CW) : 0;
+  const qs = [[], [], [], []];
+  W.forEach((_, i) => qs[quarterOf(i)].push(i));
+  const day = (i, j) => {
+    const dt = ad(W[i], j), k = ky(dt);
+    let u = 0, d = 0;
+    (S.ev[k] || []).forEach(e => e.m === "u" ? u += e.h : d += e.h);
+    const tot = u + d, tone = !tot ? "" : u >= d ? "var(--ok)" : "var(--bad)";
+    const bg = tone ? `background: color-mix(in srgb, ${tone} ${Math.round(18 + 50 * Math.min(1, tot / 8))}%, transparent);` : "";
+    return `<button type="button" class="yr-day ${k === tk ? "today" : ""} ${dt.getFullYear() !== activeYear ? "out" : ""}" style="${bg}" onclick="openDayFromYear(${i}, ${j})" aria-label="${DN_VI[j]} ${dt.getDate()}/${dt.getMonth() + 1}${tot ? `, nạp ${r1(u)} giờ, tiêu ${r1(d)} giờ` : ""}">${dt.getDate()}</button>`;
+  };
+  const row = i => {
+    let u = 0, d = 0;
+    evs(i).forEach(e => e.m === "u" ? u += e.h : d += e.h);
+    const net = u - d;
+    return `<div class="yr-row ${i === CW ? "cur" : ""}"><span class="yr-wk">W${i + 1}</span>${[0, 1, 2, 3, 4, 5, 6].map(j => day(i, j)).join("")}<span class="yr-net ${u + d ? (net >= 0 ? "up" : "down") : ""}">${u + d ? (net >= 0 ? "+" : "") + r1(net) + "h" : ""}</span></div>`;
+  };
+  const M = ["T1–T3", "T4–T6", "T7–T9", "T10–T12"];
+  return `
+    <div class="yr-mobile">
+      <div class="yr-tabs" role="tablist">${M.map((_, q) => `<button type="button" role="tab" class="btn btn-sm ${q === yrQ ? "btn-primary" : "btn-ghost"}" aria-selected="${q === yrQ}" onclick="yrGo(${q})">Quý ${q + 1}</button>`).join("")}</div>
+      <div class="yr-quarters" id="yrQuarters" onscroll="yrScrolled(this)">
+        ${qs.map((list, q) => `
+          <section class="card yr-q" aria-label="Quý ${q + 1}">
+            <h3>Quý ${q + 1} · ${M[q]}</h3>
+            <div class="yr-row hd"><span></span>${DN_SHORT.map(d => `<span>${d}</span>`).join("")}<span>Cán cân</span></div>
+            ${list.map(row).join("")}
+          </section>`).join("")}
+      </div>
+      <p class="yr-legend">Xanh: nạp nhiều hơn tiêu · Đỏ: tiêu nhiều hơn nạp · Màu càng đậm càng nhiều giờ. Chạm một ngày để xem chi tiết.</p>
+    </div>`;
+}
+function yrGo(q, smooth = true) {
+  const box = $("yrQuarters");
+  if (!box) return;
+  yrQ = q;
+  box.scrollTo({ left: q * (box.clientWidth + 12), behavior: smooth ? "smooth" : "auto" });
+  document.querySelectorAll(".yr-tabs button").forEach((b, i) => { b.classList.toggle("btn-primary", i === q); b.classList.toggle("btn-ghost", i !== q); b.setAttribute("aria-selected", i === q); });
+}
+function yrScrolled(box) {
+  const q = Math.round(box.scrollLeft / (box.clientWidth + 12));
+  if (q !== yrQ && q >= 0 && q < 4) {
+    yrQ = q;
+    document.querySelectorAll(".yr-tabs button").forEach((b, i) => { b.classList.toggle("btn-primary", i === q); b.classList.toggle("btn-ghost", i !== q); b.setAttribute("aria-selected", i === q); });
+  }
+}
+function openDayFromYear(i, j) {
+  sel = i;
+  timelineDayIdx = j;
+  calSubView = "timeline";
+  draw(true);
+  window.scrollTo(0, 0);
+}
+
+/* Hướng dẫn lần đầu: 3 bước, viền sáng chỉ vào đúng chỗ trên màn hình. Không chặn thao tác. */
+const ONB = [
+  { el: ".quick-capture-box", t: "Ghi nhanh", d: "Gõ như nói, vd “Mai 18h cầu lông 2 tiếng”. App tự nhận ngày, giờ, thời lượng và loại vốn." },
+  { el: "#nav button:nth-child(2)", t: "Hộp việc", d: "Việc chưa rõ lúc làm: gõ “+ tên việc” để cất vào hộp, chia nhỏ rồi xếp vào lịch sau." },
+  { el: "#reviewBtn", t: "Tổng kết", d: "Cuối tuần, xem cán cân Nạp / Tiêu và gợi ý cho tuần tới." }
+];
+let onbIdx = -1;
+function onbStart() {
+  if (cur !== "ca") switchTab("ca");
+  window.scrollTo(0, 0);
+  onbIdx = 0;
+  onbShow();
+}
+function onbShow() {
+  document.querySelectorAll(".onb-target").forEach(x => x.classList.remove("onb-target"));
+  const st = ONB[onbIdx], last = onbIdx === ONB.length - 1;
+  const el = document.querySelector(st.el);
+  if (el) { el.classList.add("onb-target"); if (el.scrollIntoView) el.scrollIntoView({ block: "nearest" }); }
+  $("onbStep").textContent = `Bước ${onbIdx + 1}/${ONB.length}`;
+  $("onbTitle").textContent = st.t;
+  $("onbText").textContent = st.d;
+  $("onbActs").innerHTML = last
+    ? `<button type="button" class="btn btn-sm btn-ghost" onclick="onbEnd(); loadDemo();">Dùng thử dữ liệu mẫu</button><button type="button" class="btn btn-sm btn-primary" onclick="onbEnd(true)">Bắt đầu</button>`
+    : `<button type="button" class="btn btn-sm btn-ghost" onclick="onbEnd()">Bỏ qua</button><button type="button" class="btn btn-sm btn-primary" onclick="onbIdx++; onbShow();">Tiếp</button>`;
+  $("onb").hidden = false;
+  const b = $("onbActs").querySelector(".btn-primary");
+  if (b) b.focus({ preventScroll: true });
+}
+function onbEnd(focusCapture) {
+  onbIdx = -1;
+  $("onb").hidden = true;
+  document.querySelectorAll(".onb-target").forEach(x => x.classList.remove("onb-target"));
+  try { localStorage.setItem("lc_onb", "1"); } catch (e) {}
+  if (focusCapture) $("nlpInput").focus();
+}
+
 // Chế độ Ngày trên điện thoại: vuốt ngang trên dòng thời gian để đổi ngày (qua cả tuần trước/sau)
 let swipe0 = null;
 document.addEventListener("touchstart", e => {
@@ -3539,7 +3761,10 @@ function startOrDemoNotice() {
           <b>Bắt đầu</b>
           <div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Gõ vào ô ghi nhanh, vd <i>Mai 18h cầu lông 2 tiếng</i>, hoặc bấm Thêm ở một ngày.</div>
         </div>
-        <button type="button" class="btn btn-sm" onclick="loadDemo()">Dùng thử</button>
+        <div class="row" style="gap:6px;">
+          <button type="button" class="btn btn-sm btn-ghost" onclick="onbStart()">Hướng dẫn</button>
+          <button type="button" class="btn btn-sm" onclick="loadDemo()">Dùng thử</button>
+        </div>
       </div>`;
   }
   if (hasDemo()) {
@@ -3785,7 +4010,7 @@ const V = {
     }
 
     tbl += `</tbody></table></div>`;
-    return headerBar + filterBar + tbl;
+    return headerBar + `<div class="yr-desk">${filterBar}${tbl}</div>` + yearMobileHTML();
   },
 
   // --- TAB 2: HIỆU SUẤT & 168 GIỜ & BÁNH XE CUỘC ĐỜI ---
@@ -4710,6 +4935,7 @@ function draw(jump) {
   if (jump && cur === "ca" && calSubView === "year") {
     scrollToCurrentWeek();
   }
+  if (cur === "ca" && calSubView === "year" && yrQ !== null) yrGo(yrQ, false);
 
   // Chia làn hiển thị nếu ở dòng thời gian 24h
   if (cur === "ca" && calSubView === "timeline") {
@@ -4794,6 +5020,8 @@ document.addEventListener("keydown", e => {
     undoRun();
     return;
   }
+  if (onbIdx >= 0 && e.key === "Escape") { e.preventDefault(); onbEnd(); return; }
+  if (shortcut(e)) { e.preventDefault(); return; }
   if (e.key === "Escape") {
     if (ed) closeEditor();
     closeSched();
@@ -5493,6 +5721,9 @@ try { bgGet().then(b => { if (b) applyBg(b); }).catch(() => {}); } catch (e) {}
 // Khởi chạy ứng dụng
 draw(true);
 gcalFlush(); // đẩy các thay đổi còn chờ từ lần mở trước
+try {
+  if (!localStorage.getItem("lc_onb") && !Object.keys(S.ev).length && !S.tasks.length) setTimeout(onbStart, 500);
+} catch (e) {}
 </script>
 </body>
 </html>
