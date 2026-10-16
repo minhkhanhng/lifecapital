@@ -663,14 +663,17 @@ input[type="time"] { min-width: 105px; }
 /* Calendar Week Cards (Tuần chi tiết) */
 .week-cards-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 10px;
 }
-@media (max-width: 992px) {
-  .week-cards-grid { grid-template-columns: repeat(4, 1fr); }
-}
-@media (max-width: 640px) {
-  .week-cards-grid { grid-template-columns: 1fr; }
+/* Số cột theo bề rộng thật của lưới (hẹp lại khi mở cột Hộp việc), không theo bề rộng màn hình */
+.wk-wrap { container-type: inline-size; min-width: 0; }
+@container (max-width: 1039px) { .week-cards-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@container (max-width: 599px) { .week-cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .week-cards-grid { grid-template-columns: minmax(0, 1fr) !important; } } /* điện thoại: một cột */
+@supports not (container-type: inline-size) {
+  @media (max-width: 992px) { .week-cards-grid { grid-template-columns: repeat(4, 1fr); } }
+  @media (max-width: 640px) { .week-cards-grid { grid-template-columns: 1fr; } }
 }
 
 .day-card {
@@ -829,6 +832,7 @@ input[type="time"] { min-width: 105px; }
   transform: translateY(-50%);
   user-select: none;
 }
+.timeline-hour-mark:first-child { transform: translateY(2px); } /* 06:00 nằm sát mép trên: không đẩy lên để khỏi bị cắt */
 .timeline-content-area {
   position: absolute;
   left: 60px;
@@ -1150,9 +1154,6 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
 .chg { font-weight: 600; background: var(--ac-soft); border-radius: 4px; padding: 0 3px; box-shadow: 0 0 0 1px var(--ac); }
 /* Hộp việc chờ (v0.2.0) */
 .cal-with-inbox { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 14px; align-items: start; }
-.cal-with-inbox .week-cards-grid { grid-template-columns: repeat(4, 1fr); }
-@media (min-width: 1440px) { .cal-with-inbox .week-cards-grid { grid-template-columns: repeat(7, minmax(0, 1fr)); } }
-@media (max-width: 640px) { .cal-with-inbox .week-cards-grid { grid-template-columns: minmax(0, 1fr); } } /* iPhone: một cột như trước khi có Hộp việc */
 .inbox-aside { position: sticky; top: 12px; max-height: calc(100vh - 24px); overflow-y: auto; background: var(--card); border: 1px solid var(--bd); border-radius: var(--radius-lg); padding: 12px; }
 @media (max-width: 1023px) { .cal-with-inbox { grid-template-columns: minmax(0, 1fr); } .inbox-aside { display: none; } }
 .hv-box { display: flex; flex-direction: column; gap: 8px; }
@@ -1316,7 +1317,9 @@ body[data-tab="su"] #addBtn, body[data-tab="set"] #addBtn { display: none; }
 
 /* Hoạt động dạng viên, tô theo màu loại vốn */
 .event-item { --cap: var(--ac); border-left: 0; border-radius: 10px; padding: 6px 9px; background: color-mix(in srgb, var(--cap) 30%, var(--glass-hi)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cap) 40%, transparent); }
-.event-meta { color: var(--tx-sec); }
+.event-meta { color: var(--tx-sec); gap: 6px; min-width: 0; }
+.event-meta > span { white-space: nowrap; }
+.event-meta > span:last-child { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .timeline-event-block { border-radius: 10px; }
 
 @media (max-width: 899px) {
@@ -1490,7 +1493,7 @@ body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(-
 /* Phím tắt */
 .sidebar-keys { width: 100%; justify-content: flex-start; border-radius: 12px; margin-top: auto; }
 .sidebar-keys + .sidebar-settings { margin-top: 6px; }
-@media (hover: none), (pointer: coarse) { .sidebar-keys { display: none; } .sidebar-keys + .sidebar-settings { margin-top: auto; } }
+@media (hover: none), (pointer: coarse), (max-width: 899px) { .sidebar-keys { display: none; } .sidebar-keys + .sidebar-settings { margin-top: auto; } }
 .keys { display: grid; grid-template-columns: auto 1fr; gap: 8px 14px; margin: 10px 0 0; font-size: 13.5px; color: var(--tx); }
 .keys kbd { font: 600 12px var(--font-ui); min-width: 26px; text-align: center; padding: 3px 7px; border-radius: 7px; border: 1px solid var(--glass-bd); background: var(--sheen), var(--glass-hi); box-shadow: var(--glass-shadow); justify-self: start; }
 .ask-msg.ask-html { color: var(--tx); }
@@ -3811,7 +3814,7 @@ const V = {
 
     // 1. Chế độ TUẦN CHI TIẾT
     if (calSubView === "focus") {
-      let cards = '<div class="week-cards-grid">';
+      let cards = '<div class="wk-wrap"><div class="week-cards-grid">';
       for (let j = 0; j < 7; j++) {
         const dt = ad(selWeekStart, j);
         const k = ky(dt);
@@ -3844,7 +3847,7 @@ const V = {
                     </div>
                     <div class="event-meta">
                       <span>${e.s ? e.s + ' · ' : ''}${r1(e.h)}h</span>
-                      <span style="color:${cap.c}; font-weight:500;">${esc(cap.n)}</span>
+                      <span style="color:${cap.c}; font-weight:500;" title="${esc(cap.n)}">${esc(cap.n)}</span>
                     </div>
                   </div>
                 `;
@@ -3854,7 +3857,7 @@ const V = {
           </div>
         `;
       }
-      cards += '</div>';
+      cards += '</div></div>';
       return headerBar + weekStatsHTML(selWeekStart) + withInbox(cards);
     }
 
