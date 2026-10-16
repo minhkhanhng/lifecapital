@@ -1333,8 +1333,31 @@ body[data-tab="su"] #addBtn, body[data-tab="set"] #addBtn { display: none; }
   .app-header #settingsBtn { display: inline-flex; }
   .page-title { font-size: 21px; }
   .stat-row { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-  .toast-container { bottom: calc(92px + env(safe-area-inset-bottom, 0px)) !important; }
+  .toast-container { bottom: calc(146px + env(safe-area-inset-bottom, 0px)) !important; }
+  /* Ô ghi nhanh nổi ngay trên thanh tab; bàn phím mở thì nằm sát trên bàn phím và ẩn thanh tab */
+  .app-shell { padding-bottom: calc(150px + env(safe-area-inset-bottom, 0px)); }
+  .quick-capture-box { position: fixed; left: 10px; right: 10px; bottom: calc(82px + env(safe-area-inset-bottom, 0px)); z-index: 59; margin: 0; padding: 6px 6px 6px 14px; }
+  .quick-capture-input { font-size: 16px; }
+  .quick-capture-box:focus-within { bottom: calc(max(var(--kb, 0px), env(safe-area-inset-bottom, 0px)) + 8px); }
+  body:has(.quick-capture-box:focus-within) .sidebar { display: none; }
 }
+/* Chế độ Ngày: vuốt ngang để đổi ngày */
+.timeline-container { touch-action: pan-y; }
+@keyframes tlSlideL { from { opacity: 0.35; transform: translateX(28px); } to { opacity: 1; transform: none; } }
+@keyframes tlSlideR { from { opacity: 0.35; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
+.timeline-container.slide-l .timeline-grid { animation: tlSlideL 0.22s ease-out; }
+.timeline-container.slide-r .timeline-grid { animation: tlSlideR 0.22s ease-out; }
+/* Mục thu gọn được (Cài đặt, Tổng quan) */
+details.set-sec > summary, details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 8px; user-select: none; }
+details.set-sec > summary::-webkit-details-marker, details.fold > summary::-webkit-details-marker { display: none; }
+details.set-sec > summary::after, details.fold > summary::after { content: ""; flex: none; width: 7px; height: 7px; margin: 0 4px 3px 2px; border-right: 1.5px solid var(--mu); border-bottom: 1.5px solid var(--mu); transform: rotate(45deg); transition: transform 0.15s; }
+details.set-sec[open] > summary::after, details.fold[open] > summary::after { transform: rotate(-135deg); margin-bottom: -3px; }
+details.set-sec > summary { margin: 0; min-height: 32px; }
+details.set-sec[open] > summary { margin-bottom: 8px; }
+.set-sum { margin-left: auto; font-size: 12px; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--tx-sec); text-align: right; }
+details.fold > summary .card-title { margin: 0; }
+details.fold > summary .set-sum { font-size: 12.5px; }
+details.fold[open] > summary .set-sum { display: none; }
 /* ===== Giọt nước: kính trong veo có vệt sáng, nút kính loang màu, không mảng màu đặc ===== */
 :root {
   --glass: rgba(255, 255, 255, 0.30);
@@ -1929,6 +1952,7 @@ const wkNow = () => {
 let CW = wkNow(), lt = tk, sel = CW;
 let cur = "ca"; // Tabs: "ca" (Lịch tuần), "su" (Tổng quan), "set" (Cài đặt vốn), "bak" (Sao lưu)
 let calSubView = "focus"; // "focus" (Tuần chi tiết), "timeline" (Dòng thời gian 24h), "year" (Lưới 53 tuần)
+let suMore = false; // Tổng quan: bảng "Giờ theo loại vốn" đang mở
 let timelineDayIdx = (new Date().getDay() + 6) % 7; // 0 = T2 .. 6 = CN; mặc định là hôm nay
 let N = 4;
 let ed = null, ei = null;
@@ -2099,6 +2123,13 @@ function undoRun() {
   showToast("Đã hoàn tác", "ok");
 }
 window.addEventListener("pagehide", undoCommit);
+// Chiều cao bàn phím ảo (iPhone không thu nhỏ trang khi bàn phím mở): ô ghi nhanh dùng để nằm sát trên bàn phím
+if (window.visualViewport) {
+  const vv = window.visualViewport;
+  const kb = () => document.documentElement.style.setProperty("--kb", Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop)) + "px");
+  vv.addEventListener("resize", kb);
+  vv.addEventListener("scroll", kb);
+}
 // Gỡ các hoạt động thỏa điều kiện khỏi lịch (kèm lệnh xóa trên Google); trả về [[ngày, hoạt động]] để hoàn tác
 function pullEvents(pred) {
   const out = [];
@@ -3275,6 +3306,17 @@ function updateSyncBadge() {
   }
 }
 
+// Mục nào trong Cài đặt đang mở (nhớ giữa các lần mở)
+let setOpen = null;
+function setSecOpen(id) {
+  if (!setOpen) { try { setOpen = new Set(JSON.parse(localStorage.getItem("lc_set_open")) || ["ui"]); } catch (e) { setOpen = new Set(["ui"]); } }
+  return setOpen.has(id) ? "open" : "";
+}
+function setSecToggle(id, on) {
+  setSecOpen(id);
+  on ? setOpen.add(id) : setOpen.delete(id);
+  try { localStorage.setItem("lc_set_open", JSON.stringify([...setOpen])); } catch (e) {}
+}
 function renderSettingsModal() {
   const curTheme = getThemePreference();
   const total = Object.values(S.ev).flat().length;
@@ -3287,8 +3329,8 @@ function renderSettingsModal() {
   const backup = S.lb ? `sao lưu ${new Date(S.lb).toLocaleString("vi-VN", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "2-digit" })}` : `<span style="color:var(--bad)">chưa sao lưu</span>`;
 
   $("settingsSheetBody").innerHTML = `
-    <section class="set-sec set-bg">
-      <h4 class="set-h">Giao diện</h4>
+    <details class="set-sec set-bg" ${setSecOpen("ui")} ontoggle="setSecToggle('ui', this.open)">
+      <summary class="set-h">Giao diện<span class="set-sum">${{ light: "Sáng", dark: "Tối", auto: "Theo máy" }[curTheme] || ""}${document.body.classList.contains("has-bg") ? " · có ảnh nền" : ""}</span></summary>
       <div class="set-row">
         <span class="set-lbl">Chế độ</span>
         <div class="set-seg">${seg("light", "Sáng")}${seg("dark", "Tối")}${seg("auto", "Theo máy")}</div>
@@ -3307,10 +3349,10 @@ function renderSettingsModal() {
                oninput="setBgBlur(this.value, false)" onchange="setBgBlur(this.value)"
                onpointerdown="bgPeek(true)" onpointerup="bgPeek(false)" onpointercancel="bgPeek(false)" onfocus="bgPeek(true)" onblur="bgPeek(false)">
       </div>
-    </section>
+    </details>
 
-    <section class="set-sec">
-      <h4 class="set-h">Mặc định</h4>
+    <details class="set-sec" ${setSecOpen("def")} ontoggle="setSecToggle('def', this.open)">
+      <summary class="set-h">Mặc định<span class="set-sum">${String(defDur).replace(".", ",")} giờ · ngưỡng ${burnH} giờ</span></summary>
       <div class="set-row">
         <label class="set-lbl" for="setDur">Thời lượng mặc định</label>
         <select id="setDur" onchange="setDefaultDuration(+this.value)">
@@ -3323,10 +3365,10 @@ function renderSettingsModal() {
           ${opt(5, burnH, "5 giờ")}${opt(6, burnH, "6 giờ")}${opt(7, burnH, "7 giờ")}${opt(8, burnH, "8 giờ")}
         </select>
       </div>
-    </section>
+    </details>
 
-    <section class="set-sec">
-      <h4 class="set-h">Dữ liệu</h4>
+    <details class="set-sec" ${setSecOpen("data")} ontoggle="setSecToggle('data', this.open)">
+      <summary class="set-h">Dữ liệu<span class="set-sum">${S.lb ? total + " hoạt động" : `<span style="color:var(--bad)">chưa sao lưu</span>`}</span></summary>
       <p class="set-note">${total} hoạt động · ${kb} KB · ${backup}</p>
       <div class="set-actions">
         <button type="button" class="btn btn-primary btn-sm" onclick="exportData('json')">Sao lưu</button>
@@ -3354,15 +3396,10 @@ function renderSettingsModal() {
           }).join("") || `<span style="font-size:12.5px; color:var(--mu);">Chưa có</span>`}
         </div>
       </div>
-    </section>
+    </details>
 
-    <section class="set-sec">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <h4 class="set-h" style="margin-bottom:0;">Google Calendar</h4>
-        <span class="pill ${isGCalConnected() ? 'pill-ok' : 'pill-neutral'}" style="font-size:11px;">
-          ${isGCalConnected() ? 'Đã kết nối' : 'Chưa kết nối'}
-        </span>
-      </div>
+    <details class="set-sec" ${setSecOpen("gc") || (gcalConfigErr ? "open" : "")} ontoggle="setSecToggle('gc', this.open)">
+      <summary class="set-h">Google Calendar<span class="set-sum"><span class="pill ${isGCalConnected() ? 'pill-ok' : 'pill-neutral'}" style="font-size:11px;">${isGCalConnected() ? 'Đã kết nối' : 'Chưa kết nối'}</span></span></summary>
       ${gcalConfigErr ? `<p class="set-note" style="color:var(--bad);" role="alert">${esc(gcalConfigErr)}</p>` : ""}
       <p style="font-size:12px; color:var(--tx-sec); margin-bottom:12px; line-height:1.45;">
         Gửi một chiều khi thêm, sửa, xóa. Sửa trên Google không cập nhật về app.
@@ -3401,21 +3438,46 @@ function renderSettingsModal() {
           <button type="button" class="btn btn-sm" onclick="gcalSyncWeek(sel)" title="Gửi lại mọi hoạt động của tuần đang xem">Đồng bộ tuần</button>
         `}
       </div>
-    </section>
+    </details>
 
-    <section class="set-sec set-danger">
-      <h4 class="set-h">Xóa dữ liệu</h4>
+    <details class="set-sec set-danger" ${setSecOpen("del")} ontoggle="setSecToggle('del', this.open)">
+      <summary class="set-h">Xóa dữ liệu<span class="set-sum"></span></summary>
       <div class="set-row">
         <span class="set-lbl">Xóa mọi hoạt động, đặt lại loại vốn<small>Không hoàn tác được. Nên sao lưu trước.</small></span>
         <button type="button" class="btn btn-sm btn-danger" onclick="resetToDefaultData()">Xóa hết</button>
       </div>
-    </section>
+    </details>
   `;
 }
 
 /* ==========================================================================
    8. MAIN VIEWS
    ========================================================================== */
+// Chế độ Ngày trên điện thoại: vuốt ngang trên dòng thời gian để đổi ngày (qua cả tuần trước/sau)
+let swipe0 = null;
+document.addEventListener("touchstart", e => {
+  const t = e.touches[0];
+  swipe0 = e.touches.length === 1 && e.target.closest && e.target.closest(".timeline-container") && !e.target.closest(".timeline-days-nav")
+    ? { x: t.clientX, y: t.clientY, at: Date.now() } : null;
+}, { passive: true });
+document.addEventListener("touchend", e => {
+  if (!swipe0) return;
+  const t = e.changedTouches[0], dx = t.clientX - swipe0.x, dy = t.clientY - swipe0.y, quick = Date.now() - swipe0.at < 700;
+  swipe0 = null;
+  if (quick && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) shiftDay(dx < 0 ? 1 : -1);
+}, { passive: true });
+function shiftDay(d) {
+  let i = timelineDayIdx + d;
+  if (i > 6) { if (sel >= W.length - 1) return; sel++; i = 0; }
+  if (i < 0) { if (sel <= 0) return; sel--; i = 6; }
+  timelineDayIdx = i;
+  draw();
+  const box = document.querySelector(".timeline-container");
+  if (box) box.classList.add(d > 0 ? "slide-l" : "slide-r");
+  const chip = document.querySelector(".timeline-days-nav .btn-primary");
+  if (chip && chip.scrollIntoView) chip.scrollIntoView({ inline: "center", block: "nearest" });
+}
+
 // Đầu tab Lịch chỉ hiện một thông báo, theo thứ tự ưu tiên: sao lưu, tổng kết tuần, dữ liệu mẫu, bắt đầu
 function calendarNotices() {
   return backupNotice() || reviewNotice() || startOrDemoNotice();
@@ -3910,8 +3972,8 @@ const V = {
     });
 
     const reportTable = `
-      <div class="card">
-        <h2 class="card-title">Giờ theo loại vốn</h2>
+      <details class="card fold" ${suMore ? "open" : ""} ontoggle="suMore = this.open">
+        <summary><h2 class="card-title">Giờ theo loại vốn</h2><span class="set-sum">Xem chi tiết</span></summary>
         <div style="overflow-x:auto; margin-top:12px;">
           <table class="sum-table">
             <thead>
@@ -3936,7 +3998,7 @@ const V = {
             </tbody>
           </table>
         </div>
-      </div>
+      </details>
     `;
 
     return selectorBar + insightCard + wheelCard + f168 + reportTable;
