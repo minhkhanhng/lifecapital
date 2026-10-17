@@ -1120,7 +1120,7 @@ nav.main-nav button.active { background: var(--glass-hi); color: var(--tx); bord
 .page-sub { margin: 0; color: var(--tx-sec); font-size: 13px; }
 .year-row { display: inline-flex; align-items: center; gap: 2px; }
 /* Header theo tab: chỉ hiện nút có tác dụng ở tab đang mở */
-body[data-tab="hv"] .year-row, body[data-tab="set"] .year-row,
+body[data-tab="hv"] .year-row, body[data-tab="set"] .year-row, body[data-tab="pj"] .year-row, body[data-tab="pj"] #reviewBtn,
 body[data-tab="hv"] #reviewBtn, body[data-tab="set"] #reviewBtn,
 body[data-tab="su"] #addBtn, body[data-tab="set"] #addBtn { display: none; }
 /* Hộp thoại xác nhận */
@@ -1176,7 +1176,7 @@ body[data-tab="su"] #addBtn, body[data-tab="set"] #addBtn { display: none; }
   .app-shell { display: block; padding: 12px 12px calc(92px + env(safe-area-inset-bottom, 0px)); }
   .sidebar { position: fixed; left: 10px; right: 10px; top: auto; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); height: auto; z-index: 60; padding: 6px; border-radius: 20px; flex-direction: row; gap: 0; background: var(--glass-hi); }
   .sidebar .brand-area { display: none; }
-  nav.main-nav { flex-direction: row; flex: 4 1 0; min-width: 0; width: auto; justify-content: space-around; }
+  nav.main-nav { flex-direction: row; flex: 5 1 0; min-width: 0; width: auto; justify-content: space-around; } /* 5 tab + Cài đặt = 6 ô bằng nhau */
   /* Cài đặt là ô thứ năm của thanh tab dưới: trong tầm ngón cái, cùng kiểu với các tab */
   .sidebar .sidebar-settings { display: flex; flex: 1 1 0; min-width: 0; width: auto; margin: 0; flex-direction: column; justify-content: center; gap: 2px; min-height: 52px; padding: 6px 2px; border: 0; background: transparent; box-shadow: none; font-size: 14px; font-weight: 500; white-space: nowrap; color: var(--tx-sec); border-radius: 12px; }
   .sidebar .sidebar-settings:hover { background: var(--glass-hi); color: var(--tx); }
@@ -1427,6 +1427,89 @@ body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(-
 .set-row > .btn { flex: none; white-space: nowrap; }
 @media (max-width: 899px) { .update-bar { top: auto; bottom: calc(146px + env(safe-area-inset-bottom, 0px)); } }
 .inst-steps { margin: 6px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
+/* ===== Dự án (v0.5.0) ===== */
+.pj-list { display: flex; flex-direction: column; gap: 12px; max-width: 980px; margin: 0 auto; }
+.pj-empty { padding: 22px 20px; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; max-width: 640px; margin: 0 auto; }
+.pj-empty p { margin: 0; font-size: 13.5px; color: var(--tx-sec); line-height: 1.5; }
+.pj-item { padding: 0; overflow: hidden; border-left: 4px solid var(--pj); }
+.pj-bar { width: 100%; display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto auto; align-items: center; gap: 12px; padding: 14px 16px; border: 0; background: transparent; color: var(--tx); font: inherit; text-align: left; cursor: pointer; }
+.pj-bar:hover { background: color-mix(in srgb, var(--pj) 8%, transparent); }
+.pj-bar:focus-visible { outline: 2px solid var(--ac); outline-offset: -2px; }
+.pj-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--pj); flex: none; display: inline-block; }
+.pj-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.pj-name { font-size: 15.5px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pj-sub { font-size: 12.5px; color: var(--tx-sec); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pj-tags { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.pj-tags .pill { font-size: 11px; }
+.pj-pr-h { background: color-mix(in srgb, var(--bad) 18%, transparent); color: var(--bad); }
+.pj-pr-m { background: color-mix(in srgb, var(--ac) 18%, transparent); color: var(--tx); }
+.pj-pr-l { background: color-mix(in srgb, var(--mu) 18%, transparent); color: var(--tx-sec); }
+.pj-hours { display: flex; flex-direction: column; align-items: flex-end; font-variant-numeric: tabular-nums; }
+.pj-hours b { font-size: 17px; font-weight: 600; }
+.pj-hours small { font-size: 11.5px; color: var(--tx-sec); white-space: nowrap; }
+.pj-chev { color: var(--mu); font-size: 13px; }
+.pj-time { height: 3px; background: color-mix(in srgb, var(--pj) 18%, transparent); }
+.pj-time i { display: block; height: 100%; background: var(--pj); }
+.pj-detail { padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--glass-bd); }
+.pj-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.pj-caps { display: flex; gap: 6px; flex-wrap: wrap; }
+.pj-caps .pill { font-size: 12px; }
+.pj-hint { margin: 0; font-size: 13px; color: var(--tx-sec); }
+.pj-closed-toggle { align-self: flex-start; }
+@media (max-width: 640px) {
+  .pj-bar { grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px 10px; padding: 12px 12px; }
+  .pj-tags { grid-column: 2 / -1; grid-row: 2; justify-content: flex-start; }
+  .pj-chev { display: none; }
+  .pj-detail { padding: 10px 12px 14px; }
+}
+/* Gantt: cột nhãn đứng yên, trục thời gian cuộn ngang; mỗi dòng một hoạt động, cũ nhất ở trên */
+.gantt { --g-lab: 176px; display: flex; flex-direction: column; gap: 6px; }
+.g-scroll { overflow-x: auto; border: 1px solid var(--glass-bd); border-radius: 12px; background: color-mix(in srgb, var(--glass-hi) 60%, transparent); overscroll-behavior-x: contain; }
+.g-inner { position: relative; min-width: 100%; }
+.g-head, .g-row { display: flex; align-items: stretch; }
+.g-head { height: 38px; border-bottom: 1px solid var(--glass-bd); }
+.g-lab { position: sticky; left: 0; z-index: 2; flex: none; width: var(--g-lab); padding: 5px 10px; display: flex; flex-direction: column; justify-content: center; gap: 1px; background: var(--sheen), var(--glass-hi); border-right: 1px solid var(--glass-bd); min-width: 0; }
+.g-head .g-lab { font-size: 11px; font-weight: 600; color: var(--tx-sec); text-transform: uppercase; letter-spacing: 0.04em; }
+.g-lab small { font-size: 11px; color: var(--tx-sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.g-lab span { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.g-axis { position: relative; flex: none; }
+.g-lb, .g-mo { position: absolute; top: 3px; font-size: 10.5px; color: var(--tx-sec); padding-left: 3px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.g-mo { top: auto; bottom: 3px; font-weight: 600; color: var(--tx); border-left: 1px solid var(--tx-sec); line-height: 1.1; }
+.g-body { position: relative; }
+.g-grid { position: absolute; top: 0; bottom: 0; left: var(--g-lab); pointer-events: none; z-index: 0; }
+.g-wk { position: absolute; top: 0; bottom: 0; width: 1px; background: color-mix(in srgb, var(--tx) 8%, transparent); }
+.g-today { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--bad); opacity: 0.8; }
+.g-edge { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1.5px dashed color-mix(in srgb, var(--pj, var(--ac)) 80%, var(--tx)); }
+.g-edge.end { margin-left: var(--g-dw, 0); }
+.g-row { width: 100%; border: 0; padding: 0; margin: 0; background: transparent; color: var(--tx); font: inherit; text-align: left; cursor: pointer; min-height: 40px; border-bottom: 1px solid color-mix(in srgb, var(--glass-bd) 60%, transparent); }
+.g-row:last-child { border-bottom: 0; }
+.g-row:hover .g-lab, .g-row:focus-visible .g-lab { background: var(--sheen), color-mix(in srgb, var(--ac) 14%, var(--glass-hi)); }
+.g-row:focus-visible { outline: none; }
+.g-track { position: relative; flex: none; z-index: 1; }
+.g-bar { position: absolute; top: 50%; height: 16px; margin-top: -8px; border-radius: 5px; background: color-mix(in srgb, var(--cap, var(--ac)) 78%, transparent); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); display: inline-block; }
+.g-bar.fut { background: color-mix(in srgb, var(--cap, var(--ac)) 18%, transparent); border: 1.5px dashed var(--cap, var(--ac)); box-shadow: none; }
+.g-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11.5px; color: var(--tx-sec); align-items: center; }
+.g-legend span { display: inline-flex; align-items: center; gap: 5px; }
+.g-legend .g-bar { position: static; margin: 0; width: 18px; height: 10px; --cap: var(--tx-sec); }
+.g-today-key { display: inline-block; width: 2px; height: 12px; background: var(--bad); }
+.g-edge-key { display: inline-block; width: 0; height: 12px; border-left: 1.5px dashed var(--tx-sec); }
+@media (max-width: 640px) { .gantt { --g-lab: 128px; } .g-lab span { font-size: 12.5px; } }
+/* Bảng dự án */
+.pj-form { display: flex; flex-direction: column; gap: 12px; }
+.pj-swatches { display: flex; gap: 8px; flex-wrap: wrap; }
+.pj-sw { width: 30px; height: 30px; border-radius: 50%; border: 2px solid transparent; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12); cursor: pointer; padding: 0; }
+.pj-sw.on { border-color: var(--tx); box-shadow: inset 0 0 0 2px var(--glass-hi); }
+.pj-capchips { display: flex; gap: 6px; flex-wrap: wrap; }
+.pj-capchip { cursor: pointer; border: 1px solid var(--glass-bd); background: transparent; color: var(--tx-sec); font: inherit; font-size: 12.5px; min-height: 32px; }
+.pj-capchip.on { color: var(--tx); font-weight: 600; }
+.pj-form-acts { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+#pjOverlay { z-index: 1200; } /* nằm trên popup hoạt động khi tạo dự án từ đó */
+/* Nhãn dự án trên lịch, ô ghi nhanh, Hộp việc */
+.ev-pj { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--pj); margin-right: 5px; vertical-align: 1px; }
+.tl-pj { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 0 6px; border-radius: 99px; background: color-mix(in srgb, var(--pj) 22%, transparent); }
+.pj-sug { display: inline-flex; align-items: center; gap: 5px; cursor: pointer; border: 1px solid color-mix(in srgb, var(--pj) 50%, transparent); background: color-mix(in srgb, var(--pj) 16%, transparent); color: var(--tx); font: inherit; font-size: 12.5px; }
+.pj-sug .pj-dot { width: 8px; height: 8px; }
+.hv-mini[data-pj] { border-left: 3px solid var(--pj); }
 </style>
 <script>
   try {
@@ -1517,6 +1600,15 @@ body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(-
 </div>
 
 <!-- Modal Cài đặt hệ thống & Dữ liệu -->
+<div class="modal-overlay" id="pjOverlay" onclick="if (event.target.id === 'pjOverlay') closeProject()">
+  <div class="modal-sheet" style="max-width:560px;" role="dialog" aria-modal="true" aria-labelledby="pjTitle">
+    <div class="modal-header">
+      <h3 class="modal-title" id="pjTitle">Thêm dự án</h3>
+      <button type="button" class="btn btn-sm btn-ghost" onclick="closeProject()" title="Đóng (ESC)" aria-label="Đóng">✕</button>
+    </div>
+    <div class="modal-body" id="pjBody"></div>
+  </div>
+</div>
 <div class="modal-overlay" id="settingsModalOverlay" onclick="handleSettingsBackdropClick(event)">
   <div class="modal-sheet" id="settingsModalSheet" style="max-width:640px;" role="dialog" aria-modal="true" aria-labelledby="settingsSheetTitle">
     <div class="modal-header">
@@ -1635,6 +1727,7 @@ function defState() {
     mem: {},
     gdel: [],
     tasks: [],
+    projects: [],
     pm: "0",
     cfg: { defDuration: 2, burnoutHours: 6 }
   };
@@ -1656,6 +1749,7 @@ function loadDemo() {
     S.tasks.unshift({ id: nid("t"), t: title, c: S.caps.some(c => c.k === "tn") ? "tn" : guess(title), m: "u", demo: 1,
       subs: [["Chốt ngày đi với cả nhà", 0.5], ["Đặt vé xe", 0.5], ["Đặt homestay", 1]].map(([t, h]) => ({ id: nid("s"), t, h })) });
   }
+  pjDemo();
   save();
   draw();
   showToast("Đã thêm dữ liệu mẫu", "ok");
@@ -1667,6 +1761,10 @@ function clearDemo() {
     if (!S.ev[k].length) delete S.ev[k];
   });
   S.tasks = S.tasks.filter(t => !t.demo);
+  const demoPj = new Set((S.projects || []).filter(p => p.demo).map(p => p.id));
+  S.projects = (S.projects || []).filter(p => !p.demo);
+  Object.values(S.ev).forEach(l => l.forEach(e => { if (demoPj.has(e.pj)) delete e.pj; }));
+  S.tasks.forEach(t => { if (demoPj.has(t.pj)) delete t.pj; });
   save();
   draw();
   showToast("Đã xóa dữ liệu mẫu", "ok");
@@ -1702,6 +1800,7 @@ S.bl = S.bl || {};
 S.mem = S.mem || {};
 S.gdel = S.gdel || [];
 S.tasks = S.tasks || [];
+S.projects = S.projects || [];
 // Bản cũ ghi cả phỏng đoán của thanh ghi nhanh vào bộ nhớ (vd "học tiếng anh" → Quan hệ): xóa một lần
 if (S.memV !== 2) { S.mem = {}; S.memV = 2; }
 
@@ -1764,7 +1863,7 @@ const save = () => {
    hay cửa sổ khác đã ghi mà tab này không nhận được (tab bị trình duyệt tạm dừng, trang khôi phục từ
    bộ nhớ đệm, bản cũ của app không biết lắng nghe…): gộp hai bên thay vì ghi đè.
    Dữ liệu do bản này ghi có sv = 2. Bên ghi không có sv (bản cũ) thì chỉ cộng thêm, không xóa gì. */
-const APPV = 41; // v0.4.1
+const APPV = 50; // v0.5.0
 const SV = 3; // 3 (v0.4.0): hoạt động có mã riêng và thời điểm sửa; bản ghi sv khác được gộp kiểu cộng thêm
 let lastRaw = rawSaved, oldWriterSeen = 0;
 // Đồng bộ giữa các thiết bị (v0.4.0, xem phần ĐỒNG BỘ ở cuối tệp)
@@ -1773,7 +1872,7 @@ let cloudBusy = false, cloudAgain = false, cloudT = null, cloudApplying = false,
 let cloud = { st: "off", n: 0, at: 0, msg: "" }; // st: off · sync · ok · wait · offline · auth · setup · err
 function readDisk() { try { return localStorage.getItem("lc2"); } catch (e) { return null; } }
 const evKey = e => [e.t, e.s, e.h, e.c, e.m, e.r || "", e.demo ? 1 : 0, e.tk || ""].join("|");
-const evCore = e => [e.t, e.s, e.h, e.c, e.m, e.r || "", e.tk || "", e.demo ? 1 : 0, extraSig(e)].join("|");
+const evCore = e => [e.t, e.s, e.h, e.c, e.m, e.r || "", e.tk || "", e.demo ? 1 : 0, e.pj || "", extraSig(e)].join("|");
 // Mã cho hoạt động có từ trước v0.4.0: suy từ ngày + nội dung + thứ tự trong các bản giống hệt, nên mọi máy
 // cấp ra cùng một mã cho cùng một hoạt động. Hoạt động mới được cấp mã ngẫu nhiên khi lưu (stampEdits).
 function fnv(str) { let h = 0x811c9dc5; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); } return (h >>> 0).toString(36); }
@@ -1790,14 +1889,15 @@ function giveIds(ev) {
 }
 // Trước mỗi lần lưu: so với bản tab này đọc/ghi gần nhất (lastRaw), hoạt động hay việc nào đổi nội dung
 // thì ghi thời điểm sửa; hoạt động mới (hoặc trùng mã do sao chép) được cấp mã mới.
-let stampRaw, stampEv = new Map(), stampTk = new Map();
+let stampRaw, stampEv = new Map(), stampTk = new Map(), stampPj = new Map();
 const taskSig = t => JSON.stringify({ ...t, mt: 0 });
 // Mốc so sánh = dữ liệu tab này đang có ngay sau khi đọc, ghi hoặc nhận từ nơi khác (tab khác, máy khác).
 // Nhờ vậy thay đổi nhận về không bị tính là “máy này vừa sửa”.
 function stampBase(st) {
   stampRaw = lastRaw;
-  stampEv = new Map(); stampTk = new Map();
+  stampEv = new Map(); stampTk = new Map(); stampPj = new Map();
   if (!st) return;
+  (st.projects || []).forEach(p => stampPj.set(p.id, taskSig(p)));
   Object.keys(st.ev).forEach(k => st.ev[k].forEach(e => { if (e.id) stampEv.set(e.id, k + "|" + evCore(e)); }));
   st.tasks.forEach(t => stampTk.set(t.id, taskSig(t)));
 }
@@ -1814,16 +1914,31 @@ function stampEdits() {
     ids.add(e.id);
   }));
   S.tasks.forEach(t => { if (stampTk.get(t.id) !== taskSig(t)) t.mt = now; });
+  (S.projects || []).forEach(p => { if (stampPj.get(p.id) !== taskSig(p)) p.mt = now; });
 }
 const sameJ = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+// Gộp danh sách có mã (dự án): một bên sửa → bên đó; cả hai sửa → mt sau cùng; xóa thua sửa
+function mergeById(B, M, T, trust) {
+  const mb = new Map((B || []).map(x => [x.id, x])), mm = new Map((M || []).map(x => [x.id, x])), mt = new Map((T || []).map(x => [x.id, x]));
+  const out = [];
+  [...new Set([...(M || []).map(x => x.id), ...(T || []).map(x => x.id)])].forEach(id => {
+    const b = mb.get(id), m = mm.get(id), t = mt.get(id);
+    let x;
+    if (m && t) x = sameJ(m, t) ? m : trust && b && sameJ(m, b) ? t : trust && b && sameJ(t, b) ? m : (t.mt || 0) > (m.mt || 0) ? t : m;
+    else x = trust && b && sameJ(m || t, b) ? null : (m || t);
+    if (x) out.push(x);
+  });
+  return out;
+}
 // Gộp hoạt động theo mã (v0.4.0):
 // - Chỉ một bên sửa so với gốc chung: lấy bên đã sửa. Cả hai cùng sửa: bản có thời điểm sửa (mt) sau cùng thắng.
 // - Một bên xóa (trust, có trong gốc): xóa, trừ khi bên kia đã sửa nó sau gốc chung (giữ bản đã sửa).
 // - Không trust (lần đầu gộp với tài khoản, bản ghi kiểu cũ): cộng hai bên, hoạt động giống hệt trong cùng ngày chỉ giữ một.
-function mergeEv(base, mine, theirs, trust) {
+function mergeEv(base, mine, theirs, trust, oldT) {
   const idx = st => { const m = new Map(); if (st) Object.keys(st.ev).forEach(k => st.ev[k].forEach(e => { if (e.id) m.set(e.id, [k, e]); })); return m; };
   const B = idx(base), M = idx(mine), T = idx(theirs), out = {};
-  const same = (a, b) => !!a && !!b && a[0] === b[0] && evCore(a[1]) === evCore(b[1]);
+  // Bên kia là bản cũ (không có trường pj): so sánh như thể nó giữ nguyên nhãn dự án của gốc/máy này
+  const same = (a, b) => !!a && !!b && a[0] === b[0] && (oldT ? evCore({ ...a[1], pj: "" }) === evCore({ ...b[1], pj: "" }) : evCore(a[1]) === evCore(b[1]));
   const put = ([k, e]) => (out[k] = out[k] || []).push(e);
   // hoạt động chưa có mã (vừa tạo, chưa lưu) giữ nguyên
   [mine, theirs].forEach(st => Object.keys(st.ev).forEach(k => st.ev[k].forEach(e => { if (!e.id && st === mine) put([k, e]); })));
@@ -1836,6 +1951,7 @@ function mergeEv(base, mine, theirs, trust) {
       else if (trust && same(t, b)) w = m;      // chỉ máy này sửa
       else w = (t[1].mt || 0) > (m[1].mt || 0) ? t : m;
       const o = w === m ? t : m;
+      if (oldT && w === t && !w[1].pj && m[1].pj) w[1].pj = m[1].pj; // máy bản cũ không biết dự án: giữ nhãn
       if (!w[1].gid && o[1].gid) w[1].gid = o[1].gid; // giữ liên kết Google, tránh tạo bản trùng
       if (!w[1].gi && o[1].gi) w[1].gi = o[1].gi;
       put(w);
@@ -1864,7 +1980,8 @@ function mergeEv(base, mine, theirs, trust) {
 }
 // trust = bên kia là bản mới và có gốc chung: việc nó xóa là thật. Không trust: hợp hai bên, không xóa gì.
 function mergeStates(base, mine, theirs, trust) {
-  const ev = mergeEv(base, mine, theirs, trust);
+  const oldT = !(+theirs.av >= 41); // bên kia là v0.4.0 trở về trước: không biết dự án, xóa mất trường lạ khi lưu
+  const ev = mergeEv(base, mine, theirs, trust, oldT);
   const used = new Set(Object.values(ev).flat().map(e => e.c));
   const cap = st => new Map(((st && st.caps) || []).map(c => [c.k, c]));
   const cB = cap(base), cM = cap(mine), cT = cap(theirs), caps = [];
@@ -1882,11 +1999,16 @@ function mergeStates(base, mine, theirs, trust) {
   [...new Set([...(mine.tasks || []).map(t => t.id), ...(theirs.tasks || []).map(t => t.id)])].forEach(id => {
     const b = tB.get(id), m = tM.get(id), t = tT.get(id);
     let x;
-    if (m && t) x = sameJ(m, t) ? m : trust && b && sameJ(m, b) ? t : trust && b && sameJ(t, b) ? m : (t.mt || 0) > (m.mt || 0) ? t : m;
+    if (m && t) {
+      x = sameJ(m, t) ? m : trust && b && sameJ(m, b) ? t : trust && b && sameJ(t, b) ? m : (t.mt || 0) > (m.mt || 0) ? t : m;
+      if (oldT && x === t && !t.pj && m.pj) x = { ...t, pj: m.pj }; // máy bản cũ không biết dự án
+    }
     else x = trust && b && sameJ(m || t, b) ? null : (m || t); // một bên xóa: xóa theo, trừ khi bên kia đã sửa
     if (x) tasks.push(x);
   });
-  const known = ["ev", "caps", "bl", "mem", "cfg", "pm", "memV", "lb", "gdel", "tasks", "sv", "av"];
+  // Dự án: theo mã như việc; bản sửa sau cùng thắng; máy bản cũ không gửi dự án thì giữ của máy này
+  const projects = oldT && !(theirs.projects || []).length ? (mine.projects || []) : mergeById(base && base.projects, mine.projects, theirs.projects, trust);
+  const known = ["ev", "caps", "bl", "mem", "cfg", "pm", "memV", "lb", "gdel", "tasks", "sv", "av", "projects"];
   const extra = {};
   [...new Set([...Object.keys(mine), ...Object.keys(theirs)])].filter(k => known.indexOf(k) < 0).forEach(k => {
     extra[k] = (trust && base && sameJ(mine[k], base[k])) || !(k in mine) ? theirs[k] : mine[k];
@@ -1897,6 +2019,7 @@ function mergeStates(base, mine, theirs, trust) {
     lb: Math.max(+mine.lb || 0, +theirs.lb || 0),
     gdel: [...new Set([...(mine.gdel || []), ...(theirs.gdel || [])])].slice(-500),
     tasks,
+    projects,
     sv: SV
   };
 }
@@ -2398,13 +2521,17 @@ function parseNLPText(str) {
 }
 
 function handleNLPInput(val) {
+  const sug = pjSuggestHTML(val);
+  const tp = takeProject(val || "");
+  const pjPill = tp.q === null ? "" : tp.pj ? `<span class="pill pj-sug" style="--pj:${tp.pj.col}"><span class="pj-dot"></span>${esc(tp.pj.n)}</span>` : tp.q ? `<span class="pill pill-bad">Chưa có dự án “${esc(tp.q)}”</span>` : "";
+  val = tp.rest;
   const plus = /^\s*\+\s*/.exec(val || "");
   if (plus) {
     // "+ việc" ghi vào Hộp việc, không vào lịch
     parsedNLP = null;
-    const p = $("nlpPreview"), t = val.slice(plus[0].length).trim(), cap = CM(guess(t)), md = guessMode(t);
+    const p = $("nlpPreview"), t = val.slice(plus[0].length).trim(), cap = CM(pjCap(tp.pj, guess(t))), md = guessMode(t);
     p.style.display = "flex";
-    p.innerHTML = t ? `
+    p.innerHTML = sug ? sug : t ? `${pjPill}
       <span class="pill pill-cyan">Vào Hộp việc</span>
       <span class="pill ${md === "u" ? "pill-ok" : "pill-bad"}">${md === "u" ? "▲ Nạp" : "▼ Tiêu"}</span>
       <span class="pill" style="${capInk(cap.c)}">${esc(cap.n)}</span>
@@ -2413,10 +2540,11 @@ function handleNLPInput(val) {
   }
   parsedNLP = parseNLPText(val);
   const p = $("nlpPreview");
-  if (!parsedNLP) { p.style.display = "none"; return; }
-  const r = parsedNLP, cap = CM(r.capKey);
+  if (sug) { p.style.display = "flex"; p.innerHTML = sug; return; }
+  if (!parsedNLP) { p.style.display = pjPill ? "flex" : "none"; p.innerHTML = pjPill; return; }
+  const r = parsedNLP, cap = CM(pjCap(tp.pj, r.capKey));
   p.style.display = "flex";
-  p.innerHTML = `
+  p.innerHTML = `${pjPill}
     <span class="pill pill-cyan">${esc(r.dateDesc)}</span>
     <span class="pill pill-neutral">⏰ ${r.startTime} – ${tt(r.startTime, r.duration)} (${r1(r.duration)}h)</span>
     <span class="pill ${r.mode === "u" ? "pill-ok" : "pill-bad"}">${r.mode === "u" ? "▲ Nạp" : "▼ Tiêu"}</span>
@@ -2457,22 +2585,25 @@ function handleNLPKeydown(e) {
 
 async function executeNLP() {
   const input = $("nlpInput");
-  const plus = /^\s*\+\s*/.exec(input.value);
+  const tp = takeProject(input.value);
+  if (tp.q && !tp.pj) { showToast(`Chưa có dự án “${tp.q}”. Tạo dự án trước hoặc bỏ dấu #.`, "bad"); return; }
+  const plus = /^\s*\+\s*/.exec(tp.rest);
   if (plus) {
-    const t = addTask(input.value.slice(plus[0].length));
+    const t = addTask(tp.rest.slice(plus[0].length));
     if (!t) { showToast("Gõ tên việc sau dấu +", "bad"); return; }
+    if (tp.pj) { t.pj = tp.pj.id; t.c = pjCap(tp.pj, t.c); save(); }
     input.value = "";
     handleNLPInput("");
     draw();
     showToast(`Đã thêm "${t.t}" vào Hộp việc`, "ok");
     return;
   }
-  const r = parseNLPText(input.value);
+  const r = parseNLPText(tp.rest);
   if (!r) { showToast("Nhập nội dung", "bad"); return; }
   if (r.err) { showToast(r.err, "bad"); return; }
   if (r.hit && !(await ask({ title: "Trùng giờ", msg: `Trùng với "${r.hit.t}" lúc ${r.hit.s}.`, ok: "Vẫn thêm" }))) return;
   const L = S.ev[r.targetDate] = S.ev[r.targetDate] || [];
-  const newEvt = { t: r.title, c: r.capKey, m: r.mode, h: r.duration, s: r.startTime };
+  const newEvt = { t: r.title, c: pjCap(tp.pj, r.capKey), m: r.mode, h: r.duration, s: r.startTime, ...(tp.pj ? { pj: tp.pj.id } : {}) };
   L.push(newEvt);
   sortL(L);
   markPending(newEvt);
@@ -2501,7 +2632,7 @@ async function executeNLP() {
   timelineDayIdx = (dObj.getDay() + 6) % 7;
 
   draw();
-  showToast(`Đã thêm "${r.title}" · ${r.dateDesc}`, "ok");
+  showToast(`Đã thêm "${r.title}" · ${r.dateDesc}${tp.pj ? " · " + tp.pj.n : ""}`, "ok");
 }
 
 /* ==========================================================================
@@ -2838,8 +2969,9 @@ function copyReviewToClipboard(wIdx) {
    ========================================================================== */
 const TABS = [
   { id: "ca", label: "Lịch biểu", short: "Lịch", icon: "📅", sub: "Thời gian và năng lượng trong tuần" },
-  { id: "hv", label: "Hộp việc", short: "Hộp việc", icon: "📥", sub: "Việc chưa có lịch: chia nhỏ rồi xếp" },
-  { id: "su", label: "Tổng quan", short: "Tổng quan", icon: "📊", sub: "Cán cân năng lượng trong tuần" },
+  { id: "hv", label: "Hộp việc", short: "Hộp việc", mshort: "Việc", icon: "📥", sub: "Việc chưa có lịch: chia nhỏ rồi xếp" },
+  { id: "pj", label: "Dự án", short: "Dự án", icon: "🗂", sub: "Thời gian và việc theo từng dự án" },
+  { id: "su", label: "Tổng quan", short: "Tổng quan", mshort: "Số liệu", icon: "📊", sub: "Cán cân năng lượng trong tuần" },
   { id: "set", label: "Danh mục vốn", short: "Vốn", icon: "🏷️", sub: "Loại vốn, mục tiêu và từ khóa" }
 ];
 
@@ -2862,18 +2994,19 @@ function renderNav() {
   const n = inboxCount();
   $("nav").innerHTML = TABS.map(t =>
     `<button class="${t.id === cur ? "active" : ""}" aria-current="${t.id === cur ? "page" : "false"}" onclick="switchTab('${t.id}')" aria-label="${t.label}${t.id === "hv" && n ? `, ${n} việc chưa xếp` : ""}">
-      <span>${t.short}</span>${t.id === "hv" && n ? `<span class="nav-count">${n}</span>` : ""}
+      <span class="lb-full">${t.short}</span><span class="lb-short">${t.mshort || t.short}</span>${t.id === "hv" && n ? `<span class="nav-count">${n}</span>` : ""}
     </button>`
   ).join("");
   const t = TABS.find(x => x.id === cur) || TABS[0];
   $("pageTitle").textContent = t.label;
   $("pageSub").textContent = t.sub;
   document.body.dataset.tab = cur;
-  $("addBtn").title = cur === "hv" ? "Thêm việc vào hộp (N)" : "Thêm hoạt động hôm nay (N)";
+  $("addBtn").title = cur === "hv" ? "Thêm việc vào hộp (N)" : cur === "pj" ? "Thêm dự án (N)" : "Thêm hoạt động hôm nay (N)";
 }
 
 // Nút Thêm trên header: ở Hộp việc thì thêm việc, ở Lịch thì thêm hoạt động
 function headerAdd() {
+  if (cur === "pj") { openProject(); return; }
   if (cur === "hv") {
     const i = document.querySelector("#v .hv-add");
     if (i) { i.scrollIntoView({ block: "center", behavior: "smooth" }); i.focus(); return; }
@@ -3108,7 +3241,7 @@ function buildGCalEventPayload(eventObj, dateStr) {
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Ho_Chi_Minh";
   const base = {
     summary: `${eventObj.m === 'u' ? '▲' : '▼'} ${eventObj.t}`,
-    description: `Life Capital · Loại vốn: [${capName}] · Tác động: ${modeText} (${r1(dur)}h)`,
+    description: `Life Capital · Loại vốn: [${capName}] · Tác động: ${modeText} (${r1(dur)}h)${eventObj.pj && findPj(eventObj.pj) ? `\nDự án: ${findPj(eventObj.pj).n}` : ""}`,
     colorId: GCAL_COLOR_MAP[eventObj.c] || "1"
   };
   const day = new Date(dateStr + "T00:00");
@@ -3552,7 +3685,7 @@ const KEYS = [
   ["/", "Ghi nhanh"],
   ["← →", "Tuần trước, tuần sau (chế độ Ngày: ngày trước, ngày sau)"],
   ["T", "Về hôm nay"],
-  ["1 – 4", "Lịch, Hộp việc, Tổng quan, Vốn"],
+  ["1 – 5", "Lịch, Hộp việc, Dự án, Tổng quan, Vốn"],
   ["Esc", "Đóng popup"],
   ["⌘Z", "Hoàn tác khi vừa xóa"],
   ["?", "Xem phím tắt"]
@@ -3577,7 +3710,7 @@ function shortcut(e) {
   if (k === "n" || k === "N") { headerAdd(); return true; }
   if (k === "t" || k === "T") { goToday(); return true; }
   if (k === "?") { showShortcuts(); return true; }
-  if (/^[1-4]$/.test(k)) { switchTab(TABS[+k - 1].id); return true; }
+  if (/^[1-5]$/.test(k)) { switchTab(TABS[+k - 1].id); return true; }
   if ((k === "ArrowLeft" || k === "ArrowRight") && (cur === "ca" || cur === "su") && !(tg && tg.closest && tg.closest(".table-wrapper, .yr-quarters, .timeline-days-nav"))) {
     const d = k === "ArrowLeft" ? -1 : 1;
     if (cur === "ca" && calSubView === "timeline") shiftDay(d);
@@ -3848,7 +3981,7 @@ const V = {
                 return `
                   <div class="event-item" style="--cap: ${cap.c}" onclick="openEditor('${k}', ${idx})">
                     <div class="event-item-top">
-                      <span class="event-title" title="${esc(e.t)}">${e.tk ? '<span class="ev-linked" title="Từ Hộp việc"></span>' : ""}${esc(e.t)}</span>
+                      <span class="event-title" title="${esc(e.t)}">${e.pj && findPj(e.pj) ? `<span class="ev-pj" style="--pj:${findPj(e.pj).col}" title="Dự án: ${esc(findPj(e.pj).n)}"></span>` : ""}${e.tk ? '<span class="ev-linked" title="Từ Hộp việc"></span>' : ""}${esc(e.t)}</span>
                       <span class="${e.m === 'u' ? 'event-mode-up' : 'event-mode-down'}">${e.m === 'u' ? '▲' : '▼'}</span>
                     </div>
                     <div class="event-meta">
@@ -3910,7 +4043,7 @@ const V = {
           <div class="timeline-event-block"
                style="top:${topPx}px; height:${heightPx}px; ${capInk(cap.c)}"
                onclick="openEditor('${activeDate}', ${idx})">
-            <b>${e.s} – ${tt(e.s, e.h)}</b> · ${e.m === 'u' ? '▲' : '▼'} ${esc(e.t)} (${r1(e.h)}h)
+            <b>${e.s} – ${tt(e.s, e.h)}</b> · ${e.m === 'u' ? '▲' : '▼'} ${esc(e.t)} (${r1(e.h)}h)${e.pj && findPj(e.pj) ? ` <span class="tl-pj" style="--pj:${findPj(e.pj).col}">${esc(findPj(e.pj).n)}</span>` : ""}
           </div>
         `;
       }).join("");
@@ -4344,6 +4477,7 @@ function openEditor(dateStr, editIndex = null) {
   LFi = [...document.querySelectorAll(FOC)].indexOf(LF);
   ed = dateStr;
   ei = editIndex;
+  capTouched = editIndex != null; // sửa hoạt động có sẵn: giữ loại vốn đang có
   renderEditorSheet();
   $("modalOverlay").classList.add("open");
   setTimeout(() => {
@@ -4359,6 +4493,7 @@ function closeEditor() {
   $("modalOverlay").classList.remove("open");
   ed = null;
   ei = null;
+  edPjPreset = null;
   restoreFocus();
 }
 
@@ -4483,7 +4618,9 @@ function handleSheetKeydown(e) {
 $("sheetBody").addEventListener("keydown", handleSheetKeydown);
 
 function handleTitleInput(val) {
-  const guessedCap = guess(val);
+  if (capTouched) return; // người dùng đã tự chọn loại vốn
+  const pjSel = $("inpPj");
+  const guessedCap = pjCap(pjSel && pjSel.value ? findPj(pjSel.value) : null, guess(val));
   const select = $("inpCap");
   if (select && S.caps.some(c => c.k === guessedCap)) {
     select.value = guessedCap;
@@ -4540,11 +4677,12 @@ function renderEditorSheet() {
                value="${X ? esc(X.t) : ''}"
                oninput="handleTitleInput(this.value)">
       </div>
+      ${pjSelectHTML(X ? X.pj || "" : edPjPreset || "")}
 
       <div class="form-row">
         <div class="form-group">
           <label class="form-label" for="inpCap">Loại vốn</label>
-          <select id="inpCap">
+          <select id="inpCap" onchange="capTouched = true">
             ${S.caps.map(c => `<option value="${c.k}" ${X && X.c === c.k ? 'selected' : ''}>${esc(c.n)}</option>`).join("")}
           </select>
         </div>
@@ -4624,6 +4762,9 @@ function renderEditorSheet() {
   `;
 
   $("sheetBody").innerHTML = html;
+  // Mở popup kèm dự án (vd từ tab Dự án): điền loại vốn mặc định của dự án, các loại vốn của dự án lên đầu
+  const pjSel = $("inpPj");
+  if (pjSel && pjSel.value) pjPicked(pjSel.value);
 }
 
 async function saveEventFromForm(keepOpen) {
@@ -4631,7 +4772,8 @@ async function saveEventFromForm(keepOpen) {
   if (!title) { showToast("Nhập tên hoạt động", "bad"); $("inpTitle").focus(); return; }
   const c = chkEvent(ed, start, hours, ei);
   if (c.err) { showToast(c.err, "bad"); return; }
-  const o = { t: title, c: $("inpCap").value, m: $("inpMode").value, h: hours, s: start };
+  const pjv = $("inpPj") ? $("inpPj").value : "";
+  const o = { t: title, c: $("inpCap").value, m: $("inpMode").value, h: hours, s: start, pj: pjv || undefined }; // undefined: bỏ nhãn khi lưu
   const cur0 = ei != null ? (S.ev[ed] || [])[ei] : null;
   const ser = $("inpSeries"), applySeries = !!(cur0 && cur0.r && ser && ser.checked);
   const rp0 = !applySeries && $("inpRepeat") ? $("inpRepeat").value : "";
@@ -4800,7 +4942,7 @@ function extras(src, known) {
   return o;
 }
 function extraSig(e) {
-  const x = extras(e, ["id", "mt", "t", "c", "m", "h", "s", "r", "tk", "gid", "gi", "ds", "demo"]);
+  const x = extras(e, ["id", "mt", "t", "c", "m", "h", "s", "r", "tk", "pj", "gid", "gi", "ds", "demo"]);
   const ks = Object.keys(x).sort();
   return ks.length ? JSON.stringify(ks.map(k => [k, x[k]])) : "";
 }
@@ -4823,8 +4965,9 @@ function cleanCap(c) {
 function cleanEv(e) {
   if (!e || typeof e.t !== "string" || !(+e.h > 0 && +e.h <= 24) || !SAFE_K.test(e.c || "")) return null;
   return {
-    ...extras(e, ["id", "mt", "t", "c", "m", "h", "s", "r", "tk", "gid", "gi", "ds", "demo"]),
-    ...(SAFE_K.test(e.id || "") ? { id: e.id } : {}),            // mã riêng (v0.4.0), thiếu thì cleanState cấp
+    ...extras(e, ["id", "mt", "t", "c", "m", "h", "s", "r", "tk", "pj", "gid", "gi", "ds", "demo"]),
+    ...(SAFE_K.test(e.id || "") ? { id: e.id } : {}),
+    ...(SAFE_K.test(e.pj || "") ? { pj: e.pj } : {}), // dự án (v0.5.0)            // mã riêng (v0.4.0), thiếu thì cleanState cấp
     ...(Number.isFinite(+e.mt) && +e.mt > 0 ? { mt: +e.mt } : {}), // lần sửa gần nhất, để bản sửa sau cùng thắng
     t: e.t.slice(0, 120), c: e.c, m: e.m === "d" ? "d" : "u", h: +e.h,
     s: /^([01]\d|2[0-3]):[0-5]\d$/.test(e.s || "") ? e.s : "",
@@ -4857,7 +5000,8 @@ function cleanState(d) {
   };
   const gdel = Array.isArray(d.gdel) ? [...new Set(d.gdel.filter(g => typeof g === "string" && GID.test(g)))].slice(-500) : [];
   const tasks = Array.isArray(d.tasks) ? d.tasks.map(cleanTask).filter(Boolean).slice(0, 500) : [];
-  return { ...extras(d, ["ev", "caps", "bl", "mem", "memV", "cfg", "gdel", "tasks", "pm", "lb", "sv"]), ev, caps, bl, mem, memV: d.memV === 2 ? 2 : 0, cfg, gdel, tasks, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
+  const projects = Array.isArray(d.projects) ? d.projects.map(cleanProject).filter(Boolean).slice(0, 200) : [];
+  return { ...extras(d, ["ev", "caps", "bl", "mem", "memV", "cfg", "gdel", "tasks", "pm", "lb", "sv", "projects"]), projects, ev, caps, bl, mem, memV: d.memV === 2 ? 2 : 0, cfg, gdel, tasks, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
 }
 
 async function saveFile(filename, content, mime) {
@@ -5055,6 +5199,7 @@ document.addEventListener("keydown", e => {
   if (onbIdx >= 0 && e.key === "Escape") { e.preventDefault(); onbEnd(); return; }
   if (shortcut(e)) { e.preventDefault(); return; }
   if (e.key === "Escape") {
+    if (pjForm) { closeProject(); return; } // bảng dự án nằm trên popup hoạt động: đóng từng lớp
     if (ed) closeEditor();
     closeSched();
     closeReviewModal();
@@ -5135,6 +5280,23 @@ let hvAfterCompose = null;  // ô nhập đang chờ bộ gõ chốt chữ
 let inboxPanel = true;
 try { inboxPanel = localStorage.getItem("lc_inbox_panel") !== "0"; } catch (e) {}
 
+// Dự án (v0.5.0). Hàm khai báo: cleanState gọi lúc mở app, không dùng hằng ở dưới.
+function cleanProject(x) {
+  if (!x || !SAFE_K.test(x.id || "") || typeof x.n !== "string" || !x.n.trim()) return null;
+  const D = /^\d{4}-\d\d-\d\d$/;
+  const caps = Array.isArray(x.caps) ? [...new Set(x.caps.filter(k => SAFE_K.test(k || "")))].slice(0, 20) : [];
+  return {
+    ...extras(x, ["id", "n", "col", "st", "pr", "sd", "ed", "caps", "mt"]),
+    id: x.id, n: x.n.trim().slice(0, 60),
+    col: /^#[0-9a-f]{6}$/i.test(x.col || "") ? x.col : "#E0A3BB",
+    st: ["todo", "run", "pause", "done", "cancel"].indexOf(x.st) >= 0 ? x.st : "run",
+    pr: ["h", "m", "l"].indexOf(x.pr) >= 0 ? x.pr : "m",
+    sd: D.test(x.sd || "") ? x.sd : ky(new Date()),
+    ...(D.test(x.ed || "") ? { ed: x.ed } : {}),
+    caps,
+    ...(Number.isFinite(+x.mt) && +x.mt > 0 ? { mt: +x.mt } : {})
+  };
+}
 function cleanSub(x) {
   if (!x || !SAFE_K.test(x.id || "") || typeof x.t !== "string" || !x.t.trim()) return null;
   const h = +x.h;
@@ -5143,8 +5305,9 @@ function cleanSub(x) {
 function cleanTask(x) {
   if (!x || !SAFE_K.test(x.id || "") || typeof x.t !== "string" || !x.t.trim()) return null;
   return {
-    ...extras(x, ["id", "t", "c", "m", "subs", "done", "demo", "mt"]),
+    ...extras(x, ["id", "t", "c", "m", "subs", "done", "demo", "mt", "pj"]),
     id: x.id, t: x.t.slice(0, 160), c: SAFE_K.test(x.c || "") ? x.c : "sk", m: x.m === "d" ? "d" : "u",
+    ...(SAFE_K.test(x.pj || "") ? { pj: x.pj } : {}),
     subs: Array.isArray(x.subs) ? x.subs.map(cleanSub).filter(Boolean).slice(0, 100) : [],
     ...(x.done ? { done: 1 } : {}), ...(x.demo ? { demo: 1 } : {}),
     ...(Number.isFinite(+x.mt) && +x.mt > 0 ? { mt: +x.mt } : {})
@@ -5251,6 +5414,21 @@ function saveHvEdit() {
   }
   hvEdit = null;
   save();
+  draw();
+}
+// Đổi dự án của việc: hỏi có đổi luôn các hoạt động đã xếp từ việc này không
+async function setTaskPj(id, v) {
+  const t = findTask(id);
+  if (!t) return;
+  const ids = new Set([t.id, ...t.subs.map(s => s.id)]);
+  const same = Object.values(S.ev).flat().filter(e => e.tk && ids.has(e.tk));
+  if (v) t.pj = v; else delete t.pj;
+  if (same.length) {
+    const a = await ask({ title: "Đổi cả hoạt động đã xếp?", msg: `${same.length} hoạt động đã xếp từ việc này.`, ok: "Đổi cả hoạt động", cancel: "Chỉ đổi việc" });
+    if (a === "ok") same.forEach(e => { if (v) e.pj = v; else delete e.pj; markPending(e); });
+  }
+  save();
+  gcalFlush();
   draw();
 }
 function setTaskField(id, field, val) {
@@ -5391,7 +5569,7 @@ function planUnits(date, start, list) {
 function createEvents(task, date, plan) {
   const L = S.ev[date] = S.ev[date] || [];
   const made = plan.filter(p => !p.over).map(p => {
-    const e = { t: p.t, c: task.c, m: task.m, h: p.h, s: p.s, tk: p.tk, ...(task.demo ? { demo: 1 } : {}) };
+    const e = { t: p.t, c: task.c, m: task.m, h: p.h, s: p.s, tk: p.tk, ...(task.pj ? { pj: task.pj } : {}), ...(task.demo ? { demo: 1 } : {}) };
     L.push(e);
     markPending(e);
     return e;
@@ -5634,6 +5812,10 @@ function inboxHTML(where) {
             ${S.caps.map(c => `<option value="${c.k}" ${c.k === t.c ? "selected" : ""}>${esc(c.n)}</option>`).join("")}
           </select>
           <button type="button" class="hv-mini ${t.m === "u" ? "up" : "down"}" onclick="setTaskField('${t.id}','m','${t.m === "u" ? "d" : "u"}')" title="Đổi tác động">${t.m === "u" ? "▲ Nạp" : "▼ Tiêu"}</button>
+          ${(S.projects || []).length ? `<select class="hv-mini" onchange="setTaskPj('${t.id}', this.value)" aria-label="Dự án" ${t.pj && findPj(t.pj) ? `style="--pj:${findPj(t.pj).col}" data-pj="1"` : ""}>
+            <option value="">Không dự án</option>
+            ${(S.projects || []).filter(p => pjIsOpen(p) || p.id === t.pj).sort(pjCmp).map(p => `<option value="${p.id}" ${p.id === t.pj ? "selected" : ""}>${esc(p.n)}</option>`).join("")}
+          </select>` : ""}
           <span class="hv-acts">
             ${taskDone(t) ? "" : `<button type="button" class="btn btn-sm hv-sched" onclick="openSched('task','${t.id}')">${t.subs.length ? "Xếp hết" : selfP ? "Dời" : "Xếp"}</button>`}
             ${list ? `<button type="button" class="btn btn-sm btn-ghost hv-mv" onclick="moveItem('task','${t.id}',-1)" ${i ? "" : "disabled"} aria-label="Lên">↑</button>
@@ -5790,6 +5972,7 @@ function canonState(st) {
   const c = cleanState(JSON.parse(JSON.stringify(st)));
   Object.values(c.ev).forEach(l => l.sort((a, b) => cmp(a, b) || evKey(a).localeCompare(evKey(b)) || String(a.id).localeCompare(String(b.id))));
   c.gdel.sort();
+  c.projects.sort((a, b) => a.id.localeCompare(b.id));
   const sortKeys = v => Array.isArray(v) ? v.map(sortKeys)
     : v && typeof v === "object" ? Object.keys(v).sort().reduce((o, k) => { o[k] = sortKeys(v[k]); return o; }, {}) : v;
   return JSON.stringify(sortKeys(c));
@@ -6242,6 +6425,360 @@ if ("serviceWorker" in navigator && (location.protocol === "https:" || location.
     setInterval(() => reg.update().catch(() => {}), 30 * 60000);
   }).catch(() => {});
   navigator.serviceWorker.addEventListener("controllerchange", () => { if (swReloading) location.reload(); });
+}
+
+/* ==========================================================================
+   DỰ ÁN (v0.5.0): gom hoạt động và việc theo mục tiêu lớn, độc lập với loại vốn
+   S.projects: [{ id, n, col, st, pr, sd, ed?, caps: [mã vốn, loại đầu là mặc định], mt }]
+   Hoạt động và việc trong Hộp việc có thêm e.pj / t.pj (mã dự án), không bắt buộc.
+   ========================================================================== */
+const PJ_ST = { todo: "Chưa bắt đầu", run: "Đang chạy", pause: "Tạm dừng", done: "Hoàn thành", cancel: "Hủy" };
+const PJ_PR = { h: "Cao", m: "Trung bình", l: "Thấp" };
+const PJ_COLORS = ["#E0A3BB", "#97A13B", "#4a859c", "#8b6da9", "#b88628", "#d1706b", "#3f8f7a", "#6b7fd1"];
+const pjIsOpen = p => p.st === "todo" || p.st === "run" || p.st === "pause";
+const findPj = id => (S.projects || []).find(p => p.id === id);
+// So khớp không phân biệt hoa thường và dấu: "#marathon" khớp "Marathon 2027"
+const fold = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[đĐ]/g, "d").toLowerCase().replace(/[^a-z0-9]+/g, "");
+let pjOpenId = null, pjShowClosed = false, pjForm = null, edPjPreset = null, capTouched = false;
+
+function pjCmp(a, b) {
+  const pr = { h: 0, m: 1, l: 2 };
+  return (pr[a.pr] - pr[b.pr]) || ((a.ed || "9999") .localeCompare(b.ed || "9999")) || a.n.localeCompare(b.n, "vi");
+}
+const dayDiff = (a, b) => Math.round((new Date(b + "T00:00") - new Date(a + "T00:00")) / 864e5);
+const dm = k => k.slice(8, 10) + "/" + k.slice(5, 7);
+
+function pjEvents(id) {
+  const out = [];
+  Object.keys(S.ev).forEach(k => S.ev[k].forEach((e, i) => { if (e.pj === id) out.push({ k, i, e }); }));
+  // Cũ nhất ở trên cùng (quyết định PO 17/10)
+  return out.sort((a, b) => a.k.localeCompare(b.k) || (a.e.s || "").localeCompare(b.e.s || ""));
+}
+function pjStats(id) {
+  const evs = pjEvents(id), byCap = {};
+  const t0 = new Date(tk + "T00:00"), ws = ky(ad(t0, -((t0.getDay() + 6) % 7))), we = ky(ad(new Date(ws + "T00:00"), 6));
+  let h = 0, wk = 0;
+  evs.forEach(({ k, e }) => { h += e.h; byCap[e.c] = (byCap[e.c] || 0) + e.h; if (k >= ws && k <= we) wk += e.h; });
+  const tasks = S.tasks.filter(t => t.pj === id);
+  return { evs, h, wk, byCap, tasks: tasks.length, done: tasks.filter(taskDone).length };
+}
+
+/* ---- Tab Dự án ---- */
+V.pj = function () {
+  const ps = (S.projects || []).slice().sort(pjCmp);
+  if (!ps.length) {
+    return `
+      <div class="card pj-empty">
+        <b>Chưa có dự án</b>
+        <p>Dự án gom các hoạt động và việc phục vụ một mục tiêu lớn, vd “Marathon 2027” hay “Website công ty”. Hoạt động như ăn cơm, di chuyển không cần thuộc dự án nào.</p>
+        <button type="button" class="btn btn-primary" onclick="openProject()">Thêm dự án</button>
+      </div>`;
+  }
+  const open = ps.filter(pjIsOpen), closed = ps.filter(p => !pjIsOpen(p));
+  return `
+    <div class="pj-list">
+      ${open.length ? open.map(pjItemHTML).join("") : `<div class="card pj-empty"><p>Không có dự án nào đang mở.</p></div>`}
+      ${closed.length ? `
+        <button type="button" class="btn btn-sm btn-ghost pj-closed-toggle" onclick="pjShowClosed=!pjShowClosed; draw()" aria-expanded="${pjShowClosed}">${pjShowClosed ? "▾" : "▸"} Đã đóng (${closed.length})</button>
+        ${pjShowClosed ? closed.map(pjItemHTML).join("") : ""}` : ""}
+    </div>`;
+};
+
+function pjItemHTML(p) {
+  const s = pjStats(p.id), open = pjOpenId === p.id;
+  const late = pjIsOpen(p) && p.ed && p.ed < tk;
+  let timePct = null;
+  if (p.ed && p.sd) {
+    const tot = Math.max(1, dayDiff(p.sd, p.ed) + 1);
+    timePct = Math.max(0, Math.min(100, Math.round((dayDiff(p.sd, tk) + 1) / tot * 100)));
+  }
+  return `
+    <div class="card pj-item ${open ? "open" : ""}" style="--pj:${p.col}">
+      <button type="button" class="pj-bar" onclick="pjToggle('${p.id}')" aria-expanded="${open}">
+        <span class="pj-dot" aria-hidden="true"></span>
+        <span class="pj-main">
+          <b class="pj-name">${esc(p.n)}</b>
+          <span class="pj-sub">${dm(p.sd)}${p.ed ? " – " + dm(p.ed) : " · không hạn"} · ${s.evs.length} hoạt động${s.tasks ? ` · việc ${s.done}/${s.tasks}` : ""}</span>
+        </span>
+        <span class="pj-tags">
+          ${late ? `<span class="pill pill-bad">Quá hạn</span>` : ""}
+          <span class="pill pj-pr-${p.pr}">${PJ_PR[p.pr]}</span>
+          <span class="pill pill-neutral">${PJ_ST[p.st]}</span>
+        </span>
+        <span class="pj-hours"><b>${r1(s.h)}h</b><small>tuần này ${r1(s.wk)}h</small></span>
+        <span class="pj-chev" aria-hidden="true">${open ? "▾" : "▸"}</span>
+      </button>
+      ${timePct !== null ? `<div class="pj-time" title="Thời gian đã trôi: ${timePct}%"><i style="width:${timePct}%"></i></div>` : ""}
+      ${open ? pjDetailHTML(p, s) : ""}
+    </div>`;
+}
+
+function pjToggle(id) {
+  pjOpenId = pjOpenId === id ? null : id;
+  draw();
+}
+
+function pjDetailHTML(p, s) {
+  const caps = Object.keys(s.byCap).sort((a, b) => s.byCap[b] - s.byCap[a]);
+  return `
+    <div class="pj-detail">
+      <div class="pj-actions">
+        <button type="button" class="btn btn-sm btn-primary" onclick="pjAddEvent('${p.id}')">Thêm hoạt động</button>
+        <button type="button" class="btn btn-sm" onclick="openProject('${p.id}')">Sửa dự án</button>
+      </div>
+      ${caps.length ? `<div class="pj-caps" aria-label="Giờ theo loại vốn">${caps.map(k => { const c = CM(k); return `<span class="pill" style="${capInk(c.c)}">${esc(c.n)} ${r1(s.byCap[k])}h</span>`; }).join("")}</div>` : ""}
+      ${ganttHTML(p, s.evs)}
+    </div>`;
+}
+
+function ganttHTML(p, evs) {
+  if (!evs.length) {
+    return `<p class="pj-hint">Chưa có hoạt động nào. Bấm “Thêm hoạt động”, chọn dự án trong popup, hoặc gõ <b>#${esc(p.n.split(/\s+/)[0].toLowerCase())}</b> ở ô ghi nhanh.</p>`;
+  }
+  const first = evs[0].k, last = evs[evs.length - 1].k;
+  const start = [p.sd, first].filter(Boolean).sort()[0];
+  const end = [p.ed || last, last].sort().pop();
+  const days = dayDiff(start, end) + 1;
+  const dw = Math.max(8, Math.min(44, Math.floor(640 / days))); // bề rộng một ngày (px)
+  const W2 = days * dw;
+  const x = k => dayDiff(start, k) * dw;
+  // Vạch tuần (thứ 2), nhãn ngày khi đủ chỗ, nhãn tháng ở ngày 1
+  let grid = "", axis = "";
+  for (let i = 0; i < days; i++) {
+    const d = ad(new Date(start + "T00:00"), i), k = ky(d), left = i * dw;
+    if (d.getDay() === 1) {
+      grid += `<i class="g-wk" style="left:${left}px"></i>`;
+      if (dw * 7 >= 46) axis += `<span class="g-lb" style="left:${left}px">${dm(k)}</span>`;
+    }
+    if (d.getDate() === 1) axis += `<span class="g-mo" style="left:${left}px">Th${d.getMonth() + 1}</span>`;
+  }
+  const mark = (k, cls, title) => k >= start && k <= end ? `<i class="${cls}" style="left:${x(k) + (cls === "g-today" ? dw / 2 : 0)}px" title="${title}"></i>` : "";
+  grid += mark(tk, "g-today", "Hôm nay") + mark(p.sd, "g-edge", "Bắt đầu dự án") + (p.ed ? mark(p.ed, "g-edge end", "Kết thúc dự án") : "");
+  const rows = evs.map(({ k, i, e }) => {
+    const c = CM(e.c), dt = new Date(k + "T00:00");
+    const min = e.s ? +e.s.slice(0, 2) * 60 + +e.s.slice(3, 5) : 0;
+    const left = x(k) + (e.s ? min / 1440 * dw : 0), w = Math.max(10, (e.s ? e.h / 24 : 1) * dw);
+    const fut = k > tk || (k === tk && e.s && e.s > new Date().toTimeString().slice(0, 5));
+    return `
+      <button type="button" class="g-row" onclick="openEditor('${k}', ${i})" title="${esc(e.t)} · ${dm(k)}${e.s ? " " + e.s : ""} · ${r1(e.h)}h · ${esc(c.n)}">
+        <span class="g-lab"><small>${DN_VI[(dt.getDay() + 6) % 7].replace("Thứ ", "T").replace("Chủ Nhật", "CN")} ${dm(k)}${e.s ? " · " + e.s : ""} · ${r1(e.h)}h</small><span>${esc(e.t)}</span></span>
+        <span class="g-track" style="width:${W2}px"><i class="g-bar ${fut ? "fut" : ""}" style="left:${left}px; width:${w}px; --cap:${c.c}"></i></span>
+      </button>`;
+  }).join("");
+  return `
+    <div class="gantt" aria-label="Biểu đồ Gantt: ${evs.length} hoạt động, cũ nhất ở trên">
+      <div class="g-scroll">
+        <div class="g-inner" style="width:calc(var(--g-lab) + ${W2}px)">
+          <div class="g-head"><span class="g-lab">${evs.length} hoạt động</span><span class="g-axis" style="width:${W2}px">${axis}</span></div>
+          <div class="g-body">
+            <div class="g-grid" style="width:${W2}px">${grid}</div>
+            ${rows}
+          </div>
+        </div>
+      </div>
+      <div class="g-legend"><span><i class="g-bar"></i> Đã qua</span><span><i class="g-bar fut"></i> Sắp tới</span><span><i class="g-today-key"></i> Hôm nay</span><span><i class="g-edge-key"></i> Bắt đầu / kết thúc</span></div>
+    </div>`;
+}
+
+function pjAddEvent(id) {
+  edPjPreset = id;
+  openEditor(tk);
+}
+
+/* ---- Bảng tạo / sửa dự án ---- */
+function openProject(id, presetName) {
+  const p = id ? findPj(id) : null;
+  pjForm = p ? { ...p, caps: [...p.caps] } : { id: "", n: presetName || "", col: PJ_COLORS[(S.projects || []).length % PJ_COLORS.length], st: "run", pr: "m", sd: tk, ed: "", caps: [] };
+  renderProjectForm();
+  $("pjOverlay").classList.add("open");
+  setTimeout(() => { const i = $("pjName"); if (i) { i.focus(); if (p) i.select(); } }, 80);
+}
+function closeProject() {
+  const ov = $("pjOverlay");
+  if (!ov || !ov.classList.contains("open")) return;
+  ov.classList.remove("open");
+  pjForm = null;
+}
+function renderProjectForm() {
+  const f = pjForm;
+  $("pjTitle").textContent = f.id ? "Sửa dự án" : "Thêm dự án";
+  $("pjBody").innerHTML = `
+    <div class="pj-form">
+      <div class="form-group">
+        <label class="form-label" for="pjName">Tên dự án <span style="color:var(--bad)">*</span></label>
+        <input id="pjName" maxlength="60" placeholder="vd: Marathon 2027" value="${esc(f.n)}" oninput="pjForm.n=this.value">
+      </div>
+      <div class="form-group">
+        <span class="form-label">Màu</span>
+        <div class="pj-swatches" role="radiogroup" aria-label="Màu dự án">
+          ${PJ_COLORS.map(c => `<button type="button" class="pj-sw ${f.col === c ? "on" : ""}" style="background:${c}" role="radio" aria-checked="${f.col === c}" aria-label="Màu ${c}" onclick="pjForm.col='${c}'; renderProjectForm()"></button>`).join("")}
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="pjSt">Trạng thái</label>
+          <select id="pjSt" onchange="pjForm.st=this.value">${Object.keys(PJ_ST).map(k => `<option value="${k}" ${f.st === k ? "selected" : ""}>${PJ_ST[k]}</option>`).join("")}</select>
+        </div>
+        <div class="form-group">
+          <span class="form-label">Mức ưu tiên</span>
+          <div class="set-seg">${Object.keys(PJ_PR).map(k => `<button type="button" class="${f.pr === k ? "on" : ""}" aria-pressed="${f.pr === k}" onclick="pjForm.pr='${k}'; renderProjectForm()">${PJ_PR[k]}</button>`).join("")}</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="pjSd">Ngày bắt đầu</label>
+          <input id="pjSd" type="date" value="${f.sd}" onchange="pjForm.sd=this.value">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="pjEd">Ngày kết thúc <small style="color:var(--mu); font-weight:400;">không bắt buộc</small></label>
+          <input id="pjEd" type="date" value="${f.ed || ""}" onchange="pjForm.ed=this.value">
+        </div>
+      </div>
+      <div class="form-group">
+        <span class="form-label">Loại vốn liên quan <small style="color:var(--mu); font-weight:400;">chọn theo thứ tự, loại đầu là mặc định</small></span>
+        <div class="pj-capchips">
+          ${S.caps.map(c => { const i = f.caps.indexOf(c.k); return `<button type="button" class="pill pj-capchip ${i >= 0 ? "on" : ""}" style="${i >= 0 ? capInk(c.c) : ""}" aria-pressed="${i >= 0}" onclick="pjCapToggle('${c.k}')">${i === 0 ? "★ " : i > 0 ? (i + 1) + ". " : ""}${esc(c.n)}</button>`; }).join("")}
+        </div>
+      </div>
+      <div class="pj-form-acts">
+        ${f.id ? `<button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad)" onclick="deleteProject('${f.id}')">Xóa dự án</button>` : "<span></span>"}
+        <div class="row" style="gap:8px;">
+          <button type="button" class="btn btn-ghost" onclick="closeProject()">Hủy</button>
+          <button type="button" class="btn btn-primary" onclick="saveProject()">Lưu</button>
+        </div>
+      </div>
+    </div>`;
+}
+function pjCapToggle(k) {
+  const i = pjForm.caps.indexOf(k);
+  if (i >= 0) pjForm.caps.splice(i, 1); else pjForm.caps.push(k);
+  const n = $("pjName"); if (n) pjForm.n = n.value;
+  renderProjectForm();
+}
+function saveProject() {
+  const f = pjForm;
+  if (!f) return;
+  f.n = ($("pjName").value || "").trim();
+  if (!f.n) { showToast("Nhập tên dự án", "bad"); $("pjName").focus(); return; }
+  if (!f.caps.length) { showToast("Chọn ít nhất một loại vốn", "bad"); return; }
+  if (!/^\d{4}-\d\d-\d\d$/.test(f.sd || "")) { showToast("Chọn ngày bắt đầu", "bad"); return; }
+  if (f.ed && f.ed < f.sd) { showToast("Ngày kết thúc phải từ ngày bắt đầu trở đi", "bad"); return; }
+  S.projects = S.projects || [];
+  const clean = { n: f.n.slice(0, 60), col: f.col, st: f.st, pr: f.pr, sd: f.sd, caps: f.caps.slice() };
+  if (f.ed) clean.ed = f.ed;
+  let p = f.id ? findPj(f.id) : null;
+  if (p) {
+    const renamed = p.n !== clean.n;
+    Object.assign(p, clean);
+    if (!f.ed) delete p.ed;
+    delete p.demo;
+    if (renamed) pjEvents(p.id).forEach(({ e }) => markPending(e)); // cập nhật mô tả trên Google Calendar
+  } else {
+    p = { id: nid("p"), ...clean };
+    S.projects.push(p);
+    pjOpenId = p.id;
+  }
+  save();
+  gcalFlush();
+  closeProject();
+  if (cur !== "pj" && !ed) switchTab("pj"); else draw();
+  if (ed) renderEditorSheet(); // tạo từ popup hoạt động hoặc ô ghi nhanh: có ngay trong danh sách
+  showToast(`Đã lưu dự án "${p.n}"`, "ok");
+}
+async function deleteProject(id) {
+  const p = findPj(id);
+  if (!p) return;
+  const evs = pjEvents(id), tasks = S.tasks.filter(t => t.pj === id);
+  const a = await ask({ title: `Xóa dự án "${p.n}"?`, msg: `${evs.length} hoạt động và ${tasks.length} việc vẫn giữ nguyên, chỉ bỏ nhãn dự án.`, ok: "Xóa dự án", danger: true });
+  if (a !== "ok") return;
+  const idx = S.projects.indexOf(p);
+  S.projects.splice(idx, 1);
+  const evObjs = evs.map(x => x.e);
+  evObjs.forEach(e => { delete e.pj; markPending(e); });
+  tasks.forEach(t => delete t.pj);
+  if (pjOpenId === id) pjOpenId = null;
+  save();
+  gcalFlush();
+  closeProject();
+  draw();
+  offerUndo(`Đã xóa dự án "${p.n}"`, () => {
+    S.projects.splice(Math.min(idx, S.projects.length), 0, p);
+    evObjs.forEach(e => { e.pj = id; markPending(e); });
+    tasks.forEach(t => { t.pj = id; });
+  }, []);
+}
+
+/* ---- Popup hoạt động: ô Dự án ---- */
+function pjSelectHTML(cur0) {
+  const ps = (S.projects || []).filter(p => pjIsOpen(p) || p.id === cur0).sort(pjCmp);
+  return `
+    <div class="form-group">
+      <label class="form-label" for="inpPj">Dự án</label>
+      <div style="display:flex; gap:6px;">
+        <select id="inpPj" onchange="pjPicked(this.value)" style="flex:1; min-width:0;">
+          <option value="">Không thuộc dự án</option>
+          ${ps.map(p => `<option value="${p.id}" ${p.id === cur0 ? "selected" : ""}>${esc(p.n)}</option>`).join("")}
+        </select>
+        <button type="button" class="btn btn-sm" onclick="openProject()" title="Tạo dự án mới">Mới</button>
+      </div>
+    </div>`;
+}
+// Chọn dự án khi chưa tự chọn loại vốn: điền loại vốn mặc định; đưa các loại vốn của dự án lên đầu danh sách
+function pjPicked(id) {
+  const p = findPj(id), sel2 = $("inpCap");
+  if (!sel2) return;
+  const order = p ? p.caps : [];
+  [...sel2.options].sort((a, b) => {
+    const ia = order.indexOf(a.value), ib = order.indexOf(b.value);
+    return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || S.caps.findIndex(c => c.k === a.value) - S.caps.findIndex(c => c.k === b.value);
+  }).forEach(o => sel2.appendChild(o));
+  if (p && !capTouched && p.caps[0]) sel2.value = p.caps[0];
+}
+
+/* ---- Ô ghi nhanh: #dự án ---- */
+// Tách "#tên" khỏi câu. Trả về dự án khớp (ưu tiên khớp đầu tên, dự án đang mở), phần câu còn lại, và từ khóa đã gõ.
+function takeProject(str) {
+  const m = /(^|\s)#([^\s#]*)/u.exec(str || "");
+  if (!m) return { rest: str, pj: null, q: null };
+  const q = m[2], fq = fold(q);
+  const rest = (str.slice(0, m.index) + m[1] + str.slice(m.index + m[0].length)).replace(/\s{2,}/g, " ").trim();
+  if (!fq) return { rest, pj: null, q };
+  const cands = (S.projects || []).map(p => ({ p, f: fold(p.n) })).filter(x => x.f.includes(fq));
+  cands.sort((a, b) => (b.f.startsWith(fq) - a.f.startsWith(fq)) || (pjIsOpen(b.p) - pjIsOpen(a.p)) || pjCmp(a.p, b.p));
+  return { rest, pj: cands.length ? cands[0].p : null, q };
+}
+// Gợi ý khi đang gõ "#..." ở cuối câu
+function pjSuggestHTML(val) {
+  const m = /(^|\s)#([^\s#]*)$/u.exec(val || "");
+  if (!m) return "";
+  const fq = fold(m[2]);
+  const list = (S.projects || []).filter(p => pjIsOpen(p) && fold(p.n).includes(fq)).sort(pjCmp).slice(0, 5);
+  return list.map(p => `<button type="button" class="pill pj-sug" style="--pj:${p.col}" onmousedown="event.preventDefault()" onclick="pjPickSuggest('${p.id}')"><span class="pj-dot"></span>${esc(p.n)}</button>`).join("")
+    + (m[2] && !list.length ? `<button type="button" class="pill pill-neutral" onmousedown="event.preventDefault()" onclick="openProject(null, decodeURIComponent('${encodeURIComponent(m[2])}'))">Tạo dự án “${esc(m[2])}”</button>` : "");
+}
+function pjPickSuggest(id) {
+  const p = findPj(id), inp = $("nlpInput");
+  if (!p || !inp) return;
+  inp.value = inp.value.replace(/(^|\s)#([^\s#]*)$/u, `$1#${fold(p.n)} `);
+  inp.focus();
+  handleNLPInput(inp.value);
+}
+// Dự án có loại vốn riêng: loại vốn đoán từ chữ không thuộc dự án thì dùng loại mặc định của dự án
+function pjCap(p, guessed) {
+  if (!p || !p.caps.length) return guessed;
+  return p.caps.includes(guessed) ? guessed : p.caps[0];
+}
+
+/* ---- Dữ liệu mẫu ---- */
+function pjDemo() {
+  S.projects = S.projects || [];
+  if (S.projects.some(p => p.demo)) return;
+  const has = k => S.caps.some(c => c.k === k);
+  const caps = ["sk", "tc"].filter(has);
+  if (!caps.length) return;
+  const p = { id: nid("p"), n: "Marathon 2027", col: "#97A13B", st: "run", pr: "h", sd: ky(ad(new Date(tk + "T00:00"), -14)), ed: ky(ad(new Date(tk + "T00:00"), 120)), caps, demo: 1 };
+  S.projects.push(p);
+  Object.values(S.ev).forEach(l => l.forEach(e => { if (e.demo && e.c === caps[0]) e.pj = p.id; }));
 }
 
 // Khởi chạy ứng dụng
