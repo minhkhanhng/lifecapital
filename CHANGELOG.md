@@ -2,6 +2,23 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.5.0 · Dự án · 18/10/2026
+
+Gắn hoạt động và việc vào dự án để biết thời gian đang dồn vào mục tiêu lớn nào. Không bắt buộc: ăn cơm, di chuyển… cứ để trống.
+
+**Mới**
+- Tab **Dự án**: danh sách xếp theo mức ưu tiên (Cao → Thấp, cùng mức thì hạn gần hơn ở trên). Mỗi dự án có màu, trạng thái, ngày bắt đầu và kết thúc, giờ tổng và giờ tuần này, số việc xong, vạch thời gian đã trôi, nhãn Quá hạn.
+- Bấm vào một dự án để xem **biểu đồ Gantt**: mỗi dòng một hoạt động, cũ nhất ở trên, màu theo loại vốn, hoạt động sắp tới viền nét đứt. Kèm giờ theo từng tuần và theo loại vốn.
+- Tạo và sửa dự án: tên, màu, trạng thái, ưu tiên, ngày, một hoặc nhiều loại vốn (loại đầu là mặc định). Xóa dự án chỉ bỏ nhãn, có Hoàn tác.
+- Gắn dự án: ô Dự án trong popup hoạt động; gõ `#tên` ở ô ghi nhanh (Enter để chọn gợi ý); `+ #tên việc` để thêm việc vào Hộp việc.
+- Hộp việc: chọn dự án cho từng việc, lọc theo dự án; xếp lịch thì hoạt động mang theo dự án.
+- Tổng quan và Tổng kết tuần có mục **Giờ theo dự án**, kèm phần giờ không thuộc dự án nào.
+- Google Calendar: mô tả sự kiện có thêm dòng “Dự án: …”.
+
+**Thay đổi**
+- Thanh tab trên điện thoại có 6 ô: Lịch · Việc · Dự án · Số liệu · Vốn · Cài đặt. Phím tắt 1–5 cho 5 tab.
+- Có trang test tự động cho phần gộp dữ liệu (`tests/merge-tests.html`, 20 tình huống).
+
 ## v0.4.1 · Giữ dữ liệu khi có bản mới · 17/10/2026
 
 - App giữ nguyên các thông tin do bản mới hơn ghi (vd nhãn dự án sắp có ở v0.5.0) thay vì xóa khi lưu hoặc đồng bộ, nên máy chưa cập nhật không làm mất dữ liệu của máy đã cập nhật.

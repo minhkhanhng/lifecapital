@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Life Capital · test gộp dữ liệu</title>
+<style>
+  body { font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 24px; color: #222; background: #fafafa; }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  #sum { font-weight: 600; margin: 8px 0 16px; }
+  table { border-collapse: collapse; width: 100%; max-width: 900px; background: #fff; }
+  td, th { border-bottom: 1px solid #e5e5e5; padding: 6px 10px; text-align: left; vertical-align: top; }
+  .ok { color: #2e7d32; font-weight: 600; } .bad { color: #c62828; font-weight: 600; }
+  iframe { width: 1px; height: 1px; border: 0; position: absolute; left: -9999px; }
+  code { background: #f0f0f0; padding: 1px 5px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<h1>Test gộp dữ liệu</h1>
+<p>Tải chính <code>index.html</code> trong khung ẩn rồi kiểm các hàm <code>cleanState</code>, <code>mergeStates</code>, <code>canonState</code>. Chạy: <code>python3 -m http.server 8765</code> ở thư mục gốc repo, mở <code>http://localhost:8765/tests/merge-tests.html</code>.</p>
+<div id="sum">Đang chạy…</div>
+<table><thead><tr><th>#</th><th>Tình huống</th><th>Kết quả</th></tr></thead><tbody id="rows"></tbody></table>
+<iframe id="app"></iframe>
+<script>
+// Không để app trong khung ẩn mở hướng dẫn hay đăng ký service worker làm nhiễu
+try { localStorage.setItem("lc_onb", "1"); } catch (e) {}
+const frame = document.getElementById("app");
+frame.src = "../index.html?test=" + Date.now();
+frame.onload = () => setTimeout(run, 300);
+
+function run() {
+  const A = frame.contentWindow;
+  const { cleanState, mergeStates, canonState } = A;
+  const day = "2026-10-12", day2 = "2026-10-13";
+  const caps = [{ k: "sk", n: "Sức khỏe", c: "#97A13B", tg: 5, kw: [] }, { k: "tc", n: "Tài chính", c: "#4a859c", tg: 10, kw: [] }];
+  const C = o => cleanState(JSON.parse(JSON.stringify(o)));
+  const base = (ev, extra) => ({ sv: 3, av: 50, ev, caps, tasks: [], cfg: { defDuration: 2, burnoutHours: 6 }, bl: {}, mem: {}, memV: 2, gdel: [], projects: [], ...(extra || {}) });
+  const evOf = (st, k = day) => (st.ev[k] || []);
+  const T = [];
+  const t = (name, fn) => { try { T.push([name, !!fn()]); } catch (e) { T.push([name + " (lỗi: " + e.message + ")", false]); } };
+
+  // --- Dữ liệu cũ, mã cố định ---
+  const legacy = { sv: 2, ev: { [day]: [{ t: "Họp", c: "tc", m: "d", h: 2, s: "09:00" }, { t: "Họp", c: "tc", m: "d", h: 2, s: "09:00" }, { t: "Chạy", c: "sk", m: "u", h: 1, s: "06:00" }] }, caps, tasks: [] };
+  t("Dữ liệu chưa có mã được cấp mã, hai lần đọc cho cùng mã", () => { const a = C(legacy), b = C(legacy); return evOf(a).every(e => e.id) && evOf(a).map(e => e.id).join() === evOf(b).map(e => e.id).join(); });
+  t("Hai buổi giống hệt nhau có hai mã khác nhau", () => { const l = evOf(C(legacy)).filter(e => e.t === "Họp"); return l.length === 2 && l[0].id !== l[1].id; });
+  t("Gộp lần đầu (không gốc chung) không nhân đôi, giữ đủ 2 buổi Họp", () => evOf(mergeStates(null, C(legacy), C(legacy), false)).filter(e => e.t === "Họp").length === 2);
+
+  // --- Gộp ba bên theo mã ---
+  const B0 = base({ [day]: [{ id: "e1", t: "Chạy", c: "sk", m: "u", h: 1, s: "06:00", mt: 1 }, { id: "e2", t: "Họp", c: "tc", m: "d", h: 2, s: "09:00", mt: 1 }] });
+  t("Chỉ một bên sửa: lấy bên đã sửa", () => { const m = C(B0), th = C(B0); th.ev[day][0].s = "07:00"; th.ev[day][0].mt = 5; return evOf(mergeStates(C(B0), m, th, true)).find(e => e.id === "e1").s === "07:00"; });
+  t("Hai bên cùng sửa: bản có mt sau cùng thắng", () => { const m = C(B0), th = C(B0); m.ev[day][0].t = "A"; m.ev[day][0].mt = 10; th.ev[day][0].t = "B"; th.ev[day][0].mt = 20; const r = evOf(mergeStates(C(B0), m, th, true)); return r.filter(e => e.id === "e1").length === 1 && r.find(e => e.id === "e1").t === "B"; });
+  t("Một bên xóa, bên kia không đổi: xóa theo", () => { const th = C(B0); th.ev[day] = th.ev[day].filter(e => e.id !== "e2"); return !evOf(mergeStates(C(B0), C(B0), th, true)).some(e => e.id === "e2"); });
+  t("Một bên xóa, bên kia sửa: giữ bản đã sửa", () => { const m = C(B0), th = C(B0); m.ev[day][1].h = 3; m.ev[day][1].mt = 9; th.ev[day] = th.ev[day].filter(e => e.id !== "e2"); const e = evOf(mergeStates(C(B0), m, th, true)).find(x => x.id === "e2"); return e && e.h === 3; });
+  t("Chuyển hoạt động sang ngày khác: chỉ còn ở ngày mới", () => { const th = C(B0); const e = th.ev[day].splice(0, 1)[0]; e.mt = 7; th.ev[day2] = [e]; const r = mergeStates(C(B0), C(B0), th, true); return !evOf(r).some(x => x.id === "e1") && evOf(r, day2).some(x => x.id === "e1"); });
+  t("Cả hai bên cùng thêm: giữ cả hai", () => { const m = C(B0), th = C(B0); m.ev[day].push({ id: "a1", t: "A", c: "sk", m: "u", h: 1, s: "12:00" }); th.ev[day].push({ id: "b1", t: "B", c: "sk", m: "u", h: 1, s: "13:00" }); const r = evOf(mergeStates(C(B0), C(m), C(th), true)); return r.some(e => e.id === "a1") && r.some(e => e.id === "b1"); });
+  t("Liên kết Google (gid) được giữ khi bản kia thắng", () => { const m = C(B0), th = C(B0); m.ev[day][0].gid = "abcde12345"; th.ev[day][0].t = "Mới"; th.ev[day][0].mt = 30; return evOf(mergeStates(C(B0), m, th, true)).find(e => e.id === "e1").gid === "abcde12345"; });
+
+  // --- Việc trong Hộp việc ---
+  const TB = base({}, { tasks: [{ id: "t1", t: "Việc", c: "sk", m: "u", subs: [], mt: 1 }] });
+  t("Việc: hai bên cùng sửa, mt sau cùng thắng", () => { const m = C(TB), th = C(TB); m.tasks[0].t = "M"; m.tasks[0].mt = 5; th.tasks[0].t = "T"; th.tasks[0].mt = 9; return mergeStates(C(TB), m, th, true).tasks[0].t === "T"; });
+
+  // --- Trường lạ (bản mới hơn ghi) ---
+  t("Trường lạ ở hoạt động, việc, cấp cao nhất được giữ khi làm sạch", () => { const d = base({ [day]: [{ id: "e1", t: "X", c: "sk", m: "u", h: 1, s: "06:00", future: 1 }] }, { futureTop: { a: 1 }, tasks: [{ id: "t1", t: "V", c: "sk", m: "u", subs: [], future: 2 }] }); const c = C(d); return c.ev[day][0].future === 1 && c.futureTop.a === 1 && c.tasks[0].future === 2; });
+  t("Không cho __proto__ lọt vào", () => { C(JSON.parse('{"ev":{},"caps":' + JSON.stringify(caps) + ',"__proto__":{"polluted":1}}')); return !({}).polluted; });
+
+  // --- Dự án ---
+  const P = { id: "p1", n: "Marathon", col: "#97A13B", st: "run", pr: "h", sd: day, caps: ["sk"], mt: 10 };
+  const PB = base({ [day]: [{ id: "e1", t: "Chạy", c: "sk", m: "u", h: 1, s: "06:00", pj: "p1", mt: 1 }] }, { projects: [P], tasks: [{ id: "t1", t: "Việc", c: "sk", m: "u", subs: [], pj: "p1" }] });
+  const old = () => { const o = JSON.parse(JSON.stringify(PB)); delete o.av; delete o.projects; delete o.ev[day][0].pj; delete o.tasks[0].pj; return o; };
+  t("Máy v0.4.0 sửa tên hoạt động: nhận tên mới, giữ nhãn dự án", () => { const o = old(); o.ev[day][0].t = "Chạy dài"; o.ev[day][0].mt = 99; const r = mergeStates(C(PB), C(PB), C(o), true); const e = evOf(r)[0]; return e.t === "Chạy dài" && e.pj === "p1"; });
+  t("Máy v0.4.0 không gửi dự án: danh sách dự án và nhãn việc còn nguyên", () => { const r = mergeStates(C(PB), C(PB), C(old()), true); return r.projects.length === 1 && r.tasks[0].pj === "p1" && evOf(r)[0].pj === "p1"; });
+  t("Đổi nhãn dự án từ máy mới được nhận", () => { const th = C(PB); th.projects.push({ ...P, id: "p2", n: "KD", mt: 20 }); th.ev[day][0].pj = "p2"; th.ev[day][0].mt = 20; const r = mergeStates(C(PB), C(PB), th, true); return evOf(r)[0].pj === "p2" && r.projects.length === 2; });
+  t("Sửa dự án ở hai máy: bản sau cùng thắng", () => { const a = C(PB), b = C(PB); a.projects[0].n = "A"; a.projects[0].mt = 20; b.projects[0].n = "B"; b.projects[0].mt = 30; return mergeStates(C(PB), a, b, true).projects[0].n === "B"; });
+  t("Xóa dự án lan sang máy kia; xóa thua sửa", () => { const d = C(PB); d.projects = []; const e = C(PB); e.projects[0].pr = "l"; e.projects[0].mt = 40; return mergeStates(C(PB), C(PB), d, true).projects.length === 0 && mergeStates(C(PB), e, d, true).projects.length === 1; });
+  t("Gộp lần đầu cộng dự án hai bên", () => { const l = C(PB); l.projects = [{ ...P, id: "p9", n: "Riêng" }]; return mergeStates(null, C(PB), l, false).projects.length === 2; });
+
+  // --- Dạng chuẩn để so sánh khi đồng bộ ---
+  t("canonState ổn định và không phụ thuộc thứ tự dự án", () => { const a = C(PB), b = C(PB); a.projects.push({ ...P, id: "p0", n: "Z" }); b.projects.unshift({ ...P, id: "p0", n: "Z" }); return canonState(a) === canonState(b) && canonState(a) === canonState(C(JSON.parse(canonState(a)))); });
+
+  const pass = T.filter(x => x[1]).length;
+  document.getElementById("rows").innerHTML = T.map(([n, ok], i) => `<tr><td>${i + 1}</td><td>${n}</td><td class="${ok ? "ok" : "bad"}">${ok ? "Đạt" : "LỖI"}</td></tr>`).join("");
+  const sum = document.getElementById("sum");
+  sum.textContent = pass === T.length ? `Đạt ${pass}/${T.length}` : `LỖI: đạt ${pass}/${T.length}`;
+  sum.className = pass === T.length ? "ok" : "bad";
+  document.title = (pass === T.length ? "PASS " : "FAIL ") + pass + "/" + T.length;
+  window.__result = { pass, total: T.length, fail: T.filter(x => !x[1]).map(x => x[0]) };
+}
+</script>
+</body>
+</html>

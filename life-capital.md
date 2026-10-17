@@ -1661,6 +1661,20 @@ body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(-
 .pj-sug { display: inline-flex; align-items: center; gap: 5px; cursor: pointer; border: 1px solid color-mix(in srgb, var(--pj) 50%, transparent); background: color-mix(in srgb, var(--pj) 16%, transparent); color: var(--tx); font: inherit; font-size: 12.5px; }
 .pj-sug .pj-dot { width: 8px; height: 8px; }
 .hv-mini[data-pj] { border-left: 3px solid var(--pj); }
+/* Dự án: giờ theo tuần, giờ theo dự án, lọc Hộp việc */
+.pj-weeks { display: flex; flex-direction: column; gap: 4px; }
+.pj-wk-bars { display: flex; align-items: flex-end; gap: 3px; height: 56px; padding: 4px 0; border-bottom: 1px solid var(--glass-bd); }
+.pj-wk { flex: 1 1 0; min-width: 4px; max-width: 28px; height: 100%; display: flex; align-items: flex-end; }
+.pj-wk i { display: block; width: 100%; min-height: 2px; border-radius: 3px 3px 0 0; background: color-mix(in srgb, var(--pj) 55%, transparent); }
+.pj-wk.now i { background: var(--pj); }
+.pj-wk-axis { display: flex; justify-content: space-between; gap: 8px; font-size: 11px; color: var(--tx-sec); font-variant-numeric: tabular-nums; }
+.pj-wrows { display: flex; flex-direction: column; gap: 8px; }
+.pj-wrow { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(60px, 2fr) auto; align-items: center; gap: 10px; font-size: 13px; }
+.pj-wname { display: inline-flex; align-items: center; gap: 6px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pj-wbar { height: 8px; border-radius: 99px; background: color-mix(in srgb, var(--tx) 8%, transparent); overflow: hidden; }
+.pj-wbar i { display: block; height: 100%; border-radius: 99px; background: var(--pj); }
+.pj-wval { font-variant-numeric: tabular-nums; color: var(--tx-sec); white-space: nowrap; font-size: 12.5px; }
+.hv-filter { width: 100%; font-size: 13px; }
 </style>
 <script>
   try {
@@ -2731,6 +2745,8 @@ function handleNLPKeydown(e) {
   if (e.key !== "Enter" || e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
   if (e.isComposing || e.keyCode === 229) { nlpAfterCompose = true; return; }
   e.preventDefault();
+  const sl = pjSuggestList(e.target.value);
+  if (sl && sl.list.length) { pjPickSuggest(sl.list[0].id); return; } // đang gõ #tên: Enter chọn dự án đầu tiên
   executeNLP();
 }
 
@@ -3016,6 +3032,12 @@ function openWeeklyReviewModal(wIdx = sel) {
           <small style="color:var(--tx-sec)">${noData ? 'Ghi hoạt động để đánh giá' : netEnergy >= 0 ? 'Hồi phục tốt' : 'Cần nghỉ bù tuần tới'}</small>
         </div>
       </div>
+
+      ${(S.projects || []).length ? `
+      <div style="border:1px solid var(--bd); border-radius:var(--radius-md); padding:12px; background:var(--card);">
+        <div style="font-weight:600; font-size:14px; margin-bottom:8px;">Giờ theo dự án</div>
+        ${pjWeekRowsHTML(W[wIdx])}
+      </div>` : ""}
 
       <!-- BÁNH XE CUỘC ĐỜI CỦA TUẦN ĐÓ -->
       <div style="border:1px solid var(--bd); border-radius:var(--radius-md); padding:12px; background:var(--card);">
@@ -4518,7 +4540,13 @@ const V = {
       </details>
     `;
 
-    return selectorBar + insightCard + wheelCard + f168 + reportTable;
+    const pjCard = (S.projects || []).length ? `
+      <div class="card">
+        <div class="card-header"><div><h2 class="card-title">Giờ theo dự án</h2><div class="card-sub">Tuần W${sel + 1}</div></div>
+        <button type="button" class="btn btn-sm btn-ghost" onclick="switchTab('pj')">Xem dự án</button></div>
+        ${pjWeekRowsHTML(W[sel])}
+      </div>` : "";
+    return selectorBar + insightCard + wheelCard + pjCard + f168 + reportTable;
   },
   // --- TAB 3: CÀI ĐẶT LOẠI VỐN (SETTINGS) ---
   set() {
@@ -5208,7 +5236,9 @@ function importData(inputEl) {
         Object.keys(d.bl).forEach(k => { if (!S.bl[k]) S.bl[k] = d.bl[k]; });
         S.mem = Object.assign({}, d.mem, S.mem);
         d.tasks.forEach(t => { if (!S.tasks.some(x => x.id === t.id)) S.tasks.push(t); });
-        const sg = e => [e.t, e.s, e.c, e.m, e.h, e.r].join("|");
+        S.projects = S.projects || [];
+        (d.projects || []).forEach(p => { if (!S.projects.some(x => x.id === p.id)) S.projects.push(p); });
+        const sg = e => [e.t, e.s, e.c, e.m, e.h, e.r, e.pj || ""].join("|");
         Object.keys(d.ev).forEach(k => { const L = S.ev[k] = S.ev[k] || []; d.ev[k].forEach(e => { if (!L.some(y => sg(y) === sg(e))) L.push(e); }); sortL(L); });
       }
       save(); draw(true);
@@ -5509,7 +5539,8 @@ function parseSubText(str) {
 function addTask(title) {
   title = String(title || "").trim();
   if (!title) return null;
-  const t = { id: nid("t"), t: title.slice(0, 160), c: guess(title), m: guessMode(title), subs: [] };
+  const fp = typeof hvPjF === "string" && hvPjF && hvPjF !== "-" ? findPj(hvPjF) : null;
+  const t = { id: nid("t"), t: title.slice(0, 160), c: fp ? pjCap(fp, guess(title)) : guess(title), m: guessMode(title), subs: [], ...(fp ? { pj: fp.id } : {}) };
   S.tasks.unshift(t);
   openTasks.add(t.id);
   save();
@@ -5915,9 +5946,12 @@ function rowDrop(e, kind, id) {
 }
 
 /* ---------- Giao diện hộp việc (tab riêng và cột bên lịch) ---------- */
+let hvPjF = ""; // lọc Hộp việc: "" tất cả, "-" không thuộc dự án, hoặc mã dự án
 function inboxHTML(where) {
   const m = schedMap(), P = where === "panel" ? "p" : "t";
-  const active = S.tasks.filter(t => !taskDone(t)), done = S.tasks.filter(taskDone);
+  if (hvPjF && hvPjF !== "-" && !findPj(hvPjF)) hvPjF = "";
+  const inF = t => !hvPjF || (hvPjF === "-" ? !(t.pj && findPj(t.pj)) : t.pj === hvPjF);
+  const active = S.tasks.filter(t => !taskDone(t) && inF(t)), done = S.tasks.filter(t => taskDone(t) && inF(t));
   const drag = (kind, id) => CAN_DRAG ? `draggable="true" ondragstart="dndStart(event,'${kind}','${id}')" ondragend="dndEnd()"` : "";
   const sub = (t, s, i) => {
     const p = m.get(s.id);
@@ -5984,7 +6018,11 @@ function inboxHTML(where) {
     <div class="hv-box ${where}">
       ${where === "panel" ? `<div class="hv-panel-head"><b>Hộp việc</b><button type="button" class="btn btn-sm btn-ghost" onclick="toggleInboxPanel()" title="Ẩn cột hộp việc">Ẩn</button></div>
         <div class="hv-hint">Kéo việc nhỏ vào ${calSubView === "timeline" ? "khung giờ" : "một ngày"}; kéo tên việc để xếp hết.</div>` : ""}
-      <input id="hvTask-${P}" class="hv-add" data-hv="task" placeholder="Thêm việc" onkeydown="hvKeydown(event)" aria-label="Thêm việc vào hộp">
+      ${(S.projects || []).length ? `<select class="hv-filter" onchange="hvPjF=this.value; draw()" aria-label="Lọc theo dự án">
+        <option value="">Mọi dự án</option><option value="-" ${hvPjF === "-" ? "selected" : ""}>Không thuộc dự án</option>
+        ${(S.projects || []).slice().sort(pjCmp).map(p => `<option value="${p.id}" ${hvPjF === p.id ? "selected" : ""}>${esc(p.n)}</option>`).join("")}
+      </select>` : ""}
+      <input id="hvTask-${P}" class="hv-add" data-hv="task" placeholder="${hvPjF && hvPjF !== "-" && findPj(hvPjF) ? "Thêm việc vào " + esc(findPj(hvPjF).n) : "Thêm việc"}" onkeydown="hvKeydown(event)" aria-label="Thêm việc vào hộp">
       ${active.length ? active.map((t, i) => card(t, i, active)).join("") : `<div class="hv-empty">${S.tasks.length ? "Mọi việc đã xong" : "Chưa có việc. Ghi việc chưa rõ lúc làm, chia nhỏ, rồi xếp vào lịch."}</div>`}
       ${done.length ? `
         <button type="button" class="btn btn-sm btn-ghost hv-done-toggle" onclick="hvShowDone=!hvShowDone; draw()" aria-expanded="${hvShowDone}">${hvShowDone ? "▾" : "▸"} Đã xong (${done.length})</button>
@@ -6677,9 +6715,46 @@ function pjDetailHTML(p, s) {
         <button type="button" class="btn btn-sm btn-primary" onclick="pjAddEvent('${p.id}')">Thêm hoạt động</button>
         <button type="button" class="btn btn-sm" onclick="openProject('${p.id}')">Sửa dự án</button>
       </div>
+      ${s.evs.length ? pjWeeksHTML(p, s.evs) : ""}
       ${caps.length ? `<div class="pj-caps" aria-label="Giờ theo loại vốn">${caps.map(k => { const c = CM(k); return `<span class="pill" style="${capInk(c.c)}">${esc(c.n)} ${r1(s.byCap[k])}h</span>`; }).join("")}</div>` : ""}
       ${ganttHTML(p, s.evs)}
     </div>`;
+}
+
+// Giờ từng tuần của dự án (tối đa 26 tuần gần nhất), cột tuần này tô đậm
+function pjWeeksHTML(p, evs) {
+  const mon = k => { const d = new Date(k + "T00:00"); return ky(ad(d, -((d.getDay() + 6) % 7))); };
+  const startK = mon([p.sd, evs[0].k].sort()[0]);
+  const lastK = [evs[evs.length - 1].k, tk].sort().pop();
+  const nowW = mon(tk);
+  let weeks = [];
+  for (let k = startK; k <= lastK; k = ky(ad(new Date(k + "T00:00"), 7))) weeks.push({ k, h: 0 });
+  if (weeks.length > 26) weeks = weeks.slice(-26);
+  const idx = new Map(weeks.map((w, i) => [w.k, i]));
+  evs.forEach(({ k, e }) => { const i = idx.get(mon(k)); if (i != null) weeks[i].h += e.h; });
+  const max = Math.max(1, ...weeks.map(w => w.h));
+  return `
+    <div class="pj-weeks" aria-label="Giờ theo tuần">
+      <div class="pj-wk-bars">${weeks.map(w => `<span class="pj-wk ${w.k === nowW ? "now" : ""}" title="Tuần ${dm(w.k)}: ${r1(w.h)}h"><i style="height:${Math.round(w.h / max * 100)}%"></i></span>`).join("")}</div>
+      <div class="pj-wk-axis"><span>${dm(weeks[0].k)}</span><span>Giờ mỗi tuần · cao nhất ${r1(max)}h</span><span>${dm(weeks[weeks.length - 1].k)}</span></div>
+    </div>`;
+}
+
+// ---- US10: giờ theo dự án trong một tuần (Tổng quan, Tổng kết tuần) ----
+function pjWeekRowsHTML(ws) {
+  if (!(S.projects || []).length) return "";
+  const by = {}; let tot = 0;
+  for (let i = 0; i < 7; i++) (S.ev[ky(ad(ws, i))] || []).forEach(e => { const k = e.pj && findPj(e.pj) ? e.pj : ""; by[k] = (by[k] || 0) + e.h; tot += e.h; });
+  if (!tot) return `<p class="pj-hint">Tuần này chưa có hoạt động.</p>`;
+  const rows = Object.keys(by).sort((a, b) => (a === "") - (b === "") || by[b] - by[a]);
+  return `<div class="pj-wrows">${rows.map(k => {
+    const p = k ? findPj(k) : null, pct = Math.round(by[k] / tot * 100);
+    return `<div class="pj-wrow" style="--pj:${p ? p.col : "var(--mu)"}">
+      <span class="pj-wname">${p ? `<span class="pj-dot"></span>${esc(p.n)}` : `<span class="pj-dot" style="background:transparent; border:1.5px dashed var(--mu)"></span>Không thuộc dự án`}</span>
+      <span class="pj-wbar"><i style="width:${pct}%"></i></span>
+      <span class="pj-wval">${r1(by[k])}h · ${pct}%</span>
+    </div>`;
+  }).join("")}</div>`;
 }
 
 function ganttHTML(p, evs) {
@@ -6899,11 +6974,16 @@ function takeProject(str) {
   return { rest, pj: cands.length ? cands[0].p : null, q };
 }
 // Gợi ý khi đang gõ "#..." ở cuối câu
-function pjSuggestHTML(val) {
+function pjSuggestList(val) {
   const m = /(^|\s)#([^\s#]*)$/u.exec(val || "");
-  if (!m) return "";
+  if (!m) return null;
   const fq = fold(m[2]);
-  const list = (S.projects || []).filter(p => pjIsOpen(p) && fold(p.n).includes(fq)).sort(pjCmp).slice(0, 5);
+  return { m, list: (S.projects || []).filter(p => pjIsOpen(p) && fold(p.n).includes(fq)).sort(pjCmp).slice(0, 5) };
+}
+function pjSuggestHTML(val) {
+  const sl = pjSuggestList(val);
+  if (!sl) return "";
+  const { m, list } = sl;
   return list.map(p => `<button type="button" class="pill pj-sug" style="--pj:${p.col}" onmousedown="event.preventDefault()" onclick="pjPickSuggest('${p.id}')"><span class="pj-dot"></span>${esc(p.n)}</button>`).join("")
     + (m[2] && !list.length ? `<button type="button" class="pill pill-neutral" onmousedown="event.preventDefault()" onclick="openProject(null, decodeURIComponent('${encodeURIComponent(m[2])}'))">Tạo dự án “${esc(m[2])}”</button>` : "");
 }
