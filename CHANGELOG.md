@@ -19,6 +19,8 @@ Gắn hoạt động và việc vào dự án để biết thời gian đang d�
 - Thanh tab trên điện thoại có 6 ô: Lịch · Việc · Dự án · Số liệu · Vốn · Cài đặt. Phím tắt 1–5 cho 5 tab.
 - Có trang test tự động cho phần gộp dữ liệu (`tests/merge-tests.html`, 20 tình huống).
 
+**Ghi chú quy trình:** lên production theo yêu cầu chủ dự án ngày 18/10 khi UAT trên staging chưa chấm bước nào; UAT tiếp tục như hậu kiểm.
+
 ## v0.4.1 · Giữ dữ liệu khi có bản mới · 17/10/2026
 
 - App giữ nguyên các thông tin do bản mới hơn ghi (vd nhãn dự án sắp có ở v0.5.0) thay vì xóa khi lưu hoặc đồng bộ, nên máy chưa cập nhật không làm mất dữ liệu của máy đã cập nhật.
