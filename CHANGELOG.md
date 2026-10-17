@@ -2,6 +2,12 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.4.1 · Giữ dữ liệu khi có bản mới · 17/10/2026
+
+- App giữ nguyên các thông tin do bản mới hơn ghi (vd nhãn dự án sắp có ở v0.5.0) thay vì xóa khi lưu hoặc đồng bộ, nên máy chưa cập nhật không làm mất dữ liệu của máy đã cập nhật.
+- Dữ liệu ghi kèm số phiên bản app, để bản sau nhận ra dữ liệu đến từ máy chưa cập nhật.
+- Không đổi giao diện. Nên mở app trên mọi máy để nhận bản này trước khi v0.5.0 ra mắt.
+
 ## v0.4.0 · Đồng bộ và cài app · 16/10/2026
 
 Đăng nhập Google để dùng chung dữ liệu giữa iPhone và máy tính. Không đăng nhập thì app chạy như trước.

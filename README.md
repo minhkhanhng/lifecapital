@@ -1892,6 +1892,7 @@ const save = () => {
     stampEdits(); // đánh dấu những gì tab này vừa sửa, trước khi gộp với nơi khác
     absorb(readDisk()); // nơi khác vừa ghi mà tab này chưa biết: gộp trước, không ghi đè
     S.sv = SV;
+    S.av = APPV; // phiên bản app ghi bản này: bản sau biết dữ liệu đến từ máy chưa cập nhật
     const out = JSON.stringify(S);
     try { localStorage.setItem("lc2", out); }
     catch (q) { freeSpace(); localStorage.setItem("lc2", out); } // đầy bộ nhớ: bỏ bản phụ rồi thử lại
@@ -1914,6 +1915,7 @@ const save = () => {
    hay cửa sổ khác đã ghi mà tab này không nhận được (tab bị trình duyệt tạm dừng, trang khôi phục từ
    bộ nhớ đệm, bản cũ của app không biết lắng nghe…): gộp hai bên thay vì ghi đè.
    Dữ liệu do bản này ghi có sv = 2. Bên ghi không có sv (bản cũ) thì chỉ cộng thêm, không xóa gì. */
+const APPV = 41; // v0.4.1
 const SV = 3; // 3 (v0.4.0): hoạt động có mã riêng và thời điểm sửa; bản ghi sv khác được gộp kiểu cộng thêm
 let lastRaw = rawSaved, oldWriterSeen = 0;
 // Đồng bộ giữa các thiết bị (v0.4.0, xem phần ĐỒNG BỘ ở cuối tệp)
@@ -1922,7 +1924,7 @@ let cloudBusy = false, cloudAgain = false, cloudT = null, cloudApplying = false,
 let cloud = { st: "off", n: 0, at: 0, msg: "" }; // st: off · sync · ok · wait · offline · auth · setup · err
 function readDisk() { try { return localStorage.getItem("lc2"); } catch (e) { return null; } }
 const evKey = e => [e.t, e.s, e.h, e.c, e.m, e.r || "", e.demo ? 1 : 0, e.tk || ""].join("|");
-const evCore = e => [e.t, e.s, e.h, e.c, e.m, e.r || "", e.tk || "", e.demo ? 1 : 0].join("|");
+const evCore = e => [e.t, e.s, e.h, e.c, e.m, e.r || "", e.tk || "", e.demo ? 1 : 0, extraSig(e)].join("|");
 // Mã cho hoạt động có từ trước v0.4.0: suy từ ngày + nội dung + thứ tự trong các bản giống hệt, nên mọi máy
 // cấp ra cùng một mã cho cùng một hoạt động. Hoạt động mới được cấp mã ngẫu nhiên khi lưu (stampEdits).
 function fnv(str) { let h = 0x811c9dc5; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); } return (h >>> 0).toString(36); }
@@ -2035,8 +2037,13 @@ function mergeStates(base, mine, theirs, trust) {
     else x = trust && b && sameJ(m || t, b) ? null : (m || t); // một bên xóa: xóa theo, trừ khi bên kia đã sửa
     if (x) tasks.push(x);
   });
+  const known = ["ev", "caps", "bl", "mem", "cfg", "pm", "memV", "lb", "gdel", "tasks", "sv", "av"];
+  const extra = {};
+  [...new Set([...Object.keys(mine), ...Object.keys(theirs)])].filter(k => known.indexOf(k) < 0).forEach(k => {
+    extra[k] = (trust && base && sameJ(mine[k], base[k])) || !(k in mine) ? theirs[k] : mine[k];
+  });
   return {
-    ...theirs, ...mine, ev, caps: caps.length ? caps : mine.caps,
+    ...theirs, ...mine, ...extra, ev, caps: caps.length ? caps : mine.caps,
     bl: pick("bl"), mem: pick("mem"), cfg: pick("cfg"), pm: pick("pm"), memV: pick("memV"),
     lb: Math.max(+mine.lb || 0, +theirs.lb || 0),
     gdel: [...new Set([...(mine.gdel || []), ...(theirs.gdel || [])])].slice(-500),
@@ -4933,6 +4940,21 @@ function deleteCap(k) {
 }
 
 
+// Giữ nguyên các trường dữ liệu bản này chưa biết (do bản mới hơn ghi, vd nhãn dự án), thay vì xóa.
+// Không dùng hằng ở ngoài: cleanState chạy lúc mở app, trước khi các hằng phía dưới được khai báo.
+function extras(src, known) {
+  const o = {};
+  if (!src || typeof src !== "object") return o;
+  Object.keys(src).forEach(k => {
+    if (known.indexOf(k) < 0 && k !== "__proto__" && k !== "constructor" && k !== "prototype" && src[k] !== undefined && typeof src[k] !== "function") o[k] = src[k];
+  });
+  return o;
+}
+function extraSig(e) {
+  const x = extras(e, ["id", "mt", "t", "c", "m", "h", "s", "r", "tk", "gid", "gi", "ds", "demo"]);
+  const ks = Object.keys(x).sort();
+  return ks.length ? JSON.stringify(ks.map(k => [k, x[k]])) : "";
+}
 function cleanCap(c) {
   if (!c || !SAFE_K.test(c.k)) return null;
   const def = DCAP.find(d => d[0] === c.k);
@@ -4941,6 +4963,7 @@ function cleanCap(c) {
     ? c.kw.map(x => String(x).trim().toLowerCase()).filter(Boolean)
     : (typeof c.kw === "string" ? c.kw.split(/[,;\n]+/).map(x => x.trim().toLowerCase()).filter(Boolean) : [...defKw]);
   return {
+    ...extras(c, ["k", "n", "c", "tg", "kw"]),
     k: c.k,
     n: String(c.n || "Vốn").slice(0, 60),
     c: /^#[0-9a-f]{6}$/i.test(c.c) ? c.c : "#888888",
@@ -4951,6 +4974,7 @@ function cleanCap(c) {
 function cleanEv(e) {
   if (!e || typeof e.t !== "string" || !(+e.h > 0 && +e.h <= 24) || !SAFE_K.test(e.c || "")) return null;
   return {
+    ...extras(e, ["id", "mt", "t", "c", "m", "h", "s", "r", "tk", "gid", "gi", "ds", "demo"]),
     ...(SAFE_K.test(e.id || "") ? { id: e.id } : {}),            // mã riêng (v0.4.0), thiếu thì cleanState cấp
     ...(Number.isFinite(+e.mt) && +e.mt > 0 ? { mt: +e.mt } : {}), // lần sửa gần nhất, để bản sửa sau cùng thắng
     t: e.t.slice(0, 120), c: e.c, m: e.m === "d" ? "d" : "u", h: +e.h,
@@ -4976,6 +5000,7 @@ function cleanState(d) {
   const cl = (v, lo, hi, def) => { v = +v; return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : def; };
   const dc = d.cfg || {};
   const cfg = {
+    ...extras(dc, ["defDuration", "burnoutHours", "gcalAutoSync", "gcalClientId"]),
     defDuration: cl(dc.defDuration, 0.5, 24, 2),
     burnoutHours: cl(dc.burnoutHours, 1, 24, 6),
     gcalAutoSync: dc.gcalAutoSync !== false,
@@ -4983,7 +5008,7 @@ function cleanState(d) {
   };
   const gdel = Array.isArray(d.gdel) ? [...new Set(d.gdel.filter(g => typeof g === "string" && GID.test(g)))].slice(-500) : [];
   const tasks = Array.isArray(d.tasks) ? d.tasks.map(cleanTask).filter(Boolean).slice(0, 500) : [];
-  return { ev, caps, bl, mem, memV: d.memV === 2 ? 2 : 0, cfg, gdel, tasks, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
+  return { ...extras(d, ["ev", "caps", "bl", "mem", "memV", "cfg", "gdel", "tasks", "pm", "lb", "sv"]), ev, caps, bl, mem, memV: d.memV === 2 ? 2 : 0, cfg, gdel, tasks, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
 }
 
 async function saveFile(filename, content, mime) {
@@ -5264,11 +5289,12 @@ try { inboxPanel = localStorage.getItem("lc_inbox_panel") !== "0"; } catch (e) {
 function cleanSub(x) {
   if (!x || !SAFE_K.test(x.id || "") || typeof x.t !== "string" || !x.t.trim()) return null;
   const h = +x.h;
-  return { id: x.id, t: x.t.slice(0, 120), h: h > 0 && h <= 12 ? Math.round(h * 100) / 100 : 1, ...(x.done ? { done: 1 } : {}) };
+  return { ...extras(x, ["id", "t", "h", "done"]), id: x.id, t: x.t.slice(0, 120), h: h > 0 && h <= 12 ? Math.round(h * 100) / 100 : 1, ...(x.done ? { done: 1 } : {}) };
 }
 function cleanTask(x) {
   if (!x || !SAFE_K.test(x.id || "") || typeof x.t !== "string" || !x.t.trim()) return null;
   return {
+    ...extras(x, ["id", "t", "c", "m", "subs", "done", "demo", "mt"]),
     id: x.id, t: x.t.slice(0, 160), c: SAFE_K.test(x.c || "") ? x.c : "sk", m: x.m === "d" ? "d" : "u",
     subs: Array.isArray(x.subs) ? x.subs.map(cleanSub).filter(Boolean).slice(0, 100) : [],
     ...(x.done ? { done: 1 } : {}), ...(x.demo ? { demo: 1 } : {}),
