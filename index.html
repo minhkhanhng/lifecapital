@@ -940,7 +940,22 @@ body.hv-dragging .day-card { border-style: dashed; }
 .hv-plan { display: flex; flex-direction: column; gap: 4px; padding: 8px 10px; border: 1px solid var(--bd); border-radius: var(--radius-sm); background: var(--card-subtle); }
 .hv-plan-row { display: flex; gap: 10px; font-size: 13px; align-items: baseline; flex-wrap: wrap; }
 .hv-plan-row b { font-variant-numeric: tabular-nums; min-width: 92px; }
+.hv-miss { color: var(--wa-text); font-weight: 600; }
 .hv-plan-row.over { color: var(--mu); text-decoration: line-through; }
+.sch-row { align-items: center; flex-wrap: nowrap; gap: 8px; }
+.sch-row input[type=checkbox] { flex: none; margin: 0; }
+.sch-row b { min-width: 88px; flex: none; }
+.sch-row .sch-nm { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.sch-row .sch-mv { display: flex; gap: 2px; flex: none; }
+.sch-row .sch-mv .btn { padding: 2px 8px; min-width: 32px; }
+.sch-row.over .sch-mv, .sch-row.off .sch-mv { text-decoration: none; }
+.sch-row.off { color: var(--mu); }
+.sch-row.off .sch-nm { text-decoration: line-through; }
+.sch-day { font-size: 12px; font-weight: 600; color: var(--tx-sec); margin-top: 6px; }
+.sch-note { font-size: 12.5px; line-height: 1.5; color: var(--tx-sec); padding: 6px 10px; border-radius: var(--radius-sm); background: var(--card); border-left: 3px solid var(--ok); }
+.sch-note.warn { border-left-color: var(--wa); color: var(--tx); }
+.sch-note.bad { border-left-color: var(--bad); color: var(--tx); }
+@media (max-width: 480px) { .sch-row b { min-width: 76px; font-size: 12.5px; } }
 .ev-linked { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--ac); margin-right: 5px; vertical-align: middle; }
 /* Cột bên lịch hẹp: bỏ nút lên/xuống (đổi thứ tự bằng kéo, hoặc ở tab Hộp việc), gom mỗi việc nhỏ về một dòng */
 .hv-box.panel .hv-mv { display: none; }
@@ -3230,6 +3245,17 @@ function setDefaultDuration(val) {
   showToast("Đã lưu", "ok");
 }
 
+function setSchedCfg(k, v) {
+  S.cfg = S.cfg || {};
+  S.cfg[k] = v;
+  const from = +S.cfg.schedFrom || 480, to = +S.cfg.schedTo || 1320;
+  // Khung giờ ngược (từ ≥ đến): kéo đầu kia theo để luôn còn ít nhất 1 giờ
+  const fix = k === "schedFrom" && to <= v ? (S.cfg.schedTo = Math.min(1440, v + 60), "setSchTo") : k === "schedTo" && from >= v ? (S.cfg.schedFrom = Math.max(0, v - 60), "setSchFrom") : null;
+  save();
+  showToast("Đã lưu", "ok");
+  if (fix && $(fix)) $(fix).value = fix === "setSchTo" ? S.cfg.schedTo : S.cfg.schedFrom;
+}
+
 function setBurnoutThreshold(val) {
   S.cfg = S.cfg || {};
   S.cfg.burnoutHours = Math.max(1, Math.min(24, val));
@@ -3687,6 +3713,7 @@ function renderSettingsModal() {
   try { kb = ((localStorage.getItem("lc2") || "").length / 1024).toFixed(1); } catch (e) {}
   const defDur = (S.cfg && S.cfg.defDuration) || 2;
   const burnH = (S.cfg && S.cfg.burnoutHours) || 6;
+  const sc = schCfg(), hOpt = (v, cur) => opt(v, cur, hmOf(v));
   const opt = (v, cur, label) => `<option value="${v}" ${cur === v ? "selected" : ""}>${label}</option>`;
   const seg = (v, label) => `<button type="button" class="${curTheme === v ? "on" : ""}" aria-pressed="${curTheme === v}" onclick="setThemePreference('${v}')">${label}</button>`;
   const backup = S.lb ? `sao lưu ${new Date(S.lb).toLocaleString("vi-VN", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "2-digit" })}` : sbUser ? "có bản trên tài khoản" : `<span style="color:var(--bad)">chưa sao lưu</span>`;
@@ -3719,7 +3746,7 @@ function renderSettingsModal() {
     </details>
 
     <details class="set-sec" ${setSecOpen("def")} ontoggle="setSecToggle('def', this.open)">
-      <summary class="set-h">Mặc định<span class="set-sum">${String(defDur).replace(".", ",")} giờ · ngưỡng ${burnH} giờ</span></summary>
+      <summary class="set-h">Mặc định<span class="set-sum">${String(defDur).replace(".", ",")} giờ · ngưỡng ${burnH} giờ · xếp ${hmOf(sc.from)}–${hmOf(sc.to)}</span></summary>
       <div class="set-row">
         <label class="set-lbl" for="setDur">Thời lượng mặc định</label>
         <select id="setDur" onchange="setDefaultDuration(+this.value)">
@@ -3730,6 +3757,20 @@ function renderSettingsModal() {
         <label class="set-lbl" for="setBurn">Ngưỡng kiệt sức<small>Giờ tiêu hao mỗi ngày</small></label>
         <select id="setBurn" onchange="setBurnoutThreshold(+this.value)">
           ${opt(5, burnH, "5 giờ")}${opt(6, burnH, "6 giờ")}${opt(7, burnH, "7 giờ")}${opt(8, burnH, "8 giờ")}
+        </select>
+      </div>
+      <div class="set-row">
+        <span class="set-lbl">Khung giờ xếp việc<small>Xếp hết chỉ đặt việc trong khung này, trừ khi hạn gấp</small></span>
+        <div class="set-inline">
+          <select id="setSchFrom" onchange="setSchedCfg('schedFrom', +this.value)" aria-label="Xếp việc từ">${[300, 360, 420, 480, 540, 600, 660, 720].map(v => hOpt(v, sc.from)).join("")}</select>
+          <span>–</span>
+          <select id="setSchTo" onchange="setSchedCfg('schedTo', +this.value)" aria-label="Xếp việc đến">${[1020, 1080, 1140, 1200, 1260, 1320, 1380, 1440].map(v => hOpt(v, sc.to)).join("")}</select>
+        </div>
+      </div>
+      <div class="set-row">
+        <label class="set-lbl" for="setSchCap">Tối đa mỗi ngày<small>Cho một việc khi Xếp hết, để không dồn một loại vốn vào một ngày</small></label>
+        <select id="setSchCap" onchange="setSchedCfg('schedCap', +this.value)">
+          ${opt(1, sc.cap, "1 giờ")}${opt(2, sc.cap, "2 giờ")}${opt(3, sc.cap, "3 giờ")}${opt(4, sc.cap, "4 giờ")}${opt(6, sc.cap, "6 giờ")}${opt(0, sc.cap, "Không giới hạn")}
         </select>
       </div>
     </details>
@@ -5150,7 +5191,10 @@ function cleanState(d) {
   const cl = (v, lo, hi, def) => { v = +v; return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : def; };
   const dc = d.cfg || {};
   const cfg = {
-    ...extras(dc, ["defDuration", "burnoutHours", "gcalAutoSync", "gcalClientId"]),
+    ...extras(dc, ["defDuration", "burnoutHours", "gcalAutoSync", "gcalClientId", "schedFrom", "schedTo", "schedCap"]),
+    ...(dc.schedFrom != null ? { schedFrom: Math.round(cl(dc.schedFrom, 0, 1380, 480)) } : {}),
+    ...(dc.schedTo != null ? { schedTo: Math.round(cl(dc.schedTo, 60, 1440, 1320)) } : {}),
+    ...(dc.schedCap != null ? { schedCap: cl(dc.schedCap, 0, 24, 2) } : {}),
     defDuration: cl(dc.defDuration, 0.5, 24, 2),
     burnoutHours: cl(dc.burnoutHours, 1, 24, 6),
     gcalAutoSync: dc.gcalAutoSync !== false,
@@ -5756,17 +5800,86 @@ function freeStarts(date, h, from, to, max) {
   return out;
 }
 const defaultStart = (date, h) => { const f = freeStarts(date, h, 480, 1440, 1); return hmOf(f.length ? f[0] : 480); };
-// Kế hoạch xếp liền nhau theo thứ tự: mỗi phần tử có giờ, chỗ trùng, hoặc không vừa trong ngày
-function planUnits(date, start, list) {
-  let t = minOf(start), over = false;
-  return list.map(u => {
-    const end = t + Math.round(u.h * 60);
-    // Giữ đúng thứ tự: từ việc đầu tiên không vừa, mọi việc sau cũng ở lại hộp
-    if (over || end > 1440) { over = true; return { ...u, over: true }; }
-    const c = chkEvent(date, hmOf(t), u.h, -1), p = { ...u, s: hmOf(t), hit: c.hit };
-    t = end;
-    return p;
+/* Xếp thông minh (Xếp hết): giữ thứ tự các việc nhỏ, lách qua lịch bận, chỉ trong khung giờ xếp việc và tối đa
+   schedCap giờ/ngày cho một việc; để sau những tuần mà loại vốn này đã đạt mục tiêu. Hạn đứng trên mọi kiểu cân bằng:
+   bình thường phải xong trước hạn ít nhất 1 ngày; không được thì dồn làm sớm nhất (bỏ giới hạn mỗi ngày và cân bằng),
+   vẫn không kịp thì nới khung giờ 06:00–24:00, cuối cùng mới để phần còn lại trong hộp. */
+const SCH_DAYS = 14;
+function schCfg() {
+  const c = S.cfg || {}, n = (v, d) => Number.isFinite(+v) && v !== null && v !== "" ? +v : d;
+  const from = n(c.schedFrom, 480), to = n(c.schedTo, 1320);
+  return { from, to: to > from ? to : Math.max(from + 60, 1320), cap: n(c.schedCap, 2) };
+}
+const nowMin = () => { const d = new Date(); return Math.ceil((d.getHours() * 60 + d.getMinutes()) / 15) * 15; };
+const capWeekH = (i, k) => { const w = wk(i, k); return typeof w === "number" ? w : w.u; };
+const weekOfDate = k => W.findIndex(w => k >= ky(w) && k < ky(ad(w, 7)));
+// Việc nhỏ đã xếp nhưng giờ đã qua mà chưa đánh dấu xong: "lỡ", Xếp hết sẽ xếp lại
+function missedOf(task, m) {
+  const now = new Date(), today = ky(now), nm = now.getHours() * 60 + now.getMinutes();
+  return units(task).filter(u => {
+    const p = !u.done && m.get(u.tk);
+    return !!p && (p.date < today || (p.date === today && !!p.s && minOf(p.s) + Math.round(p.h * 60) <= nm));
   });
+}
+// Phút bắt đầu sớm nhất ≥ t còn trống đủ h giờ trước "to" (bỏ qua hoạt động của các tk trong skip: chúng sắp được dời)
+function gapAt(date, t, to, h, skip) {
+  const need = Math.round(h * 60);
+  const b = (S.ev[date] || []).filter(e => e.s && !(e.tk && skip.has(e.tk))).map(e => [minOf(e.s), minOf(e.s) + Math.round(e.h * 60)]).sort((x, y) => x[0] - y[0]);
+  for (const [a, e] of b) {
+    if (e <= t) continue;
+    if (a - t >= need) break;
+    t = Math.max(t, e);
+  }
+  return t + need <= to ? t : null;
+}
+function schSim(list, days, o, skip) {
+  const out = [];
+  let i = 0;
+  for (const d of days) {
+    if (i >= list.length) break;
+    let t = Math.max(o.from, d === o.d0 ? o.m0 : 0), used = 0;
+    while (i < list.length) {
+      const u = list[i];
+      if (o.cap && used > 0 && used + u.h > o.cap) break;
+      const g = gapAt(d, t, o.to, u.h, skip);
+      if (g == null) break;
+      out.push({ ...u, date: d, s: hmOf(g) });
+      t = g + Math.round(u.h * 60);
+      used += u.h;
+      i++;
+    }
+  }
+  return { out, left: list.slice(i) };
+}
+function planSmart(task, list, d0, m0) {
+  const c = schCfg(), skip = new Set(list.filter(u => u.missed).map(u => u.tk));
+  const due = task.due || null, overdue = !!due && due < d0;
+  const start = new Date(d0 + "T00:00"), span = n => [...Array(Math.max(1, n))].map((_, j) => ky(ad(start, j)));
+  const all = due && !overdue ? span(Math.round((new Date(due + "T00:00") - start) / 864e5) + 1) : span(SCH_DAYS);
+  const base = { d0, m0, from: c.from, to: c.to }, info = { due, overdue, cfg: c };
+  if (!list.length) return { out: [], left: [], mode: "ok", ...info };
+  if (!overdue) {
+    // Bình thường: chừa 1 ngày dự phòng trước hạn; ưu tiên tuần mà vốn này chưa đạt mục tiêu
+    const norm = due && all.length > 1 ? all.slice(0, -1) : all, cap = CM(task.c);
+    const met = d => { const wi = weekOfDate(d); return cap.tg > 0 && wi >= 0 && capWeekH(wi, task.c) >= cap.tg; };
+    const pref = norm.filter(d => !met(d));
+    if (pref.length && pref.length < norm.length) {
+      const r = schSim(list, pref, { ...base, cap: c.cap }, skip);
+      if (!r.left.length) return { ...r, mode: "ok", deferred: norm.length - pref.length, ...info };
+    }
+    const r = schSim(list, norm, { ...base, cap: c.cap }, skip);
+    if (!r.left.length) return { ...r, mode: "ok", deferred: 0, ...info };
+  }
+  // Gấp: dồn làm sớm nhất cho kịp hạn, bỏ giới hạn mỗi ngày và cân bằng
+  let r = schSim(list, all, { ...base, cap: 0 }, skip);
+  if (!r.left.length) return { ...r, mode: "rush", ...info };
+  if (c.from > 360 || c.to < 1440) {
+    // Nới khung cũng bỏ qua giờ bắt đầu đã chọn, chỉ không xếp vào giờ đã qua của hôm nay
+    const w = schSim(list, all, { ...base, m0: d0 === tk ? Math.min(m0, Math.max(360, nowMin())) : 360, from: Math.min(360, c.from), to: 1440, cap: 0 }, skip);
+    if (!w.left.length) return { ...w, mode: "wide", ...info };
+    if (w.out.length > r.out.length) r = { ...w, wide: true };
+  }
+  return { ...r, mode: "short", ...info };
 }
 function createEvents(task, date, plan) {
   const L = S.ev[date] = S.ev[date] || [];
@@ -5780,6 +5893,17 @@ function createEvents(task, date, plan) {
   if (!L.length) delete S.ev[date];
   save(); gcalFlush();
   return made.length;
+}
+function createPlan(task, plan) {
+  const made = plan.map(p => {
+    const e = { t: p.t, c: task.c, m: "u", h: p.h, s: p.s, tk: p.tk, ...(task.pj ? { pj: task.pj } : {}), ...(task.demo ? { demo: 1 } : {}) };
+    (S.ev[p.date] = S.ev[p.date] || []).push(e);
+    markPending(e);
+    return e;
+  });
+  new Set(plan.map(p => p.date)).forEach(k => sortL(S.ev[k]));
+  save(); gcalFlush();
+  return made;
 }
 const dayDesc = date => describeDate(new Date(date + "T00:00"));
 // Xếp một việc nhỏ vào ngày giờ cho trước (thả trên dòng thời gian, hoặc bấm Lưu trong bảng)
@@ -5798,25 +5922,35 @@ async function scheduleSub(tk, date, start) {
 }
 
 /* Bảng "Xếp lịch": dùng cho nút Xếp lịch (iPhone), thả vào một ngày ở Tuần chi tiết, và thả cả việc */
-let sch = null; // { kind, id, date, start }
+let sch = null; // { kind, id, date, start, order, skip }
 function schedTarget() {
   if (!sch) return null;
   const m = schedMap();
   if (sch.kind === "task") {
     const task = findTask(sch.id);
     if (!task) return null;
-    return { task, list: units(task).filter(u => !u.done && !m.has(u.tk)), whole: true };
+    const miss = new Set(missedOf(task, m).map(u => u.tk));
+    const all = units(task).filter(u => !u.done && (!m.has(u.tk) || miss.has(u.tk))).map(u => ({ tk: u.tk, t: u.t, h: u.h, missed: miss.has(u.tk) }));
+    if (sch.order) { const ix = tk => { const i = sch.order.indexOf(tk); return i < 0 ? 1e9 : i; }; all.sort((a, b) => ix(a.tk) - ix(b.tk)); }
+    return { task, all, list: all.filter(u => !sch.skip.has(u.tk)), whole: true };
   }
   const f = findSub(sch.id), task = f ? f.task : findTask(sch.id);
   if (!task) return null;
   return { task, list: [f ? { tk: f.sub.id, t: f.sub.t, h: f.sub.h } : { tk: task.id, t: task.t, h: SUB_DEF_H }], whole: false, moving: m.get(sch.id) };
 }
+// Xếp hết bắt đầu từ: hôm nay = giờ hiện tại (làm tròn 15 phút), ngày khác = đầu khung giờ xếp việc
+const wholeStart = date => { const c = schCfg(); return hmOf(Math.min(1425, date === tk ? Math.max(c.from, nowMin()) : c.from)); };
 function openSched(kind, id, date, start) {
-  sch = { kind, id, date: date || tk, start: start || "" };
+  if (kind === "task") {
+    // Việc chưa chia nhỏ đã có giờ (chưa lỡ): dời như một việc nhỏ
+    const t = findTask(id), m = schedMap();
+    if (t && !t.subs.length && m.has(t.id) && !missedOf(t, m).length) kind = "sub";
+  }
+  sch = { kind, id, date: date || tk, start: start || "", order: null, skip: new Set() };
   const tg = schedTarget();
   if (!tg) { sch = null; return; }
-  if (tg.whole && !tg.list.length) { sch = null; showToast("Không còn việc nhỏ để xếp", "bad"); return; }
-  if (!sch.start) sch.start = defaultStart(sch.date, tg.whole ? tg.list.reduce((a, u) => a + u.h, 0) : tg.list[0].h);
+  if (tg.whole && !tg.all.length) { sch = null; showToast("Không còn việc nhỏ để xếp", "bad"); return; }
+  if (!sch.start) sch.start = tg.whole ? wholeStart(sch.date) : defaultStart(sch.date, tg.list[0].h);
   LF = document.activeElement;
   renderSched();
   $("schedOverlay").classList.add("open");
@@ -5831,28 +5965,85 @@ function closeSched() {
 function schedSet(field, val) {
   if (!val) return;
   sch[field] = val;
-  if (field === "date") { const tg = schedTarget(); if (tg) sch.start = defaultStart(val, tg.whole ? tg.list.reduce((a, u) => a + u.h, 0) : tg.list[0].h); }
+  if (field === "date") { const tg = schedTarget(); if (tg) sch.start = tg.whole ? wholeStart(val) : defaultStart(val, tg.list[0].h); }
   renderSched();
+}
+// Sửa ngay trong phần xem trước: đổi thứ tự, bỏ bớt việc
+function schedMove(tkId, dir) {
+  const tg = schedTarget();
+  if (!tg || !tg.whole) return;
+  const o = tg.all.map(u => u.tk), i = o.indexOf(tkId), j = i + dir;
+  if (i < 0 || j < 0 || j >= o.length) return;
+  [o[i], o[j]] = [o[j], o[i]];
+  sch.order = o;
+  renderSched();
+  const b = document.querySelector(`#schedBody [data-mv="${tkId}"][data-dir="${dir}"]`) || document.querySelector(`#schedBody [data-mv="${tkId}"]`);
+  if (b && !b.disabled) b.focus();
+}
+function schedSkip(tkId, off) {
+  if (off) sch.skip.add(tkId); else sch.skip.delete(tkId);
+  renderSched();
+  const c = document.querySelector(`#schedBody [data-skip="${tkId}"]`);
+  if (c) c.focus();
+}
+function schedNote(r, task) {
+  const c = r.cfg, capT = c.cap ? `tối đa ${hrs(c.cap)}/ngày` : "không giới hạn giờ mỗi ngày", win = `${hmOf(c.from)}–${hmOf(c.to)}`;
+  const dueT = r.due ? dm(r.due) : "";
+  if (r.mode === "ok") return `<div class="sch-note">Rải trong ${win}, ${capT}${r.due ? `, xong trước hạn ${dueT} ít nhất 1 ngày` : ""}.${r.deferred ? ` Để sau ${r.deferred} ngày thuộc tuần ${esc(CM(task.c).n)} đã đạt mục tiêu.` : ""}</div>`;
+  const lead = r.overdue ? `<b>Đã quá hạn ${dueT}:</b> ` : r.due ? `<b>Hạn ${dueT} gấp:</b> ` : `<b>Không đủ chỗ trong ${SCH_DAYS} ngày nếu giữ giới hạn:</b> `;
+  const rush = `dồn làm sớm nhất${r.due ? " cho kịp hạn" : ""}, bỏ giới hạn mỗi ngày và ưu tiên cân bằng`;
+  if (r.mode === "rush") return `<div class="sch-note warn">${lead}${rush}.</div>`;
+  if (r.mode === "wide") return `<div class="sch-note warn">${lead}${rush}, mở rộng khung giờ 06:00–24:00.</div>`;
+  const lh = r.left.reduce((a, u) => a + u.h, 0);
+  return `<div class="sch-note bad">${r.due && !r.overdue ? `<b>Không kịp hạn ${dueT}:</b> ` : lead}${r.left.length} việc (${hrs(lh)}) chưa có chỗ${r.overdue || !r.due ? ` trong ${SCH_DAYS} ngày tới` : " trước hạn"}, giữ lại trong hộp${r.wide ? ". Đã mở rộng khung giờ 06:00–24:00" : ""}.</div>`;
 }
 function renderSched() {
   const tg = schedTarget();
   if (!tg) { closeSched(); return; }
-  const total = tg.list.reduce((a, u) => a + u.h, 0), tmr = ky(ad(new Date(tk + "T00:00"), 1));
+  const tmr = ky(ad(new Date(tk + "T00:00"), 1));
   $("schedTitle").textContent = tg.whole ? `Xếp hết: ${tg.task.t}` : `Xếp: ${tg.list[0].t}`;
-  const slots = freeStarts(sch.date, tg.whole ? total : tg.list[0].h, 360, 1380, 3);
-  const plan = planUnits(sch.date, sch.start, tg.list), over = plan.filter(p => p.over).length;
-  $("schedBody").innerHTML = `
-    <div style="display:flex; flex-direction:column; gap:12px;">
-      <div style="font-size:13px; color:var(--tx-sec);">${tg.whole ? `${tg.list.length} việc nhỏ · ${hrs(total)} · liền nhau theo thứ tự` : `${hrs(tg.list[0].h)}${tg.moving ? ` · đang ở ${whenLabel(tg.moving)}` : ""}`}</div>
+  let mid = "", okDis = "", note = "";
+  if (tg.whole) {
+    const c = schCfg(), total = tg.list.reduce((a, u) => a + u.h, 0), nMiss = tg.all.filter(u => u.missed).length;
+    const r = planSmart(tg.task, tg.list, sch.date, minOf(sch.start)), at = new Map(r.out.map(p => [p.tk, p]));
+    const slots = tg.list.length ? freeStarts(sch.date, tg.list[0].h, c.from, c.to, 6).filter(x => sch.date !== tk || x >= nowMin()).slice(0, 3) : [];
+    let lastD = "";
+    const rows = tg.all.map((u, i) => {
+      const p = at.get(u.tk), off = sch.skip.has(u.tk);
+      const day = p && p.date !== lastD ? `<div class="sch-day">${esc(dayDesc(p.date))}</div>` : "";
+      if (p) lastD = p.date;
+      const when = off ? "Bỏ qua" : p ? `${p.s}–${tt(p.s, p.h)}` : "Chưa có chỗ";
+      return `${day}<div class="hv-plan-row sch-row ${off ? "off" : p ? "" : "over"}">
+        <input type="checkbox" data-skip="${u.tk}" ${off ? "" : "checked"} onchange="schedSkip('${u.tk}', !this.checked)" aria-label="Xếp ${esc(u.t)}">
+        <b>${when}</b>
+        <span class="sch-nm">${esc(u.t)} · ${hrs(u.h)}${u.missed ? ` <span class="pill pill-blush">lỡ, xếp lại</span>` : ""}</span>
+        <span class="sch-mv">
+          <button type="button" class="btn btn-sm btn-ghost" data-mv="${u.tk}" data-dir="-1" onclick="schedMove('${u.tk}', -1)" ${i ? "" : "disabled"} aria-label="Đưa ${esc(u.t)} lên">↑</button>
+          <button type="button" class="btn btn-sm btn-ghost" data-mv="${u.tk}" data-dir="1" onclick="schedMove('${u.tk}', 1)" ${i < tg.all.length - 1 ? "" : "disabled"} aria-label="Đưa ${esc(u.t)} xuống">↓</button>
+        </span>
+      </div>`;
+    }).join("");
+    note = `<div style="font-size:13px; color:var(--tx-sec);">${tg.list.length} việc nhỏ · ${hrs(total)}${tg.task.due ? ` · hạn ${dm(tg.task.due)}` : " · chưa có hạn"}${nMiss ? ` · ${nMiss} việc lỡ được xếp lại` : ""}</div>`;
+    mid = `
       <div class="form-group">
-        <span class="form-label">Ngày</span>
-        <div class="row" style="gap:6px;">
-          <button type="button" class="btn btn-sm ${sch.date === tk ? "btn-primary" : ""}" onclick="schedSet('date','${tk}')">Hôm nay</button>
-          <button type="button" class="btn btn-sm ${sch.date === tmr ? "btn-primary" : ""}" onclick="schedSet('date','${tmr}')">Ngày mai</button>
-          <input id="schedDate" type="date" value="${sch.date}" onkeydown="dateKey(event)" onchange="dateSet(this, v => schedSet('date', v))" onblur="dateSet(this, v => schedSet('date', v), 1)" aria-label="Chọn ngày" style="flex:1; min-width:140px;">
+        <label class="form-label" for="schedStart">Bắt đầu từ</label>
+        <input id="schedStart" type="time" step="900" value="${sch.start}" onchange="schedSet('start', this.value)">
+        <div class="row" style="gap:6px; margin-top:4px;">
+          <span style="font-size:12px; color:var(--mu);">${slots.length ? "Khung trống:" : "Ngày này hết khung trống, xếp tiếp từ ngày sau"}</span>
+          ${slots.map(m => `<button type="button" class="btn btn-sm btn-ghost hv-slot ${hmOf(m) === sch.start ? "on" : ""}" onclick="schedSet('start','${hmOf(m)}')">${hmOf(m)}</button>`).join("")}
         </div>
-        <div style="font-size:12px; color:var(--mu);">${esc(dayDesc(sch.date))}</div>
       </div>
+      <div class="hv-plan">
+        <span class="form-label">Xem trước</span>
+        ${tg.list.length ? schedNote(r, tg.task) : `<div class="sch-note">Chọn ít nhất một việc để xếp.</div>`}
+        ${rows}
+        <div style="font-size:12px; color:var(--mu);">Đổi khung giờ và giới hạn mỗi ngày trong Cài đặt › Mặc định.</div>
+      </div>`;
+    okDis = r.out.length ? "" : "disabled";
+  } else {
+    const slots = freeStarts(sch.date, tg.list[0].h, 360, 1380, 3);
+    note = `<div style="font-size:13px; color:var(--tx-sec);">${hrs(tg.list[0].h)}${tg.moving ? ` · đang ở ${whenLabel(tg.moving)}` : ""}</div>`;
+    mid = `
       <div class="form-group">
         <label class="form-label" for="schedStart">Giờ bắt đầu</label>
         <input id="schedStart" type="time" step="900" value="${sch.start}" onchange="schedSet('start', this.value)">
@@ -5860,18 +6051,24 @@ function renderSched() {
           <span style="font-size:12px; color:var(--mu);">${slots.length ? "Khung trống:" : "Không còn khung trống đủ dài"}</span>
           ${slots.map(m => `<button type="button" class="btn btn-sm btn-ghost hv-slot ${hmOf(m) === sch.start ? "on" : ""}" onclick="schedSet('start','${hmOf(m)}')">${hmOf(m)}</button>`).join("")}
         </div>
+      </div>`;
+  }
+  $("schedBody").innerHTML = `
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      ${note}
+      <div class="form-group">
+        <span class="form-label">${tg.whole ? "Từ ngày" : "Ngày"}</span>
+        <div class="row" style="gap:6px;">
+          <button type="button" class="btn btn-sm ${sch.date === tk ? "btn-primary" : ""}" onclick="schedSet('date','${tk}')">Hôm nay</button>
+          <button type="button" class="btn btn-sm ${sch.date === tmr ? "btn-primary" : ""}" onclick="schedSet('date','${tmr}')">Ngày mai</button>
+          <input id="schedDate" type="date" value="${sch.date}" onkeydown="dateKey(event)" onchange="dateSet(this, v => schedSet('date', v))" onblur="dateSet(this, v => schedSet('date', v), 1)" aria-label="Chọn ngày" style="flex:1; min-width:140px;">
+        </div>
+        <div style="font-size:12px; color:var(--mu);">${esc(dayDesc(sch.date))}</div>
       </div>
-      ${tg.whole ? `
-        <div class="hv-plan">
-          <span class="form-label">Xem trước</span>
-          ${plan.map(p => p.over
-            ? `<div class="hv-plan-row over"><span>Không vừa trong ngày</span><span>${esc(p.t)} · ${hrs(p.h)}</span></div>`
-            : `<div class="hv-plan-row"><b>${p.s}–${tt(p.s, p.h)}</b><span>${esc(p.t)}${p.hit ? ` <span class="pill pill-bad">trùng "${esc(p.hit.t)}"</span>` : ""}</span></div>`).join("")}
-          ${over ? `<div style="font-size:12.5px; color:var(--wa-text);">${over} việc không vừa trong ngày, giữ lại trong hộp.</div>` : ""}
-        </div>` : ""}
+      ${mid}
       <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:4px;">
         <button type="button" class="btn btn-ghost" onclick="closeSched()">Hủy</button>
-        <button type="button" class="btn btn-primary" id="schedOk" onclick="confirmSched()" ${tg.whole && over === plan.length ? "disabled" : ""}>${tg.whole ? "Xếp" : "Lưu"}</button>
+        <button type="button" class="btn btn-primary" id="schedOk" onclick="confirmSched()" ${okDis}>${tg.whole ? "Xếp" : "Lưu"}</button>
       </div>
     </div>`;
 }
@@ -5882,10 +6079,20 @@ async function confirmSched() {
   if (!st) { showToast("Chọn giờ bắt đầu", "bad"); return; }
   sch.start = st;
   if (!tg.whole) { if (await scheduleSub(tg.list[0].tk, sch.date, st)) closeSched(); return; }
-  const plan = planUnits(sch.date, st, tg.list), n = createEvents(tg.task, sch.date, plan), date = sch.date;
+  const r = planSmart(tg.task, tg.list, sch.date, minOf(st));
+  if (!r.out.length) { showToast("Không còn chỗ trống để xếp", "bad"); return; }
+  // Việc lỡ được xếp lại: gỡ buổi cũ rồi mới tạo buổi mới
+  const moved = new Set(r.out.filter(p => p.missed).map(p => p.tk));
+  const gone = moved.size ? pullEvents(e => e.tk && moved.has(e.tk)) : [];
+  const made = createPlan(tg.task, r.out), days = [...new Set(r.out.map(p => p.date))];
   closeSched();
   draw();
-  showToast(`Đã xếp ${n} việc vào ${dayDesc(date)}${plan.length > n ? ` · ${plan.length - n} việc còn trong hộp` : ""}`, "ok");
+  const where = days.length === 1 ? dayDesc(days[0]) : `${days.length} ngày, từ ${dayDesc(days[0])}`;
+  offerUndo(`Đã xếp ${made.length} việc vào ${where}${r.left.length ? ` · ${r.left.length} việc còn trong hộp` : ""}`, () => {
+    const mine = new Set(made);
+    pullEvents(e => mine.has(e));
+    putEvents(gone);
+  }, gone);
 }
 
 /* ---------- Kéo thả (chỉ trên máy tính có chuột) ---------- */
@@ -5999,7 +6206,7 @@ function inboxHTML(where) {
   };
   const card = (t, i, list) => {
     const us = units(t), nS = us.filter(u => m.has(u.tk)).length, tot = us.reduce((a, u) => a + u.h, 0), open = openTasks.has(t.id), cap = CM(t.c);
-    const selfP = !t.subs.length ? m.get(t.id) : null;
+    const selfP = !t.subs.length ? m.get(t.id) : null, nMiss = taskDone(t) ? 0 : missedOf(t, m).length;
     const editing = hvEdit && hvEdit.kind === "task" && hvEdit.id === t.id;
     return `
       <div class="hv-task ${open ? "open" : ""}" style="border-left-color:${cap.c}" ondragover="rowOver(event,'task','${t.id}')" ondragleave="this.classList.remove('hv-over')" ondrop="rowDrop(event,'task','${t.id}')">
@@ -6012,7 +6219,7 @@ function inboxHTML(where) {
             : `<button type="button" class="hv-name hv-title" onclick="startHvEdit('task','${t.id}')" title="Bấm để sửa">${esc(t.t)}</button>`}
         </div>
         <div class="hv-meta">
-          <span>${t.subs.length ? `Đã xếp ${nS}/${us.length} · tổng ${hrs(tot)}` : selfP ? `Đã xếp · ${whenLabel(selfP)}` : "Chưa chia nhỏ"}</span>
+          <span>${t.subs.length ? `Đã xếp ${nS}/${us.length} · tổng ${hrs(tot)}` : selfP ? `Đã xếp · ${whenLabel(selfP)}` : "Chưa chia nhỏ"}${nMiss ? ` · <b class="hv-miss">${nMiss} lỡ</b>` : ""}</span>
           <select class="hv-mini" onchange="setTaskField('${t.id}','c',this.value)" aria-label="Loại vốn" style="${capInk(cap.c)}">
             ${S.caps.map(c => `<option value="${c.k}" ${c.k === t.c ? "selected" : ""}>${esc(c.n)}</option>`).join("")}
           </select>
@@ -6023,7 +6230,7 @@ function inboxHTML(where) {
             ${(S.projects || []).filter(p => pjIsOpen(p) || p.id === t.pj).sort(pjCmp).map(p => `<option value="${p.id}" ${p.id === t.pj ? "selected" : ""}>${esc(p.n)}</option>`).join("")}
           </select>` : ""}
           <span class="hv-acts">
-            ${taskDone(t) ? "" : `<button type="button" class="btn btn-sm hv-sched" onclick="openSched('task','${t.id}')">${t.subs.length ? "Xếp hết" : selfP ? "Dời" : "Xếp"}</button>`}
+            ${taskDone(t) ? "" : `<button type="button" class="btn btn-sm hv-sched" onclick="openSched('task','${t.id}')">${nMiss && !us.some(u => !u.done && !m.has(u.tk)) ? "Xếp lại" : t.subs.length ? "Xếp hết" : selfP ? "Dời" : "Xếp"}</button>`}
             ${list ? `<button type="button" class="btn btn-sm btn-ghost hv-mv" onclick="moveItem('task','${t.id}',-1)" ${i ? "" : "disabled"} aria-label="Lên">↑</button>
             <button type="button" class="btn btn-sm btn-ghost hv-mv" onclick="moveItem('task','${t.id}',1)" ${i < list.length - 1 ? "" : "disabled"} aria-label="Xuống">↓</button>` : ""}
             <button type="button" class="btn btn-sm btn-ghost hv-del" onclick="deleteTask('${t.id}')" aria-label="Xóa việc ${esc(t.t)}">✕</button>

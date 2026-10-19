@@ -25,6 +25,15 @@ Làm lại phần Dự án theo cách Asana tổ chức dự án, vì bản v0.5
 - Dữ liệu ghi số phiên bản 60; máy còn chạy bản cũ giữ nguyên phần, hạn, mốc khi lưu và đồng bộ.
 - Test gộp dữ liệu 28 tình huống (thêm 8 cho phần, hạn, mốc, cập nhật trạng thái).
 
+**Thêm trong UAT (20/10): Xếp thông minh** (PO yêu cầu thêm vào bản này)
+- **Xếp hết** lách qua lịch bận, vẫn giữ đúng thứ tự các việc nhỏ.
+- Rải sang nhiều ngày, chỉ trong **khung giờ xếp việc** (mặc định 08:00–22:00) và **tối đa 2 giờ mỗi ngày** cho một việc; cả hai đổi được trong Cài đặt › Mặc định.
+- Có **hạn** thì xong trước hạn ít nhất 1 ngày. Hạn đứng trên mọi kiểu cân bằng: không kịp thì dồn làm sớm nhất (bỏ giới hạn mỗi ngày), vẫn không kịp thì nới khung giờ 06:00–24:00, cuối cùng mới báo "Không kịp hạn" và để phần còn lại trong hộp.
+- Cân bằng: không có hạn gấp thì để sau những tuần mà loại vốn của việc đã đạt mục tiêu.
+- Việc nhỏ đã qua giờ mà chưa xong được đánh dấu **lỡ**; nút **Xếp lại** dời chúng sang khoảng trống từ bây giờ. Cả lần Xếp hết có **Hoàn tác**.
+- Phần xem trước sửa được: đổi thứ tự (↑ ↓), bỏ bớt việc (ô tích).
+- Sửa: bấm "Dời" ở việc chưa chia nhỏ đã có giờ báo nhầm "Không còn việc nhỏ để xếp".
+
 **Sửa trong UAT (19/10)**
 - Thêm việc trong trang dự án bằng bộ gõ tiếng Việt: một lần Enter có lúc thêm 2 việc giống nhau. Bộ gõ phát thêm một Enter sau Enter chốt chữ; nay mỗi lần nhấn chỉ làm một lần ở mọi ô (thêm việc, việc nhỏ, phần, mốc, ghi nhanh, chuyển ô trong popup). Ghi nhanh gõ có dấu thì Enter cũng chọn gợi ý #dự án như khi gõ không dấu.
 - Bảng chi tiết: sửa tên rồi bấm ngay dropdown Phần, Loại vốn hay ô Hạn thì dropdown không mở hoặc đóng ngay, vì bảng vẽ lại đúng lúc bấm. Nay bảng chờ bấm xong hoặc rời ô mới vẽ lại.
