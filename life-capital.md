@@ -1,6 +1,6 @@
-# Life Capital · Quản trị Năng lượng & Thời gian
+# Life Capital · Cân bằng thời gian cho 5 loại vốn
 
-Ứng dụng web cá nhân hoá giúp quản trị năng lượng, tối ưu hoá quỹ 168 giờ và cân bằng 5 loại vốn cuộc sống (Health, Relationship, Experience, Skill, Finance & Career).
+Ứng dụng web cá nhân hoá giúp tối ưu hoá quỹ 168 giờ, giữ thói quen và cân bằng 5 loại vốn cuộc sống (Health, Relationship, Experience, Skill, Finance & Career).
 
 ---
 
@@ -13,22 +13,17 @@
   4. 🌊 **Kỹ năng (Skill)** `#4a859c` - Học hỏi, đọc sách, tích luỹ tri thức, rèn luyện chuyên môn.
   5. 🪙 **Tài chính / Công việc (Finance & Career)** `#b88628` - Sự nghiệp, tạo ra giá trị, quản lý tài sản.
 
-- **Cơ chế Nạp ▲ (Recharge) vs Tiêu ▼ (Drain)**:
-  - **Nạp (▲)**: Hoạt động bồi đắp, tích luỹ và phục hồi vốn sống.
-  - **Tiêu (▼)**: Hoạt động tiêu hao, sử dụng năng lượng hoặc tạo áp lực (họp hành, deadline, làm việc căng thẳng).
+- **Mọi hoạt động đều là đầu tư (từ v0.6.0)**:
+  - Không còn chia Nạp ▲ / Tiêu ▼: mỗi giờ đã ghi cộng vào loại vốn của nó. Câu hỏi chính là bánh xe 5 loại vốn tuần này có cân bằng không.
+  - Dữ liệu cũ có trường Nạp/Tiêu vẫn giữ nguyên (không dùng) để máy chạy bản cũ đồng bộ không lỗi.
 
 - **Khung 168 Giờ (The 168-Hour Framework)**:
   - 1 tuần = 24h × 7 ngày = 168 giờ.
   - Mọi người đều có 168 giờ bình đẳng như nhau. Ứng dụng giúp bạn nhìn rõ số giờ đã phân bổ, số giờ còn trống cho sinh hoạt cá nhân và cảnh báo khi ghi chép vượt quá 168h.
 
-- **Chỉ số Pin Năng Lượng (Daily Battery & Burnout Warning)**:
-  - Cán cân mỗi ngày: Net = Tổng Nạp (▲) - Tổng Tiêu (▼).
-  - Pin xanh khi nạp dương, pin đỏ khi tiêu hao nhiều hơn nạp.
-  - Cảnh báo **⚡ Kiệt sức** tự động kích hoạt nếu ngày đó có từ 6h tiêu hao hoặc thâm hụt ≥ 4h mà không được nghỉ ngơi bù đắp (có thể tùy chỉnh ngưỡng trong Cài đặt).
-
 - **Bánh xe cuộc đời (Wheel of Life Radar Chart)**:
   - Biểu đồ radar 5 trục SVG chuẩn công thái học thể hiện độ tròn trịa và cân bằng giữa các nguồn vốn mỗi tuần.
-  - Tích hợp vòng đo 33% - 66% - 100% mục tiêu, tính toán tự động Điểm cân bằng bánh xe (Balance Score).
+  - Tích hợp vòng đo 33% - 66% - 100% mục tiêu, tính toán tự động Điểm cân bằng bánh xe (Balance Score) = 60% trung bình % đạt + 40% vốn thấp nhất; chỉ tính các vốn đã đặt mục tiêu.
 
 ---
 
@@ -37,9 +32,9 @@
 - **Màu chủ đạo (Primary)**: `#E0A3BB` (Mauve Rose)
 - **4 Màu bổ trợ (Supporting)**:
   - `#F4DFE6` (Blush Soft) - Nền thanh tiến trình, hover state, card phụ
-  - `#D6E6E7` (Mist Cyan) - Nhãn thời gian, trạng thái pin cân bằng
-  - `#C5CC82` (Sage Olive) - Trạng thái nạp nhẹ, nhãn đạt chuẩn
-  - `#97A13B` (Deep Olive Green) - Chỉ báo Nạp ▲, pin sạc dương
+  - `#D6E6E7` (Mist Cyan) - Nhãn thời gian
+  - `#C5CC82` (Sage Olive) - Nhãn đạt chuẩn
+  - `#97A13B` (Deep Olive Green) - Chỉ báo đạt mục tiêu, thói quen đã làm
 - **Nền web**: Pha thêm 5% màu trắng (`#fdfcfd` / `color-mix(in srgb, #faf7f8 95%, #ffffff 5%)`) mang lại cảm giác sáng sủa, thanh lịch và trong trẻo.
 - **Hỗ trợ giao diện Sáng / Tối (Light & Dark Mode) chuẩn công thái học**:
   - Hỗ trợ chuyển đổi thủ công hoặc tự động theo hệ điều hành (`color-scheme: dark`).
@@ -51,24 +46,24 @@
 
 1. ⚡ **Command Bar Ghi nhanh bằng ngôn ngữ tự nhiên**:
    - Nhập: *"Mai 18h đánh cầu lông 2 tiếng"* hoặc *"Hôm nay 20h đọc sách 1h"*.
-   - Tự động nhận diện ngày, giờ bắt đầu, thời lượng, loại vốn và tác động Nạp/Tiêu theo thời gian thực; dòng xem trước luôn ghi rõ thứ và ngày (vd *Hôm qua · Thứ 5, 08/10*).
+   - Tự động nhận diện ngày, giờ bắt đầu, thời lượng và loại vốn theo thời gian thực; dòng xem trước luôn ghi rõ thứ và ngày (vd *Hôm qua · Thứ 5, 08/10*).
    - **Ngày:** *hôm nay, mai, ngày kia/mốt, hôm qua, tối qua, hôm kia*; ngày cụ thể *ngày 9 tháng 10 (năm 2026), 9 tháng 11, 09/10, 09-10, 09.10, 9/10/2026, ngày 15*; thứ *thứ 2 / t2 / thứ hai / chủ nhật* kèm *tuần này, tuần sau, tuần tới, tuần trước, tuần sau nữa* (đứng trước hoặc sau). Không nói tuần thì hiểu là lần tới gần nhất.
    - **Giờ:** *18h, 6h30, 20:00, 5h sáng, 2 giờ chiều, tối 8h, 8 giờ rưỡi, 12h đêm, 14-16h, 2-4h chiều*.
    - **Thời lượng:** *2 tiếng, 1.5h, 1h30, 1 tiếng 30 phút, một tiếng rưỡi, hai tiếng, 45 phút, mười lăm phút, nửa tiếng*.
    - "Mai" là tên người khi đi sau *gặp, cho, với…* hoặc viết hoa giữa câu (*Gọi điện cho Mai 20h*).
 2. 📅 **3 Chế độ Xem Lịch Biểu**:
-   - **Tuần chi tiết**: 7 thẻ ngày responsive kèm Pin năng lượng và nút thêm nhanh.
+   - **Tuần chi tiết**: 7 thẻ ngày responsive kèm tổng giờ mỗi ngày và nút thêm nhanh; phía trên là 4 ô số liệu (Hoạt động · Tổng giờ · Cân bằng · Yếu nhất) và dải Thói quen.
    - **Dòng thời gian 24h (Timeline)**: Trục thời gian dọc từ 06:00 đến 24:00, trực quan hoá các khối sự kiện. Tích hợp thuật toán **chia làn song song (Lane Splitting)** khi các sự kiện bị trùng khung giờ.
    - **Lưới 53 tuần**: Toàn cảnh cả năm có thanh cuộn và tự động định vị tuần hiện tại.
 3. ⚙️ **Trung Tâm Cài Đặt & Dữ Liệu Tinh Gọn (Settings Modal)**:
-   - Nút `⚙️` trên header tập trung toàn bộ cấu hình: Chuyển theme (Sáng/Tối/Theo máy), Sao lưu JSON/CSV, Khôi phục, Đặt thời lượng mặc định và Ngưỡng báo kiệt sức.
+   - Nút `⚙️` trên header tập trung toàn bộ cấu hình: Chuyển theme (Sáng/Tối/Theo máy), Sao lưu JSON/CSV, Khôi phục, Đặt thời lượng mặc định, khung giờ xếp việc và giới hạn giờ mỗi ngày cho Xếp hết.
    - Thanh điều hướng chính gồm 5 tab: **Lịch biểu**, **Hộp việc**, **Dự án**, **Tổng quan & 168h**, **Danh mục vốn** (điện thoại thêm ô Cài đặt ở thanh dưới đáy).
 4. 🏆 **Bản Tin Tổng Kết Tuần Linh Hoạt (Weekly Review with Week Selector)**:
    - Cho phép chọn xem báo cáo tổng kết của **bất kỳ tuần nào** trong năm (từ W1 đến W52/53) qua bộ chuyển tuần `[ ◀ | ▶ ]` và menu thả xuống ngay trong popup.
-   - Đánh giá Điểm sáng của tuần, Vốn cần cứu trợ, Bánh xe cuộc đời và gợi ý kế hoạch tuần mới.
+   - Thẻ Cân bằng, Giờ đã ghi, Yếu nhất; Điểm sáng của tuần, Vốn cần bù, Bánh xe cuộc đời, Thói quen và gợi ý kế hoạch tuần mới.
 5. 🛠️ **Popup Thêm / Sửa Hoạt Động Tinh Gọn**:
    - Giao diện form tinh gọn chỉ gồm các trường thông tin cần thiết, tự động đóng popup khi bấm Lưu.
-   - Nhập bằng bàn phím: trong popup, mỗi lần nhấn Enter chuyển sang ô kế tiếp (Tên → Loại vốn → Tác động → Giờ bắt đầu → Thời lượng → Lặp lại → Đến hết ngày); Enter ở ô cuối cùng thì lưu. Khi đang gõ có dấu, một lần Enter vừa chốt chữ vừa chuyển ô. `Cmd/Ctrl + Enter` lưu ngay từ bất kỳ ô nào.
+   - Nhập bằng bàn phím: trong popup, mỗi lần nhấn Enter chuyển sang ô kế tiếp (Tên → Loại vốn → Giờ bắt đầu → Thời lượng → Lặp lại → Đến hết ngày); Enter ở ô cuối cùng thì lưu. Khi đang gõ có dấu, một lần Enter vừa chốt chữ vừa chuyển ô. `Cmd/Ctrl + Enter` lưu ngay từ bất kỳ ô nào.
    - Thanh ghi nhanh: khi đang gõ có dấu, một lần Enter vừa chốt chữ vừa ghi hoạt động (Chrome và Safari).
    - Hỗ trợ tạo chuỗi lặp định kỳ (Hằng ngày, Ngày làm việc, Hằng tuần) kèm ngày kết thúc chuỗi, cả khi thêm mới lẫn khi sửa một hoạt động lẻ (hoạt động đó thành buổi đầu của chuỗi).
    - Xóa chuỗi có hai lựa chọn: **Xóa từ ngày này về sau** (giữ các buổi trước ngày đang mở) và **Xóa toàn bộ chuỗi**; hộp xác nhận ghi rõ số buổi bị xóa và được giữ.
@@ -112,7 +107,7 @@
 13. 📥 **Hộp Việc Chờ (v0.2.0)**:
    - Ghi những việc còn mơ hồ chưa có ngày giờ: ở tab **Hộp việc**, hoặc gõ dấu `+` ở đầu thanh ⚡ (vd *+ Chuẩn bị chuyến đi Đà Lạt*).
    - Chia mỗi việc thành các **việc nhỏ** có thứ tự và thời lượng (*Đặt vé xe 30p*, *Đặt homestay 1h30*; không ghi thì 1h). Đổi thứ tự bằng kéo hoặc nút ↑ ↓; bấm tên để sửa; tick khi xong.
-   - **Máy tính:** ở Tuần chi tiết và Dòng thời gian 24h, hộp việc hiện thành cột bên phải. Kéo một việc nhỏ thả vào khung giờ (làm tròn 15 phút) hoặc vào một ngày (chọn giờ, gợi ý khung trống sớm nhất từ 08:00). Kéo dòng tên việc để **xếp cả việc**: các việc nhỏ chưa xếp được đặt liền nhau theo thứ tự, có bản xem trước chỗ trùng và việc không vừa trong ngày.
+   - **Máy tính:** ở Tuần chi tiết và Dòng thời gian 24h, hộp việc hiện thành cột bên phải. Kéo một việc nhỏ thả vào khung giờ (làm tròn 15 phút) hoặc vào một ngày (chọn giờ, gợi ý khung trống sớm nhất từ 08:00). Kéo dòng tên việc để **xếp cả việc** (xem mục 15 Xếp thông minh).
    - **iPhone:** bấm **Xếp lịch** trên việc nhỏ (hoặc **Xếp cả việc**), chọn ngày, giờ hoặc một khung trống gợi ý.
    - Việc nhỏ đã xếp là một hoạt động bình thường trên lịch (tính vào vốn, đồng bộ Google Calendar). Sửa giờ trên lịch thì nhãn "Đã xếp" trong hộp đổi theo; xóa hoạt động hoặc bấm **Đưa về hộp việc** trong popup thì việc nhỏ quay lại hộp.
    - Mỗi việc có thể đặt **hạn** (v0.6.0); việc chưa xong mà quá hạn hiện nhãn đỏ.
@@ -124,6 +119,18 @@
    - Mỗi **mục** là một việc trong Hộp việc (kèm việc nhỏ và các buổi đã xếp) hoặc một **chuỗi hoạt động** cùng tên (vd 12 buổi "Chạy dài" thành một dòng). Chia mục theo **phần** tự đặt tên; đổi phần bằng kéo thả (máy tính) hoặc ô Chuyển (điện thoại).
    - Thêm việc ngay trong từng phần; tích xong có Hoàn tác; bấm một mục để mở bảng chi tiết (sửa tên, phần, hạn, loại vốn, việc nhỏ, xếp lịch).
    - Ghi nhanh: `#tên` gắn dự án cho hoạt động, `+ #tên việc` thêm việc vào dự án.
+
+15. 🧭 **Xếp Thông Minh (v0.6.0)**:
+   - **Xếp hết** đặt các việc nhỏ theo đúng thứ tự, lách qua lịch bận, rải sang nhiều ngày; chỉ trong khung giờ xếp việc (mặc định 08:00–22:00) và tối đa 2 giờ mỗi ngày cho một việc (đổi trong Cài đặt › Mặc định).
+   - Có hạn thì xong trước hạn ít nhất 1 ngày. Hạn đứng trên mọi kiểu cân bằng: không kịp thì dồn làm sớm nhất (bỏ giới hạn mỗi ngày), vẫn không kịp thì nới khung 06:00–24:00, cuối cùng báo "Không kịp hạn" và giữ phần còn lại trong hộp.
+   - Không có hạn gấp thì để sau những tuần mà loại vốn của việc đã đạt mục tiêu.
+   - Việc nhỏ đã qua giờ mà chưa xong là **lỡ**; nút **Xếp lại** dời sang khoảng trống từ bây giờ. Mỗi lần Xếp hết có Hoàn tác; phần xem trước đổi thứ tự (↑ ↓) và bỏ bớt việc (ô tích) được.
+
+16. 🔁 **Thói Quen (v0.6.0)**:
+   - Dải **Thói quen** dưới 4 ô số liệu ở tab Lịch: tên, chuỗi hiện tại và 7 chấm của tuần; điện thoại vuốt ngang.
+   - **Tự đếm** các buổi cùng tên trên lịch (không phân biệt hoa thường, có dấu hay không) hoặc **tích tay** bằng nút ✓.
+   - Chuỗi kiểu mềm: theo **số lần mỗi tuần** thì đếm số tuần liên tiếp đạt; **mỗi ngày** thì mỗi tuần được nghỉ 1 ngày. Hôm nay, tuần này chưa xong không làm đứt chuỗi.
+   - Bảng chi tiết: chuỗi, kỷ lục, lưới 26 tuần, tích bù trong tuần, **Xếp 1 buổi**, lưu trữ, xóa có Hoàn tác. Popup hoạt động có ô **Theo dõi thành thói quen**; app gợi ý khi một hoạt động lặp lại 3 ngày trong 2 tuần; mốc 7/21/30/66 ngày hoặc 4/8/12/26/52 tuần báo bằng thông báo nhỏ.
 
 ---
 

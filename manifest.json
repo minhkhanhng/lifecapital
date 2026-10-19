@@ -2,7 +2,7 @@
   "id": "/",
   "name": "Life Capital",
   "short_name": "Life Capital",
-  "description": "Quản lý thời gian và năng lượng theo tuần",
+  "description": "Cân bằng thời gian cho 5 loại vốn mỗi tuần",
   "lang": "vi",
   "start_url": "./",
   "scope": "./",
