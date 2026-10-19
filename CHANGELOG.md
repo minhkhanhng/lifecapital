@@ -2,6 +2,21 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.6.1 · Bỏ Nạp / Tiêu · bản thử, chờ duyệt
+
+Mọi hoạt động đều là đầu tư vào một loại vốn, nên app không chia ▲ Nạp / ▼ Tiêu nữa. Câu hỏi chính chỉ còn: bánh xe 5 loại vốn tuần này có cân bằng không.
+
+**Thay đổi**
+- Bỏ ▲ / ▼ ở mọi nơi: thẻ hoạt động, ghi nhanh, popup thêm hoạt động (bỏ ô Tác động), Hộp việc (bỏ nút đổi tác động), lịch năm, tiêu đề sự kiện Google Calendar, tệp CSV (bỏ cột Tác động).
+- Bỏ pin năng lượng từng ngày, nhãn Kiệt sức và cài đặt Ngưỡng kiệt sức. Thẻ ngày hiện tổng giờ đã ghi.
+- Mọi giờ đã ghi, kể cả hoạt động cũ ghi là Tiêu, đều cộng vào loại vốn của nó trên bánh xe.
+- Ô số liệu tuần: Hoạt động · Tổng giờ · **Cân bằng** (điểm %) · **Yếu nhất** (vốn đạt % mục tiêu thấp nhất), thay cho ▲ Nạp / ▼ Tiêu.
+- Tổng kết tuần: thẻ Cân bằng, Giờ đã ghi, Yếu nhất; bỏ phần Cán cân năng lượng và “Tiêu nhiều hơn nạp”. Sao chép tổng kết ghi giờ từng vốn và điểm cân bằng.
+- Tổng quan: bảng giờ theo loại vốn chỉ còn một cột giờ; bỏ nhận định “Tiêu nhiều hơn nạp”.
+- Tab Vốn: giờ cố định mỗi tuần gộp thành một cột (bản cũ có ▲ và ▼ thì cộng lại).
+- Lịch năm trên điện thoại tô màu theo tổng giờ, cột cuối là tổng giờ của tuần.
+- Dữ liệu ghi số phiên bản 61. Trường cũ vẫn giữ trong dữ liệu để máy chạy bản cũ đồng bộ không lỗi.
+
 ## v0.6.0 · Dự án kiểu Asana · đang UAT trên staging
 
 Làm lại phần Dự án theo cách Asana tổ chức dự án, vì bản v0.5.0 khó theo dõi và khó dùng. Dữ liệu cũ dùng tiếp, không cần làm gì.
