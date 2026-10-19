@@ -5181,7 +5181,19 @@ function importData(inputEl) {
         S.mem = Object.assign({}, d.mem, S.mem);
         d.tasks.forEach(t => { if (!S.tasks.some(x => x.id === t.id)) S.tasks.push(t); });
         S.projects = S.projects || [];
-        (d.projects || []).forEach(p => { if (!S.projects.some(x => x.id === p.id)) S.projects.push(p); });
+        (d.projects || []).forEach(p => {
+          const x = S.projects.find(y => y.id === p.id);
+          if (!x) { S.projects.push(p); return; }
+          // Dự án đã có: thêm phần, mốc, cập nhật trạng thái còn thiếu (theo mã), không sửa cái đã có
+          [["secs", 20], ["ms", 50], ["ups", 30]].forEach(([f, max]) => {
+            const add = (p[f] || []).filter(i => !(x[f] || []).some(j => j.id === i.id));
+            if (!add.length) return;
+            x[f] = [...(x[f] || []), ...add];
+            if (f === "ups") x.ups.sort((u, v) => v.d.localeCompare(u.d));
+            x[f] = x[f].slice(0, max);
+          });
+          if (!x.desc && p.desc) x.desc = p.desc;
+        });
         const sg = e => [e.t, e.s, e.c, e.m, e.h, e.r, e.pj || ""].join("|");
         Object.keys(d.ev).forEach(k => { const L = S.ev[k] = S.ev[k] || []; d.ev[k].forEach(e => { if (!L.some(y => sg(y) === sg(e))) L.push(e); }); sortL(L); });
       }

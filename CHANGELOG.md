@@ -21,6 +21,7 @@ Làm lại phần Dự án theo cách Asana tổ chức dự án, vì bản v0.5
 
 **Thay đổi**
 - Bỏ biểu đồ Gantt mỗi hoạt động một dòng và kiểu bấm dự án xổ ra tại chỗ.
+- Khôi phục từ tệp sao lưu ở chế độ Gộp: dự án đã có cũng được thêm lại phần, mốc, cập nhật trạng thái còn thiếu.
 - Dữ liệu ghi số phiên bản 60; máy còn chạy bản cũ giữ nguyên phần, hạn, mốc khi lưu và đồng bộ.
 - Test gộp dữ liệu 28 tình huống (thêm 8 cho phần, hạn, mốc, cập nhật trạng thái).
 
