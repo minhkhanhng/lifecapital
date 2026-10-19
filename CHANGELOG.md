@@ -25,6 +25,12 @@ Làm lại phần Dự án theo cách Asana tổ chức dự án, vì bản v0.5
 - Dữ liệu ghi số phiên bản 60; máy còn chạy bản cũ giữ nguyên phần, hạn, mốc khi lưu và đồng bộ.
 - Test gộp dữ liệu 28 tình huống (thêm 8 cho phần, hạn, mốc, cập nhật trạng thái).
 
+**Sửa trong UAT (19/10)**
+- Thêm việc trong trang dự án bằng bộ gõ tiếng Việt: một lần Enter có lúc thêm 2 việc giống nhau. Bộ gõ phát thêm một Enter sau Enter chốt chữ; nay mỗi lần nhấn chỉ làm một lần ở mọi ô (thêm việc, việc nhỏ, phần, mốc, ghi nhanh, chuyển ô trong popup). Ghi nhanh gõ có dấu thì Enter cũng chọn gợi ý #dự án như khi gõ không dấu.
+- Bảng chi tiết: sửa tên rồi bấm ngay dropdown Phần, Loại vốn hay ô Hạn thì dropdown không mở hoặc đóng ngay, vì bảng vẽ lại đúng lúc bấm. Nay bảng chờ bấm xong hoặc rời ô mới vẽ lại.
+- Ô ngày (Hạn, Xếp lịch): gõ tay tới chữ số đầu của năm là lưu luôn năm 0002 rồi mất con trỏ. Nay gõ tay thì lưu khi Enter hoặc rời ô, chọn trên lịch thì lưu ngay; năm phải trong 2000–2100, gõ dở rồi bỏ thì giữ ngày cũ.
+- Chuyển tab khi con trỏ đang ở một ô nhập thì con trỏ nhảy vào một ô bất kỳ của trang mới (Bảng bị kéo về cột đầu).
+
 ## v0.5.1 · Dọn mã · 19/10/2026
 
 Không đổi giao diện hay tính năng.

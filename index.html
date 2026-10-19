@@ -2655,31 +2655,67 @@ function handleNLPInput(val) {
 // Gõ tiếng Việt có dấu: một lần Enter vừa chốt chữ vừa thực hiện (ghi nhanh / chuyển ô trong popup).
 // Chrome phát keydown Enter (isComposing) TRƯỚC compositionend: ghi nhớ, chờ bộ gõ chốt chữ xong rồi mới làm.
 // Safari phát compositionend trước, nên lúc keydown chữ đã chốt và làm ngay được.
-let nlpAfterCompose = false;
+// Có bộ gõ phát thêm một Enter thường ngay sau Enter chốt chữ: enterOnce chỉ làm một lần cho mỗi lần nhấn.
+let composeAt = 0;        // lúc bộ gõ vừa chốt chữ
+let composeEnter = null;  // Enter đang chờ bộ gõ chốt chữ: { el, fn, t }
+let enterDone = null;     // Enter vừa xử lý: { el, t }
+function enterOnce(el, fn) {
+  // Enter thừa có thể đến ô kế tiếp nếu ô đầu đã chuyển con trỏ: trong 150ms bỏ qua với mọi ô
+  const ago = enterDone ? Date.now() - enterDone.t : 1e9;
+  if (ago < 150 || (ago < 400 && enterDone.el === el)) return;
+  enterDone = { el, t: Date.now() };
+  fn(el);
+}
+// Trong keydown Enter: true nếu bộ gõ đang chốt chữ (sẽ làm sau compositionend), false nếu làm ngay được
+function enterWaitsIME(e, el, fn) {
+  if (!e.isComposing && !(e.keyCode === 229 && Date.now() - composeAt > 100)) return false;
+  const c = composeEnter = { el, fn, t: Date.now() };
+  // Bàn phím điện thoại có thể báo 229 mà không có compositionend: quá 300ms thì làm luôn
+  setTimeout(() => { if (composeEnter === c) { composeEnter = null; enterOnce(el, fn); } }, 300);
+  return true;
+}
+// Enter trong ô nhập (onkeydown="enterKey(event, fn)"): chờ bộ gõ chốt chữ, chỉ làm một lần
+function enterKey(e, fn) {
+  if (e.key !== "Enter" || e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) return;
+  if (enterWaitsIME(e, e.target, fn)) return;
+  e.preventDefault();
+  enterOnce(e.target, fn);
+}
+// Ô ngày: gõ tay thì trình duyệt báo "change" ngay khi đủ ba phần (gõ chữ "2" đầu năm đã thành năm 0002),
+// lưu và vẽ lại lúc đó làm mất con trỏ. Chọn trên lịch thì lưu ngay; gõ tay thì lưu khi Enter hoặc rời ô.
+// Dùng: onkeydown="dateKey(event)" onchange="dateSet(this, fn)" onblur="dateSet(this, fn, 1)"
+const dateOk = v => v === "" || (/^\d{4}-\d\d-\d\d$/.test(v) && v >= "2000-01-01" && v <= "2100-12-31");
+function dateKey(e) {
+  const el = e.target;
+  if (e.key === "Enter") { e.preventDefault(); el.blur(); return; }
+  if (e.key.length === 1 || /^(Backspace|Delete|ArrowUp|ArrowDown)$/.test(e.key)) el.dataset.typing = 1;
+}
+function dateSet(el, fn, leaving) {
+  if (el.dataset.typing && !leaving) return;
+  const was = !!el.dataset.typing;
+  delete el.dataset.typing;
+  if (leaving && !was) return; // không gõ gì: đã lưu lúc chọn trên lịch
+  const v = el.value;
+  if ((el.validity && el.validity.badInput) || !dateOk(v)) { el.value = el.defaultValue; if (v || el.validity.badInput) showToast("Ngày không hợp lệ", "bad"); return; }
+  if (v !== el.defaultValue) { el.defaultValue = v; fn(v); }
+}
 function noteCompositionEnd() {
-  if (nlpAfterCompose) {
-    nlpAfterCompose = false;
-    setTimeout(executeNLP, 0);
-  }
-  if (hvAfterCompose) {
-    const el = hvAfterCompose;
-    hvAfterCompose = null;
-    setTimeout(() => hvInputEnter(el), 0);
-  }
-  if (enterAfterCompose) {
-    const el = enterAfterCompose;
-    enterAfterCompose = null;
-    setTimeout(() => editorEnter(el), 0);
-  }
+  composeAt = Date.now();
+  const c = composeEnter;
+  composeEnter = null;
+  if (c && Date.now() - c.t < 1500) setTimeout(() => enterOnce(c.el, c.fn), 0);
 }
 // Không có thuộc tính oncompositionend trong HTML nên phải gắn bằng addEventListener
 document.addEventListener("compositionend", noteCompositionEnd, true);
 
 function handleNLPKeydown(e) {
   if (e.key !== "Enter" || e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
-  if (e.isComposing || e.keyCode === 229) { nlpAfterCompose = true; return; }
+  if (enterWaitsIME(e, e.target, nlpEnter)) return;
   e.preventDefault();
-  const sl = pjSuggestList(e.target.value);
+  enterOnce(e.target, nlpEnter);
+}
+function nlpEnter(el) {
+  const sl = pjSuggestList(el.value);
   if (sl && sl.list.length) { pjPickSuggest(sl.list[0].id); return; } // đang gõ #tên: Enter chọn dự án đầu tiên
   executeNLP();
 }
@@ -4712,7 +4748,6 @@ function delSeries(i, mode = "future") {
 
 // Popup thêm/sửa: Enter chuyển lần lượt qua từng ô, Enter ở ô cuối cùng thì lưu.
 // Đang gõ có dấu thì một lần Enter vừa chốt chữ vừa chuyển ô: chờ bộ gõ chốt xong (compositionend) rồi mới chuyển.
-let enterAfterCompose = null;
 
 function editorFields() {
   return [...$("sheetBody").querySelectorAll("input, select")].filter(el => !el.disabled && el.offsetParent !== null);
@@ -4732,9 +4767,9 @@ function handleSheetKeydown(e) {
   const el = e.target;
   if (!el.matches || !el.matches("input, select")) return;
   // Chrome: Enter chốt chữ đến TRƯỚC compositionend, không chặn để bộ gõ chốt chữ bình thường
-  if (e.isComposing || e.keyCode === 229) { enterAfterCompose = el; return; }
+  if (enterWaitsIME(e, el, editorEnter)) return;
   e.preventDefault();
-  editorEnter(el);
+  enterOnce(el, editorEnter);
 }
 $("sheetBody").addEventListener("keydown", handleSheetKeydown);
 
@@ -5221,6 +5256,7 @@ V.su = function () {
 const vals = () => { const o = {}, t = document.createElement("div"); t.innerHTML = V.su(); t.querySelectorAll("[data-k]").forEach(e => { o[e.dataset.k] = e.textContent; }); return o; };
 const mark = () => document.querySelectorAll("[data-k]").forEach(e => e.classList.toggle("chg", CH.has(e.dataset.k)));
 
+let drawnView = ""; // trang vừa vẽ: chỉ giữ con trỏ khi vẽ lại cùng trang
 function draw(jump) {
   const badge = $("brandYearBadge");
   if (badge) badge.textContent = activeYear;
@@ -5229,9 +5265,13 @@ function draw(jump) {
   updateSyncBadge();
 
   const y = window.scrollY;
-  const fo = [...document.querySelectorAll("#v input,#v select")], ai = fo.indexOf(document.activeElement), td = TABDIR;
+  const view = cur === "pj" && pjOpenId ? "pj/" + pjOpenId + "/" + pjViewOf(pjOpenId) : cur, sameView = view === drawnView;
+  drawnView = view;
+  const fo = [...document.querySelectorAll("#v input,#v select")], ai = sameView ? fo.indexOf(document.activeElement) : -1, td = TABDIR;
   const tw = document.querySelector(".table-wrapper");
   const st = tw ? [tw.scrollTop, tw.scrollLeft] : null;
+  const bo = document.querySelector("#v .pjb");
+  if (bo) pjBoScroll = bo.scrollLeft; // Bảng dự án: nhớ chỗ cuộn ngang trước khi vẽ lại
 
   $("v").innerHTML = V[cur]();
 
@@ -5415,7 +5455,6 @@ const openTasks = new Set();
 let hvEdit = null;          // { kind: "task" | "sub", id }
 let hvShowDone = false;
 let dragItem = null;        // { kind: "sub" | "task", id }
-let hvAfterCompose = null;  // ô nhập đang chờ bộ gõ chốt chữ
 let inboxPanel = true;
 try { inboxPanel = localStorage.getItem("lc_inbox_panel") !== "0"; } catch (e) {}
 
@@ -5534,13 +5573,15 @@ function hvInputEnter(el) {
     setTimeout(() => { const i = $(el.id); if (i) i.focus(); }, 0);
   } else if (el.dataset.hv === "sub") {
     if (!addSub(el.dataset.task, v)) return;
+    el.value = "";
     draw();
     setTimeout(() => { const i = $(el.id); if (i) { i.value = ""; i.focus(); } }, 0);
   } else if (el.dataset.hv === "edit") saveHvEdit();
   else if (el.dataset.hv === "pjadd") pjAddTask(el);
   else if (el.dataset.hv === "pjsec") pjSecSave(el);
   else if (el.dataset.hv === "pjsub") {
-    if (!addSub(el.dataset.task, el.value)) return;
+    if (!addSub(el.dataset.task, v)) return;
+    el.value = "";
     draw();
     renderPjItem(true);
     pjFocus(el.id);
@@ -5551,9 +5592,9 @@ function hvKeydown(e) {
   if (e.key === "Escape" && el.dataset.hv === "edit") { e.preventDefault(); e.stopPropagation(); hvEdit = null; draw(); return; }
   if (e.key === "Escape" && el.dataset.hv === "pjsec") { e.preventDefault(); e.stopPropagation(); pjSecEdit = null; draw(); return; }
   if (e.key !== "Enter" || e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) return;
-  if (e.isComposing || e.keyCode === 229) { hvAfterCompose = el; return; }
+  if (enterWaitsIME(e, el, hvInputEnter)) return;
   e.preventDefault();
-  hvInputEnter(el);
+  enterOnce(el, hvInputEnter);
 }
 function startHvEdit(kind, id) {
   hvEdit = { kind, id };
@@ -5808,7 +5849,7 @@ function renderSched() {
         <div class="row" style="gap:6px;">
           <button type="button" class="btn btn-sm ${sch.date === tk ? "btn-primary" : ""}" onclick="schedSet('date','${tk}')">Hôm nay</button>
           <button type="button" class="btn btn-sm ${sch.date === tmr ? "btn-primary" : ""}" onclick="schedSet('date','${tmr}')">Ngày mai</button>
-          <input id="schedDate" type="date" value="${sch.date}" onchange="schedSet('date', this.value)" aria-label="Chọn ngày" style="flex:1; min-width:140px;">
+          <input id="schedDate" type="date" value="${sch.date}" onkeydown="dateKey(event)" onchange="dateSet(this, v => schedSet('date', v))" onblur="dateSet(this, v => schedSet('date', v), 1)" aria-label="Chọn ngày" style="flex:1; min-width:140px;">
         </div>
         <div style="font-size:12px; color:var(--mu);">${esc(dayDesc(sch.date))}</div>
       </div>
@@ -5976,7 +6017,7 @@ function inboxHTML(where) {
             ${S.caps.map(c => `<option value="${c.k}" ${c.k === t.c ? "selected" : ""}>${esc(c.n)}</option>`).join("")}
           </select>
           <button type="button" class="hv-mini ${t.m === "u" ? "up" : "down"}" onclick="setTaskField('${t.id}','m','${t.m === "u" ? "d" : "u"}')" title="Đổi tác động">${t.m === "u" ? "▲ Nạp" : "▼ Tiêu"}</button>
-          <label class="hv-mini hv-due ${t.due ? "on" : ""} ${t.due && t.due < tk && !taskDone(t) ? "late" : ""}">${t.due ? (t.due < tk && !taskDone(t) ? "Quá hạn " : "Hạn ") + dm(t.due) : "+ Hạn"}<input type="date" value="${t.due || ""}" onclick="try { this.showPicker(); } catch (e) {}" onchange="pjSetDue('${t.id}', this.value)" aria-label="Hạn của ${esc(t.t)}"></label>
+          <label class="hv-mini hv-due ${t.due ? "on" : ""} ${t.due && t.due < tk && !taskDone(t) ? "late" : ""}">${t.due ? (t.due < tk && !taskDone(t) ? "Quá hạn " : "Hạn ") + dm(t.due) : "+ Hạn"}<input type="date" value="${t.due || ""}" onclick="try { this.showPicker(); } catch (e) {}" onkeydown="dateKey(event)" onchange="dateSet(this, v => pjSetDue('${t.id}', v))" onblur="dateSet(this, v => pjSetDue('${t.id}', v), 1)" aria-label="Hạn của ${esc(t.t)}"></label>
           ${(S.projects || []).length ? `<select class="hv-mini" onchange="setTaskPj('${t.id}', this.value)" aria-label="Dự án" ${t.pj && findPj(t.pj) ? `style="--pj:${findPj(t.pj).col}" data-pj="1"` : ""}>
             <option value="">Không dự án</option>
             ${(S.projects || []).filter(p => pjIsOpen(p) || p.id === t.pj).sort(pjCmp).map(p => `<option value="${p.id}" ${p.id === t.pj ? "selected" : ""}>${esc(p.n)}</option>`).join("")}
@@ -7145,7 +7186,7 @@ function pjOverviewHTML(p, items) {
             <button type="button" class="btn btn-sm btn-ghost hv-del" onclick="pjMsDel('${m.id}')" aria-label="Xóa mốc ${esc(m.n)}">✕</button>
           </div>`).join("")}
         <div class="pjo-add">
-          <input id="pjMsName" type="text" maxlength="80" placeholder="Mốc mới, vd: Chạy 21 km" onkeydown="if (event.key === 'Enter' && !event.isComposing) pjMsAdd()" aria-label="Tên mốc">
+          <input id="pjMsName" type="text" maxlength="80" placeholder="Mốc mới, vd: Chạy 21 km" onkeydown="enterKey(event, pjMsAdd)" aria-label="Tên mốc">
           <input id="pjMsDate" type="date" aria-label="Ngày của mốc" value="${p.ed || ""}">
           <button type="button" class="btn btn-sm" onclick="pjMsAdd()">Thêm</button>
         </div>
@@ -7180,6 +7221,7 @@ function pjMsAdd() {
   const p = findPj(pjOpenId), n = ($("pjMsName").value || "").trim(), d = $("pjMsDate").value;
   if (!p) return;
   if (!n || !d) { showToast(n ? "Chọn ngày của mốc" : "Nhập tên mốc", "bad"); return; }
+  if (!dateOk(d)) { showToast("Ngày của mốc không hợp lệ", "bad"); return; }
   if ((p.ms || []).length >= 50) { showToast("Tối đa 50 mốc", "bad"); return; }
   p.ms = [...(p.ms || []), { id: nid("m"), n: n.slice(0, 80), d }];
   save(); draw();
@@ -7211,6 +7253,7 @@ function pjSetDesc(v) {
 function pjAddTask(el) {
   const p = findPj(pjOpenId), title = String(el.value || "").trim();
   if (!p || !title) return;
+  el.value = ""; // xóa ngay: Enter thừa của bộ gõ (nếu có) gặp ô trống thì không thêm lần nữa
   const sec = el.dataset.sec || "";
   S.tasks.unshift({ id: nid("t"), t: title.slice(0, 160), c: pjCap(p, guess(title)), m: guessMode(title), subs: [], pj: p.id, ...(sec ? { sec } : {}) });
   save(); draw();
@@ -7249,7 +7292,7 @@ function pjSetSec(kind, id, sec) {
 function pjSetDue(id, v) {
   const t = findTask(id);
   if (!t) return;
-  if (/^\d{4}-\d\d-\d\d$/.test(v || "")) t.due = v; else delete t.due;
+  if (v && dateOk(v)) t.due = v; else delete t.due;
   save(); draw();
 }
 function pjDragStart(ev, kind, id) {
@@ -7319,11 +7362,19 @@ function pjCloseItem() {
   $("pjItOverlay").classList.remove("open");
   restoreFocus();
 }
+// Đang thao tác trong bảng chi tiết: đang bấm (vẽ lại lúc này làm mất cú bấm, dropdown không mở được)
+// hoặc con trỏ đang ở ô nhập, dropdown, ô ngày (vẽ lại làm đóng dropdown, mất chữ đang gõ)
+let pjStale = false, pjPtr = 0; // pjPtr: lúc bắt đầu bấm trong bảng (0: không bấm)
+function pjPanelBusy() {
+  const a = document.activeElement;
+  return (pjPtr && Date.now() - pjPtr < 5000) || ($("pjItBody").contains(a) && (a.tagName === "TEXTAREA" || a.tagName === "SELECT" || (a.tagName === "INPUT" && a.type !== "checkbox")));
+}
 function renderPjItem(force) {
   if (!pjDet) return;
-  const body = $("pjItBody"), a = document.activeElement;
-  // Đang gõ trong bảng chi tiết (đồng bộ hay đổi ngày vẽ lại giữa chừng): để yên, lần vẽ sau sẽ cập nhật
-  if (!force && body.contains(a) && (a.tagName === "TEXTAREA" || (a.tagName === "INPUT" && /^(text|search|)$/.test(a.type)))) return;
+  const body = $("pjItBody");
+  // Đang thao tác: để yên, vẽ lại khi bấm xong hoặc con trỏ rời ô (pjFlushItem)
+  if (!force && pjPanelBusy()) { pjStale = true; return; }
+  pjStale = false;
   const p = findPj(pjDet.pj), it = p && pjModel(p).find(i => i.kind === pjDet.kind && i.id === pjDet.id);
   if (!it) { pjCloseItem(); return; }
   const c = CM(it.c) || { c: "var(--mu)", n: "" };
@@ -7338,13 +7389,13 @@ function renderPjItem(force) {
       <div class="pjd" style="--cap:${c.c}">
         <div class="pjd-top">
           <input type="checkbox" class="pjd-chk" ${it.done ? "checked" : ""} onchange="pjToggleTask('${t.id}')" aria-label="Xong">
-          <input class="pjd-name" value="${esc(t.t)}" maxlength="160" onchange="pjRenameTask('${t.id}', this.value)" onkeydown="if (event.key === 'Enter' && !event.isComposing) this.blur()" aria-label="Tên việc">
+          <input class="pjd-name" value="${esc(t.t)}" maxlength="160" onchange="pjRenameTask('${t.id}', this)" onkeydown="enterKey(event, el => el.blur())" aria-label="Tên việc">
         </div>
         <div class="pjd-fields">
           <span>Trạng thái</span><b class="${it.late ? "late" : ""}">${it.late ? "Quá hạn · " : ""}${pjProgLabel(it)}</b>
           <label for="pjdSec">Phần</label><select id="pjdSec" onchange="pjSetSec('task','${t.id}', this.value)">${secOpts}</select>
-          <label for="pjdDue">Hạn</label><input id="pjdDue" type="date" value="${t.due || ""}" onchange="pjSetDue('${t.id}', this.value)">
-          <label for="pjdCap">Loại vốn</label><select id="pjdCap" onchange="setTaskField('${t.id}','c',this.value)" style="${capInk(c.c)}">${capOpts}</select>
+          <label for="pjdDue">Hạn</label><input id="pjdDue" type="date" value="${t.due || ""}" onkeydown="dateKey(event)" onchange="dateSet(this, v => pjSetDue('${t.id}', v))" onblur="dateSet(this, v => pjSetDue('${t.id}', v), 1)">
+          <label for="pjdCap">Loại vốn</label><select id="pjdCap" onchange="this.setAttribute('style', capInk(CM(this.value).c)); setTaskField('${t.id}','c',this.value)" style="${capInk(c.c)}">${capOpts}</select>
         </div>
         <div class="pjd-sec">
           <b>Việc nhỏ <small>${t.subs.length ? `${it.nD}/${t.subs.length} xong · tổng ${hrs(tot)}` : "chưa chia nhỏ"}</small></b>
@@ -7372,12 +7423,12 @@ function renderPjItem(force) {
       <div class="pjd" style="--cap:${c.c}">
         <div class="pjd-top">
           <span class="pjr-ser ${it.done ? "past" : ""}" aria-hidden="true">${it.done ? "✓" : "◷"}</span>
-          <input class="pjd-name" value="${esc(it.t)}" maxlength="120" onchange="pjSerEdit('t', this.value)" onkeydown="if (event.key === 'Enter' && !event.isComposing) this.blur()" aria-label="Tên hoạt động">
+          <input class="pjd-name" value="${esc(it.t)}" maxlength="120" onchange="pjSerEdit('t', this.value)" onkeydown="enterKey(event, el => el.blur())" aria-label="Tên hoạt động">
         </div>
         <div class="pjd-fields">
           <span>Tổng</span><b>${it.evs.length} buổi · ${hrs(it.h)}</b>
           <label for="pjdSec">Phần</label><select id="pjdSec" onchange="pjSetSec('ser','${it.id}', this.value)">${secOpts}</select>
-          <label for="pjdCap">Loại vốn</label><select id="pjdCap" onchange="pjSerEdit('c', this.value)" style="${capInk(c.c)}">${capOpts}</select>
+          <label for="pjdCap">Loại vốn</label><select id="pjdCap" onchange="this.setAttribute('style', capInk(CM(this.value).c)); pjSerEdit('c', this.value)" style="${capInk(c.c)}">${capOpts}</select>
         </div>
         <div class="pjd-sec"><b>Sắp tới <small>${up.length} buổi</small></b>${up.length ? evList(up) : `<p class="pj-hint">Không còn buổi nào sắp tới.</p>`}</div>
         ${past.length ? `<div class="pjd-sec"><b>Đã qua <small>${past.length} buổi</small></b>${evList(past.slice().reverse())}</div>` : ""}
@@ -7387,6 +7438,18 @@ function renderPjItem(force) {
       </div>`;
   }
 }
+function pjFlushItem() {
+  if (pjStale && pjDet && !pjPanelBusy()) renderPjItem();
+}
+(() => {
+  const ov = $("pjItOverlay"), up = ms => { if (pjPtr) setTimeout(() => { pjPtr = 0; pjFlushItem(); }, ms); };
+  ov.addEventListener("pointerdown", () => { pjPtr = Date.now(); }, true);
+  // Điện thoại: click đến sau pointerup một chút, chờ thêm để cú chạm không rơi vào chỗ vừa vẽ lại
+  document.addEventListener("pointerup", () => up(350), true);
+  document.addEventListener("pointercancel", () => up(350), true);
+  document.addEventListener("click", () => up(0), true);
+  ov.addEventListener("focusout", () => setTimeout(pjFlushItem, 0));
+})();
 // Sau mỗi lần vẽ: giữ chỗ cuộn ngang của Timeline và Bảng, cập nhật bảng chi tiết đang mở
 function pjAfterDraw() {
   if (pjDet) renderPjItem();
@@ -7406,9 +7469,9 @@ function pjAfterDraw() {
 document.addEventListener("click", e => {
   document.querySelectorAll("details.pj-menu[open]").forEach(d => { if (!d.contains(e.target)) d.open = false; });
 });
-function pjRenameTask(id, v) {
-  const t = findTask(id), n = String(v || "").trim();
-  if (!t || !n) { renderPjItem(true); return; }
+function pjRenameTask(id, el) {
+  const t = findTask(id), n = String(el.value || "").trim();
+  if (!t || !n) { el.value = t ? t.t : el.defaultValue; return; } // tên trống: trả lại tên cũ
   t.t = n.slice(0, 160);
   save(); draw();
 }
@@ -7416,7 +7479,7 @@ function pjRenameTask(id, v) {
 async function pjSerEdit(field, v) {
   const p = pjDet && findPj(pjDet.pj), it = p && pjModel(p).find(i => i.kind === "ser" && i.id === pjDet.id);
   v = String(v || "").trim();
-  if (!it || !v) { renderPjItem(true); return; }
+  if (!it || !v) { const n = document.querySelector("#pjItBody .pjd-name"); if (n) n.value = n.defaultValue; return; }
   if (field === "t") v = v.slice(0, 120);
   const up = it.evs.filter(x => !evPast(x.k, x.e));
   let list = it.evs;
@@ -7551,7 +7614,10 @@ function saveProject() {
   f.n = ($("pjName").value || "").trim();
   if (!f.n) { showToast("Nhập tên dự án", "bad"); $("pjName").focus(); return; }
   if (!f.caps.length) { showToast("Chọn ít nhất một loại vốn", "bad"); return; }
-  if (!/^\d{4}-\d\d-\d\d$/.test(f.sd || "")) { showToast("Chọn ngày bắt đầu", "bad"); return; }
+  if ($("pjSd")) f.sd = $("pjSd").value; // đọc lại ô ngày: có thể vừa gõ tay mà chưa rời ô
+  if ($("pjEd")) f.ed = $("pjEd").value;
+  if (!f.sd || !dateOk(f.sd)) { showToast(f.sd ? "Ngày bắt đầu không hợp lệ" : "Chọn ngày bắt đầu", "bad"); return; }
+  if (!dateOk(f.ed || "")) { showToast("Ngày kết thúc không hợp lệ", "bad"); return; }
   if (f.ed && f.ed < f.sd) { showToast("Ngày kết thúc phải từ ngày bắt đầu trở đi", "bad"); return; }
   S.projects = S.projects || [];
   const clean = { n: f.n.slice(0, 60), col: f.col, st: f.st, pr: f.pr, sd: f.sd, caps: f.caps.slice() };
