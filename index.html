@@ -974,6 +974,46 @@ body.hv-dragging .day-card { border-style: dashed; }
 .hl-mini.pov { background: color-mix(in srgb, #4a859c 28%, transparent); color: var(--tx); }
 .timeline-container .hl-day { display: inline-flex; padding: 0 0 0 8px; vertical-align: middle; }
 .hl-sheet { display: flex; flex-direction: column; }
+.hl-ready { display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: center; }
+.hl-rd { display: flex; gap: 12px; align-items: center; flex: 1 1 220px; min-width: 0; }
+.hl-rd h3 { margin: 2px 0; font: 600 17px var(--font-ui); }
+.hl-rd small { font-size: 12px; color: var(--tx-sec); }
+.hl-rd-ring { position: relative; flex: none; width: 72px; height: 72px; }
+.hl-rd-ring b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font: 600 18px var(--font-ui); font-variant-numeric: tabular-nums; }
+.hl-ring { display: block; }
+.hl-rd-ci { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; flex: none; }
+.hl-rd-ci small { font-size: 12px; color: var(--tx-sec); }
+.hl-ci-q { margin: 4px 0 12px; font: 600 17px var(--font-ui); }
+.hl-ci-big .hl-m { flex: 1 1 100px; min-height: 48px; font-size: 14px; }
+.hl-ci-res { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13.5px; margin: 6px 0 12px; color: var(--tx-sec); }
+.hl-ci-res b { color: var(--tx); font-size: 16px; }
+.hl-phases { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; font-size: 12px; text-align: center; }
+.hl-phases span { padding: 6px 2px; border-radius: 8px; background: var(--card-subtle); color: var(--tx-sec); }
+.hl-phases span.on { background: color-mix(in srgb, #c24d5b 35%, transparent); color: var(--tx); font-weight: 600; }
+.hl-mini.dot { width: 8px; height: 8px; padding: 0; border-radius: 50%; align-self: center; }
+.hl-mini.dot.fl { background: #c24d5b; } .hl-mini.dot.pfl { box-shadow: inset 0 0 0 2px #c24d5b; } .hl-mini.dot.pov { background: #4a859c; }
+.hl-mini.rd.good { background: color-mix(in srgb, #97A13B 30%, transparent); color: var(--tx); }
+.hl-mini.rd.warn { background: color-mix(in srgb, #e5a13c 30%, transparent); color: var(--tx); }
+.hl-mini.rd.bad { background: color-mix(in srgb, #c24d5b 35%, transparent); color: var(--tx); }
+.hl-m.u1, .hl-m.u2, .hl-m.u3, .hl-m.u4 { --hm: #4a859c; }
+.hl-rep { font-size: 13.5px; line-height: 1.5; color: var(--tx); }
+.hl-rep header h2 { margin: 0 0 2px; font: 600 18px var(--font-ui); }
+.hl-rep header p, .hl-rep footer { margin: 0; font-size: 12px; color: var(--tx-sec); }
+.hl-rep h3 { margin: 16px 0 6px; font: 600 14px var(--font-ui); }
+.hl-rep table { width: 100%; border-collapse: collapse; }
+.hl-rep th, .hl-rep td { text-align: left; vertical-align: top; padding: 5px 6px; border-bottom: 1px solid var(--bd); }
+.hl-rep th { font-weight: 600; width: 32%; color: var(--tx-sec); }
+.hl-rep ul { margin: 0; padding-left: 18px; }
+.hl-rep footer { margin-top: 18px; }
+.hl-rep-bar { border-top: 0; margin: 0 0 12px; padding-top: 0; }
+@media print {
+  body.printing-rep > *:not(#hlOverlay) { display: none !important; }
+  body.printing-rep #hlOverlay { position: static !important; display: block !important; background: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+  body.printing-rep #hlOverlay .modal-sheet { max-width: none !important; max-height: none !important; box-shadow: none !important; border: 0 !important; background: #fff !important; transform: none !important; }
+  body.printing-rep #hlOverlay .modal-header, body.printing-rep .hl-rep-bar { display: none !important; }
+  body.printing-rep .hl-rep, body.printing-rep .hl-rep th { color: #111 !important; }
+  body.printing-rep::before { display: none !important; }
+}
 .hl-nav { display: flex; gap: 6px; align-items: center; padding-bottom: 8px; }
 .hl-nav input { flex: 1; min-width: 0; }
 .hl-2 { flex-direction: row; gap: 12px; }
@@ -2225,7 +2265,8 @@ function mergeHealth(B, M, T, trust) {
   if (!M) return T;
   const b = B || {}, pick = (f, def) => { const m = M[f] || def, t = T[f] || def, x = b[f]; return sameJ(m, t) ? m : trust && x && sameJ(m, x) ? t : trust && x && sameJ(t, x) ? m : (t.mt || 0) > (m.mt || 0) ? t : m; };
   return { ...T, ...M, days: mergeMap(b.days, M.days, T.days, trust), chk: mergeMap(b.chk, M.chk, T.chk, trust),
-    meds: mergeById(b.meds, M.meds, T.meds, trust), syc: mergeById(b.syc, M.syc, T.syc, trust), cyc: pick("cyc", {}) };
+    meds: mergeById(b.meds, M.meds, T.meds, trust), syc: mergeById(b.syc, M.syc, T.syc, trust), cyc: pick("cyc", {}),
+    ...(M.mid || T.mid ? { mid: pick("mid", {}) } : {}), ...((M.disc === T.disc ? M.disc : trust && sameJ(M.disc, b.disc) ? T.disc : M.disc) ? { disc: true } : {}) };
 }
 function mergeProfile(B, M, T, trust) {
   if (!T) return M;
@@ -2379,7 +2420,7 @@ function afterAbsorb() {
   if (ed) { closeEditor(); showToast("Đã cập nhật từ tab khác", "bad"); }
   if (sch) { closeSched(); showToast("Đã cập nhật từ tab khác", "bad"); }
   if (hbEd) hbRender(); // bảng thói quen giữ bản nháp, chỉ cập nhật chuỗi, kỷ lục
-  if (hlEd && hlEd.mode === "day") hlRender();
+  if (hlEd && hlEd.mode !== "med" && hlEd.mode !== "chk") hlRender();
   if ($("settingsModalOverlay").classList.contains("open")) renderSettingsModal();
   draw();
 }
@@ -4113,7 +4154,7 @@ function shiftDay(d) {
 
 // Đầu tab Lịch chỉ hiện một thông báo, theo thứ tự ưu tiên: sao lưu, tổng kết tuần, dữ liệu mẫu, bắt đầu
 function calendarNotices() {
-  return backupNotice() || reviewNotice() || cloudInviteNotice() || startOrDemoNotice();
+  return backupNotice() || reviewNotice() || checkinNotice() || cloudInviteNotice() || startOrDemoNotice();
 }
 
 // Chủ nhật nhắc tổng kết tuần này, thứ 2 nhắc tuần vừa qua. "Để sau" ẩn đến tuần sau.
@@ -5576,10 +5617,11 @@ function cleanHealth(x) {
   Object.keys(x.days || {}).filter(k => D.test(k)).forEach(k => {
     const d = x.days[k];
     if (!d || typeof d !== "object") return;
-    const o = { ...extras(d, ["mood", "stress", "sleep", "sy", "meds", "flow", "w", "ht", "note", "mt"]) };
+    const o = { ...extras(d, ["mood", "stress", "sleep", "sy", "meds", "flow", "w", "ht", "note", "temp", "mucus", "lh", "mt"]) };
     const put = (f, v) => { if (v !== null) o[f] = v; };
     put("mood", int(d.mood, 1, 5)); put("stress", int(d.stress, 1, 3)); put("sleep", num(d.sleep, 0, 24)); put("flow", int(d.flow, 1, 3));
     put("w", num(d.w, 2, 500)); put("ht", num(d.ht, 30, 260));
+    put("temp", num(d.temp, 34, 43)); put("mucus", int(d.mucus, 1, 4)); put("lh", int(d.lh, 1, 2));
     if (typeof d.note === "string" && d.note.trim()) o.note = d.note.slice(0, 1000);
     const sy = {}; Object.keys(d.sy || {}).forEach(s => { const v = int(d.sy[s], 1, 3); if (K.test(s) && v) sy[s] = v; });
     if (Object.keys(sy).length) o.sy = sy;
@@ -5605,7 +5647,11 @@ function cleanHealth(x) {
   });
   const c = x.cyc || {};
   const cyc = { len: int(c.len, 15, 60) || 28, per: int(c.per, 1, 12) || 5, auto: c.auto !== false, ...mt(c) };
-  return { ...extras(x, ["days", "meds", "syc", "chk", "cyc"]), days, meds, syc, chk, cyc };
+  const mid = {}, m0 = x.mid && typeof x.mid === "object" ? x.mid : {};
+  if (["A+", "A−", "B+", "B−", "AB+", "AB−", "O+", "O−"].includes(m0.blood)) mid.blood = m0.blood;
+  ["allergy", "cond", "ec"].forEach(f => { if (typeof m0[f] === "string" && m0[f].trim()) mid[f] = m0[f].trim().slice(0, 200); });
+  if (Object.keys(mid).length && Number.isFinite(+m0.mt) && +m0.mt > 0) mid.mt = +m0.mt;
+  return { ...extras(x, ["days", "meds", "syc", "chk", "cyc", "mid", "disc"]), days, meds, syc, chk, cyc, ...(Object.keys(mid).length ? { mid } : {}), ...(x.disc ? { disc: true } : {}) };
 }
 // Thói quen (v0.6.0). Không dùng fold() ở đây: cleanState chạy trước khi fold được khai báo.
 function cleanHabit(x) {
@@ -5956,9 +6002,10 @@ function schSim(list, days, o, skip) {
   for (const d of days) {
     if (i >= list.length) break;
     let t = Math.max(o.from, d === o.d0 ? o.m0 : 0), used = 0;
+    const cap = o.cap && d === tk && o.low ? Math.max(0.5, o.cap / 2) : o.cap; // hôm nay cần nhẹ nhàng: một nửa giới hạn
     while (i < list.length) {
       const u = list[i];
-      if (o.cap && used > 0 && used + u.h > o.cap) break;
+      if (cap && used > 0 && used + u.h > cap) break;
       const g = gapAt(d, t, o.to, u.h, skip);
       if (g == null) break;
       out.push({ ...u, date: d, s: hmOf(g) });
@@ -5974,7 +6021,8 @@ function planSmart(task, list, d0, m0) {
   const due = task.due || null, overdue = !!due && due < d0;
   const start = new Date(d0 + "T00:00"), span = n => [...Array(Math.max(1, n))].map((_, j) => ky(ad(start, j)));
   const all = due && !overdue ? span(Math.round((new Date(due + "T00:00") - start) / 864e5) + 1) : span(SCH_DAYS);
-  const base = { d0, m0, from: c.from, to: c.to }, info = { due, overdue, cfg: c };
+  const rd = typeof hlReady === "function" ? hlReady() : null;
+  const base = { d0, m0, from: c.from, to: c.to, low: !!(rd && rd.v < 50) }, info = { due, overdue, cfg: c, ready: rd };
   if (!list.length) return { out: [], left: [], mode: "ok", ...info };
   if (!overdue) {
     // Bình thường: chừa 1 ngày dự phòng trước hạn; ưu tiên tuần mà vốn này chưa đạt mục tiêu
@@ -6094,7 +6142,8 @@ function schedSkip(tkId, off) {
 function schedNote(r, task) {
   const c = r.cfg, capT = c.cap ? `tối đa ${hrs(c.cap)}/ngày` : "không giới hạn giờ mỗi ngày", win = `${hmOf(c.from)}–${hmOf(c.to)}`;
   const dueT = r.due ? dm(r.due) : "";
-  if (r.mode === "ok") return `<div class="sch-note">Rải trong ${win}, ${capT}${r.due ? `, xong trước hạn ${dueT} ít nhất 1 ngày` : ""}.${r.deferred ? ` Để sau ${r.deferred} ngày thuộc tuần ${esc(CM(task.c).n)} đã đạt mục tiêu.` : ""}</div>`;
+  const low = r.ready && r.ready.v < 50 && c.cap ? ` Hôm nay điểm Sẵn sàng ${r.ready.v}: chỉ xếp tối đa ${hrs(Math.max(0.5, c.cap / 2))} trong ngày.` : "";
+  if (r.mode === "ok") return `<div class="sch-note">Rải trong ${win}, ${capT}${r.due ? `, xong trước hạn ${dueT} ít nhất 1 ngày` : ""}.${r.deferred ? ` Để sau ${r.deferred} ngày thuộc tuần ${esc(CM(task.c).n)} đã đạt mục tiêu.` : ""}${low}</div>`;
   const lead = r.overdue ? `<b>Đã quá hạn ${dueT}:</b> ` : r.due ? `<b>Hạn ${dueT} gấp:</b> ` : `<b>Không đủ chỗ trong ${SCH_DAYS} ngày nếu giữ giới hạn:</b> `;
   const rush = `dồn làm sớm nhất${r.due ? " cho kịp hạn" : ""}, bỏ giới hạn mỗi ngày và ưu tiên cân bằng`;
   if (r.mode === "rush") return `<div class="sch-note warn">${lead}${rush}.</div>`;
@@ -6566,7 +6615,7 @@ async function cloudSync() {
   if (cloudBusy) { cloudAgain = true; return; }
   if (!navigator.onLine) { cloudSet("offline"); return; }
   // Đang sửa một hoạt động hoặc đang xếp lịch: chờ đóng bảng rồi mới nhận dữ liệu từ máy khác
-  if (ed || sch || (hlEd && hlEd.mode !== "day")) { clearTimeout(cloudT); cloudT = setTimeout(cloudSync, 3000); return; }
+  if (ed || sch || (hlEd && (hlEd.mode === "med" || hlEd.mode === "chk"))) { clearTimeout(cloudT); cloudT = setTimeout(cloudSync, 3000); return; }
   cloudBusy = true;
   cloudAgain = false;
   clearTimeout(cloudT);
@@ -8608,10 +8657,12 @@ function hlCycle() {
   const per = cyc.auto !== false && runs.length >= 2 ? Math.round(runs.slice(-6).reduce((a, b) => a + b, 0) / Math.min(6, runs.length)) : (cyc.per || 5);
   const last = starts[starts.length - 1] || null;
   if (!last) return { starts, runs, lens, len, per, auto, last: null };
-  const next = hlKAdd(last, len), ovu = hlKAdd(next, -14);
+  let next = hlKAdd(last, len), ovu = hlKAdd(next, -14), src = "cal";
+  const sig = hlOvuSignal(last);
+  if (sig && sig.k > last) { ovu = sig.k; next = hlKAdd(ovu, 14); src = sig.src; } // que LH hoặc nhiệt độ: rụng trứng đã biết, kỳ tới ≈ 14 ngày sau
   const lastFlow = fl[fl.length - 1];
   const late = lastFlow && lastFlow >= last && tk > next ? hlDiff(next, tk) : 0;
-  return { starts, runs, lens, len, per, auto, last, next, ovu, fert: [hlKAdd(ovu, -5), hlKAdd(ovu, 1)], day: hlDiff(last, tk) + 1, late,
+  return { starts, runs, lens, len, per, auto, last, next, ovu, src, fert: [hlKAdd(ovu, -5), hlKAdd(ovu, 1)], day: hlDiff(last, tk) + 1, late,
     irregular: lens.length >= 3 && Math.max(...lens) - Math.min(...lens) > 7, longRun: runs.length && runs[runs.length - 1] > 8 ? runs[runs.length - 1] : 0 };
 }
 // Dấu dự đoán cho ngày k (chỉ từ hôm nay trở đi, 2 chu kỳ tới)
@@ -8727,6 +8778,13 @@ function hlAdvice() {
       if (c.longRun) add("warn", `Kỳ kinh gần nhất kéo dài ${c.longRun} ngày`, "Hành kinh trên 7–8 ngày hoặc ra nhiều phải thay băng mỗi 1–2 giờ: nên khám phụ khoa.", "cy");
     }
   }
+  // Vận động trong tuần (WHO: ít nhất 150 phút vận động vừa mỗi tuần)
+  const act = hlActWeek().reduce((a, x) => a + x.min, 0), dw = dow(new Date(tk + "T00:00"));
+  if (dw >= 3 && act < 150 * (dw + 1) / 7 * 0.6) add("info", `Vận động ${act}/150 phút tuần này`, `Còn ${7 - dw} ngày: xếp ${Math.max(1, Math.ceil((150 - act) / 30))} buổi 30 phút (đi bộ nhanh, đạp xe, bơi) vào lịch để đủ khuyến nghị của WHO.`, "ac");
+  else if (act >= 150) add("good", `Đủ ${act} phút vận động tuần này`, "Đạt khuyến nghị 150 phút mỗi tuần của WHO. Thêm 2 buổi tập sức mạnh mỗi tuần nếu có thể.", "ac");
+  const rd = hlReady();
+  if (rd && rd.v < 50) add("warn", `Điểm Sẵn sàng hôm nay ${rd.v}: nên nhẹ nhàng`, `Do ${rd.why.slice(1).join(", ") || rd.why[0]}. Xếp hết hôm nay chỉ đặt tối đa một nửa số giờ mỗi ngày; dời việc nặng sang mai nếu được, ngủ sớm hơn 30 phút.`, "ac");
+  hlPms().forEach(x => add("info", `${hlSyName(x.s)} thường đến trước kỳ kinh`, `Có trong 5 ngày trước kỳ kinh ở ${x.hit}/${x.of} kỳ gần đây. Chuẩn bị trước vài ngày: ngủ đủ, bớt muối và cà phê; ${HL_TIP[x.s] ? HL_TIP[x.s][0].charAt(0).toLowerCase() + HL_TIP[x.s][0].slice(1) : "theo dõi thêm."}`, "cy"));
   // Nhắc ghi
   if (Object.keys(days).length && !hlRange(3).some(k => days[k])) add("info", "3 ngày chưa ghi nhật ký", "Ghi 30 giây mỗi tối: tâm trạng, giấc ngủ, triệu chứng. Càng đều, gợi ý càng đúng.", "lg");
   const order = { urgent: 0, warn: 1, info: 2, good: 3 };
@@ -8738,7 +8796,7 @@ let hlView = "sum", hlCat = null, hlRng = 30, hlAll = false;
 try { hlView = localStorage.getItem("lc_hl_view") || "sum"; } catch (e) {}
 const HL_CATS = [
   ["sy", "Triệu chứng", "#c9628a"], ["mh", "Tâm lý", "#8b6da9"], ["sl", "Giấc ngủ", "#4a859c"],
-  ["md", "Thuốc và thực phẩm chức năng", "#b88628"], ["bd", "Cơ thể", "#97A13B"], ["cy", "Chu kỳ", "#c24d5b"]
+  ["md", "Thuốc và thực phẩm chức năng", "#b88628"], ["ac", "Vận động", "#5f9e6e"], ["bd", "Cơ thể", "#97A13B"], ["cy", "Chu kỳ", "#c24d5b"]
 ];
 const hlCats = () => HL_CATS.filter(c => c[0] !== "cy" || hlIsF());
 function hlGo(v, cat) {
@@ -8763,12 +8821,25 @@ function hlBars(f, n, max, color, fmt) {
 function hlRangeSeg() {
   return `<div class="set-seg">${[[7, "7 ngày"], [30, "30 ngày"], [180, "6 tháng"]].map(([n, lb]) => `<button type="button" class="${hlRng === n ? "on" : ""}" aria-pressed="${hlRng === n}" onclick="hlRng=${n}; draw()">${lb}</button>`).join("")}</div>`;
 }
+const hlCiT = () => { try { return localStorage.getItem("lc_ci_time") || "21:00"; } catch (e) { return "21:00"; } };
+function hlReadyCard() {
+  const r = hlReady(), aw = hlActWeek(), am = aw.reduce((a, x) => a + x.min, 0), ci = hlCiStreak();
+  return `
+    <div class="card hl-ready">
+      <div class="hl-rd"><div class="hl-rd-ring">${hlRing(r ? r.v : 0, 100, r ? { good: "#97A13B", warn: "#e5a13c", bad: "#c24d5b" }[r.lv[1]] : "var(--bar)", 72)}<b>${r ? r.v : "–"}</b></div>
+        <div><span class="hl-pin-t" style="--hc:var(--tx-sec)">Sẵn sàng hôm nay</span><h3>${r ? r.lv[0] : "Chưa tính được"}</h3><small>${r ? esc(r.why.join(" · ")) : "Ghi giờ ngủ đêm qua để tính"}</small></div></div>
+      <div class="hl-rd"><div class="hl-rd-ring">${hlRing(am, 150, "#5f9e6e", 72)}<b>${am}</b></div>
+        <div><span class="hl-pin-t" style="--hc:var(--tx-sec)">Vận động tuần này</span><h3>${am}/150 phút</h3><small>Tính từ hoạt động trên lịch như gym, chạy, bơi, đi bộ</small></div></div>
+      <div class="hl-rd-ci"><button type="button" class="btn btn-primary" onclick="hlCheckin()">Check-in tối</button><small>${ci ? `Chuỗi ${ci} ngày` : "30 giây mỗi tối"}</small>
+        <div class="set-inline" style="justify-content:flex-start"><select id="hlCiTime" aria-label="Giờ nhắc check-in">${["19:00", "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00"].map(t => `<option ${t === hlCiT() ? "selected" : ""}>${t}</option>`).join("")}</select><button type="button" class="btn btn-sm" onclick="hlIcs()" title="Tải tệp lịch có nhắc lặp mỗi tối; mở trên iPhone để thêm vào app Lịch">Nhắc trên điện thoại</button></div></div>
+    </div>`;
+}
 function hlTodayCard() {
   const d = hlDay(tk) || {}, meds = hlMedsOn(tk), c = hlIsF() ? hlCycle() : null, pr = c ? hlPredict(tk, c) : null;
   const sy = hlSyList(), top = Object.entries(hlTopSy(30)).map(([k]) => k), show = [...new Set([...Object.keys(d.sy || {}), ...top, "met", "dau", "kho"])].filter(k => sy.some(s => s.k === k)).slice(0, 8);
   return `
     <div class="card hl-today">
-      <div class="card-header"><div><h2 class="card-title">Hôm nay</h2><div class="card-sub">${esc(dayDesc(tk).replace(/^Hôm nay · /, ""))}${pr ? ` · ${{ per: "Dự kiến hành kinh", fert: "Giai đoạn dễ thụ thai", ovu: "Dự kiến rụng trứng" }[pr]}` : ""}</div></div>
+      <div class="card-header"><div><h2 class="card-title">Hôm nay</h2><div class="card-sub">${esc(dayDesc(tk).replace(/^Hôm nay · /, ""))}${c && hlPhase(tk, c) ? ` · Giai đoạn ${HL_PHASE[hlPhase(tk, c)][0].toLowerCase()}` : pr ? ` · ${{ per: "Dự kiến hành kinh", fert: "Giai đoạn dễ thụ thai", ovu: "Dự kiến rụng trứng" }[pr]}` : ""}</div></div>
         <button type="button" class="btn btn-sm btn-primary" onclick="hlOpen('${tk}')">Ghi chi tiết</button></div>
       <div class="hl-q"><span class="hl-ql">Tâm trạng</span><div class="hl-scale">${[1, 2, 3, 4, 5].map(v => `<button type="button" class="hl-m m${v} ${d.mood === v ? "on" : ""}" aria-pressed="${d.mood === v}" onclick="hlSet('${tk}','mood', ${d.mood === v ? "null" : v})">${HL_MOOD[v]}</button>`).join("")}</div></div>
       <div class="hl-q"><span class="hl-ql">Triệu chứng</span><div class="hl-chips">${show.map(k => hlSyChip(tk, k, d)).join("")}<button type="button" class="hl-chip more" onclick="hlOpen('${tk}')">Khác…</button></div></div>
@@ -8811,6 +8882,8 @@ function hlPinned() {
   card("bd", "Cân nặng", w ? r1(w.v) + "<small> kg</small>" : "–", b && b.cat ? `BMI ${r1(b.v)} · ${b.cat[0]}` : w ? `ghi ${dm(w.k)}` : "chưa ghi", hlBars("w", 30, 0, "#97A13B", v => r1(v) + " kg"));
   const meds = hlMedsOn(tk), ad = meds.map(hlAdh).filter(Boolean);
   if (meds.length) { const g = ad.reduce((a, x) => a + x.got, 0), e = ad.reduce((a, x) => a + x.exp, 0); card("md", "Thuốc, TPCN", e ? Math.round(g / e * 100) + "<small>%</small>" : meds.length + "<small> loại</small>", e ? `đủ liều 7 ngày qua · ${meds.length} loại` : "đang dùng"); }
+  const aw = hlActWeek(), am = aw.reduce((a, x) => a + x.min, 0);
+  cards.push(`<button type="button" class="hl-pin" onclick="hlGo('browse','ac')" style="--hc:#5f9e6e"><span class="hl-pin-t">Vận động</span><b>${am}<small>/150 phút</small></b><small>tuần này · ${aw.filter(x => x.min).length} ngày có vận động</small><div class="hl-bars">${aw.map(x => `<i style="height:${x.min ? Math.max(6, Math.min(100, x.min / 60 * 100)) : 0}%; background:#5f9e6e" title="${dm(x.k)}: ${x.min} phút"></i>`).join("")}</div></button>`);
   if (hlIsF()) {
     const c = hlCycle();
     card("cy", "Chu kỳ", c.last ? (c.late ? "Trễ " + c.late + "<small> ngày</small>" : "Ngày " + c.day) : "–", c.last ? (c.late ? `dự kiến ${dm(c.next)}` : `kỳ tới ${dm(c.next)} · rụng trứng ${dm(c.ovu)}`) : "ghi ngày hành kinh để dự đoán");
@@ -8827,9 +8900,12 @@ V.hl = function () {
   else {
     const adv = hlAdvice();
     body = `${!p.dob || !p.sex ? `<div class="review-prompt-banner"><div><b>Thêm hồ sơ</b><div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Tên gọi, ngày sinh, giới tính, chiều cao, cân nặng: để tính BMI, chu kỳ và gợi ý cho đúng.</div></div><button type="button" class="btn btn-sm btn-primary" onclick="switchTab('me')">Mở hồ sơ</button></div>` : ""}
+      ${hlReadyCard()}
       ${hlTodayCard()}
       <div class="card"><div class="card-header"><div><h2 class="card-title">Điểm nổi bật</h2><div class="card-sub">Gợi ý theo nhật ký và lịch của bạn</div></div></div>${hlAdviceHTML(adv, hlAll ? 0 : 4)}</div>
-      <h3 class="hl-h">Đã ghim</h3>${hlPinned()}`;
+      <div class="card"><div class="card-header"><div><h2 class="card-title">Điều ảnh hưởng tới bạn</h2><div class="card-sub">So các ngày có và không có một hoạt động, thuốc, căng thẳng: 90 ngày qua</div></div></div>${hlInsHTML(hlInsights(), 4)}</div>
+      <h3 class="hl-h">Đã ghim</h3>${hlPinned()}
+      <div class="card hl-repcard"><div class="card-header"><div><h2 class="card-title">Báo cáo cho bác sĩ</h2><div class="card-sub">Tóm tắt 30 hoặc 90 ngày: thuốc, triệu chứng, tâm lý, giấc ngủ, chu kỳ. In, lưu PDF hoặc lưu tệp.</div></div><button type="button" class="btn btn-sm" onclick="hlReport()">Xem báo cáo</button></div></div>`;
   }
   return `<div class="hl">${hello}${seg}${body}</div>`;
 };
@@ -8860,14 +8936,14 @@ function hlSummary(k) {
 }
 // Chip trên thẻ ngày ở tab Lịch
 function hlChips(k, c) {
-  const d = hlDay(k), pr = hlPredict(k, c), out = [];
+  const d = hlDay(k), pr = hlPredict(k, c), out = [], disc = S.health && S.health.disc;
+  const r = k === tk ? hlReady() : null;
+  if (r) out.push(`<span class="hl-mini rd ${r.lv[1]}" title="Điểm Sẵn sàng: ${esc(r.why.join(", "))}">Sẵn sàng ${r.v}</span>`);
   if (d && d.mood) out.push(`<span class="hl-mini m${d.mood}">${HL_MOOD[d.mood]}</span>`);
   const n = d ? Object.keys(d.sy || {}).length : 0;
   if (n) out.push(`<span class="hl-mini sy" title="${esc(Object.keys(d.sy).map(hlSyName).join(", "))}">${n === 1 ? esc(hlSyName(Object.keys(d.sy)[0])) : n + " triệu chứng"}</span>`);
-  if (d && d.flow) out.push(`<span class="hl-mini fl">Hành kinh</span>`);
-  else if (pr === "per") out.push(`<span class="hl-mini pfl">Dự kiến hành kinh</span>`);
-  else if (pr === "ovu") out.push(`<span class="hl-mini pov">Dự kiến rụng trứng</span>`);
-  else if (pr === "fert") out.push(`<span class="hl-mini pov">Dễ thụ thai</span>`);
+  const cy = d && d.flow ? ["fl", "Hành kinh"] : pr === "per" ? ["pfl", "Dự kiến hành kinh"] : pr === "ovu" ? ["pov", "Dự kiến rụng trứng"] : pr === "fert" ? ["pov", "Dễ thụ thai"] : null;
+  if (cy) out.push(disc ? `<span class="hl-mini dot ${cy[0]}" aria-hidden="true"></span>` : `<span class="hl-mini ${cy[0]}">${cy[1]}</span>`);
   if (!out.length) return "";
   return `<button type="button" class="hl-day" onclick="event.stopPropagation(); hlOpen('${k}')" aria-label="Sức khỏe ${esc(dayDesc(k))}">${out.join("")}</button>`;
 }
@@ -8879,13 +8955,25 @@ function hlCatHTML(cat) {
   const back = `<div class="hl-back"><button type="button" class="btn btn-sm btn-ghost" onclick="hlGo('browse')">‹ Duyệt</button><h2 class="card-title" style="--hc:${c[2]}">${c[1]}</h2></div>`;
   const advC = adv.length ? `<div class="card">${hlAdviceHTML(adv, 0)}</div>` : "";
   let main = "";
-  if (cat === "sy") {
+  if (cat === "ac") {
+    const aw = hlActWeek(), am = aw.reduce((a, x) => a + x.min, 0);
+    const weeks = [...Array(8)].map((_, i) => { const end = hlKAdd(monKey(tk), -7 * (7 - i)); const w = hlActWeek(end); return { k: monKey(end), min: w.reduce((a, x) => a + x.min, 0) }; });
+    const list = aw.flatMap(x => (S.ev[x.k] || []).filter(e => x.k <= tk && hlIsAct(e.t)).map(e => `${dm(x.k)} · ${esc(e.t)} · ${Math.round(e.h * 60)} phút`));
+    main = `<div class="card"><div class="card-header"><div><h3 class="card-title">Tuần này: ${am}/150 phút</h3><div class="card-sub">WHO khuyến nghị ít nhất 150 phút vận động vừa mỗi tuần (hoặc 75 phút vận động mạnh)</div></div>${hlRing(am, 150, c[2], 64)}</div>
+        <div class="hl-bars">${aw.map(x => `<i style="height:${x.min ? Math.max(6, Math.min(100, x.min / 90 * 100)) : 0}%; background:${c[2]}" title="${dm(x.k)}: ${x.min} phút"></i>`).join("")}</div>
+        <div class="hl-legend">${aw.map(x => `<span style="flex:1; text-align:center">${DN_SHORT[dow(new Date(x.k + "T00:00"))]}</span>`).join("")}</div>
+        ${list.length ? `<p class="set-note">${list.join("<br>")}</p>` : `<p class="set-note">Chưa có hoạt động vận động nào tuần này.</p>`}</div>
+      <div class="card"><div class="card-header"><div><h3 class="card-title">8 tuần gần nhất</h3><div class="card-sub">Vạch là số phút mỗi tuần, mốc 150</div></div></div>
+        <div class="hl-bars">${weeks.map(w => `<i style="height:${w.min ? Math.max(6, Math.min(100, w.min / 300 * 100)) : 0}%; background:${w.min >= 150 ? c[2] : "#e5a13c"}" title="Tuần từ ${dm(w.k)}: ${w.min} phút"></i>`).join("")}</div>
+        <p class="hl-disc">Tự nhận hoạt động có tên như gym, chạy bộ, bơi, yoga, đi bộ, đạp xe, cầu lông, đá bóng, tennis, pilates, leo núi, nhảy dây, khiêu vũ. Số phút lấy từ thời lượng trên lịch.</p></div>`;
+  } else if (cat === "sy") {
     const f = {};
     ks.forEach(k => Object.entries((days[k] || {}).sy || {}).forEach(([s, v]) => { (f[s] = f[s] || [0, 0, 0, 0])[v]++; f[s][0]++; }));
     const rows = Object.entries(f).sort((a, b) => b[1][0] - a[1][0]);
     main = `<div class="card"><div class="card-header"><div><h3 class="card-title">Số ngày có triệu chứng</h3></div>${hlRangeSeg()}</div>
       ${rows.length ? `<div class="hl-tbl">${rows.map(([s, a]) => `<div class="hl-tr"><b>${esc(hlSyName(s))}</b><span class="hl-meter"><i style="width:${Math.min(100, a[0] / ks.length * 100 * 3)}%"></i></span><span>${a[0]} ngày${a[3] ? ` · ${a[3]} nặng` : ""}</span></div>`).join("")}</div>` : `<p class="set-note">Không có triệu chứng nào trong khoảng này.</p>`}
       </div>
+      <div class="card"><div class="card-header"><div><h3 class="card-title">Điều đi cùng triệu chứng</h3><div class="card-sub">90 ngày qua</div></div></div>${hlInsHTML(hlInsights().filter(x => x.kind === "sy"), 0, "Chưa thấy hoạt động, thuốc hay căng thẳng nào đi cùng triệu chứng rõ ràng.")}</div>
       <div class="card"><div class="card-header"><div><h3 class="card-title">Triệu chứng tự thêm</h3><div class="card-sub">Ngoài danh sách có sẵn</div></div></div>
         <div class="set-row"><input id="hlNewSy" maxlength="40" placeholder="vd: Đau răng" aria-label="Tên triệu chứng" onkeydown="enterKey(event, () => hlAddSy())"><button type="button" class="btn btn-sm" onclick="hlAddSy()">Thêm</button></div>
         ${(S.health && S.health.syc || []).map(x => `<div class="set-row"><span class="set-lbl">${esc(x.n)}</span><button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad)" onclick="hlDelSy('${x.id}')">Xóa</button></div>`).join("")}
@@ -8894,6 +8982,7 @@ function hlCatHTML(cat) {
     const chk = Object.entries(S.health && S.health.chk || {}).sort((a, b) => b[0].localeCompare(a[0])).slice(0, 8);
     main = `<div class="card"><div class="card-header"><div><h3 class="card-title">Tâm trạng</h3><div class="card-sub">1 = rất tệ · 5 = rất tốt</div></div>${hlRangeSeg()}</div>${hlBars("mood", n, 5, c[2], v => r1(v) + "/5")}
       <div class="card-sub">Căng thẳng (1 thấp · 3 cao)</div>${hlBars("stress", n, 3, "#c24d5b", v => r1(v))}</div>
+      <div class="card"><div class="card-header"><div><h3 class="card-title">Điều ảnh hưởng tới tâm trạng</h3><div class="card-sub">90 ngày qua</div></div></div>${hlInsHTML(hlInsights().filter(x => x.kind === "mood"), 0, "Chưa thấy yếu tố nào làm tâm trạng khác rõ. Ghi đều thêm vài tuần.")}</div>
       <div class="card"><div class="card-header"><div><h3 class="card-title">Kiểm tra nhanh 4 câu</h3><div class="card-sub">PHQ-2 (trầm cảm) và GAD-2 (lo âu), nên làm 2 tuần một lần</div></div><button type="button" class="btn btn-sm btn-primary" onclick="hlChkOpen()">Làm bài</button></div>
         ${chk.length ? chk.map(([k, x]) => `<div class="set-row"><span class="set-lbl">${esc(dayDesc(k))}</span><span class="set-val">PHQ-2 <b class="${x.p[0] + x.p[1] >= 3 ? "hl-hi" : ""}">${x.p[0] + x.p[1]}</b>/6 · GAD-2 <b class="${x.g[0] + x.g[1] >= 3 ? "hl-hi" : ""}">${x.g[0] + x.g[1]}</b>/6</span></div>`).join("") : `<p class="set-note">Chưa làm lần nào.</p>`}
         <p class="hl-disc">Đây là bài sàng lọc, không phải chẩn đoán. Từ 3 điểm trở lên ở một phần: nên gặp bác sĩ hoặc chuyên gia tâm lý. Nếu có ý nghĩ làm hại bản thân, gọi 115 hoặc đến cơ sở y tế gần nhất ngay.</p></div>`;
@@ -8919,8 +9008,12 @@ function hlCatHTML(cat) {
     main = `<div class="card"><div class="card-header"><div><h3 class="card-title">${cy.last ? (cy.late ? `Trễ kinh ${cy.late} ngày` : `Ngày ${cy.day} của chu kỳ`) : "Chưa có dữ liệu"}</h3><div class="card-sub">${cy.last ? `Kỳ tới ${dm(cy.next)} · rụng trứng khoảng ${dm(cy.ovu)} · dễ thụ thai ${dm(cy.fert[0])}–${dm(cy.fert[1])}` : "Ghi ngày hành kinh ở Ghi hôm nay"}</div></div><button type="button" class="btn btn-sm btn-primary" onclick="hlOpen('${tk}')">Ghi hôm nay</button></div>
         <div class="hl-cal">${strip}</div>
         <div class="hl-legend"><span class="hl-cd fl"></span>Hành kinh <span class="hl-cd per"></span>Dự kiến <span class="hl-cd fert"></span>Dễ thụ thai <span class="hl-cd ovu"></span>Rụng trứng</div>
-        <p class="hl-disc">Dự đoán theo lịch: kỳ tới = kỳ gần nhất + độ dài chu kỳ; rụng trứng khoảng 14 ngày trước kỳ tới. Không dùng để tránh thai.</p></div>
+        <p class="hl-disc">${cy.src === "lh" ? "Rụng trứng theo que thử LH dương tính (khoảng 1 ngày sau), kỳ tới ≈ 14 ngày sau rụng trứng." : cy.src === "bbt" ? "Rụng trứng theo nhiệt độ buổi sáng tăng từ 0,2°C trong 3 ngày liền, kỳ tới ≈ 14 ngày sau rụng trứng." : "Dự đoán theo lịch: kỳ tới = kỳ gần nhất + độ dài chu kỳ; rụng trứng khoảng 14 ngày trước kỳ tới. Ghi que thử LH hoặc nhiệt độ buổi sáng để chính xác hơn."} Không dùng để tránh thai.</p></div>
+      ${cy.last && hlPhase(tk, cy) ? `<div class="card"><div class="card-header"><div><h3 class="card-title">Giai đoạn ${HL_PHASE[hlPhase(tk, cy)][0].toLowerCase()}</h3><div class="card-sub">${HL_PHASE[hlPhase(tk, cy)][1]}</div></div></div>
+        <div class="hl-phases">${Object.entries(HL_PHASE).map(([k2, v]) => `<span class="${k2 === hlPhase(tk, cy) ? "on" : ""}">${v[0]}</span>`).join("")}</div></div>` : ""}
+      ${hlPms().length ? `<div class="card"><div class="card-header"><div><h3 class="card-title">Trước kỳ kinh hay gặp</h3><div class="card-sub">Trong 5 ngày trước kỳ kinh, các kỳ gần đây</div></div></div>${hlPms().map(x => `<div class="set-row"><span class="set-lbl">${esc(hlSyName(x.s))}</span><span class="set-val">${x.hit}/${x.of} kỳ</span></div>`).join("")}</div>` : ""}
       <div class="card"><div class="card-header"><div><h3 class="card-title">Độ dài chu kỳ</h3><div class="card-sub">${cy.auto ? `Tự tính: trung bình ${cy.len} ngày từ ${cy.lens.length} chu kỳ đã ghi` : `Theo số bạn nhập (${cfg.len} ngày)${cfg.auto !== false ? " · cần ghi ít nhất 3 kỳ để tự tính" : ""}`}</div></div></div>
+        <div class="set-row"><label class="set-lbl" for="hlDisc">Kín đáo trên Lịch<small>Chỉ hiện chấm màu, không hiện chữ hành kinh, rụng trứng</small></label><input type="checkbox" role="switch" class="set-switch" id="hlDisc" ${hlH().disc ? "checked" : ""} onchange="hlH().disc = this.checked || undefined; if (!this.checked) delete hlH().disc; save(); draw()"></div>
         <div class="set-row"><span class="set-lbl">Cách tính</span><div class="set-seg"><button type="button" class="${cfg.auto !== false ? "on" : ""}" onclick="hlCyc('auto', true)">Tự động</button><button type="button" class="${cfg.auto === false ? "on" : ""}" onclick="hlCyc('auto', false)">Theo số tôi nhập</button></div></div>
         <div class="set-row"><label class="set-lbl" for="hlCycLen">Độ dài chu kỳ (ngày)<small>Từ ngày đầu kỳ này tới ngày đầu kỳ sau, thường 21–35</small></label><input id="hlCycLen" type="number" min="15" max="60" value="${cfg.len}" onchange="hlCyc('len', this.value)"></div>
         <div class="set-row"><label class="set-lbl" for="hlCycPer">Số ngày hành kinh</label><input id="hlCycPer" type="number" min="1" max="12" value="${cfg.per}" onchange="hlCyc('per', this.value)"></div>
@@ -8934,6 +9027,12 @@ function hlSetNum(k, f, v, lo, hi) {
   if (String(v).trim() === "") { hlSet(k, f, null); return; }
   if (x === null || x < lo || x > hi) { showToast(`Nhập số từ ${lo} đến ${hi}`, "bad"); draw(); return; }
   hlSet(k, f, Math.round(x * 10) / 10);
+}
+function hlSetTemp(k, v) {
+  const x = hlNum(v);
+  if (String(v).trim() === "") { hlSet(k, "temp", null); return; }
+  if (x === null || x < 34 || x > 43) { showToast("Nhập nhiệt độ từ 34 đến 43°C", "bad"); hlRender(); return; }
+  hlSet(k, "temp", Math.round(x * 100) / 100);
 }
 function hlCyc(f, v) {
   const c = hlH().cyc;
@@ -8986,6 +9085,8 @@ function hlRender() {
   const b = $("hlBody");
   if (hlEd.mode === "med") return hlMedRender();
   if (hlEd.mode === "chk") return hlChkRender();
+  if (hlEd.mode === "ci") return hlCiRender();
+  if (hlEd.mode === "rep") return hlRepRender();
   const k = hlEd.k, d = hlDay(k) || {}, meds = hlMedsOn(k);
   $("hlTitle").textContent = "Sức khỏe · " + dayDesc(k);
   const scale = (f, labels, cls) => `<div class="hl-scale">${labels.map((lb, v) => v ? `<button type="button" class="hl-m ${cls}${v} ${d[f] === v ? "on" : ""}" aria-pressed="${d[f] === v}" onclick="hlSet('${k}','${f}', ${d[f] === v ? "null" : v})">${lb}</button>` : "").join("")}</div>`;
@@ -9005,7 +9106,12 @@ function hlRender() {
         <button type="button" class="btn btn-sm" onclick="hlSet('${k}','sleep', Math.min(24, ${d.sleep != null ? d.sleep : 7} + 0.5))">+0,5</button></div></div>
       <div class="hl-q"><span class="hl-ql">Triệu chứng <small>bấm để đổi mức: nhẹ → vừa → nặng → bỏ</small></span><div class="hl-chips">${hlSyList().map(s => hlSyChip(k, s.k, d)).join("")}</div></div>
       ${meds.length ? `<div class="hl-q"><span class="hl-ql">Thuốc, thực phẩm chức năng</span><div class="hl-chips">${meds.map(m => hlMedChip(k, m, d)).join("")}</div></div>` : `<div class="hl-q"><span class="hl-ql">Thuốc, thực phẩm chức năng</span><button type="button" class="btn btn-sm" onclick="hlMedOpen()">Thêm thuốc hoặc TPCN</button></div>`}
-      ${hlIsF() ? `<div class="hl-q"><span class="hl-ql">Hành kinh</span>${scale("flow", HL_FLOW, "fl f")}</div>` : ""}
+      ${hlIsF() ? `<div class="hl-q"><span class="hl-ql">Hành kinh</span>${scale("flow", HL_FLOW, "fl f")}</div>
+      <div class="hl-q"><span class="hl-ql">Dịch âm đạo <small>giúp nhận biết giai đoạn dễ thụ thai</small></span>${scale("mucus", HL_MUCUS, "u")}</div>
+      <div class="hl-q hl-2">
+        <label class="hl-ql">Nhiệt độ buổi sáng (°C)<input type="text" inputmode="decimal" value="${d.temp != null ? String(d.temp).replace(".", ",") : ""}" placeholder="vd: 36,45" onchange="hlSetTemp('${k}', this.value)"></label>
+        <span class="hl-ql">Que thử rụng trứng (LH)<span class="hl-scale">${[[1, "Âm tính"], [2, "Dương tính"]].map(([v, lb]) => `<button type="button" class="hl-m ${d.lh === v ? "on" : ""}" aria-pressed="${d.lh === v}" onclick="hlSet('${k}','lh', ${d.lh === v ? "null" : v})">${lb}</button>`).join("")}</span></span>
+      </div>` : ""}
       <div class="hl-q hl-2">
         <label class="hl-ql">Cân nặng (kg)<input type="text" inputmode="decimal" value="${d.w != null ? r1(d.w) : ""}" placeholder="${(hlLast("w", k) || {}).v != null ? r1(hlLast("w", k).v) : "vd: 58,5"}" onchange="hlSetNum('${k}','w', this.value, 2, 500)"></label>
         <label class="hl-ql">Chiều cao (cm)<input type="text" inputmode="decimal" value="${d.ht != null ? r1(d.ht) : ""}" placeholder="${(hlLast("ht", k) || {}).v != null ? r1(hlLast("ht", k).v) : "vd: 165"}" onchange="hlSetNum('${k}','ht', this.value, 30, 260)"></label>
@@ -9106,11 +9212,12 @@ function hlChkSave() {
 // Tổng kết tuần: sức khỏe của tuần
 function hlWeekHTML(ws) {
   const ks = [0, 1, 2, 3, 4, 5, 6].map(j => ky(ad(ws, j))).filter(k => k <= tk), days = S.health && S.health.days || {};
-  if (!ks.some(k => days[k])) return "";
+  if (!ks.some(k => days[k]) && !hlActWeek(ky(ws)).some(x => x.min)) return "";
   const md = hlAvg(ks, "mood"), sl = hlAvg(ks, "sleep"), f = {};
   ks.forEach(k => Object.keys((days[k] || {}).sy || {}).forEach(s => { f[s] = (f[s] || 0) + 1; }));
   const top = Object.entries(f).sort((a, b) => b[1] - a[1]).slice(0, 3);
-  return `<div class="hl-wk">${md ? `<span>Tâm trạng <b>${r1(md.v)}/5</b></span>` : ""}${sl ? `<span>Ngủ <b>${r1(sl.v)}h</b> mỗi đêm</span>` : ""}<span>${top.length ? "Triệu chứng: " + top.map(([s, n]) => `<b>${esc(hlSyName(s))}</b> ${n} ngày`).join(", ") : "Không có triệu chứng"}</span></div>`;
+  const am = hlActWeek(ky(ws)).reduce((a, x) => a + x.min, 0);
+  return `<div class="hl-wk"><span>Vận động <b>${am}/150</b> phút</span>${md ? `<span>Tâm trạng <b>${r1(md.v)}/5</b></span>` : ""}${sl ? `<span>Ngủ <b>${r1(sl.v)}h</b> mỗi đêm</span>` : ""}<span>${top.length ? "Triệu chứng: " + top.map(([s, n]) => `<b>${esc(hlSyName(s))}</b> ${n} ngày`).join(", ") : "Không có triệu chứng"}</span></div>`;
 }
 
 /* ---------- Tab Tôi: hồ sơ, loại vốn, cài đặt ---------- */
@@ -9135,6 +9242,13 @@ V.me = function () {
       <div class="set-row"><label class="set-lbl" for="meSync">Đồng bộ dữ liệu sức khỏe<small>${p.hSync === false ? "Tắt: nhật ký sức khỏe chỉ nằm trên máy này, không gửi lên tài khoản" : "Bật: nhật ký sức khỏe đi cùng tài khoản để iPhone và máy tính cùng thấy. Không bao giờ gửi sang Google Calendar."}</small></label>
         <input type="checkbox" role="switch" class="set-switch" id="meSync" ${p.hSync === false ? "" : "checked"} onchange="hpSync(this.checked)"></div>
     </div>
+    <div class="card me-card">
+      <div class="card-header"><div><h2 class="card-title">Thẻ y tế khẩn cấp</h2><div class="card-sub">Hiện trong Báo cáo cho bác sĩ. Thuộc nhật ký sức khỏe, theo công tắc đồng bộ ở trên.</div></div></div>
+      <div class="set-row"><label class="set-lbl" for="meBlood">Nhóm máu</label><select id="meBlood" onchange="hlMidSet('blood', this.value)">${HL_BLOOD.map(v => `<option value="${v}" ${((S.health || {}).mid || {}).blood === v || (!v && !((S.health || {}).mid || {}).blood) ? "selected" : ""}>${v || "Chưa rõ"}</option>`).join("")}</select></div>
+      <div class="set-row set-stack"><label class="set-lbl" for="meAllergy">Dị ứng<small>Thuốc, thức ăn…</small></label><input id="meAllergy" type="text" maxlength="200" value="${esc(((S.health || {}).mid || {}).allergy || "")}" placeholder="vd: Penicillin, hải sản" onchange="hlMidSet('allergy', this.value)"></div>
+      <div class="set-row set-stack"><label class="set-lbl" for="meCond">Bệnh nền</label><input id="meCond" type="text" maxlength="200" value="${esc(((S.health || {}).mid || {}).cond || "")}" placeholder="vd: Hen suyễn" onchange="hlMidSet('cond', this.value)"></div>
+      <div class="set-row set-stack"><label class="set-lbl" for="meEc">Liên hệ khẩn cấp<small>Tên và số điện thoại</small></label><input id="meEc" type="text" maxlength="200" value="${esc(((S.health || {}).mid || {}).ec || "")}" placeholder="vd: Mẹ · 0912 345 678" onchange="hlMidSet('ec', this.value)"></div>
+    </div>
     ${V.set()}
     <div class="card"><div class="card-header"><div><h2 class="card-title">Cài đặt</h2><div class="card-sub">Giao diện, mặc định, đồng bộ, dữ liệu, Google Calendar</div></div><button type="button" class="btn btn-sm btn-primary" onclick="openSettingsModal()">Mở Cài đặt</button></div></div>`;
 };
@@ -9154,6 +9268,280 @@ async function hpSync(on) {
 }
 // Dữ liệu gửi lên tài khoản: bỏ nhật ký sức khỏe khi người dùng tắt đồng bộ phần này
 const cloudView = st => st && st.profile && st.profile.hSync === false ? { ...st, health: undefined } : st;
+
+/* ---------- Sức khỏe, phần 2 (20/10): mối liên hệ, check-in tối, giai đoạn chu kỳ, báo cáo cho bác sĩ,
+   vận động trong tuần và điểm Sẵn sàng. Vẫn là quy tắc và thống kê đơn giản, không gọi AI. ---------- */
+
+// 1. Mối liên hệ: so các ngày có một yếu tố với các ngày không có, trong 90 ngày đã ghi nhật ký.
+// Chỉ kết luận khi mỗi bên có ít nhất 4 ngày và chênh lệch đủ lớn, để không đọc ra quy luật từ ngẫu nhiên.
+const HL_MIN = 4;
+function hlFactors(ks) {
+  const F = new Map(), names = new Map();
+  const add = (key, lb, k, act) => { let f = F.get(key); if (!f) F.set(key, f = { lb, act: !!act, days: new Set() }); f.days.add(k); };
+  ks.forEach(k => {
+    const seen = new Set();
+    (S.ev[k] || []).forEach(e => {
+      const f = hbFold(e.t);
+      if (!f || seen.has(f)) return;
+      seen.add(f);
+      add("a:" + f, "", k, true);
+      const m = names.get(f) || new Map();
+      m.set(e.t, (m.get(e.t) || 0) + 1);
+      names.set(f, m);
+    });
+    const d = hlDay(k) || {};
+    if (d.sleep != null && d.sleep < 6.5) add("sl", "ngủ dưới 6,5 tiếng", k);
+    if (d.stress === 3) add("st", "căng thẳng cao", k);
+    Object.keys(d.meds || {}).forEach(id => { const m = (S.health.meds || []).find(x => x.id === id); if (m) add("m:" + id, "dùng " + m.n, k); });
+  });
+  names.forEach((m, f) => { F.get("a:" + f).lb = [...m].sort((a, b) => b[1] - a[1])[0][0]; });
+  return F;
+}
+function hlInsights(nDays = 90) {
+  const days = S.health && S.health.days || {};
+  const ks = hlRange(nDays).filter(k => days[k]);
+  if (ks.length < 2 * HL_MIN) return [];
+  const F = hlFactors(ks), out = [], sk = new Set();
+  ks.forEach(k => Object.keys(days[k].sy || {}).forEach(s => sk.add(s)));
+  F.forEach((f, key) => {
+    const inD = ks.filter(k => f.days.has(k)), outD = ks.filter(k => !f.days.has(k));
+    if (inD.length < HL_MIN || outD.length < HL_MIN) return;
+    const on = f.act ? `có <b>${esc(f.lb)}</b>` : `<b>${esc(f.lb)}</b>`;
+    const a = inD.map(k => days[k].mood).filter(Boolean), b = outD.map(k => days[k].mood).filter(Boolean);
+    if (a.length >= HL_MIN && b.length >= HL_MIN) {
+      const ma = hlMean(a), mb = hlMean(b);
+      if (Math.abs(ma - mb) >= 0.6) out.push({ kind: "mood", key, good: ma > mb, w: Math.abs(ma - mb) / 4, n: a.length, t: `Ngày ${on}: tâm trạng ${r1(ma)}/5, ngày khác ${r1(mb)}/5 (${a.length} và ${b.length} ngày)` });
+    }
+    if (key === "sl") return; // ngủ ít đi cùng triệu chứng đã có ở Điểm nổi bật
+    sk.forEach(s => {
+      const ai = inD.filter(k => (days[k].sy || {})[s]).length, bi = outD.filter(k => (days[k].sy || {})[s]).length;
+      const pa = ai / inD.length, pb = bi / outD.length;
+      if (ai >= 3 && pa - pb >= 0.25 && pa >= 2 * pb) out.push({ kind: "sy", key, s, good: false, w: pa - pb, n: inD.length, t: `<b>${esc(hlSyName(s))}</b> vào ${ai}/${inD.length} ngày ${on} (${Math.round(pa * 100)}%), ngày khác ${bi}/${outD.length} (${Math.round(pb * 100)}%)` });
+      else if (bi >= 3 && pb - pa >= 0.25 && pb >= 2 * pa) out.push({ kind: "sy", key, s, good: true, w: pb - pa, n: inD.length, t: `<b>${esc(hlSyName(s))}</b> ít hơn vào ngày ${on}: ${ai}/${inD.length} ngày (${Math.round(pa * 100)}%), ngày khác ${Math.round(pb * 100)}%` });
+    });
+  });
+  return out.sort((x, y) => y.w - x.w);
+}
+function hlInsHTML(list, limit, empty) {
+  if (!list.length) return `<p class="set-note">${empty || "Chưa thấy mối liên hệ rõ. Cần ít nhất 8 ngày nhật ký; mỗi yếu tố cần xuất hiện và vắng mặt ít nhất 4 ngày."}</p>`;
+  return `<div class="hl-adv">${list.slice(0, limit || 99).map(x => `<div class="hl-a ${x.good ? "good" : "warn"}"><span>${x.t}</span></div>`).join("")}</div>
+    <p class="hl-disc">Đi cùng nhau chưa chắc là nguyên nhân. Dùng để thử điều chỉnh, ví dụ bớt một hoạt động vài tuần rồi xem lại.</p>`;
+}
+
+// 2. Check-in tối: 4 bước ngắn, mỗi bước một màn; nhắc bằng sự kiện lặp trên lịch điện thoại (.ics)
+const HL_CI = ["mood", "sy", "body", "meds", "done"];
+function hlCheckin() {
+  hlEd = { mode: "ci", k: tk, step: 0 };
+  LF = document.activeElement;
+  $("hlOverlay").classList.add("open");
+  hlRender();
+}
+function hlCiSteps() { return HL_CI.filter(s => s !== "meds" || hlMedsOn(tk).length); }
+function hlCiGo(d) {
+  const st = hlCiSteps(), i = Math.max(0, Math.min(st.length - 1, st.indexOf(HL_CI[hlEd.step]) + d));
+  hlEd.step = HL_CI.indexOf(st[i]);
+  hlRender();
+}
+function hlCiStreak() {
+  let n = 0;
+  for (let k = hlDay(tk) ? tk : hlKAdd(tk, -1); hlDay(k); k = hlKAdd(k, -1)) n++;
+  return n;
+}
+function hlCiRender() {
+  const k = tk, d = hlDay(k) || {}, st = hlCiSteps(), cur0 = HL_CI[hlEd.step], i = st.indexOf(cur0);
+  const nav = (next = "Tiếp") => `<div class="hl-acts"><span class="hl-saved">Bước ${i + 1}/${st.length}</span><div class="row" style="gap:6px;">${i ? `<button type="button" class="btn btn-ghost" onclick="hlCiGo(-1)">Quay lại</button>` : ""}<button type="button" class="btn btn-primary" id="hlDone" onclick="${cur0 === "done" ? "closeHl()" : "hlCiGo(1)"}">${next}</button></div></div>`;
+  let body = "";
+  if (cur0 === "mood") body = `<h4 class="hl-ci-q">Hôm nay của bạn thế nào?</h4><div class="hl-scale hl-ci-big">${[1, 2, 3, 4, 5].map(v => `<button type="button" class="hl-m m${v} ${d.mood === v ? "on" : ""}" aria-pressed="${d.mood === v}" onclick="hlGet(tk).mood=${v}; hlTouch(tk); hlCiGo(1)">${HL_MOOD[v]}</button>`).join("")}</div>${nav()}`;
+  else if (cur0 === "sy") body = `<h4 class="hl-ci-q">Có triệu chứng nào không?</h4><div class="hl-chips">${hlSyList().map(s => hlSyChip(k, s.k, d)).join("")}</div>
+    <div class="hl-acts"><span class="hl-saved">Bước ${i + 1}/${st.length} · bấm nhiều lần để đổi mức</span><div class="row" style="gap:6px;"><button type="button" class="btn btn-ghost" onclick="hlCiGo(-1)">Quay lại</button>${Object.keys(d.sy || {}).length ? `<button type="button" class="btn btn-primary" id="hlDone" onclick="hlCiGo(1)">Tiếp</button>` : `<button type="button" class="btn btn-primary" id="hlDone" onclick="hlCiGo(1)">Không có</button>`}</div></div>`;
+  else if (cur0 === "body") body = `<h4 class="hl-ci-q">Giấc ngủ và căng thẳng</h4>
+    <div class="hl-q"><label class="hl-ql" for="hlSleep">Ngủ đêm qua (giờ)</label><div class="set-inline" style="justify-content:flex-start"><button type="button" class="btn btn-sm" onclick="hlSet(tk,'sleep', Math.max(0, ${d.sleep != null ? d.sleep : 7} - 0.5))">−0,5</button><input id="hlSleep" type="text" inputmode="decimal" value="${d.sleep != null ? r1(d.sleep) : ""}" placeholder="vd: 7,5" onchange="hlSetNum(tk,'sleep', this.value, 0, 24)" style="width:80px; text-align:center"><button type="button" class="btn btn-sm" onclick="hlSet(tk,'sleep', Math.min(24, ${d.sleep != null ? d.sleep : 7} + 0.5))">+0,5</button></div></div>
+    <div class="hl-q"><span class="hl-ql">Căng thẳng hôm nay</span><div class="hl-scale">${[1, 2, 3].map(v => `<button type="button" class="hl-m s${v} ${d.stress === v ? "on" : ""}" aria-pressed="${d.stress === v}" onclick="hlSet(tk,'stress', ${d.stress === v ? "null" : v})">${HL_STRESS[v]}</button>`).join("")}</div></div>${nav()}`;
+  else if (cur0 === "meds") body = `<h4 class="hl-ci-q">Thuốc, thực phẩm chức năng hôm nay</h4><div class="hl-chips">${hlMedsOn(k).map(m => hlMedChip(k, m, d)).join("")}</div>${nav()}`;
+  else {
+    const r = hlReady(hlKAdd(tk, 0)), top = hlAdvice().filter(a => a.lv !== "good")[0], n = hlCiStreak();
+    body = `<h4 class="hl-ci-q">Đã ghi xong hôm nay</h4><p class="set-note">${hlSummary(k) || "Chưa ghi gì"}</p>
+      <div class="hl-ci-res"><span>Chuỗi check-in <b>${n}</b> ngày</span>${r ? `<span>Điểm Sẵn sàng <b>${r.v}</b></span>` : ""}</div>
+      ${top ? `<div class="hl-adv"><div class="hl-a ${top.lv}"><b>${top.t}</b><span>${top.d}</span></div></div>` : ""}${nav("Xong")}`;
+  }
+  $("hlTitle").textContent = "Check-in tối · " + dayDesc(k).replace(/^Hôm nay · /, "");
+  $("hlBody").innerHTML = `<div class="hl-sheet hl-ci">${body}</div>`;
+}
+// Lời nhắc ở tab Lịch sau 19h nếu hôm nay chưa check-in (người đã dùng Sức khỏe)
+function checkinNotice() {
+  const days = S.health && S.health.days || {};
+  if (new Date().getHours() < 19 || (hlDay(tk) || {}).mood || !hlRange(14).some(k => days[k])) return "";
+  let skip = "";
+  try { skip = localStorage.getItem("lc_ci_skip") || ""; } catch (e) {}
+  if (skip === tk || sel !== CW) return "";
+  return `
+    <div class="review-prompt-banner">
+      <div><b>Check-in sức khỏe tối nay</b><div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">30 giây: tâm trạng, triệu chứng, giấc ngủ.</div></div>
+      <div class="row" style="gap:6px;"><button type="button" class="btn btn-sm btn-ghost" onclick="try { localStorage.setItem('lc_ci_skip', tk); } catch (e) {} draw()">Để sau</button><button type="button" class="btn btn-sm btn-primary" onclick="hlCheckin()">Bắt đầu</button></div>
+    </div>`;
+}
+// Tệp lịch (.ics) có sự kiện lặp mỗi ngày kèm báo: mở trên iPhone là thêm vào app Lịch
+async function hlIcs() {
+  const t = (($("hlCiTime") || {}).value || "21:00").replace(":", ""), d = tk.replace(/-/g, "");
+  try { localStorage.setItem("lc_ci_time", (($("hlCiTime") || {}).value || "21:00")); } catch (e) {}
+  const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Life Capital//VI", "CALSCALE:GREGORIAN", "BEGIN:VEVENT",
+    "UID:lc-checkin-" + Date.now().toString(36) + "@lifecapital", "DTSTAMP:" + new Date().toISOString().replace(/[-:]/g, "").slice(0, 15) + "Z",
+    `DTSTART:${d}T${t}00`, `DTEND:${d}T${t.slice(0, 2)}${String(Math.min(59, +t.slice(2) + 5)).padStart(2, "0")}00`, "RRULE:FREQ=DAILY",
+    "SUMMARY:Check-in sức khỏe (Life Capital)", "DESCRIPTION:Mở Life Capital › Sức khỏe › Check-in tối: tâm trạng\\, triệu chứng\\, giấc ngủ (30 giây).",
+    "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:Check-in sức khỏe", "TRIGGER:PT0M", "END:VALARM", "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+  if (await saveFile("life-capital-checkin.ics", ics, "text/calendar")) showToast("Mở tệp vừa tải để thêm nhắc vào lịch điện thoại", "ok");
+}
+
+// 3. Chu kỳ theo giai đoạn; tín hiệu rụng trứng (nhiệt độ sáng, dịch, que thử LH); dấu hiệu tiền kinh nguyệt; chế độ kín đáo
+const HL_MUCUS = ["", "Khô", "Dính", "Như kem", "Trong và dai"];
+const HL_PHASE = {
+  kinh: ["Hành kinh", "Chườm ấm bụng dưới, ngủ sớm, ăn thêm thực phẩm giàu sắt (thịt đỏ, rau xanh đậm, đậu)."],
+  nang: ["Nang noãn", "Năng lượng thường tăng dần: hợp với buổi tập nặng hơn và việc cần tập trung."],
+  rung: ["Rụng trứng", "Giai đoạn dễ thụ thai nhất. Có thể thấy dịch trong và dai, hơi đau một bên bụng dưới."],
+  hoang: ["Hoàng thể", "Gần cuối giai đoạn dễ mệt, căng ngực, dễ cáu: ngủ đủ, bớt muối và cà phê, vận động nhẹ."]
+};
+// Ngày rụng trứng của chu kỳ hiện tại theo tín hiệu: que LH dương (rụng ~1 ngày sau) hoặc nhiệt độ tăng ≥0,2°C 3 ngày liền
+function hlOvuSignal(last) {
+  const days = S.health && S.health.days || {}, ks = Object.keys(days).filter(k => k >= last && k <= tk).sort();
+  const lh = ks.find(k => days[k].lh === 2);
+  if (lh) return { k: hlKAdd(lh, 1), src: "lh" };
+  const tp = ks.filter(k => days[k].temp != null);
+  for (let i = 6; i + 2 < tp.length; i++) {
+    const base = Math.max(...tp.slice(i - 6, i).map(k => days[k].temp));
+    if ([0, 1, 2].every(j => days[tp[i + j]].temp >= base + 0.2)) return { k: hlKAdd(tp[i], -1), src: "bbt" };
+  }
+  return null;
+}
+function hlPhase(k, c = hlCycle()) {
+  if (!hlIsF() || !c.last) return null;
+  const d = hlDay(k);
+  if (d && d.flow) return "kinh";
+  const st = c.starts.filter(s => s <= k).pop();
+  if (!st) return null;
+  const nx = c.starts.find(s => s > st) || c.next, len = hlDiff(st, nx), n = hlDiff(st, k) + 1;
+  if (n > len + 7) return null; // trễ lâu: không đoán giai đoạn
+  const ov = st === c.last && c.ovu ? hlDiff(st, c.ovu) + 1 : len - 13;
+  return n <= c.per ? "kinh" : n < ov - 1 ? "nang" : n <= ov + 1 ? "rung" : "hoang";
+}
+// Triệu chứng hay lặp lại trong 5 ngày trước kỳ kinh: tính theo từng kỳ đã có nhật ký trong khoảng đó
+function hlPms() {
+  const c = hlCycle(), days = S.health && S.health.days || {}, out = [];
+  if (!hlIsF() || c.starts.length < 3) return out;
+  const win = c.starts.map(s => [1, 2, 3, 4, 5].map(i => hlKAdd(s, -i))).filter(w => w.some(k => days[k])).slice(-6);
+  if (win.length < 3) return out;
+  const sy = new Set(); win.flat().forEach(k => Object.keys((days[k] || {}).sy || {}).forEach(s => sy.add(s)));
+  sy.forEach(s => {
+    const hit = win.filter(w => w.some(k => ((days[k] || {}).sy || {})[s])).length;
+    if (hit >= 3 && hit / win.length >= 0.6) out.push({ s, hit, of: win.length });
+  });
+  return out.sort((a, b) => b.hit / b.of - a.hit / a.of);
+}
+
+// 4. Báo cáo cho bác sĩ (30 hoặc 90 ngày) và thẻ y tế khẩn cấp
+const HL_BLOOD = ["", "A+", "A−", "B+", "B−", "AB+", "AB−", "O+", "O−"];
+function hlMidSet(f, v) {
+  const h = hlH(), m = h.mid = h.mid || {};
+  v = String(v || "").trim().slice(0, 200);
+  if (v) m[f] = v; else delete m[f];
+  m.mt = Date.now();
+  if (!Object.keys(m).some(x => x !== "mt")) delete h.mid;
+  save(); draw();
+}
+let hlRepN = 30;
+function hlReport() {
+  hlEd = { mode: "rep" };
+  LF = document.activeElement;
+  $("hlOverlay").classList.add("open");
+  hlRender();
+}
+function hlRepHTML(n) {
+  const p = hlProf(), h = S.health || {}, days = h.days || {}, ks = hlRange(n), logged = ks.filter(k => days[k]);
+  const age = hlAge(), w = hlLast("w"), ht = hlLast("ht"), b = hlBmi(), mid = h.mid || {};
+  const wl = ks.filter(k => days[k] && days[k].w != null), dw = wl.length >= 2 ? days[wl[wl.length - 1]].w - days[wl[0]].w : null;
+  const row = (a, v) => v ? `<tr><th>${a}</th><td>${v}</td></tr>` : "";
+  const f = {};
+  ks.forEach(k => Object.entries((days[k] || {}).sy || {}).forEach(([s, v]) => { const x = f[s] = f[s] || { n: 0, sev: 0, first: k, last: k }; x.n++; if (v === 3) x.sev++; x.last = k; }));
+  const sy = Object.entries(f).sort((a, b2) => b2[1].n - a[1].n);
+  const md = hlAvg(ks, "mood"), sl = hlAvg(ks, "sleep"), lowM = ks.filter(k => (days[k] || {}).mood <= 2).length, hiS = ks.filter(k => (days[k] || {}).stress === 3).length;
+  const shortS = ks.filter(k => (days[k] || {}).sleep != null && days[k].sleep < 6).length;
+  const chk = Object.entries(h.chk || {}).filter(([k]) => k >= ks[0]).sort().pop();
+  const meds = (h.meds || []).filter(m => m.sd <= tk && (!m.ed || m.ed >= ks[0]));
+  const adh = m => { if (m.sched !== "daily") return "khi cần"; let e = 0, g = 0; ks.forEach(k => { if (k >= m.sd && (!m.ed || k <= m.ed) && k < tk) { e += m.times || 1; g += Math.min(m.times || 1, ((days[k] || {}).meds || {})[m.id] || 0); } }); return e ? `${g}/${e} liều (${Math.round(g / e * 100)}%)` : "–"; };
+  const c = hlIsF() ? hlCycle() : null, notes = ks.filter(k => (days[k] || {}).note);
+  return `
+    <article class="hl-rep">
+      <header><h2>Báo cáo sức khỏe ${n} ngày</h2><p>${dm(ks[0])}/${ks[0].slice(0, 4)} – ${dm(tk)}/${tk.slice(0, 4)} · ${logged.length} ngày có nhật ký · lập ${new Date().toLocaleDateString("vi-VN")}</p></header>
+      <section><h3>Thông tin</h3><table>
+        ${row("Tên", esc(p.n || ""))}${row("Tuổi", age !== null ? age + " (sinh " + p.dob.split("-").reverse().join("/") + ")" : "")}${row("Giới tính", { f: "Nữ", m: "Nam", o: "Khác" }[p.sex] || "")}
+        ${row("Chiều cao", ht ? r1(ht.v) + " cm" : "")}${row("Cân nặng", w ? `${r1(w.v)} kg (${dm(w.k)})${dw !== null ? `, ${dw >= 0 ? "tăng" : "giảm"} ${r1(Math.abs(dw))} kg trong kỳ báo cáo` : ""}` : "")}
+        ${row("BMI", b && b.cat ? `${r1(b.v)} (${b.cat[0]}, ngưỡng châu Á)` : "")}${row("Nhóm máu", esc(mid.blood || ""))}${row("Dị ứng", esc(mid.allergy || ""))}${row("Bệnh nền", esc(mid.cond || ""))}
+      </table></section>
+      <section><h3>Thuốc và thực phẩm chức năng</h3>${meds.length ? `<table><tr><th>Tên</th><th>Liều, lịch</th><th>Từ</th><th>Dùng đủ</th></tr>${meds.map(m => `<tr><td>${esc(m.n)}${m.kind === "sup" ? " (TPCN)" : ""}</td><td>${esc(m.dose || "")}${m.dose ? ", " : ""}${m.sched === "daily" ? (m.times || 1) + " lần/ngày" : "khi cần"}</td><td>${dm(m.sd)}${m.ed ? "–" + dm(m.ed) : ""}${m.arch ? " (đã ngừng)" : ""}</td><td>${adh(m)}</td></tr>`).join("")}</table>` : "<p>Không có.</p>"}</section>
+      <section><h3>Triệu chứng</h3>${sy.length ? `<table><tr><th>Triệu chứng</th><th>Số ngày</th><th>Ngày nặng</th><th>Đầu – cuối</th></tr>${sy.map(([s, x]) => `<tr><td>${esc(hlSyName(s))}</td><td>${x.n}</td><td>${x.sev || "–"}</td><td>${dm(x.first)} – ${dm(x.last)}</td></tr>`).join("")}</table>` : "<p>Không ghi nhận.</p>"}</section>
+      <section><h3>Tâm lý và giấc ngủ</h3><table>
+        ${row("Tâm trạng", md ? `trung bình ${r1(md.v)}/5 (${md.n} ngày), ${lowM} ngày tệ hoặc rất tệ` : "chưa ghi")}${row("Căng thẳng cao", hiS ? hiS + " ngày" : "")}
+        ${row("Giấc ngủ", sl ? `trung bình ${r1(sl.v)} giờ (${sl.n} đêm), ${shortS} đêm dưới 6 giờ` : "chưa ghi")}
+        ${row("Kiểm tra nhanh", chk ? `${dm(chk[0])}: PHQ-2 ${chk[1].p[0] + chk[1].p[1]}/6, GAD-2 ${chk[1].g[0] + chk[1].g[1]}/6` : "")}
+      </table></section>
+      ${c ? `<section><h3>Chu kỳ kinh nguyệt</h3><table>${row("Kỳ gần nhất", c.last ? `${dm(c.last)}, ${c.runs[c.runs.length - 1]} ngày` : "chưa ghi")}${row("Độ dài chu kỳ", c.lens.length ? `trung bình ${Math.round(hlMean(c.lens))} ngày (${c.lens.join(", ")})` : "")}${row("Ghi chú", [c.late ? `trễ ${c.late} ngày` : "", c.irregular ? "không đều" : ""].filter(Boolean).join(", "))}</table></section>` : ""}
+      ${notes.length ? `<section><h3>Ghi chú theo ngày</h3><ul>${notes.map(k => `<li><b>${dm(k)}</b>: ${esc(days[k].note)}</li>`).join("")}</ul></section>` : ""}
+      <footer>Người dùng tự ghi trong app Life Capital; không phải hồ sơ y tế, chưa được nhân viên y tế xác nhận.</footer>
+    </article>`;
+}
+function hlRepRender() {
+  $("hlTitle").textContent = "Báo cáo cho bác sĩ";
+  $("hlBody").innerHTML = `
+    <div class="hl-sheet">
+      <div class="hl-acts hl-rep-bar"><div class="set-seg">${[30, 90].map(n => `<button type="button" class="${hlRepN === n ? "on" : ""}" onclick="hlRepN=${n}; hlRender()">${n} ngày</button>`).join("")}</div>
+        <div class="row" style="gap:6px;"><button type="button" class="btn btn-sm" onclick="hlRepSave()">Lưu tệp</button><button type="button" class="btn btn-sm btn-primary" onclick="hlRepPrint()">In, lưu PDF</button></div></div>
+      ${hlRepHTML(hlRepN)}
+    </div>`;
+}
+function hlRepPrint() {
+  document.body.classList.add("printing-rep");
+  const done = () => { document.body.classList.remove("printing-rep"); window.removeEventListener("afterprint", done); };
+  window.addEventListener("afterprint", done);
+  try { window.print(); } catch (e) {}
+  setTimeout(done, 60000);
+}
+async function hlRepSave() {
+  const css = "body{font:14px/1.5 -apple-system,Segoe UI,Helvetica,Arial,sans-serif;color:#222;max-width:760px;margin:24px auto;padding:0 16px}h2{margin:0 0 4px}h3{margin:20px 0 6px;font-size:15px}table{border-collapse:collapse;width:100%}th,td{text-align:left;padding:5px 8px;border-bottom:1px solid #ddd;vertical-align:top}th{font-weight:600;width:30%}footer{margin-top:24px;font-size:12px;color:#666}";
+  const html = `<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Báo cáo sức khỏe</title><style>${css}</style></head><body>${hlRepHTML(hlRepN)}</body></html>`;
+  if (await saveFile(`bao-cao-suc-khoe-${tk}.html`, html, "text/html")) showToast("Đã lưu báo cáo", "ok");
+}
+
+// 5. Vận động trong tuần (từ lịch) và điểm Sẵn sàng mỗi ngày
+const HL_ACT = ["gym", "chay", "chay bo", "boi", "yoga", "cau long", "da bong", "di bo", "dap xe", "the thao", "fitness", "tap luyen", "tap the duc", "tap gym", "pilates", "tennis", "leo nui", "nhay day", "zumba", "aerobic", "hiit", "cardio", "bong ro", "bong chuyen", "vo thuat", "boxing", "golf", "khieu vu", "bong ban", "squash", "marathon", "chay dai"];
+const hlWords = t => " " + String(t || "").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[đĐ]/g, "d").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim() + " ";
+const hlIsAct = t => { const w = hlWords(t); return HL_ACT.some(a => w.includes(" " + a + " ")); };
+// Phút vận động mỗi ngày của tuần chứa ngày k (T2 → CN), chỉ tính tới hôm nay
+function hlActWeek(k = tk) {
+  const m = monKey(k);
+  return [0, 1, 2, 3, 4, 5, 6].map(j => { const d = hlKAdd(m, j); return { k: d, min: d > tk ? 0 : (S.ev[d] || []).filter(e => hlIsAct(e.t)).reduce((a, e) => a + Math.round(e.h * 60), 0) }; });
+}
+function hlRing(v, max, color, size = 64) {
+  const r = size / 2 - 6, c = 2 * Math.PI * r, p = Math.min(1, v / max);
+  return `<svg class="hl-ring" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" aria-hidden="true"><circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="var(--bar)" stroke-width="8"/><circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="${color}" stroke-width="8" stroke-linecap="round" stroke-dasharray="${(c * p).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 ${size / 2} ${size / 2})"/></svg>`;
+}
+// Điểm Sẵn sàng 0–100: giấc ngủ đêm qua là gốc, trừ cho triệu chứng, căng thẳng, tâm trạng thấp hôm qua và nợ ngủ 3 đêm
+function hlReady(k = tk) {
+  const d = hlDay(k) || {}, y = hlDay(hlKAdd(k, -1)) || {};
+  if (d.sleep == null) return null;
+  const s = d.sleep, pts = [[0, 0], [4, 15], [5, 40], [6, 65], [7, 90], [7.5, 100], [9.5, 100], [12, 80], [24, 60]];
+  let base = 100;
+  for (let i = 1; i < pts.length; i++) if (s <= pts[i][0]) { const [x0, y0] = pts[i - 1], [x1, y1] = pts[i]; base = y0 + (y1 - y0) * (s - x0) / (x1 - x0); break; }
+  const why = [`ngủ ${r1(s)}h`], pen = [];
+  const sev = Object.values(d.sy || {}).reduce((a, v) => a + v, 0), ysev = Object.values(y.sy || {}).filter(v => v === 3).length;
+  if (sev) pen.push([Math.min(40, sev * 8), `${Object.keys(d.sy).length} triệu chứng hôm nay`]);
+  if (ysev) pen.push([ysev * 4, "triệu chứng nặng hôm qua"]);
+  const st = d.stress || y.stress;
+  if (st === 3) pen.push([10, "căng thẳng cao"]); else if (st === 2) pen.push([4, "căng thẳng vừa"]);
+  if (y.mood && y.mood <= 2) pen.push([y.mood === 1 ? 10 : 5, "tâm trạng hôm qua thấp"]);
+  const n3 = [1, 2, 3].map(i => (hlDay(hlKAdd(k, -i)) || {}).sleep).filter(v => v != null);
+  if (n3.length >= 2 && hlMean([s, ...n3]) < 6.5) pen.push([10, "thiếu ngủ mấy đêm liền"]);
+  const v = Math.max(0, Math.min(100, Math.round(base - pen.reduce((a, x) => a + x[0], 0))));
+  return { v, lv: v >= 75 ? ["Sẵn sàng", "good"] : v >= 50 ? ["Vừa phải", "warn"] : ["Nên nhẹ nhàng", "bad"], why: [...why, ...pen.map(x => x[1])] };
+}
 
 // Khởi chạy ứng dụng
 (() => { // mở thẳng một dự án qua địa chỉ #pj/<mã>; nút Quay lại về danh sách dự án

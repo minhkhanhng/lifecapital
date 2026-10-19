@@ -137,6 +137,7 @@
    - Ghi mỗi ngày: tâm trạng, căng thẳng, giờ ngủ, triệu chứng (có sẵn và tự thêm, 3 mức), thuốc và TPCN đã dùng, cân nặng, chiều cao, ghi chú. Chu kỳ kinh nguyệt khi hồ sơ là Nữ: dự đoán kỳ tới, rụng trứng (kỳ tới − 14 ngày), giai đoạn dễ thụ thai.
    - Gợi ý theo quy tắc cố định (không AI), có số cụ thể và dấu hiệu cần đi khám; dùng cả dữ liệu lịch (giờ làm việc, giờ cho Quan hệ, Sức khỏe). BMI theo ngưỡng châu Á; kiểm tra nhanh PHQ-2, GAD-2.
    - Tab **Tôi**: hồ sơ (tên gọi, ngày sinh, giới tính, chiều cao, cân nặng), Danh mục vốn, Cài đặt. Công tắc đồng bộ dữ liệu sức khỏe; không bao giờ gửi sang Google Calendar.
+   - Phần 2: Điều ảnh hưởng tới bạn (so ngày có/không có hoạt động, thuốc, căng thẳng với tâm trạng và triệu chứng), Check-in tối kèm nhắc qua tệp lịch, chu kỳ theo 4 giai đoạn với tín hiệu rụng trứng (nhiệt độ, dịch, que LH) và chế độ kín đáo, Báo cáo cho bác sĩ (in, PDF, HTML) và Thẻ y tế khẩn cấp, vòng Vận động 150 phút/tuần từ lịch, điểm Sẵn sàng 0–100 nối với Xếp hết.
 
 ---
 

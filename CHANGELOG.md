@@ -25,6 +25,13 @@ Làm lại phần Dự án theo cách Asana tổ chức dự án, vì bản v0.5
 - Dữ liệu ghi số phiên bản 60; máy còn chạy bản cũ giữ nguyên phần, hạn, mốc khi lưu và đồng bộ.
 - Test gộp dữ liệu 28 tình huống (thêm 8 cho phần, hạn, mốc, cập nhật trạng thái).
 
+**Thêm trong UAT (20/10): Sức khỏe, phần 2** (học từ Bearable, Daylio, Clue, Flo, Apple Health, Oura)
+- **Điều ảnh hưởng tới bạn:** tự so các ngày có và không có một hoạt động trên lịch, một loại thuốc, căng thẳng cao, ngủ ít với tâm trạng và từng triệu chứng trong 90 ngày; chỉ kết luận khi mỗi bên có ít nhất 4 ngày và chênh lệch đủ lớn, vd "Ngày có Gym: tâm trạng 4,6/5, ngày khác 3,4/5", "Nhức đầu vào 4/5 ngày có Họp dài (80%), ngày khác 11%".
+- **Check-in tối:** 4–5 bước ngắn (tâm trạng, triệu chứng, giấc ngủ và căng thẳng, thuốc), có chuỗi ngày; tab Lịch nhắc sau 19h nếu hôm nay chưa ghi; nút Nhắc trên điện thoại tải tệp lịch (.ics) có nhắc lặp mỗi tối để thêm vào app Lịch.
+- **Chu kỳ theo giai đoạn:** hành kinh, nang noãn, rụng trứng, hoàng thể, mỗi giai đoạn có gợi ý; tự phát hiện triệu chứng hay đến trong 5 ngày trước kỳ kinh; ghi thêm dịch âm đạo, nhiệt độ buổi sáng, que thử rụng trứng LH để biết ngày rụng trứng (que dương: ~1 ngày sau; nhiệt độ tăng từ 0,2°C 3 ngày liền) và dự đoán kỳ tới chính xác hơn; chế độ kín đáo trên Lịch chỉ hiện chấm màu.
+- **Báo cáo cho bác sĩ:** tóm tắt 30 hoặc 90 ngày (thông tin, thẻ y tế, thuốc và tỷ lệ dùng đủ liều, triệu chứng, tâm lý, giấc ngủ, chu kỳ, ghi chú theo ngày); In, lưu PDF hoặc lưu tệp HTML. **Thẻ y tế khẩn cấp** ở tab Tôi: nhóm máu, dị ứng, bệnh nền, liên hệ khẩn cấp.
+- **Vận động trong tuần:** vòng 150 phút (khuyến nghị WHO), tự tính từ hoạt động trên lịch như gym, chạy, bơi, đi bộ, đạp xe; mục Duyệt › Vận động có 8 tuần gần nhất. **Điểm Sẵn sàng** 0–100 mỗi ngày từ giấc ngủ, triệu chứng, căng thẳng, tâm trạng hôm qua, nợ ngủ; hiện trên thẻ hôm nay ở Lịch. Điểm dưới 50 thì Xếp hết chỉ đặt tối đa một nửa giới hạn giờ hôm nay.
+
 **Thêm trong UAT (20/10): Sức khỏe và hồ sơ** (PO yêu cầu thêm vào bản này)
 - Tab mới **Sức khỏe**, bố cục theo app Sức khỏe của iPhone: **Tóm tắt** (ghi nhanh hôm nay, Điểm nổi bật, thẻ ghim), **Duyệt** theo nhóm (Triệu chứng, Tâm lý, Giấc ngủ, Thuốc và thực phẩm chức năng, Cơ thể, Chu kỳ) với biểu đồ 7 ngày / 30 ngày / 6 tháng, **Nhật ký** từng ngày.
 - Ghi mỗi ngày: tâm trạng (5 mức), căng thẳng, giờ ngủ, triệu chứng (18 loại có sẵn + tự thêm, mỗi loại 3 mức nặng), thuốc và thực phẩm chức năng đã dùng, cân nặng, chiều cao, ghi chú. Ghi được cho ngày đã qua, không ghi trước cho ngày tới.
