@@ -1929,7 +1929,7 @@ Object.values(S.ev).forEach(sortL);
 
 const CM = k => S.caps.find(c => c.k === k) || { n: "(đã xóa)", c: "#888888", tg: 0 };
 const BL = k => S.bl[k] = S.bl[k] || { u: 0, d: 0 };
-// Giờ cố định mỗi tuần của một vốn. Bản trước v0.6.1 tách ▲/▼: cộng cả hai.
+// Giờ cố định mỗi tuần của một vốn. Bản trước v0.6.0 tách ▲/▼: cộng cả hai.
 const blH = k => { const b = S.bl[k]; return b ? (+b.u || 0) + (+b.d || 0) : 0; };
 function setBl(k, v) { BL(k); S.bl[k] = { u: Math.max(0, +v || 0), d: 0 }; save(); draw(); }
 const esc = s => String(s == null ? "" : s).replace(/[&<>"'`]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;", "`": "&#96;" }[c]));
@@ -1979,7 +1979,7 @@ const save = () => {
    hay cửa sổ khác đã ghi mà tab này không nhận được (tab bị trình duyệt tạm dừng, trang khôi phục từ
    bộ nhớ đệm, bản cũ của app không biết lắng nghe…): gộp hai bên thay vì ghi đè.
    Dữ liệu do bản này ghi có sv = 2. Bên ghi không có sv (bản cũ) thì chỉ cộng thêm, không xóa gì. */
-const APPV = 61; // v0.6.1
+const APPV = 60; // v0.6.0
 const SV = 3; // 3 (v0.4.0): hoạt động có mã riêng và thời điểm sửa; bản ghi sv khác được gộp kiểu cộng thêm
 let lastRaw = rawSaved, oldWriterSeen = 0;
 // Đồng bộ giữa các thiết bị (v0.4.0, xem phần ĐỒNG BỘ ở cuối tệp)
@@ -2258,7 +2258,7 @@ let N = 4;
 let ed = null, ei = null;
 
 const evs = i => [0, 1, 2, 3, 4, 5, 6].flatMap(j => S.ev[ky(ad(W[i], j))] || []);
-// Giờ của một vốn trong tuần i (gồm giờ cố định). Từ v0.6.1 mọi hoạt động đều tính, không còn Nạp/Tiêu.
+// Giờ của một vốn trong tuần i (gồm giờ cố định). Từ v0.6.0 mọi hoạt động đều tính, không còn Nạp/Tiêu.
 const wk = (i, c) => evs(i).reduce((a, e) => e.c === c ? a + e.h : a, blH(c));
 const al = i => S.caps.reduce((a, c) => a + wk(i, c.k), 0);
 const dayH = k => (S.ev[k] || []).reduce((a, e) => a + e.h, 0);
