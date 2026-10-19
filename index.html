@@ -1947,7 +1947,8 @@ function capInk(hex) {
   if (!/^#[0-9a-f]{6}$/i.test(hex || "")) hex = "#888888";
   return `--cap:${hex}; background: linear-gradient(135deg, var(--pill-sheen) 0%, color-mix(in srgb, ${hex} var(--pill-mix), transparent) 100%); color: var(--tx); border-color: color-mix(in srgb, ${hex} 40%, transparent);`;
 }
-const r1 = n => (Math.round((n || 0) * 10) / 10).toString();
+// Số giờ để hiển thị: làm tròn 1 chữ số, dấu phẩy thập phân kiểu Việt ("32,5"). Ô nhập số vẫn dùng số thô.
+const r1 = n => (Math.round((n || 0) * 10) / 10).toString().replace(".", ",");
 const pad = n => String(n).padStart(2, "0");
 const tt = (s, h) => {
   if (!s) return "";
@@ -3629,8 +3630,8 @@ function setSecToggle(id, on) {
 function renderSettingsModal() {
   const curTheme = getThemePreference();
   const total = Object.values(S.ev).flat().length;
-  let kb = "0.0";
-  try { kb = ((localStorage.getItem("lc2") || "").length / 1024).toFixed(1); } catch (e) {}
+  let kb = "0,0";
+  try { kb = ((localStorage.getItem("lc2") || "").length / 1024).toFixed(1).replace(".", ","); } catch (e) {}
   const defDur = (S.cfg && S.cfg.defDuration) || 2;
   const sc = schCfg(), hOpt = (v, cur) => opt(v, cur, hmOf(v));
   const opt = (v, cur, label) => `<option value="${v}" ${cur === v ? "selected" : ""}>${label}</option>`;
@@ -4765,9 +4766,9 @@ function renderEditorSheet() {
         <div class="form-group">
           <label class="form-label" for="inpHours">Thời lượng (giờ)</label>
           <div style="display:flex; align-items:center; gap:6px;">
-            <button type="button" class="btn btn-sm" onclick="adjustHours(-0.5)" style="padding:5px 8px;">-0.5</button>
+            <button type="button" class="btn btn-sm" onclick="adjustHours(-0.5)" style="padding:5px 8px;" aria-label="Bớt 30 phút">-0,5</button>
             <input id="inpHours" type="number" step="0.5" min="0.5" max="24" value="${X ? X.h : defaultDuration}" style="flex:1; text-align:center;">
-            <button type="button" class="btn btn-sm" onclick="adjustHours(0.5)" style="padding:5px 8px;">+0.5</button>
+            <button type="button" class="btn btn-sm" onclick="adjustHours(0.5)" style="padding:5px 8px;" aria-label="Thêm 30 phút">+0,5</button>
           </div>
         </div>
       </div>
@@ -5169,7 +5170,7 @@ V.su = function () {
   // Không gắn thẻ <span> bên trong <svg>: parser HTML sẽ phá vỡ cây SVG (bánh xe bị vỡ)
   let n = 0;
   return h.split(/(<svg[\s\S]*?<\/svg>)/).map(part => part.startsWith("<svg") ? part :
-    part.replace(/(<[^>]*>)|(\d+(?:\.\d+)?[h%])/g, (m, t, v) => t ? t : `<span data-k="n${n++}">${v}</span>`)).join("");
+    part.replace(/(<[^>]*>)|(\d+(?:[.,]\d+)?[h%])/g, (m, t, v) => t ? t : `<span data-k="n${n++}">${v}</span>`)).join("");
 };
 const vals = () => { const o = {}, t = document.createElement("div"); t.innerHTML = V.su(); t.querySelectorAll("[data-k]").forEach(e => { o[e.dataset.k] = e.textContent; }); return o; };
 const mark = () => document.querySelectorAll("[data-k]").forEach(e => e.classList.toggle("chg", CH.has(e.dataset.k)));
@@ -5449,7 +5450,7 @@ function inboxCount() {
   const m = schedMap();
   return S.tasks.reduce((n, t) => n + units(t).filter(u => !u.done && !m.has(u.tk)).length, 0);
 }
-const hrs = h => r1(h).replace(".", ",") + "h";
+const hrs = h => r1(h) + "h";
 const whenLabel = p => {
   const d = new Date(p.date + "T00:00");
   return `${DN_SHORT[dow(d)]} ${pad(d.getDate())}/${pad(d.getMonth() + 1)}${p.s ? " " + p.s : ""}`;

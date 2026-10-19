@@ -25,6 +25,9 @@ Làm lại phần Dự án theo cách Asana tổ chức dự án, vì bản v0.5
 - Dữ liệu ghi số phiên bản 60; máy còn chạy bản cũ giữ nguyên phần, hạn, mốc khi lưu và đồng bộ.
 - Test gộp dữ liệu 28 tình huống (thêm 8 cho phần, hạn, mốc, cập nhật trạng thái).
 
+**Thống nhất cách viết số giờ (20/10)**
+- Mọi chỗ hiển thị số giờ dùng dấu phẩy thập phân: "32,5h", "1,5h" (trước đây chỗ "32.5h", chỗ "0,5h"), gồm cả đoạn sao chép Tổng kết tuần và mô tả sự kiện Google Calendar. Ô nhập số không đổi.
+
 **Thêm trong UAT (20/10): Bỏ Nạp / Tiêu** (PO yêu cầu gộp vào bản này)
 Mọi hoạt động đều là đầu tư vào một loại vốn, nên app không chia ▲ Nạp / ▼ Tiêu nữa; câu hỏi chính chỉ còn: bánh xe 5 loại vốn tuần này có cân bằng không.
 - Bỏ ▲ / ▼ ở mọi nơi: thẻ hoạt động, ghi nhanh, popup thêm hoạt động (bỏ ô Tác động), Hộp việc (bỏ nút đổi tác động), lịch năm, tiêu đề sự kiện Google Calendar, tệp CSV (bỏ cột Tác động).
