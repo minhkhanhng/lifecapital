@@ -898,6 +898,94 @@ body.hv-dragging .day-card { border-style: dashed; }
   .sch-row .sch-mv .btn { min-width: 40px; min-height: 40px; }
   .sch-row { padding: 2px 0; }
 }
+/* Sức khỏe: bố cục theo app Sức khỏe của iPhone (Tóm tắt, thẻ ghim, Duyệt theo nhóm), màu Life Capital */
+.hl { display: flex; flex-direction: column; gap: 14px; }
+.hl-hello { margin: 0; font-size: 13px; color: var(--tx-sec); }
+.hl-seg { align-self: flex-start; }
+.hl-h { margin: 6px 0 -4px; font: 600 15px var(--font-ui); color: var(--tx); }
+.hl-today .hl-q + .hl-q, .hl-sheet .hl-q + .hl-q { border-top: 1px solid var(--bd); }
+.hl-q { display: flex; flex-direction: column; gap: 8px; padding: 10px 0; min-width: 0; }
+.hl-ql { font-size: 12.5px; font-weight: 600; color: var(--tx-sec); display: flex; flex-direction: column; gap: 6px; }
+.hl-ql small { font-weight: 400; color: var(--mu); }
+.hl-scale, .hl-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.hl-m, .hl-chip { font: inherit; font-size: 13px; min-height: 36px; padding: 6px 12px; border-radius: 99px; border: 1px solid var(--bd); background: var(--field); color: var(--tx); cursor: pointer; }
+.hl-m.on { color: var(--btn-ink, var(--tx)); font-weight: 600; border-color: transparent; background: color-mix(in srgb, var(--hm, var(--ac)) 55%, transparent); }
+.hl-m.m1 { --hm: #c24d5b; } .hl-m.m2 { --hm: #e5a13c; } .hl-m.m3 { --hm: #9aa0a6; } .hl-m.m4 { --hm: #97A13B; } .hl-m.m5 { --hm: #4a859c; }
+.hl-m.s1 { --hm: #97A13B; } .hl-m.s2 { --hm: #e5a13c; } .hl-m.s3 { --hm: #c24d5b; }
+.hl-m.fl { --hm: #c24d5b; }
+.hl-ans .hl-m { flex: 1 1 120px; }
+.hl-chip.on { font-weight: 600; border-color: transparent; }
+.hl-chip.l1 { background: color-mix(in srgb, #e5a13c 28%, transparent); } .hl-chip.l2 { background: color-mix(in srgb, #e5a13c 55%, transparent); } .hl-chip.l3 { background: color-mix(in srgb, #c24d5b 55%, transparent); }
+.hl-chip.more { border-style: dashed; color: var(--tx-sec); }
+.hl-chip.med { display: inline-flex; padding: 0; overflow: hidden; }
+.hl-chip.med button { font: inherit; border: 0; background: transparent; color: inherit; padding: 6px 12px; cursor: pointer; min-height: 36px; }
+.hl-chip.med .undo { border-left: 1px solid var(--bd); padding: 6px 10px; }
+.hl-chip.med.on { background: color-mix(in srgb, #b88628 45%, transparent); }
+.hl-adv { display: flex; flex-direction: column; gap: 8px; }
+.hl-a { display: flex; flex-direction: column; gap: 3px; padding: 10px 12px; border-radius: 12px; background: var(--card-subtle); border-left: 4px solid var(--mu); font-size: 13px; line-height: 1.5; }
+.hl-a b { font-size: 13.5px; }
+.hl-a span { color: var(--tx-sec); }
+.hl-a.urgent { border-left-color: var(--bad); background: color-mix(in srgb, var(--bad) 12%, var(--card-subtle)); }
+.hl-a.warn { border-left-color: var(--wa); }
+.hl-a.info { border-left-color: var(--c-cyan, #4a859c); }
+.hl-a.good { border-left-color: var(--ok); }
+.hl-disc { margin: 8px 0 0; font-size: 12px; color: var(--mu); line-height: 1.45; }
+.hl-pins { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.hl-pin { font: inherit; text-align: left; display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border-radius: 16px; border: 1px solid var(--glass-bd); background: var(--sheen), var(--card); color: var(--tx); cursor: pointer; min-width: 0; }
+.hl-pin-t { font-size: 13px; font-weight: 600; color: var(--hc); }
+.hl-pin b { font: 600 26px/1.15 var(--font-ui); font-variant-numeric: tabular-nums; }
+.hl-pin b small { font-size: 14px; font-weight: 500; color: var(--tx-sec); }
+.hl-pin > small { font-size: 12px; color: var(--tx-sec); }
+.hl-bars { display: flex; align-items: flex-end; gap: 2px; height: 44px; margin-top: 6px; }
+.hl-bars i { flex: 1 1 0; min-width: 2px; border-radius: 3px 3px 1px 1px; opacity: 0.85; }
+.card .hl-bars { height: 120px; margin: 8px 0 12px; }
+.hl-browse { padding: 0; overflow: hidden; }
+.hl-row { font: inherit; width: 100%; display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 0; background: transparent; color: var(--tx); font-size: 15px; font-weight: 500; text-align: left; cursor: pointer; }
+.hl-row + .hl-row { border-top: 1px solid var(--bd); }
+.hl-ic { width: 28px; height: 28px; border-radius: 8px; background: var(--hc); flex: none; opacity: 0.85; }
+.hl-chev { margin-left: auto; width: 8px; height: 8px; border-right: 2px solid var(--mu); border-top: 2px solid var(--mu); transform: rotate(45deg); }
+.hl-back { display: flex; align-items: center; gap: 8px; }
+.hl-back .card-title { color: var(--hc); }
+.hl-tbl { display: flex; flex-direction: column; gap: 8px; }
+.hl-tr { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(60px, 2fr) auto; gap: 10px; align-items: center; font-size: 13px; }
+.hl-meter { height: 8px; border-radius: 99px; background: var(--bar); overflow: hidden; }
+.hl-meter i { display: block; height: 100%; background: #e5a13c; border-radius: 99px; }
+.hl-hi { color: var(--bad); }
+.hl-log { display: flex; flex-direction: column; }
+.hl-lrow { font: inherit; text-align: left; display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border: 0; border-top: 1px solid var(--bd); background: transparent; color: var(--tx); cursor: pointer; }
+.hl-lrow b { font-size: 13.5px; } .hl-lrow span { font-size: 12.5px; color: var(--tx-sec); }
+.hl-cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; margin: 6px 0 8px; }
+.hl-cd { display: inline-flex; align-items: center; justify-content: center; min-height: 32px; border-radius: 10px; font-size: 12px; background: var(--card-subtle); color: var(--tx-sec); }
+.hl-cd.fl { background: color-mix(in srgb, #c24d5b 60%, transparent); color: var(--btn-ink, var(--tx)); font-weight: 600; }
+.hl-cd.per { background: transparent; box-shadow: inset 0 0 0 2px color-mix(in srgb, #c24d5b 60%, transparent); }
+.hl-cd.fert { background: color-mix(in srgb, #4a859c 30%, transparent); }
+.hl-cd.ovu { background: color-mix(in srgb, #4a859c 65%, transparent); color: var(--btn-ink, var(--tx)); font-weight: 600; }
+.hl-cd.today { outline: 2px solid var(--ac); outline-offset: 1px; }
+.hl-cd.hd { background: transparent; min-height: 20px; font-weight: 600; color: var(--mu); }
+.hl-legend { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; font-size: 12px; color: var(--tx-sec); }
+.hl-legend .hl-cd { min-height: 12px; width: 14px; height: 14px; border-radius: 4px; }
+.hl-day { font: inherit; display: flex; flex-wrap: wrap; gap: 4px; padding: 4px 10px 0; border: 0; background: transparent; cursor: pointer; text-align: left; }
+.hl-mini { font-size: 10.5px; font-weight: 600; padding: 1px 7px; border-radius: 99px; background: var(--card-subtle); color: var(--tx-sec); white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.hl-mini.m1, .hl-mini.m2 { background: color-mix(in srgb, #e5a13c 30%, transparent); color: var(--tx); }
+.hl-mini.m4, .hl-mini.m5 { background: color-mix(in srgb, #97A13B 30%, transparent); color: var(--tx); }
+.hl-mini.sy { background: color-mix(in srgb, #e5a13c 22%, transparent); color: var(--tx); }
+.hl-mini.fl { background: color-mix(in srgb, #c24d5b 40%, transparent); color: var(--tx); }
+.hl-mini.pfl { box-shadow: inset 0 0 0 1px color-mix(in srgb, #c24d5b 55%, transparent); }
+.hl-mini.pov { background: color-mix(in srgb, #4a859c 28%, transparent); color: var(--tx); }
+.timeline-container .hl-day { display: inline-flex; padding: 0 0 0 8px; vertical-align: middle; }
+.hl-sheet { display: flex; flex-direction: column; }
+.hl-nav { display: flex; gap: 6px; align-items: center; padding-bottom: 8px; }
+.hl-nav input { flex: 1; min-width: 0; }
+.hl-2 { flex-direction: row; gap: 12px; }
+.hl-2 .hl-ql { flex: 1 1 0; min-width: 0; }
+.hl-sheet textarea { width: 100%; resize: vertical; font: inherit; font-size: 13.5px; padding: 8px 10px; border-radius: 10px; }
+.hl-acts { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; padding-top: 12px; border-top: 1px solid var(--bd); margin-top: 4px; }
+.hl-saved { font-size: 12px; color: var(--mu); }
+.hl-wk { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--tx-sec); }
+.hl-wk b { color: var(--tx); }
+.me-card .set-row input[type=text], .me-card .set-row input[type=date] { width: 180px; max-width: 100%; }
+@media (pointer: coarse) { .hl-m, .hl-chip, .hl-chip.med button { min-height: 40px; } }
+@media (max-width: 480px) { .hl-pins { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; } .hl-pin { padding: 12px; } .hl-pin b { font-size: 22px; } .hl-2 { flex-direction: column; } }
 .ev-hb { display: inline-block; font-size: 10px; font-weight: 700; color: var(--ok-text); margin-right: 4px; vertical-align: 1px; }
 .hb-strip { display: flex; align-items: center; gap: 10px; margin: -4px 0 12px; min-width: 0; }
 .hb-lbl { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tx-sec); flex: none; }
@@ -1014,9 +1102,9 @@ nav.main-nav button.active { color: var(--tx); border: 0; font-weight: 600; box-
 .page-sub { margin: 0; color: var(--tx-sec); font-size: 13px; }
 .year-row { display: inline-flex; align-items: center; gap: 2px; }
 /* Header theo tab: chỉ hiện nút có tác dụng ở tab đang mở */
-body[data-tab="hv"] .year-row, body[data-tab="set"] .year-row, body[data-tab="pj"] .year-row, body[data-tab="pj"] #reviewBtn,
-body[data-tab="hv"] #reviewBtn, body[data-tab="set"] #reviewBtn,
-body[data-tab="su"] #addBtn, body[data-tab="set"] #addBtn { display: none; }
+body[data-tab="hv"] .year-row, body[data-tab="me"] .year-row, body[data-tab="pj"] .year-row, body[data-tab="hl"] .year-row, body[data-tab="pj"] #reviewBtn,
+body[data-tab="hv"] #reviewBtn, body[data-tab="me"] #reviewBtn, body[data-tab="hl"] #reviewBtn,
+body[data-tab="su"] #addBtn, body[data-tab="me"] #addBtn { display: none; }
 /* Hộp thoại xác nhận */
 .modal-overlay.ask-overlay { z-index: 1500; align-items: center; padding: 20px; }
 .ask-overlay .ask-sheet { max-width: 380px; border-radius: var(--radius-lg); padding: 18px 18px 16px; transform: scale(0.96); max-height: calc(100dvh - 40px); overflow-y: auto; overscroll-behavior: contain; }
@@ -1068,9 +1156,9 @@ body[data-tab="su"] #addBtn, body[data-tab="set"] #addBtn { display: none; }
   .app-shell { display: block; padding: 12px 12px calc(92px + env(safe-area-inset-bottom, 0px)); }
   .sidebar { position: fixed; left: 10px; right: 10px; top: auto; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); height: auto; z-index: 60; padding: 6px; border-radius: 20px; flex-direction: row; gap: 0; }
   .sidebar .brand-area { display: none; }
-  nav.main-nav { flex-direction: row; flex: 5 1 0; min-width: 0; width: auto; justify-content: space-around; } /* 5 tab + Cài đặt = 6 ô bằng nhau */
+  nav.main-nav { flex-direction: row; flex: 1 1 0; min-width: 0; width: auto; justify-content: space-around; } /* 6 tab bằng nhau; Cài đặt nằm trong tab Tôi */
   /* Cài đặt là ô thứ năm của thanh tab dưới: trong tầm ngón cái, cùng kiểu với các tab */
-  .sidebar .sidebar-settings { display: flex; flex: 1 1 0; min-width: 0; width: auto; margin: 0; flex-direction: column; justify-content: center; gap: 2px; min-height: 52px; padding: 6px 2px; border: 0; background: transparent; box-shadow: none; font-size: 14px; font-weight: 500; white-space: nowrap; color: var(--tx-sec); border-radius: 12px; }
+  .sidebar .sidebar-settings { display: none !important; flex: 1 1 0; min-width: 0; width: auto; margin: 0; flex-direction: column; justify-content: center; gap: 2px; min-height: 52px; padding: 6px 2px; border: 0; background: transparent; box-shadow: none; font-size: 14px; font-weight: 500; white-space: nowrap; color: var(--tx-sec); border-radius: 12px; }
   .sidebar .sidebar-settings:hover { background: var(--glass-hi); color: var(--tx); }
   body.settings-open .sidebar .sidebar-settings { background: var(--sheen), var(--glass-hi); color: var(--tx); font-weight: 600; box-shadow: inset 0 -3px 0 var(--ac), var(--glass-shadow); }
   nav.main-nav button { flex: 1; flex-direction: column; gap: 2px; font-size: 14px; font-weight: 500; white-space: nowrap; padding: 6px 2px; justify-content: center; min-height: 52px; position: relative; }
@@ -1761,6 +1849,17 @@ button.tl-lab:hover { background: linear-gradient(color-mix(in srgb, var(--ac) 1
   </div>
 </div>
 
+<!-- Modal Sức khỏe: ghi một ngày, thuốc, bài kiểm tra -->
+<div class="modal-overlay" id="hlOverlay" onclick="if (event.target.id === 'hlOverlay') closeHl()">
+  <div class="modal-sheet" style="max-width:560px;" role="dialog" aria-modal="true" aria-labelledby="hlTitle">
+    <div class="modal-header">
+      <h3 class="modal-title" id="hlTitle">Sức khỏe</h3>
+      <button type="button" class="btn btn-sm btn-ghost" onclick="closeHl()" title="Đóng (ESC)" aria-label="Đóng">✕</button>
+    </div>
+    <div class="modal-body" id="hlBody"></div>
+  </div>
+</div>
+
 <!-- Modal Thói quen -->
 <div class="modal-overlay" id="hbOverlay" onclick="if (event.target.id === 'hbOverlay') closeHb()">
   <div class="modal-sheet" style="max-width:520px;" role="dialog" aria-modal="true" aria-labelledby="hbTitle">
@@ -1907,6 +2006,7 @@ function loadDemo() {
   }
   pjDemo();
   hbDemo();
+  hlDemo();
   save();
   draw();
   showToast("Đã thêm dữ liệu mẫu", "ok");
@@ -1921,6 +2021,10 @@ function clearDemo() {
   const demoPj = new Set((S.projects || []).filter(p => p.demo).map(p => p.id));
   S.projects = (S.projects || []).filter(p => !p.demo);
   S.habits = (S.habits || []).filter(h => !h.demo);
+  if (S.health) {
+    Object.keys(S.health.days).forEach(k => { if (S.health.days[k].demo) delete S.health.days[k]; });
+    S.health.meds = S.health.meds.filter(m => !m.demo);
+  }
   Object.values(S.ev).forEach(l => l.forEach(e => { if (demoPj.has(e.pj)) delete e.pj; }));
   S.tasks.forEach(t => { if (demoPj.has(t.pj)) delete t.pj; });
   save();
@@ -2103,6 +2207,31 @@ function mergeHabits(B, M, T, trust) {
     return { ...x, ticks };
   });
 }
+// Gộp một bảng theo khóa (ngày → bản ghi): như mergeById
+function mergeMap(B, M, T, trust) {
+  const out = {}, b0 = B || {}, m0 = M || {}, t0 = T || {};
+  new Set([...Object.keys(m0), ...Object.keys(t0)]).forEach(k => {
+    const b = b0[k], m = m0[k], t = t0[k];
+    let x;
+    if (m && t) x = sameJ(m, t) ? m : trust && b && sameJ(m, b) ? t : trust && b && sameJ(t, b) ? m : (t.mt || 0) > (m.mt || 0) ? t : m;
+    else x = trust && b && sameJ(m || t, b) ? null : (m || t);
+    if (x) out[k] = x;
+  });
+  return out;
+}
+// Nhật ký sức khỏe: bên nào không gửi (tắt đồng bộ phần này, hoặc bản cũ) thì giữ của bên kia, không xóa
+function mergeHealth(B, M, T, trust) {
+  if (!T) return M;
+  if (!M) return T;
+  const b = B || {}, pick = (f, def) => { const m = M[f] || def, t = T[f] || def, x = b[f]; return sameJ(m, t) ? m : trust && x && sameJ(m, x) ? t : trust && x && sameJ(t, x) ? m : (t.mt || 0) > (m.mt || 0) ? t : m; };
+  return { ...T, ...M, days: mergeMap(b.days, M.days, T.days, trust), chk: mergeMap(b.chk, M.chk, T.chk, trust),
+    meds: mergeById(b.meds, M.meds, T.meds, trust), syc: mergeById(b.syc, M.syc, T.syc, trust), cyc: pick("cyc", {}) };
+}
+function mergeProfile(B, M, T, trust) {
+  if (!T) return M;
+  if (!M) return T;
+  return sameJ(M, T) ? M : trust && B && sameJ(M, B) ? T : trust && B && sameJ(T, B) ? M : (T.mt || 0) > (M.mt || 0) ? T : M;
+}
 // Gộp hoạt động theo mã (v0.4.0):
 // - Chỉ một bên sửa so với gốc chung: lấy bên đã sửa. Cả hai cùng sửa: bản có thời điểm sửa (mt) sau cùng thắng.
 // - Một bên xóa (trust, có trong gốc): xóa, trừ khi bên kia đã sửa nó sau gốc chung (giữ bản đã sửa).
@@ -2177,7 +2306,8 @@ function mergeStates(base, mine, theirs, trust) {
   // Dự án: theo mã như việc; bản sửa sau cùng thắng; máy bản cũ không gửi dự án thì giữ của máy này
   const projects = oldT && !(theirs.projects || []).length ? (mine.projects || []) : mergeById(base && base.projects, mine.projects, theirs.projects, trust);
   const habits = !(theirs.habits || []).length && !(base && (base.habits || []).length) ? (mine.habits || []) : mergeHabits(base && base.habits, mine.habits, theirs.habits, trust);
-  const known = ["ev", "caps", "bl", "mem", "cfg", "pm", "memV", "lb", "gdel", "tasks", "sv", "av", "projects", "habits"];
+  const health = mergeHealth(base && base.health, mine.health, theirs.health, trust), profile = mergeProfile(base && base.profile, mine.profile, theirs.profile, trust);
+  const known = ["ev", "caps", "bl", "mem", "cfg", "pm", "memV", "lb", "gdel", "tasks", "sv", "av", "projects", "habits", "health", "profile"];
   const extra = {};
   [...new Set([...Object.keys(mine), ...Object.keys(theirs)])].filter(k => known.indexOf(k) < 0).forEach(k => {
     extra[k] = (trust && base && sameJ(mine[k], base[k])) || !(k in mine) ? theirs[k] : mine[k];
@@ -2190,6 +2320,8 @@ function mergeStates(base, mine, theirs, trust) {
     tasks,
     projects,
     habits,
+    ...(health ? { health } : {}),
+    ...(profile ? { profile } : {}),
     sv: SV
   };
 }
@@ -2247,6 +2379,7 @@ function afterAbsorb() {
   if (ed) { closeEditor(); showToast("Đã cập nhật từ tab khác", "bad"); }
   if (sch) { closeSched(); showToast("Đã cập nhật từ tab khác", "bad"); }
   if (hbEd) hbRender(); // bảng thói quen giữ bản nháp, chỉ cập nhật chuỗi, kỷ lục
+  if (hlEd && hlEd.mode === "day") hlRender();
   if ($("settingsModalOverlay").classList.contains("open")) renderSettingsModal();
   draw();
 }
@@ -2289,7 +2422,7 @@ const wkNow = () => {
   return i >= 0 && i < W.length ? i : -1;
 };
 let CW = wkNow(), lt = tk, sel = CW;
-let cur = "ca"; // Tabs: "ca" (Lịch tuần), "su" (Tổng quan), "set" (Cài đặt vốn), "bak" (Sao lưu)
+let cur = "ca"; // Tab: "ca" Lịch, "hv" Hộp việc, "pj" Dự án, "hl" Sức khỏe, "su" Tổng quan, "me" Tôi (hồ sơ, vốn, cài đặt)
 let calSubView = "focus"; // "focus" (Tuần chi tiết), "timeline" (Dòng thời gian 24h), "year" (Lưới 53 tuần)
 let suMore = false; // Tổng quan: bảng "Giờ theo loại vốn" đang mở
 let timelineDayIdx = dow(new Date()); // 0 = T2 .. 6 = CN; mặc định là hôm nay
@@ -2998,6 +3131,12 @@ function openWeeklyReviewModal(wIdx = sel) {
         ${pjWeekRowsHTML(W[wIdx])}
       </div>` : ""}
 
+      ${hlWeekHTML(W[wIdx]) ? `
+      <div style="border:1px solid var(--bd); border-radius:var(--radius-md); padding:12px; background:var(--card);">
+        <div style="font-weight:600; font-size:14px; margin-bottom:8px;">Sức khỏe</div>
+        ${hlWeekHTML(W[wIdx])}
+      </div>` : ""}
+
       ${hbList().length ? `
       <div style="border:1px solid var(--bd); border-radius:var(--radius-md); padding:12px; background:var(--card);">
         <div style="font-weight:600; font-size:14px; margin-bottom:8px;">Thói quen</div>
@@ -3088,8 +3227,9 @@ const TABS = [
   { id: "ca", label: "Lịch biểu", short: "Lịch", sub: "Thời gian của bạn trong tuần" },
   { id: "hv", label: "Hộp việc", short: "Hộp việc", mshort: "Việc", sub: "Việc chưa có lịch: chia nhỏ rồi xếp" },
   { id: "pj", label: "Dự án", short: "Dự án", sub: "Thời gian và việc theo từng dự án" },
+  { id: "hl", label: "Sức khỏe", short: "Sức khỏe", sub: "Nhật ký sức khỏe mỗi ngày" },
   { id: "su", label: "Tổng quan", short: "Tổng quan", mshort: "Số liệu", sub: "Bánh xe cân bằng và giờ trong tuần" },
-  { id: "set", label: "Danh mục vốn", short: "Vốn", sub: "Loại vốn, mục tiêu và từ khóa" }
+  { id: "me", label: "Tôi", short: "Tôi", sub: "Hồ sơ, loại vốn và cài đặt" }
 ];
 
 // Mở chế độ Ngày: đang xem tuần hiện tại thì nhảy thẳng tới hôm nay
@@ -3122,7 +3262,7 @@ function renderNav() {
   $("pageTitle").textContent = t.label;
   $("pageSub").textContent = t.sub;
   document.body.dataset.tab = cur;
-  $("addBtn").title = cur === "hv" ? "Thêm việc vào hộp (N)" : cur === "pj" ? (pjOpenId ? "Thêm việc vào dự án (N)" : "Thêm dự án (N)") : "Thêm hoạt động hôm nay (N)";
+  $("addBtn").title = cur === "hl" ? "Ghi sức khỏe hôm nay (N)" : cur === "hv" ? "Thêm việc vào hộp (N)" : cur === "pj" ? (pjOpenId ? "Thêm việc vào dự án (N)" : "Thêm dự án (N)") : "Thêm hoạt động hôm nay (N)";
 }
 
 // Nút Thêm trên header: ở Hộp việc thì thêm việc, ở Lịch thì thêm hoạt động
@@ -3134,6 +3274,7 @@ function headerAdd() {
     if (i) { i.scrollIntoView({ block: "center", behavior: "smooth" }); i.focus(); }
     return;
   }
+  if (cur === "hl") { hlOpen(tk); return; }
   if (cur === "hv") {
     const i = document.querySelector("#v .hv-add");
     if (i) { i.scrollIntoView({ block: "center", behavior: "smooth" }); i.focus(); return; }
@@ -3144,7 +3285,8 @@ function headerAdd() {
 function switchTab(tabId) {
   // Rời tab Dự án: bỏ #pj/<mã> khỏi địa chỉ để tải lại trang không nhảy về dự án
   if (tabId !== "pj") try { if (history.state && history.state.pj) history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
-  cur = tabId;
+  cur = tabId === "set" ? "me" : tabId; // "set" (Danh mục vốn) nay nằm trong tab Tôi
+  if (cur !== "hl") hlAll = false;
   draw(true);
 }
 
@@ -3222,7 +3364,7 @@ function setSchedCfg(k, v) {
 
 
 async function resetToDefaultData() {
-  const a = await ask({ title: "Xóa toàn bộ dữ liệu?", msg: "Mọi hoạt động trên máy này sẽ mất và không hoàn tác được.", ok: "Xóa hết", alt: "Sao lưu trước", danger: true });
+  const a = await ask({ title: "Xóa toàn bộ dữ liệu?", msg: "Mọi hoạt động, việc, dự án, thói quen, hồ sơ và nhật ký sức khỏe trên máy này sẽ mất và không hoàn tác được.", ok: "Xóa hết", alt: "Sao lưu trước", danger: true });
   if (a === "alt") { exportData("json"); return; }
   if (a !== "ok") return;
   const keepLb = S.lb, keepGdel = S.gdel || [], oldCfg = S.cfg || {};
@@ -3802,7 +3944,7 @@ function renderSettingsModal() {
     <details class="set-sec set-danger" ${setSecOpen("del")} ontoggle="setSecToggle('del', this.open)">
       <summary class="set-h">Xóa dữ liệu<span class="set-sum"></span></summary>
       <div class="set-row">
-        <span class="set-lbl">Xóa mọi hoạt động, đặt lại loại vốn<small>Không hoàn tác được. Nên sao lưu trước.</small></span>
+        <span class="set-lbl">Xóa toàn bộ dữ liệu trên máy này<small>Gồm hoạt động, việc, dự án, thói quen, hồ sơ, nhật ký sức khỏe. Không hoàn tác được; nên sao lưu trước.</small></span>
         <button type="button" class="btn btn-sm btn-danger" onclick="resetToDefaultData()">Xóa hết</button>
       </div>
     </details>
@@ -3818,7 +3960,7 @@ const KEYS = [
   ["/", "Ghi nhanh"],
   ["← →", "Tuần trước, tuần sau (chế độ Ngày: ngày trước, ngày sau)"],
   ["T", "Về hôm nay"],
-  ["1 – 5", "Lịch, Hộp việc, Dự án, Tổng quan, Vốn"],
+  ["1 – 6", "Lịch, Hộp việc, Dự án, Sức khỏe, Tổng quan, Tôi"],
   ["Esc", "Đóng popup"],
   ["⌘Z", "Hoàn tác khi vừa xóa"],
   ["?", "Xem phím tắt"]
@@ -3843,7 +3985,7 @@ function shortcut(e) {
   if (k === "n" || k === "N") { headerAdd(); return true; }
   if (k === "t" || k === "T") { goToday(); return true; }
   if (k === "?") { showShortcuts(); return true; }
-  if (/^[1-5]$/.test(k)) { switchTab(TABS[+k - 1].id); return true; }
+  if (/^[1-6]$/.test(k)) { switchTab(TABS[+k - 1].id); return true; }
   if ((k === "ArrowLeft" || k === "ArrowRight") && (cur === "ca" || cur === "su") && !(tg && tg.closest && tg.closest(".table-wrapper, .yr-quarters, .timeline-days-nav"))) {
     const d = k === "ArrowLeft" ? -1 : 1;
     if (cur === "ca" && calSubView === "timeline") shiftDay(d);
@@ -4082,6 +4224,7 @@ const V = {
 
     // 1. Chế độ TUẦN CHI TIẾT
     if (calSubView === "focus") {
+      const cyc = hlIsF() ? hlCycle() : null;
       let cards = '<div class="wk-wrap"><div class="week-cards-grid">';
       for (let j = 0; j < 7; j++) {
         const dt = ad(selWeekStart, j);
@@ -4096,6 +4239,7 @@ const V = {
               <span class="day-name">${DN_VI[j]}</span>
               <span class="day-date">${dt.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" })}${dh ? ` · ${r1(dh)}h` : ""}</span>
             </div>
+            ${hlChips(k, cyc)}
             <div class="day-events-list">
               ${es.length === 0 ? `<div style="color:var(--mu); font-size:12px; text-align:center; margin:auto 0; padding:12px 0;">Trống</div>` : ""}
               ${es.map((e, idx) => {
@@ -4187,6 +4331,7 @@ const V = {
             <div>
               <b style="font-size:15px;">${DN_VI[timelineDayIdx]}, ${ad(selWeekStart, timelineDayIdx).toLocaleDateString("vi-VN")}</b>
               ${dh ? `<span style="margin-left:8px; font-size:12.5px; color:var(--tx-sec);">${r1(dh)}h</span>` : ""}
+              ${hlChips(activeDate, hlIsF() ? hlCycle() : null)}
             </div>
             <button class="btn btn-sm btn-primary" onclick="openEditor('${activeDate}')">Thêm</button>
           </div>
@@ -5101,7 +5246,8 @@ function cleanState(d) {
   const tasks = Array.isArray(d.tasks) ? d.tasks.map(cleanTask).filter(Boolean).slice(0, 500) : [];
   const projects = Array.isArray(d.projects) ? d.projects.map(cleanProject).filter(Boolean).slice(0, 200) : [];
   const hbSeen = new Set(), habits = Array.isArray(d.habits) ? d.habits.map(cleanHabit).filter(h => h && !hbSeen.has(h.id) && hbSeen.add(h.id)).slice(0, 100) : [];
-  return { ...extras(d, ["ev", "caps", "bl", "mem", "memV", "cfg", "gdel", "tasks", "pm", "lb", "sv", "projects", "habits"]), projects, habits, ev, caps, bl, mem, memV: d.memV === 2 ? 2 : 0, cfg, gdel, tasks, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
+  const profile = cleanProfile(d.profile), health = cleanHealth(d.health);
+  return { ...extras(d, ["ev", "caps", "bl", "mem", "memV", "cfg", "gdel", "tasks", "pm", "lb", "sv", "projects", "habits", "profile", "health"]), ...(profile ? { profile } : {}), ...(health ? { health } : {}), projects, habits, ev, caps, bl, mem, memV: d.memV === 2 ? 2 : 0, cfg, gdel, tasks, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
 }
 
 async function saveFile(filename, content, mime) {
@@ -5171,6 +5317,14 @@ function importData(inputEl) {
           });
           if (!x.desc && p.desc) x.desc = p.desc;
         });
+        if (d.health) {
+          const h = hlH();
+          Object.keys(d.health.days).forEach(k => { if (!h.days[k]) h.days[k] = d.health.days[k]; });
+          Object.keys(d.health.chk).forEach(k => { if (!h.chk[k]) h.chk[k] = d.health.chk[k]; });
+          d.health.meds.forEach(m => { if (!h.meds.some(x => x.id === m.id)) h.meds.push(m); });
+          d.health.syc.forEach(c => { if (!h.syc.some(x => x.id === c.id)) h.syc.push(c); });
+        }
+        if (d.profile) S.profile = { ...d.profile, ...(S.profile || {}) };
         S.habits = S.habits || [];
         (d.habits || []).forEach(h => {
           const x = S.habits.find(y => y.id === h.id);
@@ -5324,6 +5478,7 @@ document.addEventListener("keydown", e => {
     if (ed) closeEditor();
     closeSched();
     closeHb();
+    closeHl();
     closeReviewModal();
     closeSettingsModal();
   }
@@ -5399,6 +5554,59 @@ let dragItem = null;        // { kind: "sub" | "task", id }
 let inboxPanel = true;
 try { inboxPanel = localStorage.getItem("lc_inbox_panel") !== "0"; } catch (e) {}
 
+// Hồ sơ và nhật ký sức khỏe (v0.6.0). Không có trong dữ liệu thì trả null để giữ "không có" khác với "rỗng" khi gộp.
+function cleanProfile(x) {
+  if (!x || typeof x !== "object") return null;
+  const D = /^\d{4}-\d\d-\d\d$/;
+  return {
+    ...extras(x, ["n", "dob", "sex", "hSync", "mt"]),
+    ...(typeof x.n === "string" && x.n.trim() ? { n: x.n.trim().slice(0, 40) } : {}),
+    ...(D.test(x.dob || "") ? { dob: x.dob } : {}),
+    ...(["f", "m", "o"].includes(x.sex) ? { sex: x.sex } : {}),
+    ...(x.hSync === false ? { hSync: false } : {}),
+    ...(Number.isFinite(+x.mt) && +x.mt > 0 ? { mt: +x.mt } : {})
+  };
+}
+function cleanHealth(x) {
+  if (!x || typeof x !== "object") return null;
+  const D = /^\d{4}-\d\d-\d\d$/, K = /^[\w-]{1,24}$/, mt = o => Number.isFinite(+o.mt) && +o.mt > 0 ? { mt: +o.mt } : {};
+  const int = (v, lo, hi) => { v = Math.round(+v); return v >= lo && v <= hi ? v : null; };
+  const num = (v, lo, hi) => { v = +v; return Number.isFinite(v) && v >= lo && v <= hi ? Math.round(v * 100) / 100 : null; };
+  const days = {};
+  Object.keys(x.days || {}).filter(k => D.test(k)).forEach(k => {
+    const d = x.days[k];
+    if (!d || typeof d !== "object") return;
+    const o = { ...extras(d, ["mood", "stress", "sleep", "sy", "meds", "flow", "w", "ht", "note", "mt"]) };
+    const put = (f, v) => { if (v !== null) o[f] = v; };
+    put("mood", int(d.mood, 1, 5)); put("stress", int(d.stress, 1, 3)); put("sleep", num(d.sleep, 0, 24)); put("flow", int(d.flow, 1, 3));
+    put("w", num(d.w, 2, 500)); put("ht", num(d.ht, 30, 260));
+    if (typeof d.note === "string" && d.note.trim()) o.note = d.note.slice(0, 1000);
+    const sy = {}; Object.keys(d.sy || {}).forEach(s => { const v = int(d.sy[s], 1, 3); if (K.test(s) && v) sy[s] = v; });
+    if (Object.keys(sy).length) o.sy = sy;
+    const md = {}; Object.keys(d.meds || {}).forEach(m => { const v = int(d.meds[m], 1, 10); if (K.test(m) && v) md[m] = v; });
+    if (Object.keys(md).length) o.meds = md;
+    Object.assign(o, mt(d));
+    if (Object.keys(o).some(f => f !== "mt")) days[k] = o;
+  });
+  const seen = new Set();
+  const meds = (Array.isArray(x.meds) ? x.meds : []).filter(m => m && K.test(m.id || "") && typeof m.n === "string" && m.n.trim() && !seen.has(m.id) && seen.add(m.id)).slice(0, 100).map(m => ({
+    ...extras(m, ["id", "n", "kind", "dose", "sched", "times", "sd", "ed", "arch", "mt"]),
+    id: m.id, n: m.n.trim().slice(0, 60), kind: m.kind === "med" ? "med" : "sup",
+    ...(typeof m.dose === "string" && m.dose.trim() ? { dose: m.dose.trim().slice(0, 40) } : {}),
+    sched: m.sched === "prn" ? "prn" : "daily", times: int(m.times, 1, 4) || 1,
+    sd: D.test(m.sd || "") ? m.sd : ky(new Date()), ...(D.test(m.ed || "") ? { ed: m.ed } : {}), ...(m.arch ? { arch: 1 } : {}), ...mt(m)
+  }));
+  const s2 = new Set();
+  const syc = (Array.isArray(x.syc) ? x.syc : []).filter(c => c && K.test(c.id || "") && typeof c.n === "string" && c.n.trim() && !s2.has(c.id) && s2.add(c.id)).slice(0, 50).map(c => ({ id: c.id, n: c.n.trim().slice(0, 40), ...mt(c) }));
+  const chk = {};
+  Object.keys(x.chk || {}).filter(k => D.test(k)).forEach(k => {
+    const c = x.chk[k], ok = a => Array.isArray(a) && a.length === 2 && a.every(v => int(v, 0, 3) !== null);
+    if (c && ok(c.p) && ok(c.g)) chk[k] = { p: c.p.map(v => int(v, 0, 3)), g: c.g.map(v => int(v, 0, 3)), ...mt(c) };
+  });
+  const c = x.cyc || {};
+  const cyc = { len: int(c.len, 15, 60) || 28, per: int(c.per, 1, 12) || 5, auto: c.auto !== false, ...mt(c) };
+  return { ...extras(x, ["days", "meds", "syc", "chk", "cyc"]), days, meds, syc, chk, cyc };
+}
 // Thói quen (v0.6.0). Không dùng fold() ở đây: cleanState chạy trước khi fold được khai báo.
 function cleanHabit(x) {
   if (!x || !SAFE_K.test(x.id || "") || typeof x.n !== "string" || !x.n.trim()) return null;
@@ -6305,7 +6513,7 @@ function cloudPendingCount() {
   if (!sbUser || !meta || meta.uid !== sbUser.id) return 0;
   let base = null;
   try { base = raw ? JSON.parse(raw) : null; } catch (e) {}
-  const cur = JSON.parse(canonState(S));
+  const cur = JSON.parse(canonState(cloudView(S)));
   if (!base) return Object.values(cur.ev).flat().length + cur.tasks.length || 1;
   let n = 0;
   new Set([...Object.keys(cur.ev), ...Object.keys(base.ev)]).forEach(k => {
@@ -6342,6 +6550,7 @@ function cloudSoon(ms = 2000) {
 
 // Thay dữ liệu đang dùng bằng bản đã gộp, lưu xuống máy và vẽ lại (giống khi nhận thay đổi từ tab khác)
 function cloudApply(next) {
+  if (S.health && !next.health) next.health = S.health; // tắt đồng bộ sức khỏe: bản trên tài khoản không có phần này, giữ của máy
   S = next;
   Object.values(S.ev).forEach(sortL);
   stampBase(S); // dữ liệu nhận từ máy khác không tính là sửa trên máy này
@@ -6357,7 +6566,7 @@ async function cloudSync() {
   if (cloudBusy) { cloudAgain = true; return; }
   if (!navigator.onLine) { cloudSet("offline"); return; }
   // Đang sửa một hoạt động hoặc đang xếp lịch: chờ đóng bảng rồi mới nhận dữ liệu từ máy khác
-  if (ed || sch) { clearTimeout(cloudT); cloudT = setTimeout(cloudSync, 3000); return; }
+  if (ed || sch || (hlEd && hlEd.mode !== "day")) { clearTimeout(cloudT); cloudT = setTimeout(cloudSync, 3000); return; }
   cloudBusy = true;
   cloudAgain = false;
   clearTimeout(cloudT);
@@ -6386,7 +6595,7 @@ async function cloudSync() {
         const baseRaw = meta ? cloudBaseRaw() : null;
         if (theirs) {
           const blank = !Object.keys(S.ev).length && !S.tasks.length;
-          if ((baseRaw && canonState(S) === baseRaw) || (!baseRaw && blank)) {
+          if ((baseRaw && canonState(cloudView(S)) === baseRaw) || (!baseRaw && blank)) {
             cloudApply(theirs); // máy này không đổi gì (hoặc chưa có dữ liệu): nhận nguyên bản trên máy chủ
           } else {
             if (!baseRaw) snapshotNow("dang-nhap"); // lần đầu gộp với tài khoản: lưu một bản trên máy trước
@@ -6402,14 +6611,14 @@ async function cloudSync() {
         cloudKeep(meta, theirsRaw);
       }
       // Máy này có thay đổi chưa gửi thì gửi lên
-      const cur = canonState(S);
+      const cur = canonState(cloudView(S));
       if (srvRev && cur === cloudBaseRaw()) { cloudFails = 0; cloudSet("ok"); break; }
       const push = await sb.rpc("lc_push", { p_base: srvRev, p_data: JSON.parse(cur), p_device: DEV });
       if (push.error) throw push.error;
       if (push.data > 0) {
         cloudKeep({ uid, rev: push.data }, cur);
         cloudFails = 0;
-        cloudSet(canonState(S) === cur ? "ok" : "wait");
+        cloudSet(canonState(cloudView(S)) === cur ? "ok" : "wait");
         if (cloud.st === "wait") cloudAgain = true; // có thay đổi mới trong lúc đang gửi
         break;
       }
@@ -8238,6 +8447,24 @@ function hbWeekRowsHTML(ws) {
     </div>`;
   }).join("")}</div>`;
 }
+// Mẫu: 12 ngày qua có tâm trạng, giấc ngủ, vài lần nhức đầu vào ngày họp nhiều, một loại TPCN
+function hlDemo() {
+  const h = hlH();
+  if (h.meds.some(m => m.demo)) return;
+  const m = { id: nid("m"), n: "Vitamin D3", kind: "sup", dose: "1 viên 1000 IU", sched: "daily", times: 1, sd: hlKAdd(tk, -20), demo: 1, mt: Date.now() };
+  h.meds.push(m);
+  const mood = [4, 3, 2, 3, 4, 4, 3, 2, 3, 4, 5, 4], sleep = [7, 6.5, 5.5, 6, 7.5, 8, 7, 5.5, 6, 7, 8, 7.5];
+  for (let j = 12; j >= 1; j--) {
+    const k = hlKAdd(tk, -j);
+    if (h.days[k]) continue;
+    const i = 12 - j, d = { mood: mood[i], sleep: sleep[i], demo: 1, mt: Date.now() };
+    if (sleep[i] < 6.5) d.sy = { dau: sleep[i] < 6 ? 2 : 1, met: 1 };
+    if (j % 4) d.meds = { [m.id]: 1 };
+    if (j === 3) d.w = 58.4;
+    if (j === 10) { d.w = 59.1; d.ht = 162; }
+    h.days[k] = d;
+  }
+}
 function hbDemo() {
   if ((S.habits || []).some(h => h.demo)) return;
   const sk = S.caps.some(c => c.k === "sk") ? "sk" : (S.caps[0] || {}).k;
@@ -8251,6 +8478,682 @@ function hbDemo() {
   S.habits.push({ id: nid("h"), n: "Chạy bộ", c: sk, kind: "auto", key: fold("Chạy bộ"), per: "week", tgt: 2, ticks: {}, sd: tk, demo: 1 },
                 { id: nid("h"), n: "Uống đủ nước", c: sk, kind: "tick", per: "day", tgt: 7, ticks, sd: tk, demo: 1 });
 }
+
+/* ==========================================================================
+   SỨC KHỎE VÀ HỒ SƠ (v0.6.0, thêm trong UAT 20/10)
+   S.profile: { n, dob, sex: "f" | "m" | "o", hSync (false = không gửi dữ liệu sức khỏe lên tài khoản), mt }
+   S.health: { days: { "YYYY-MM-DD": { mood 1–5, stress 1–3, sleep (giờ), sy: { mã: 1–3 }, meds: { mã thuốc: số lần },
+                                         flow 1–3, w (kg), ht (cm), note, mt } },
+               meds: [{ id, n, kind: "med" | "sup", dose, sched: "daily" | "prn", times, sd, ed?, arch?, mt }],
+               syc: [{ id, n, mt }] (triệu chứng tự thêm), chk: { ngày: { p: [0–3, 0–3], g: [0–3, 0–3], mt } } (PHQ-2, GAD-2),
+               cyc: { len, per, auto } }
+   Gợi ý theo quy tắc cố định, không gọi AI: tần suất triệu chứng, liên hệ với giờ làm việc và giấc ngủ,
+   tâm trạng, cân nặng, BMI, thuốc, chu kỳ. Chỉ là gợi ý chung, không thay cho bác sĩ.
+   ========================================================================== */
+const HL_SY = [
+  ["met", "Mệt mỏi"], ["dau", "Nhức đầu"], ["kho", "Khó chịu, bứt rứt"], ["lo", "Lo âu"], ["mat", "Mất ngủ"],
+  ["chong", "Chóng mặt"], ["non", "Buồn nôn"], ["bung", "Đau bụng"], ["hoi", "Đầy hơi"], ["lung", "Đau lưng"],
+  ["co", "Đau cơ, mỏi người"], ["sot", "Sốt"], ["ho", "Ho"], ["mui", "Sổ mũi, nghẹt mũi"], ["hong", "Đau họng"],
+  ["kinh", "Đau bụng kinh", "f"], ["nguc", "Căng ngực", "f"], ["mun", "Nổi mụn", "f"]
+];
+// Mẹo tự chăm sóc và dấu hiệu cần đi khám cho từng triệu chứng (thông tin phổ thông, không phải chẩn đoán)
+const HL_TIP = {
+  met: ["Ngủ đủ 7–9 tiếng, ăn đủ 3 bữa, uống 1,5–2 lít nước, đi bộ nhẹ 20–30 phút mỗi ngày.", "Mệt kéo dài hơn 2 tuần không rõ lý do, sụt cân, khó thở: nên đi khám và xét nghiệm máu."],
+  dau: ["Uống nước, nghỉ mắt theo quy tắc 20-20-20 (mỗi 20 phút nhìn xa 6 m trong 20 giây), ngủ đúng giờ, hạn chế cà phê sau 14h.", "Đau đột ngột dữ dội, kèm sốt cao, cứng cổ, yếu tay chân hoặc nói khó: gọi 115. Đau trên 15 ngày mỗi tháng: nên đi khám."],
+  kho: ["Thở chậm 4-7-8 vài lần, đi bộ ngắn, ngủ đủ; để ý xem có trùng ngày thiếu ngủ hay nhiều việc không.", "Kéo dài nhiều tuần, ảnh hưởng công việc và các mối quan hệ: nên nói chuyện với bác sĩ hoặc chuyên gia tâm lý."],
+  lo: ["Viết ra điều đang lo, chia nhỏ việc cần làm, thở chậm, hạn chế cà phê và tin tức trước khi ngủ.", "Lo âu gần như mỗi ngày, hồi hộp, khó thở, mất ngủ kéo dài: nên gặp bác sĩ hoặc chuyên gia tâm lý."],
+  mat: ["Giờ ngủ và giờ dậy cố định cả cuối tuần, tránh màn hình 1 tiếng trước khi ngủ, không cà phê sau 14h, phòng tối và mát.", "Khó ngủ trên 3 đêm mỗi tuần, kéo dài hơn 3 tháng: nên đi khám."],
+  chong: ["Đứng dậy từ từ, uống đủ nước, không bỏ bữa.", "Kèm ngất, đau ngực, tim đập nhanh, nói khó hoặc yếu một bên người: gọi 115."],
+  non: ["Ăn nhẹ, chia nhỏ bữa, uống nước từng ngụm nhỏ; gừng có thể giúp dịu.", "Nôn liên tục trên 1–2 ngày, nôn ra máu, không giữ được nước: đi khám ngay."],
+  bung: ["Ăn chậm, tránh đồ cay và nhiều dầu mỡ, theo dõi xem đau sau món ăn nào.", "Đau dữ dội, đau vùng bụng dưới bên phải, kèm sốt hoặc nôn: đi khám ngay."],
+  hoi: ["Ăn chậm, nhai kỹ, bớt đồ uống có ga và đồ ngọt, đi bộ nhẹ sau bữa ăn.", "Kèm sụt cân, đi ngoài ra máu hoặc đau kéo dài: nên đi khám tiêu hóa."],
+  lung: ["Đứng dậy vận động mỗi 45–60 phút khi ngồi làm việc, giãn cơ lưng, chỉnh ghế và màn hình ngang tầm mắt.", "Kèm tê hoặc yếu chân, khó tiểu tiện: đi khám ngay."],
+  co: ["Nghỉ ngơi, giãn cơ nhẹ, tắm nước ấm, uống đủ nước.", "Đau cơ kèm sốt cao hoặc nước tiểu sẫm màu: nên đi khám."],
+  sot: ["Nghỉ ngơi, uống nhiều nước, mặc thoáng; đo nhiệt độ vài lần mỗi ngày.", "Sốt từ 39°C, sốt trên 3 ngày, kèm phát ban, khó thở hoặc lơ mơ: đi khám ngay."],
+  ho: ["Uống nước ấm, súc miệng nước muối, tránh khói thuốc.", "Ho trên 3 tuần, ho ra máu hoặc khó thở: nên đi khám."],
+  mui: ["Rửa mũi bằng nước muối sinh lý, uống nước ấm, ngủ đủ.", "Kéo dài trên 10 ngày hoặc sốt cao trở lại: nên đi khám."],
+  hong: ["Súc miệng nước muối ấm, uống nước ấm, nói ít.", "Đau họng nặng, khó nuốt, khó thở hoặc sốt cao: nên đi khám."],
+  kinh: ["Chườm ấm bụng dưới, vận động nhẹ, uống nước ấm, ngủ đủ.", "Đau dữ dội đến mức phải nghỉ học, nghỉ làm, hoặc ngày càng đau hơn: nên khám phụ khoa."],
+  nguc: ["Thường gặp trước kỳ kinh; áo ngực vừa vặn, giảm muối và cà phê có thể đỡ hơn.", "Có khối cứng, tiết dịch bất thường hoặc không theo chu kỳ: nên đi khám."],
+  mun: ["Rửa mặt nhẹ nhàng 2 lần mỗi ngày, không nặn mụn, ngủ đủ.", "Mụn viêm nhiều, để lại sẹo: nên gặp bác sĩ da liễu."]
+};
+const HL_LV = ["", "Nhẹ", "Vừa", "Nặng"];
+const HL_MOOD = ["", "Rất tệ", "Tệ", "Bình thường", "Tốt", "Rất tốt"];
+const HL_STRESS = ["", "Thấp", "Vừa", "Cao"];
+const HL_FLOW = ["", "Ít", "Vừa", "Nhiều"];
+const HL_ANS = ["Không ngày nào", "Vài ngày", "Hơn nửa số ngày", "Gần như mỗi ngày"];
+const HL_Q = { p: ["Ít hứng thú hoặc ít thấy vui khi làm mọi việc", "Thấy buồn, chán nản hoặc tuyệt vọng"], g: ["Thấy lo lắng, bồn chồn hoặc căng thẳng", "Không ngừng lo lắng được, hoặc không kiểm soát được việc lo lắng"] };
+const hlProf = () => S.profile || {};
+const hlIsF = () => hlProf().sex === "f";
+function hlH() {
+  if (!S.health) S.health = { days: {}, meds: [], syc: [], chk: {}, cyc: { len: 28, per: 5, auto: true } };
+  const h = S.health;
+  h.days = h.days || {}; h.meds = h.meds || []; h.syc = h.syc || []; h.chk = h.chk || {};
+  h.cyc = h.cyc || { len: 28, per: 5, auto: true };
+  return h;
+}
+const hlDay = k => (S.health && S.health.days && S.health.days[k]) || null;
+const hlKAdd = (k, n) => ky(ad(new Date(k + "T00:00"), n));
+const hlDiff = (a, b) => Math.round((new Date(b + "T00:00") - new Date(a + "T00:00")) / 864e5); // b − a (ngày)
+const hlNum = v => { const x = parseFloat(String(v).replace(",", ".")); return Number.isFinite(x) ? x : null; };
+const hlRange = (n, end = tk) => [...Array(n)].map((_, j) => hlKAdd(end, j - n + 1));
+// Danh sách triệu chứng cho người này: có sẵn (theo giới tính) + tự thêm
+const hlSyList = () => [...HL_SY.filter(s => !s[2] || hlIsF()).map(s => ({ k: s[0], n: s[1] })),
+  ...(S.health && S.health.syc || []).map(c => ({ k: c.id, n: c.n }))];
+const hlSyName = k => { const b = HL_SY.find(s => s[0] === k); if (b) return b[1]; const c = (S.health && S.health.syc || []).find(x => x.id === k); return c ? c.n : "(đã xóa)"; };
+function hlDayEmpty(d) { return !d || !Object.keys(d).some(f => f !== "mt" && !(f === "sy" || f === "meds" ? !Object.keys(d[f] || {}).length : d[f] === "" || d[f] == null)); }
+// Ghi một thay đổi của ngày k: đóng dấu thời gian sửa (để đồng bộ), bỏ ngày trống, lưu, vẽ lại
+function hlTouch(k) {
+  const h = hlH(), d = h.days[k];
+  if (d) { d.mt = Date.now(); delete d.demo; if (hlDayEmpty(d)) delete h.days[k]; } // đã sửa thì là dữ liệu thật
+  save(); draw();
+  if (hlEd) hlRender();
+}
+function hlGet(k) { const h = hlH(); return h.days[k] = h.days[k] || {}; }
+function hlSet(k, f, v) {
+  const d = hlGet(k);
+  if (v === null || v === undefined || v === "" || (typeof v === "number" && !Number.isFinite(v))) delete d[f]; else d[f] = v;
+  hlTouch(k);
+}
+// Bấm chip triệu chứng: không → nhẹ → vừa → nặng → không
+function hlSy(k, key) {
+  const d = hlGet(k), sy = d.sy = d.sy || {};
+  const v = ((sy[key] || 0) + 1) % 4;
+  if (v) sy[key] = v; else delete sy[key];
+  if (!Object.keys(sy).length) delete d.sy;
+  hlTouch(k);
+}
+function hlTake(k, id, delta) {
+  const m = (S.health.meds || []).find(x => x.id === id);
+  if (!m) return;
+  const d = hlGet(k), mm = d.meds = d.meds || {};
+  const v = Math.max(0, Math.min(10, (mm[id] || 0) + delta));
+  if (v) mm[id] = v; else delete mm[id];
+  if (!Object.keys(mm).length) delete d.meds;
+  hlTouch(k);
+}
+// Thuốc đang dùng vào ngày k
+const hlMedsOn = k => (S.health && S.health.meds || []).filter(m => !m.arch && m.sd <= k && (!m.ed || m.ed >= k));
+// Giá trị gần nhất của một trường (cân nặng, chiều cao) tới ngày k
+function hlLast(f, upTo = tk) {
+  const days = S.health && S.health.days || {};
+  const ks = Object.keys(days).filter(k => k <= upTo && days[k][f] != null).sort();
+  return ks.length ? { k: ks[ks.length - 1], v: days[ks[ks.length - 1]][f] } : null;
+}
+function hlAge() {
+  const b = hlProf().dob;
+  if (!b) return null;
+  const t = new Date(tk + "T00:00"), d = new Date(b + "T00:00");
+  let a = t.getFullYear() - d.getFullYear();
+  if (t.getMonth() < d.getMonth() || (t.getMonth() === d.getMonth() && t.getDate() < d.getDate())) a--;
+  return a >= 0 && a < 130 ? a : null;
+}
+// BMI theo ngưỡng châu Á – Thái Bình Dương (WHO 2000), chỉ cho người từ 18 tuổi
+function hlBmi() {
+  const w = hlLast("w"), h = hlLast("ht"), age = hlAge();
+  if (!w || !h) return null;
+  const m = h.v / 100, v = w.v / (m * m);
+  const cat = v < 18.5 ? ["Thiếu cân", "warn"] : v < 23 ? ["Bình thường", "good"] : v < 25 ? ["Thừa cân", "warn"] : ["Béo phì", "warn"];
+  return { v, w: w.v, h: h.v, cat: age !== null && age < 18 ? null : cat, lo: 18.5 * m * m, hi: 22.9 * m * m };
+}
+// Chu kỳ: ngày bắt đầu kỳ kinh = ngày có ghi hành kinh mà 2 ngày trước đó không có (cho phép quên ghi 1 ngày giữa kỳ)
+function hlCycle() {
+  const h = S.health || {}, cyc = h.cyc || { len: 28, per: 5, auto: true }, days = h.days || {};
+  const fl = Object.keys(days).filter(k => days[k].flow).sort(), set = new Set(fl);
+  const starts = fl.filter(k => !set.has(hlKAdd(k, -1)) && !set.has(hlKAdd(k, -2)));
+  const runs = starts.map(s => { let e = s; for (let k = hlKAdd(s, 1); set.has(k) || set.has(hlKAdd(k, 1)); k = hlKAdd(k, 1)) if (set.has(k)) e = k; return hlDiff(s, e) + 1; });
+  const lens = starts.slice(1).map((s, i) => hlDiff(starts[i], s)).filter(n => n >= 15 && n <= 60).slice(-6);
+  const auto = cyc.auto !== false && lens.length >= 2;
+  const len = auto ? Math.round(lens.reduce((a, b) => a + b, 0) / lens.length) : (cyc.len || 28);
+  const per = cyc.auto !== false && runs.length >= 2 ? Math.round(runs.slice(-6).reduce((a, b) => a + b, 0) / Math.min(6, runs.length)) : (cyc.per || 5);
+  const last = starts[starts.length - 1] || null;
+  if (!last) return { starts, runs, lens, len, per, auto, last: null };
+  const next = hlKAdd(last, len), ovu = hlKAdd(next, -14);
+  const lastFlow = fl[fl.length - 1];
+  const late = lastFlow && lastFlow >= last && tk > next ? hlDiff(next, tk) : 0;
+  return { starts, runs, lens, len, per, auto, last, next, ovu, fert: [hlKAdd(ovu, -5), hlKAdd(ovu, 1)], day: hlDiff(last, tk) + 1, late,
+    irregular: lens.length >= 3 && Math.max(...lens) - Math.min(...lens) > 7, longRun: runs.length && runs[runs.length - 1] > 8 ? runs[runs.length - 1] : 0 };
+}
+// Dấu dự đoán cho ngày k (chỉ từ hôm nay trở đi, 2 chu kỳ tới)
+function hlPredict(k, c = hlCycle()) {
+  if (!hlIsF() || !c.last || k < tk || c.late) return null;
+  for (let i = 0; i < 2; i++) {
+    const n = hlKAdd(c.next, i * c.len), o = hlKAdd(n, -14);
+    if (k >= n && k <= hlKAdd(n, c.per - 1)) return "per";
+    if (k === o) return "ovu";
+    if (k >= hlKAdd(o, -5) && k <= hlKAdd(o, 1)) return "fert";
+  }
+  return null;
+}
+// Tỷ lệ uống thuốc đều đặn 7 ngày qua (không tính hôm nay) cho thuốc dùng hằng ngày
+function hlAdh(m) {
+  if (m.sched !== "daily") return null;
+  let exp = 0, got = 0;
+  hlRange(7, hlKAdd(tk, -1)).forEach(k => {
+    if (k < m.sd || (m.ed && k > m.ed)) return;
+    exp += m.times || 1;
+    got += Math.min(m.times || 1, ((hlDay(k) || {}).meds || {})[m.id] || 0);
+  });
+  return exp ? { exp, got, p: got / exp } : null;
+}
+const hlAvg = (ks, f) => { const v = ks.map(k => (hlDay(k) || {})[f]).filter(x => x != null); return v.length ? { n: v.length, v: v.reduce((a, b) => a + b, 0) / v.length } : null; };
+const hlCapH = (k, c) => (S.ev[k] || []).filter(e => e.c === c).reduce((a, e) => a + e.h, 0);
+const hlMean = a => a.reduce((x, y) => x + y, 0) / a.length;
+// Gợi ý: mức "urgent" (đi khám ngay), "warn" (nên để ý, nên khám), "info" (gợi ý), "good" (đang làm tốt)
+function hlAdvice() {
+  const out = [], add = (lv, t, d, cat) => out.push({ lv, t, d, cat });
+  const days = S.health && S.health.days || {}, p = hlProf();
+  const last7 = hlRange(7), last14 = hlRange(14), last30 = hlRange(30, hlKAdd(tk, -1));
+  // Hồ sơ
+  if (!p.dob || !p.sex) add("info", "Hoàn thiện hồ sơ", "Thêm ngày sinh và giới tính ở tab Tôi để app tính tuổi, BMI và theo dõi chu kỳ cho đúng.", "me");
+  // Triệu chứng: tần suất 7 ngày, nặng liên tiếp, sốt kéo dài
+  const freq = {};
+  last7.forEach(k => Object.keys((days[k] || {}).sy || {}).forEach(s => { freq[s] = (freq[s] || 0) + 1; }));
+  Object.keys(freq).sort((a, b) => freq[b] - freq[a]).forEach(s => {
+    const tip = HL_TIP[s];
+    if (freq[s] >= 3) add("warn", `${hlSyName(s)} ${freq[s]}/7 ngày qua`, (tip ? tip[0] + " " + tip[1] : "Theo dõi thêm; nếu kéo dài hoặc nặng hơn, nên đi khám."), "sy");
+  });
+  const sev = {};
+  hlRange(3).forEach(k => Object.entries((days[k] || {}).sy || {}).forEach(([s, v]) => { if (v === 3) sev[s] = (sev[s] || 0) + 1; }));
+  Object.keys(sev).filter(s => sev[s] >= 2).forEach(s => add("urgent", `${hlSyName(s)} mức nặng ${sev[s]} ngày gần đây`, `Triệu chứng nặng kéo dài nên được bác sĩ khám. ${HL_TIP[s] ? HL_TIP[s][1] : "Nếu kèm khó thở, đau ngực, lơ mơ: gọi 115."}`, "sy"));
+  const fever = hlRange(5).filter(k => ((days[k] || {}).sy || {}).sot).length;
+  if (fever >= 3) add("urgent", `Sốt ${fever} trong 5 ngày qua`, "Sốt trên 3 ngày nên đi khám để tìm nguyên nhân. Sốt từ 39°C, khó thở, phát ban hoặc lơ mơ: đi khám ngay.", "sy");
+  // Liên hệ với lịch: triệu chứng hay vào ngày làm việc nhiều, ngày ngủ ít
+  const logged = last30.filter(k => days[k]);
+  const syAll = {};
+  logged.forEach(k => Object.keys(days[k].sy || {}).forEach(s => { (syAll[s] = syAll[s] || []).push(k); }));
+  Object.entries(syAll).forEach(([s, ks]) => {
+    if (ks.length < 3) return;
+    const other = logged.filter(k => !ks.includes(k));
+    if (other.length >= 3) {
+      const a = hlMean(ks.map(k => hlCapH(k, "tc"))), b = hlMean(other.map(k => hlCapH(k, "tc")));
+      if (a - b >= 2) add("info", `${hlSyName(s)} hay vào ngày làm việc nhiều`, `30 ngày qua: ngày có ${hlSyName(s).toLowerCase()} trung bình ${r1(a)}h cho ${esc(CM("tc").n)}, ngày khác ${r1(b)}h. Thử chia việc dài thành khối 90 phút, nghỉ 10 phút giữa các khối.`, "sy");
+    }
+    const sa = ks.map(k => days[k].sleep).filter(x => x != null), sb = other.map(k => days[k].sleep).filter(x => x != null);
+    if (sa.length >= 3 && sb.length >= 3 && hlMean(sb) - hlMean(sa) >= 1) add("info", `${hlSyName(s)} hay đi cùng đêm ngủ ít`, `Ngày có ${hlSyName(s).toLowerCase()} bạn ngủ trung bình ${r1(hlMean(sa))}h, ngày khác ${r1(hlMean(sb))}h. Ưu tiên ngủ đủ ít nhất 7 tiếng.`, "sl");
+  });
+  // Giấc ngủ 7 ngày
+  const sl = last7.map(k => (days[k] || {}).sleep).filter(x => x != null);
+  if (sl.length >= 4) {
+    const a = hlMean(sl), short = sl.filter(x => x < 6).length;
+    if (a < 6.5) add("warn", `Ngủ trung bình ${r1(a)}h mỗi đêm`, `Người lớn cần 7–9 tiếng. ${short ? short + " đêm dưới 6 tiếng trong tuần. " : ""}Thử đặt giờ đi ngủ cố định và xếp một hoạt động "Ngủ" vào lịch để giữ đúng giờ.`, "sl");
+    else if (a > 9.5) add("info", `Ngủ trung bình ${r1(a)}h mỗi đêm`, "Ngủ nhiều kéo dài kèm mệt mỏi có thể là dấu hiệu cần để ý; nếu vẫn mệt dù ngủ nhiều, nên đi khám.", "sl");
+    else if (a >= 7) add("good", `Ngủ đủ: trung bình ${r1(a)}h`, "Giữ giờ ngủ và giờ dậy đều như tuần này.", "sl");
+  }
+  // Tâm lý
+  const md = last14.map(k => (days[k] || {}).mood).filter(x => x != null), low = md.filter(x => x <= 2).length;
+  const chkK = Object.keys(S.health && S.health.chk || {}).filter(k => k >= hlKAdd(tk, -30)).sort().pop(), chk = chkK && S.health.chk[chkK];
+  const phq = chk ? chk.p[0] + chk.p[1] : null, gad = chk ? chk.g[0] + chk.g[1] : null;
+  if (phq !== null && (phq >= 3 || gad >= 3)) add("warn", `Kiểm tra ${dm(chkK)}: ${phq >= 3 ? "dấu hiệu trầm cảm" : ""}${phq >= 3 && gad >= 3 ? " và " : ""}${gad >= 3 ? "dấu hiệu lo âu" : ""}`, `Điểm PHQ-2 ${phq}/6, GAD-2 ${gad}/6 (từ 3 trở lên là nên được đánh giá thêm). Hãy nói chuyện với bác sĩ hoặc chuyên gia tâm lý. Nếu có ý nghĩ làm hại bản thân, gọi 115 hoặc đến cơ sở y tế gần nhất ngay.`, "mh");
+  else if (low >= 5) add("warn", `Tâm trạng thấp ${low}/14 ngày qua`, "Làm bài kiểm tra nhanh 4 câu ở mục Tâm lý để biết có nên gặp chuyên gia không. Kể với một người bạn tin cậy cũng giúp nhẹ lòng hơn.", "mh");
+  const md7 = last7.map(k => (days[k] || {}).mood).filter(x => x != null);
+  if (md7.length >= 3 && hlMean(md7) <= 3 && CW >= 0) {
+    const qh = wk(CW, "qh"), sk = wk(CW, "sk");
+    if (S.caps.some(c => c.k === "qh") && qh < 2) add("info", `Tâm trạng ${r1(hlMean(md7))}/5, tuần này ${r1(qh)}h cho ${esc(CM("qh").n)}`, "Hẹn gặp hoặc gọi cho một người thân trong 2–3 ngày tới; xếp luôn vào lịch để không quên.", "mh");
+    if (S.caps.some(c => c.k === "sk") && sk < 2) add("info", `Tâm trạng ${r1(hlMean(md7))}/5, tuần này ${r1(sk)}h cho ${esc(CM("sk").n)}`, "Vận động 20–30 phút (đi bộ nhanh, đạp xe, yoga) giúp cải thiện tâm trạng; xếp 3 buổi vào lịch tuần này.", "mh");
+  }
+  const st = last7.map(k => (days[k] || {}).stress).filter(x => x != null);
+  if (st.length >= 3 && st.filter(x => x === 3).length >= 3) add("info", `Căng thẳng cao ${st.filter(x => x === 3).length}/7 ngày`, "Chừa ít nhất một khoảng trống 30 phút mỗi ngày không việc, thở chậm 4-7-8 vài lần, giảm cà phê buổi chiều.", "mh");
+  // Cân nặng và BMI
+  const wl = Object.keys(days).filter(k => days[k].w != null).sort();
+  if (wl.length >= 2) {
+    const lk = wl[wl.length - 1], lw = days[lk].w;
+    const pk = wl.filter(k => hlDiff(k, lk) >= 5 && hlDiff(k, lk) <= 14).pop(), mk = wl.filter(k => hlDiff(k, lk) >= 25 && hlDiff(k, lk) <= 40).pop();
+    if (pk && Math.abs(lw - days[pk].w) >= 2) add("warn", `Cân nặng ${lw - days[pk].w > 0 ? "tăng" : "giảm"} ${r1(Math.abs(lw - days[pk].w))} kg trong ${hlDiff(pk, lk)} ngày`, "Thay đổi nhanh hơn 1 kg mỗi tuần mà không chủ đích nên được để ý: xem lại ăn uống, giấc ngủ; nếu không rõ lý do, nên đi khám.", "bd");
+    else if (mk && Math.abs(lw - days[mk].w) / days[mk].w >= 0.05) add("warn", `Cân nặng đổi ${Math.round(Math.abs(lw - days[mk].w) / days[mk].w * 100)}% trong ${hlDiff(mk, lk)} ngày`, "Giảm hoặc tăng trên 5% trong một tháng mà không chủ đích: nên đi khám.", "bd");
+  }
+  const b = hlBmi();
+  if (b && b.cat) {
+    if (b.v >= 23) add("info", `BMI ${r1(b.v)} · ${b.cat[0]}`, `Với chiều cao ${r1(b.h)} cm, mức bình thường là ${r1(b.lo)}–${r1(b.hi)} kg; giảm khoảng ${r1(b.w - b.hi)} kg để về mức này. Giảm 0,5 kg mỗi tuần là an toàn: bớt đồ ngọt, đồ chiên, thêm 150 phút vận động mỗi tuần.`, "bd");
+    else if (b.v < 18.5) add("info", `BMI ${r1(b.v)} · Thiếu cân`, `Với chiều cao ${r1(b.h)} cm, mức bình thường từ ${r1(b.lo)} kg (thiếu ${r1(b.lo - b.w)} kg). Thêm bữa phụ giàu đạm, tập sức mạnh 2–3 buổi mỗi tuần; nếu sụt cân không rõ lý do, nên đi khám.`, "bd");
+  }
+  // Thuốc và thực phẩm chức năng
+  hlMedsOn(tk).forEach(m => {
+    const a = hlAdh(m);
+    if (!a) return;
+    if (a.p < 0.8) add("warn", `${esc(m.n)}: uống ${a.got}/${a.exp} liều 7 ngày qua`, `${m.kind === "med" ? "Thuốc bác sĩ kê cần uống đều mới hiệu quả; " : ""}đặt báo thức cố định hoặc tạo thói quen tích tay "${esc(m.n)}" ở dải Thói quen.`, "md");
+    else if (a.p >= 1 && a.exp >= 5) add("good", `${esc(m.n)}: đủ ${a.got}/${a.exp} liều 7 ngày qua`, "Bạn đang dùng đều đặn.", "md");
+  });
+  // Chu kỳ
+  if (hlIsF()) {
+    const c = hlCycle();
+    if (!c.last) add("info", "Ghi ngày hành kinh để dự đoán chu kỳ", "Mở Ghi hôm nay (hoặc ngày bắt đầu kỳ gần nhất) và chọn mức hành kinh; app sẽ dự đoán kỳ tới và ngày rụng trứng.", "cy");
+    else {
+      if (c.late >= 7) add("warn", `Trễ kinh ${c.late} ngày`, `Kỳ kinh dự kiến ${dm(c.next)}. Nếu có khả năng mang thai, thử que thử thai. Căng thẳng, thay đổi cân nặng, tập luyện nặng cũng làm trễ kinh; trễ trên 3 tháng hoặc thường xuyên: nên khám phụ khoa.`, "cy");
+      else if (!c.late && hlDiff(tk, c.next) >= 0 && hlDiff(tk, c.next) <= 3) add("info", `Kỳ kinh dự kiến ${dm(c.next)}`, `Còn ${hlDiff(tk, c.next)} ngày. Chuẩn bị sẵn đồ dùng; nếu hay đau bụng kinh, chườm ấm và ngủ sớm vài ngày này.`, "cy");
+      if (!c.late && tk >= c.fert[0] && tk <= c.fert[1]) add("info", "Đang trong giai đoạn dễ thụ thai", `Dự đoán theo lịch: ${dm(c.fert[0])}–${dm(c.fert[1])}, rụng trứng khoảng ${dm(c.ovu)}. Không dùng dự đoán này để tránh thai.`, "cy");
+      if (c.irregular) add("warn", "Chu kỳ không đều", `Các chu kỳ gần đây dài ${c.lens.join(", ")} ngày (chênh hơn 7 ngày). Dự đoán sẽ kém chính xác; nếu kéo dài, nên khám phụ khoa.`, "cy");
+      if (c.auto && (c.len < 21 || c.len > 35)) add("warn", `Chu kỳ trung bình ${c.len} ngày`, "Chu kỳ thường dài 21–35 ngày. Ngắn hoặc dài hơn nhiều kỳ liền: nên khám phụ khoa.", "cy");
+      if (c.longRun) add("warn", `Kỳ kinh gần nhất kéo dài ${c.longRun} ngày`, "Hành kinh trên 7–8 ngày hoặc ra nhiều phải thay băng mỗi 1–2 giờ: nên khám phụ khoa.", "cy");
+    }
+  }
+  // Nhắc ghi
+  if (Object.keys(days).length && !hlRange(3).some(k => days[k])) add("info", "3 ngày chưa ghi nhật ký", "Ghi 30 giây mỗi tối: tâm trạng, giấc ngủ, triệu chứng. Càng đều, gợi ý càng đúng.", "lg");
+  const order = { urgent: 0, warn: 1, info: 2, good: 3 };
+  return out.sort((a, b) => order[a.lv] - order[b.lv]);
+}
+
+/* ---------- Tab Sức khỏe: Tóm tắt · Duyệt · Nhật ký (bố cục theo app Sức khỏe của iPhone) ---------- */
+let hlView = "sum", hlCat = null, hlRng = 30, hlAll = false;
+try { hlView = localStorage.getItem("lc_hl_view") || "sum"; } catch (e) {}
+const HL_CATS = [
+  ["sy", "Triệu chứng", "#c9628a"], ["mh", "Tâm lý", "#8b6da9"], ["sl", "Giấc ngủ", "#4a859c"],
+  ["md", "Thuốc và thực phẩm chức năng", "#b88628"], ["bd", "Cơ thể", "#97A13B"], ["cy", "Chu kỳ", "#c24d5b"]
+];
+const hlCats = () => HL_CATS.filter(c => c[0] !== "cy" || hlIsF());
+function hlGo(v, cat) {
+  cur = "hl"; hlView = v; hlCat = cat || null;
+  try { localStorage.setItem("lc_hl_view", v); } catch (e) {}
+  draw(); window.scrollTo(0, 0);
+}
+// Biểu đồ cột nhỏ: n ngày gần nhất (6 tháng thì gộp theo tuần, lấy trung bình)
+function hlBars(f, n, max, color, fmt) {
+  const days = S.health && S.health.days || {};
+  let cols;
+  if (n > 60) {
+    cols = [...Array(26)].map((_, i) => {
+      const end = hlKAdd(tk, -7 * (25 - i)), ks = hlRange(7, end), v = ks.map(k => (days[k] || {})[f]).filter(x => x != null);
+      return { k: end, v: v.length ? hlMean(v) : null, lb: dm(hlKAdd(end, -6)) + "–" + dm(end) };
+    });
+  } else cols = hlRange(n).map(k => ({ k, v: (days[k] || {})[f] != null ? days[k][f] : null, lb: dm(k) }));
+  const has = cols.filter(c => c.v != null);
+  const mx = max || Math.max(1, ...has.map(c => c.v)), mn = f === "w" && has.length ? Math.min(...has.map(c => c.v)) - 1 : 0;
+  return `<div class="hl-bars" role="img" aria-label="${has.length} giá trị">${cols.map(c => `<i style="height:${c.v == null ? 0 : Math.max(4, (c.v - mn) / Math.max(0.1, mx - mn) * 100)}%; background:${color}" title="${c.lb}: ${c.v == null ? "chưa ghi" : fmt(c.v)}"></i>`).join("")}</div>`;
+}
+function hlRangeSeg() {
+  return `<div class="set-seg">${[[7, "7 ngày"], [30, "30 ngày"], [180, "6 tháng"]].map(([n, lb]) => `<button type="button" class="${hlRng === n ? "on" : ""}" aria-pressed="${hlRng === n}" onclick="hlRng=${n}; draw()">${lb}</button>`).join("")}</div>`;
+}
+function hlTodayCard() {
+  const d = hlDay(tk) || {}, meds = hlMedsOn(tk), c = hlIsF() ? hlCycle() : null, pr = c ? hlPredict(tk, c) : null;
+  const sy = hlSyList(), top = Object.entries(hlTopSy(30)).map(([k]) => k), show = [...new Set([...Object.keys(d.sy || {}), ...top, "met", "dau", "kho"])].filter(k => sy.some(s => s.k === k)).slice(0, 8);
+  return `
+    <div class="card hl-today">
+      <div class="card-header"><div><h2 class="card-title">Hôm nay</h2><div class="card-sub">${esc(dayDesc(tk).replace(/^Hôm nay · /, ""))}${pr ? ` · ${{ per: "Dự kiến hành kinh", fert: "Giai đoạn dễ thụ thai", ovu: "Dự kiến rụng trứng" }[pr]}` : ""}</div></div>
+        <button type="button" class="btn btn-sm btn-primary" onclick="hlOpen('${tk}')">Ghi chi tiết</button></div>
+      <div class="hl-q"><span class="hl-ql">Tâm trạng</span><div class="hl-scale">${[1, 2, 3, 4, 5].map(v => `<button type="button" class="hl-m m${v} ${d.mood === v ? "on" : ""}" aria-pressed="${d.mood === v}" onclick="hlSet('${tk}','mood', ${d.mood === v ? "null" : v})">${HL_MOOD[v]}</button>`).join("")}</div></div>
+      <div class="hl-q"><span class="hl-ql">Triệu chứng</span><div class="hl-chips">${show.map(k => hlSyChip(tk, k, d)).join("")}<button type="button" class="hl-chip more" onclick="hlOpen('${tk}')">Khác…</button></div></div>
+      ${meds.length ? `<div class="hl-q"><span class="hl-ql">Thuốc, TPCN</span><div class="hl-chips">${meds.map(m => hlMedChip(tk, m, d)).join("")}</div></div>` : ""}
+      ${hlIsF() ? `<div class="hl-q"><span class="hl-ql">Hành kinh</span><div class="hl-scale">${[1, 2, 3].map(v => `<button type="button" class="hl-m fl ${d.flow === v ? "on" : ""}" aria-pressed="${d.flow === v}" onclick="hlSet('${tk}','flow', ${d.flow === v ? "null" : v})">${HL_FLOW[v]}</button>`).join("")}</div></div>` : ""}
+    </div>`;
+}
+function hlSyChip(k, key, d) {
+  const v = ((d || hlDay(k) || {}).sy || {})[key] || 0;
+  return `<button type="button" class="hl-chip ${v ? "on l" + v : ""}" aria-pressed="${!!v}" onclick="hlSy('${k}','${key}')" title="Bấm để đổi mức: không → nhẹ → vừa → nặng">${esc(hlSyName(key))}${v ? ` · ${HL_LV[v]}` : ""}</button>`;
+}
+function hlMedChip(k, m, d) {
+  const n = ((d || hlDay(k) || {}).meds || {})[m.id] || 0, need = m.sched === "daily" ? (m.times || 1) : 0;
+  return `<span class="hl-chip med ${n && n >= need ? "on" : ""}">
+    <button type="button" onclick="hlTake('${k}','${m.id}', 1)" aria-label="Đã dùng ${esc(m.n)} thêm 1 lần">${esc(m.n)}${need ? ` ${n}/${need}` : n ? ` · ${n} lần` : ""}</button>
+    ${n ? `<button type="button" class="undo" onclick="hlTake('${k}','${m.id}', -1)" aria-label="Bớt 1 lần ${esc(m.n)}">−</button>` : ""}</span>`;
+}
+function hlTopSy(n) {
+  const f = {};
+  hlRange(n).forEach(k => Object.keys((hlDay(k) || {}).sy || {}).forEach(s => { f[s] = (f[s] || 0) + 1; }));
+  return Object.fromEntries(Object.entries(f).sort((a, b) => b[1] - a[1]));
+}
+function hlAdviceHTML(list, limit) {
+  if (!list.length) return `<p class="set-note">Chưa có gợi ý. Ghi nhật ký vài ngày để app có dữ liệu.</p>`;
+  const sh = limit ? list.slice(0, limit) : list;
+  return `<div class="hl-adv">${sh.map(a => `<div class="hl-a ${a.lv}"><b>${a.t}</b><span>${a.d}</span></div>`).join("")}</div>
+    ${limit && list.length > limit ? `<button type="button" class="btn btn-sm btn-ghost" onclick="hlAll=true; draw()">Xem thêm ${list.length - limit} gợi ý</button>` : ""}
+    <p class="hl-disc">Gợi ý chung dựa trên nhật ký của bạn, không thay cho bác sĩ. Cấp cứu: gọi 115.</p>`;
+}
+function hlPinned() {
+  const days = S.health && S.health.days || {}, cards = [];
+  const card = (cat, t, big, sub, chart) => cards.push(`<button type="button" class="hl-pin" onclick="hlGo('browse','${cat}')" style="--hc:${HL_CATS.find(c => c[0] === cat)[2]}"><span class="hl-pin-t">${t}</span><b>${big}</b><small>${sub}</small>${chart || ""}</button>`);
+  const md = hlAvg(hlRange(7), "mood");
+  card("mh", "Tâm trạng", md ? r1(md.v) + "<small>/5</small>" : "–", md ? `trung bình 7 ngày · ${md.n} lần ghi` : "chưa ghi", hlBars("mood", 7, 5, "#8b6da9", v => HL_MOOD[Math.round(v)]));
+  const sl = hlAvg(hlRange(7), "sleep");
+  card("sl", "Giấc ngủ", sl ? r1(sl.v) + "<small>h</small>" : "–", sl ? "trung bình 7 đêm" : "chưa ghi", hlBars("sleep", 7, 10, "#4a859c", v => r1(v) + "h"));
+  const top = Object.entries(hlTopSy(14));
+  card("sy", "Triệu chứng", top.length ? top.length + "<small> loại</small>" : "0", top.length ? top.slice(0, 2).map(([k, n]) => `${esc(hlSyName(k))} ${n} ngày`).join(", ") : "14 ngày qua không có");
+  const b = hlBmi(), w = hlLast("w");
+  card("bd", "Cân nặng", w ? r1(w.v) + "<small> kg</small>" : "–", b && b.cat ? `BMI ${r1(b.v)} · ${b.cat[0]}` : w ? `ghi ${dm(w.k)}` : "chưa ghi", hlBars("w", 30, 0, "#97A13B", v => r1(v) + " kg"));
+  const meds = hlMedsOn(tk), ad = meds.map(hlAdh).filter(Boolean);
+  if (meds.length) { const g = ad.reduce((a, x) => a + x.got, 0), e = ad.reduce((a, x) => a + x.exp, 0); card("md", "Thuốc, TPCN", e ? Math.round(g / e * 100) + "<small>%</small>" : meds.length + "<small> loại</small>", e ? `đủ liều 7 ngày qua · ${meds.length} loại` : "đang dùng"); }
+  if (hlIsF()) {
+    const c = hlCycle();
+    card("cy", "Chu kỳ", c.last ? (c.late ? "Trễ " + c.late + "<small> ngày</small>" : "Ngày " + c.day) : "–", c.last ? (c.late ? `dự kiến ${dm(c.next)}` : `kỳ tới ${dm(c.next)} · rụng trứng ${dm(c.ovu)}`) : "ghi ngày hành kinh để dự đoán");
+  }
+  return `<div class="hl-pins">${cards.join("")}</div>`;
+}
+V.hl = function () {
+  const seg = `<div class="segmented-control hl-seg" role="tablist">${[["sum", "Tóm tắt"], ["browse", "Duyệt"], ["log", "Nhật ký"]].map(([v, lb]) => `<button type="button" role="tab" class="${hlView === v ? "active" : ""}" aria-selected="${hlView === v}" onclick="hlGo('${v}')">${lb}</button>`).join("")}</div>`;
+  const p = hlProf(), hello = p.n ? `<p class="hl-hello">Chào ${esc(p.n)}${hlAge() !== null ? ` · ${hlAge()} tuổi` : ""}</p>` : "";
+  let body = "";
+  if (hlView === "browse" && hlCat) body = hlCatHTML(hlCat);
+  else if (hlView === "browse") body = `<div class="card hl-browse">${hlCats().map(([k, n, col]) => `<button type="button" class="hl-row" onclick="hlGo('browse','${k}')" style="--hc:${col}"><span class="hl-ic"></span><span>${n}</span><span class="hl-chev" aria-hidden="true"></span></button>`).join("")}</div>`;
+  else if (hlView === "log") body = hlLogHTML();
+  else {
+    const adv = hlAdvice();
+    body = `${!p.dob || !p.sex ? `<div class="review-prompt-banner"><div><b>Thêm hồ sơ</b><div style="font-size:12px; color:var(--tx-sec); margin-top:2px;">Tên gọi, ngày sinh, giới tính, chiều cao, cân nặng: để tính BMI, chu kỳ và gợi ý cho đúng.</div></div><button type="button" class="btn btn-sm btn-primary" onclick="switchTab('me')">Mở hồ sơ</button></div>` : ""}
+      ${hlTodayCard()}
+      <div class="card"><div class="card-header"><div><h2 class="card-title">Điểm nổi bật</h2><div class="card-sub">Gợi ý theo nhật ký và lịch của bạn</div></div></div>${hlAdviceHTML(adv, hlAll ? 0 : 4)}</div>
+      <h3 class="hl-h">Đã ghim</h3>${hlPinned()}`;
+  }
+  return `<div class="hl">${hello}${seg}${body}</div>`;
+};
+function hlLogHTML() {
+  const days = S.health && S.health.days || {}, ks = Object.keys(days).filter(k => k <= tk).sort().reverse().slice(0, 90);
+  return `
+    <div class="card">
+      <div class="card-header"><div><h2 class="card-title">Nhật ký từng ngày</h2><div class="card-sub">${ks.length ? `${Object.keys(days).length} ngày đã ghi` : "Chưa có ngày nào"}</div></div>
+        <div class="set-inline"><input type="date" id="hlPick" max="${tk}" aria-label="Chọn ngày để ghi" onkeydown="dateKey(event)" onchange="dateSet(this, v => v && hlOpen(v))" onblur="dateSet(this, v => v && hlOpen(v), 1)"><button type="button" class="btn btn-sm btn-primary" onclick="hlOpen('${tk}')">Ghi hôm nay</button></div></div>
+      ${ks.length ? `<div class="hl-log">${ks.map(k => `<button type="button" class="hl-lrow" onclick="hlOpen('${k}')"><b>${esc(dayDesc(k))}</b><span>${hlSummary(k) || "—"}</span></button>`).join("")}</div>` : `<p class="set-note">Bấm Ghi hôm nay để bắt đầu. Ghi đều mỗi ngày, gợi ý sẽ cụ thể hơn.</p>`}
+    </div>`;
+}
+// Một dòng tóm tắt ngày (nhật ký, thẻ lịch)
+function hlSummary(k) {
+  const d = hlDay(k);
+  if (!d) return "";
+  const parts = [];
+  if (d.mood) parts.push(`Tâm trạng ${HL_MOOD[d.mood].toLowerCase()}`);
+  if (d.sleep != null) parts.push(`ngủ ${r1(d.sleep)}h`);
+  const sy = Object.entries(d.sy || {});
+  if (sy.length) parts.push(sy.map(([s, v]) => `${hlSyName(s).toLowerCase()} (${HL_LV[v].toLowerCase()})`).join(", "));
+  if (d.flow) parts.push(`hành kinh ${HL_FLOW[d.flow].toLowerCase()}`);
+  const mk = Object.keys(d.meds || {});
+  if (mk.length) parts.push(mk.map(id => { const m = (S.health.meds || []).find(x => x.id === id); return m ? esc(m.n) : ""; }).filter(Boolean).join(", "));
+  if (d.w != null) parts.push(`${r1(d.w)} kg`);
+  if (d.note) parts.push(`“${esc(d.note.slice(0, 60))}${d.note.length > 60 ? "…" : ""}”`);
+  return parts.join(" · ");
+}
+// Chip trên thẻ ngày ở tab Lịch
+function hlChips(k, c) {
+  const d = hlDay(k), pr = hlPredict(k, c), out = [];
+  if (d && d.mood) out.push(`<span class="hl-mini m${d.mood}">${HL_MOOD[d.mood]}</span>`);
+  const n = d ? Object.keys(d.sy || {}).length : 0;
+  if (n) out.push(`<span class="hl-mini sy" title="${esc(Object.keys(d.sy).map(hlSyName).join(", "))}">${n === 1 ? esc(hlSyName(Object.keys(d.sy)[0])) : n + " triệu chứng"}</span>`);
+  if (d && d.flow) out.push(`<span class="hl-mini fl">Hành kinh</span>`);
+  else if (pr === "per") out.push(`<span class="hl-mini pfl">Dự kiến hành kinh</span>`);
+  else if (pr === "ovu") out.push(`<span class="hl-mini pov">Dự kiến rụng trứng</span>`);
+  else if (pr === "fert") out.push(`<span class="hl-mini pov">Dễ thụ thai</span>`);
+  if (!out.length) return "";
+  return `<button type="button" class="hl-day" onclick="event.stopPropagation(); hlOpen('${k}')" aria-label="Sức khỏe ${esc(dayDesc(k))}">${out.join("")}</button>`;
+}
+function hlCatHTML(cat) {
+  const c = HL_CATS.find(x => x[0] === cat);
+  if (!c || (cat === "cy" && !hlIsF())) { hlCat = null; return ""; }
+  const days = S.health && S.health.days || {}, n = hlRng, ks = hlRange(n > 60 ? 182 : n);
+  const adv = hlAdvice().filter(a => a.cat === cat);
+  const back = `<div class="hl-back"><button type="button" class="btn btn-sm btn-ghost" onclick="hlGo('browse')">‹ Duyệt</button><h2 class="card-title" style="--hc:${c[2]}">${c[1]}</h2></div>`;
+  const advC = adv.length ? `<div class="card">${hlAdviceHTML(adv, 0)}</div>` : "";
+  let main = "";
+  if (cat === "sy") {
+    const f = {};
+    ks.forEach(k => Object.entries((days[k] || {}).sy || {}).forEach(([s, v]) => { (f[s] = f[s] || [0, 0, 0, 0])[v]++; f[s][0]++; }));
+    const rows = Object.entries(f).sort((a, b) => b[1][0] - a[1][0]);
+    main = `<div class="card"><div class="card-header"><div><h3 class="card-title">Số ngày có triệu chứng</h3></div>${hlRangeSeg()}</div>
+      ${rows.length ? `<div class="hl-tbl">${rows.map(([s, a]) => `<div class="hl-tr"><b>${esc(hlSyName(s))}</b><span class="hl-meter"><i style="width:${Math.min(100, a[0] / ks.length * 100 * 3)}%"></i></span><span>${a[0]} ngày${a[3] ? ` · ${a[3]} nặng` : ""}</span></div>`).join("")}</div>` : `<p class="set-note">Không có triệu chứng nào trong khoảng này.</p>`}
+      </div>
+      <div class="card"><div class="card-header"><div><h3 class="card-title">Triệu chứng tự thêm</h3><div class="card-sub">Ngoài danh sách có sẵn</div></div></div>
+        <div class="set-row"><input id="hlNewSy" maxlength="40" placeholder="vd: Đau răng" aria-label="Tên triệu chứng" onkeydown="enterKey(event, () => hlAddSy())"><button type="button" class="btn btn-sm" onclick="hlAddSy()">Thêm</button></div>
+        ${(S.health && S.health.syc || []).map(x => `<div class="set-row"><span class="set-lbl">${esc(x.n)}</span><button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad)" onclick="hlDelSy('${x.id}')">Xóa</button></div>`).join("")}
+      </div>`;
+  } else if (cat === "mh") {
+    const chk = Object.entries(S.health && S.health.chk || {}).sort((a, b) => b[0].localeCompare(a[0])).slice(0, 8);
+    main = `<div class="card"><div class="card-header"><div><h3 class="card-title">Tâm trạng</h3><div class="card-sub">1 = rất tệ · 5 = rất tốt</div></div>${hlRangeSeg()}</div>${hlBars("mood", n, 5, c[2], v => r1(v) + "/5")}
+      <div class="card-sub">Căng thẳng (1 thấp · 3 cao)</div>${hlBars("stress", n, 3, "#c24d5b", v => r1(v))}</div>
+      <div class="card"><div class="card-header"><div><h3 class="card-title">Kiểm tra nhanh 4 câu</h3><div class="card-sub">PHQ-2 (trầm cảm) và GAD-2 (lo âu), nên làm 2 tuần một lần</div></div><button type="button" class="btn btn-sm btn-primary" onclick="hlChkOpen()">Làm bài</button></div>
+        ${chk.length ? chk.map(([k, x]) => `<div class="set-row"><span class="set-lbl">${esc(dayDesc(k))}</span><span class="set-val">PHQ-2 <b class="${x.p[0] + x.p[1] >= 3 ? "hl-hi" : ""}">${x.p[0] + x.p[1]}</b>/6 · GAD-2 <b class="${x.g[0] + x.g[1] >= 3 ? "hl-hi" : ""}">${x.g[0] + x.g[1]}</b>/6</span></div>`).join("") : `<p class="set-note">Chưa làm lần nào.</p>`}
+        <p class="hl-disc">Đây là bài sàng lọc, không phải chẩn đoán. Từ 3 điểm trở lên ở một phần: nên gặp bác sĩ hoặc chuyên gia tâm lý. Nếu có ý nghĩ làm hại bản thân, gọi 115 hoặc đến cơ sở y tế gần nhất ngay.</p></div>`;
+  } else if (cat === "sl") {
+    const a = hlAvg(ks.filter(k => k <= tk), "sleep");
+    main = `<div class="card"><div class="card-header"><div><h3 class="card-title">Số giờ ngủ</h3><div class="card-sub">${a ? `Trung bình ${r1(a.v)}h · ${a.n} đêm đã ghi` : "Chưa ghi"} · nên 7–9h</div></div>${hlRangeSeg()}</div>${hlBars("sleep", n, 12, c[2], v => r1(v) + "h")}</div>`;
+  } else if (cat === "md") {
+    const all = (S.health && S.health.meds || []).slice().sort((a, b) => (a.arch ? 1 : 0) - (b.arch ? 1 : 0) || a.n.localeCompare(b.n));
+    main = `<div class="card"><div class="card-header"><div><h3 class="card-title">Đang dùng</h3><div class="card-sub">Thuốc bác sĩ kê và thực phẩm chức năng</div></div><button type="button" class="btn btn-sm btn-primary" onclick="hlMedOpen()">Thêm</button></div>
+      ${all.length ? all.map(m => { const a = hlAdh(m), on = hlMedsOn(tk).includes(m); return `<div class="set-row"><span class="set-lbl">${esc(m.n)}${m.dose ? ` · ${esc(m.dose)}` : ""}<small>${m.kind === "med" ? "Thuốc" : "Thực phẩm chức năng"} · ${m.sched === "daily" ? `${m.times || 1} lần mỗi ngày` : "Khi cần"} · từ ${dm(m.sd)}${m.ed ? ` đến ${dm(m.ed)}` : ""}${!on ? " · đã ngừng" : ""}${a ? ` · 7 ngày qua ${a.got}/${a.exp} liều` : ""}</small></span><button type="button" class="btn btn-sm" onclick="hlMedOpen('${m.id}')">Sửa</button></div>`; }).join("") : `<p class="set-note">Chưa có. Thêm thuốc hoặc thực phẩm chức năng để tích mỗi ngày và theo dõi có dùng đều không.</p>`}
+      </div>`;
+  } else if (cat === "bd") {
+    const b = hlBmi(), w = hlLast("w"), h = hlLast("ht");
+    main = `<div class="card"><div class="card-header"><div><h3 class="card-title">Cân nặng</h3><div class="card-sub">${w ? `${r1(w.v)} kg (${dm(w.k)})` : "Chưa ghi"}${b && b.cat ? ` · BMI ${r1(b.v)} · ${b.cat[0]}` : ""}</div></div>${hlRangeSeg()}</div>${hlBars("w", n, 0, c[2], v => r1(v) + " kg")}
+        <div class="set-row"><label class="set-lbl" for="hlW">Cân nặng hôm nay (kg)</label><input id="hlW" type="text" inputmode="decimal" value="${(hlDay(tk) || {}).w != null ? r1(hlDay(tk).w) : ""}" placeholder="${w ? r1(w.v) : "vd: 58,5"}" onchange="hlSetNum('${tk}','w', this.value, 2, 500)"></div>
+        <div class="set-row"><label class="set-lbl" for="hlHt">Chiều cao (cm)<small>${h ? `gần nhất ${r1(h.v)} cm (${dm(h.k)})` : "ghi một lần, đổi khi cần"}</small></label><input id="hlHt" type="text" inputmode="decimal" value="${(hlDay(tk) || {}).ht != null ? r1(hlDay(tk).ht) : ""}" placeholder="${h ? r1(h.v) : "vd: 165"}" onchange="hlSetNum('${tk}','ht', this.value, 30, 260)"></div>
+        ${b && b.cat ? `<p class="set-note">BMI châu Á: dưới 18,5 thiếu cân · 18,5–22,9 bình thường · 23–24,9 thừa cân · từ 25 béo phì. Với ${r1(b.h)} cm: bình thường ${r1(b.lo)}–${r1(b.hi)} kg.</p>` : hlAge() !== null && hlAge() < 18 ? `<p class="set-note">Dưới 18 tuổi đánh giá BMI theo biểu đồ tăng trưởng, app không xếp loại.</p>` : ""}
+      </div>`;
+  } else if (cat === "cy") {
+    const cy = hlCycle(), cfg = hlH().cyc;
+    const m0 = hlKAdd(monKey(tk), -7); // 6 tuần, bắt đầu từ Thứ 2 tuần trước
+    const strip = DN_SHORT.map(x => `<span class="hl-cd hd">${x}</span>`).join("") + [...Array(42)].map((_, i) => { const k = hlKAdd(m0, i), d = hlDay(k), pr = hlPredict(k, cy); return `<span class="hl-cd ${d && d.flow ? "fl" : pr || ""} ${k === tk ? "today" : ""}" title="${dm(k)}${d && d.flow ? ": hành kinh" : pr ? ": " + { per: "dự kiến hành kinh", fert: "dễ thụ thai", ovu: "dự kiến rụng trứng" }[pr] : ""}">${+k.slice(8)}</span>`; }).join("");
+    main = `<div class="card"><div class="card-header"><div><h3 class="card-title">${cy.last ? (cy.late ? `Trễ kinh ${cy.late} ngày` : `Ngày ${cy.day} của chu kỳ`) : "Chưa có dữ liệu"}</h3><div class="card-sub">${cy.last ? `Kỳ tới ${dm(cy.next)} · rụng trứng khoảng ${dm(cy.ovu)} · dễ thụ thai ${dm(cy.fert[0])}–${dm(cy.fert[1])}` : "Ghi ngày hành kinh ở Ghi hôm nay"}</div></div><button type="button" class="btn btn-sm btn-primary" onclick="hlOpen('${tk}')">Ghi hôm nay</button></div>
+        <div class="hl-cal">${strip}</div>
+        <div class="hl-legend"><span class="hl-cd fl"></span>Hành kinh <span class="hl-cd per"></span>Dự kiến <span class="hl-cd fert"></span>Dễ thụ thai <span class="hl-cd ovu"></span>Rụng trứng</div>
+        <p class="hl-disc">Dự đoán theo lịch: kỳ tới = kỳ gần nhất + độ dài chu kỳ; rụng trứng khoảng 14 ngày trước kỳ tới. Không dùng để tránh thai.</p></div>
+      <div class="card"><div class="card-header"><div><h3 class="card-title">Độ dài chu kỳ</h3><div class="card-sub">${cy.auto ? `Tự tính: trung bình ${cy.len} ngày từ ${cy.lens.length} chu kỳ đã ghi` : `Theo số bạn nhập (${cfg.len} ngày)${cfg.auto !== false ? " · cần ghi ít nhất 3 kỳ để tự tính" : ""}`}</div></div></div>
+        <div class="set-row"><span class="set-lbl">Cách tính</span><div class="set-seg"><button type="button" class="${cfg.auto !== false ? "on" : ""}" onclick="hlCyc('auto', true)">Tự động</button><button type="button" class="${cfg.auto === false ? "on" : ""}" onclick="hlCyc('auto', false)">Theo số tôi nhập</button></div></div>
+        <div class="set-row"><label class="set-lbl" for="hlCycLen">Độ dài chu kỳ (ngày)<small>Từ ngày đầu kỳ này tới ngày đầu kỳ sau, thường 21–35</small></label><input id="hlCycLen" type="number" min="15" max="60" value="${cfg.len}" onchange="hlCyc('len', this.value)"></div>
+        <div class="set-row"><label class="set-lbl" for="hlCycPer">Số ngày hành kinh</label><input id="hlCycPer" type="number" min="1" max="12" value="${cfg.per}" onchange="hlCyc('per', this.value)"></div>
+        ${cy.starts.length ? `<p class="set-note">Các kỳ đã ghi: ${cy.starts.slice(-6).map((s, i, a) => `${dm(s)} (${cy.runs[cy.starts.length - a.length + i]} ngày)`).join(" · ")}</p>` : ""}
+      </div>`;
+  }
+  return back + advC + main;
+}
+function hlSetNum(k, f, v, lo, hi) {
+  const x = hlNum(v);
+  if (String(v).trim() === "") { hlSet(k, f, null); return; }
+  if (x === null || x < lo || x > hi) { showToast(`Nhập số từ ${lo} đến ${hi}`, "bad"); draw(); return; }
+  hlSet(k, f, Math.round(x * 10) / 10);
+}
+function hlCyc(f, v) {
+  const c = hlH().cyc;
+  if (f === "auto") c.auto = !!v;
+  else { const x = Math.round(+v); const [lo, hi] = f === "len" ? [15, 60] : [1, 12]; if (!(x >= lo && x <= hi)) { showToast(`Nhập số từ ${lo} đến ${hi}`, "bad"); draw(); return; } c[f] = x; }
+  c.mt = Date.now();
+  save(); draw();
+}
+function hlAddSy() {
+  const i = $("hlNewSy"), n = (i && i.value || "").trim();
+  if (!n) return;
+  const h = hlH();
+  if ([...HL_SY.map(s => s[1]), ...h.syc.map(s => s.n)].some(x => fold(x) === fold(n))) { showToast("Đã có triệu chứng này", "bad"); return; }
+  h.syc.push({ id: nid("y"), n: n.slice(0, 40), mt: Date.now() });
+  save(); draw();
+  const j = $("hlNewSy"); if (j) j.focus();
+}
+function hlDelSy(id) {
+  const h = hlH(), i = h.syc.findIndex(s => s.id === id);
+  if (i < 0) return;
+  const x = h.syc[i];
+  h.syc.splice(i, 1);
+  save(); draw();
+  offerUndo(`Đã xóa "${x.n}"`, () => { if (!h.syc.some(s => s.id === id)) h.syc.splice(Math.min(i, h.syc.length), 0, x); });
+}
+
+/* ---------- Bảng ghi một ngày, bảng thuốc, bài kiểm tra tâm lý (chung một popup) ---------- */
+let hlEd = null; // { mode: "day", k } | { mode: "med", id, d } | { mode: "chk", d }
+function hlOpen(k) {
+  if (!dateOk(k) || !k || k > hlKAdd(tk, 0)) { if (k > tk) showToast("Chưa ghi được cho ngày tới", "bad"); return; }
+  hlEd = { mode: "day", k };
+  LF = document.activeElement;
+  hlRender();
+  $("hlOverlay").classList.add("open");
+}
+function closeHl() {
+  if (!hlEd) return;
+  hlEd = null;
+  $("hlOverlay").classList.remove("open");
+  restoreFocus();
+  draw();
+}
+function hlShift(n) {
+  const k = hlKAdd(hlEd.k, n);
+  if (k > tk) return;
+  hlEd.k = k; hlRender();
+}
+function hlRender() {
+  if (!hlEd) return;
+  const b = $("hlBody");
+  if (hlEd.mode === "med") return hlMedRender();
+  if (hlEd.mode === "chk") return hlChkRender();
+  const k = hlEd.k, d = hlDay(k) || {}, meds = hlMedsOn(k);
+  $("hlTitle").textContent = "Sức khỏe · " + dayDesc(k);
+  const scale = (f, labels, cls) => `<div class="hl-scale">${labels.map((lb, v) => v ? `<button type="button" class="hl-m ${cls}${v} ${d[f] === v ? "on" : ""}" aria-pressed="${d[f] === v}" onclick="hlSet('${k}','${f}', ${d[f] === v ? "null" : v})">${lb}</button>` : "").join("")}</div>`;
+  const y = b.scrollTop;
+  b.innerHTML = `
+    <div class="hl-sheet">
+      <div class="hl-nav">
+        <button type="button" class="btn btn-sm" onclick="hlShift(-1)" aria-label="Ngày trước">◀</button>
+        <input type="date" value="${k}" max="${tk}" aria-label="Ngày" onkeydown="dateKey(event)" onchange="dateSet(this, v => { if (v && v <= tk) { hlEd.k = v; hlRender(); } })" onblur="dateSet(this, v => { if (v && v <= tk) { hlEd.k = v; hlRender(); } }, 1)">
+        <button type="button" class="btn btn-sm" onclick="hlShift(1)" ${k >= tk ? "disabled" : ""} aria-label="Ngày sau">▶</button>
+      </div>
+      <div class="hl-q"><span class="hl-ql">Tâm trạng</span>${scale("mood", HL_MOOD, "m")}</div>
+      <div class="hl-q"><span class="hl-ql">Căng thẳng</span>${scale("stress", HL_STRESS, "s")}</div>
+      <div class="hl-q"><label class="hl-ql" for="hlSleep">Ngủ đêm qua (giờ)</label>
+        <div class="set-inline" style="justify-content:flex-start"><button type="button" class="btn btn-sm" onclick="hlSet('${k}','sleep', Math.max(0, ${d.sleep != null ? d.sleep : 7} - 0.5))">−0,5</button>
+        <input id="hlSleep" type="text" inputmode="decimal" value="${d.sleep != null ? r1(d.sleep) : ""}" placeholder="vd: 7,5" onchange="hlSetNum('${k}','sleep', this.value, 0, 24)" style="width:80px; text-align:center">
+        <button type="button" class="btn btn-sm" onclick="hlSet('${k}','sleep', Math.min(24, ${d.sleep != null ? d.sleep : 7} + 0.5))">+0,5</button></div></div>
+      <div class="hl-q"><span class="hl-ql">Triệu chứng <small>bấm để đổi mức: nhẹ → vừa → nặng → bỏ</small></span><div class="hl-chips">${hlSyList().map(s => hlSyChip(k, s.k, d)).join("")}</div></div>
+      ${meds.length ? `<div class="hl-q"><span class="hl-ql">Thuốc, thực phẩm chức năng</span><div class="hl-chips">${meds.map(m => hlMedChip(k, m, d)).join("")}</div></div>` : `<div class="hl-q"><span class="hl-ql">Thuốc, thực phẩm chức năng</span><button type="button" class="btn btn-sm" onclick="hlMedOpen()">Thêm thuốc hoặc TPCN</button></div>`}
+      ${hlIsF() ? `<div class="hl-q"><span class="hl-ql">Hành kinh</span>${scale("flow", HL_FLOW, "fl f")}</div>` : ""}
+      <div class="hl-q hl-2">
+        <label class="hl-ql">Cân nặng (kg)<input type="text" inputmode="decimal" value="${d.w != null ? r1(d.w) : ""}" placeholder="${(hlLast("w", k) || {}).v != null ? r1(hlLast("w", k).v) : "vd: 58,5"}" onchange="hlSetNum('${k}','w', this.value, 2, 500)"></label>
+        <label class="hl-ql">Chiều cao (cm)<input type="text" inputmode="decimal" value="${d.ht != null ? r1(d.ht) : ""}" placeholder="${(hlLast("ht", k) || {}).v != null ? r1(hlLast("ht", k).v) : "vd: 165"}" onchange="hlSetNum('${k}','ht', this.value, 30, 260)"></label>
+      </div>
+      <div class="hl-q"><label class="hl-ql" for="hlNote">Ghi chú</label><textarea id="hlNote" maxlength="1000" rows="2" placeholder="vd: đau đầu sau cuộc họp dài" onchange="hlSet('${k}','note', this.value.trim())">${esc(d.note || "")}</textarea></div>
+      <div class="hl-acts"><span class="hl-saved">${hlDay(k) ? "Đã lưu tự động" : "Chưa ghi gì cho ngày này"}</span><button type="button" class="btn btn-primary" id="hlDone" onclick="closeHl()">Xong</button></div>
+    </div>`;
+  b.scrollTop = y;
+}
+function hlMedOpen(id) {
+  const m = id ? (S.health && S.health.meds || []).find(x => x.id === id) : null;
+  hlEd = { mode: "med", id: m ? m.id : null, back: hlEd && hlEd.mode === "day" ? hlEd.k : null,
+    d: m ? { n: m.n, kind: m.kind, dose: m.dose || "", sched: m.sched, times: m.times || 1, sd: m.sd, ed: m.ed || "" } : { n: "", kind: "sup", dose: "", sched: "daily", times: 1, sd: tk, ed: "" } };
+  if (!$("hlOverlay").classList.contains("open")) { LF = document.activeElement; $("hlOverlay").classList.add("open"); }
+  hlRender();
+  setTimeout(() => { const i = $("hlMedN"); if (i && !id) i.focus(); }, 60);
+}
+function hlMedRender() {
+  const d = hlEd.d, m = hlEd.id ? (S.health.meds || []).find(x => x.id === hlEd.id) : null;
+  const seg = (f, v, lb) => `<button type="button" class="${d[f] === v ? "on" : ""}" aria-pressed="${d[f] === v}" onclick="hlEd.d['${f}']='${v}'; hlRender()">${lb}</button>`;
+  $("hlTitle").textContent = m ? m.n : "Thêm thuốc hoặc TPCN";
+  $("hlBody").innerHTML = `
+    <div class="hl-sheet">
+      <div class="form-group"><label class="form-label" for="hlMedN">Tên</label><input id="hlMedN" value="${esc(d.n)}" maxlength="60" placeholder="vd: Vitamin D3, Sắt, Omega-3" oninput="hlEd.d.n=this.value"></div>
+      <div class="form-group"><span class="form-label">Loại</span><div class="set-seg">${seg("kind", "sup", "Thực phẩm chức năng")}${seg("kind", "med", "Thuốc")}</div></div>
+      <div class="form-group"><label class="form-label" for="hlMedDose">Liều</label><input id="hlMedDose" value="${esc(d.dose)}" maxlength="40" placeholder="vd: 1 viên 1000 IU, sau ăn sáng" oninput="hlEd.d.dose=this.value"></div>
+      <div class="form-row">
+        <div class="form-group"><span class="form-label">Lịch dùng</span><div class="set-seg">${seg("sched", "daily", "Hằng ngày")}${seg("sched", "prn", "Khi cần")}</div></div>
+        ${d.sched === "daily" ? `<div class="form-group"><label class="form-label" for="hlMedT">Số lần mỗi ngày</label><select id="hlMedT" onchange="hlEd.d.times=+this.value">${[1, 2, 3, 4].map(n => `<option value="${n}" ${d.times === n ? "selected" : ""}>${n} lần</option>`).join("")}</select></div>` : ""}
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label" for="hlMedSd">Bắt đầu</label><input id="hlMedSd" type="date" value="${d.sd}" onkeydown="dateKey(event)" onchange="dateSet(this, v => { hlEd.d.sd = v; })" onblur="dateSet(this, v => { hlEd.d.sd = v; }, 1)"></div>
+        <div class="form-group"><label class="form-label" for="hlMedEd">Kết thúc <small>(để trống nếu dùng lâu dài)</small></label><input id="hlMedEd" type="date" value="${d.ed}" onkeydown="dateKey(event)" onchange="dateSet(this, v => { hlEd.d.ed = v; })" onblur="dateSet(this, v => { hlEd.d.ed = v; }, 1)"></div>
+      </div>
+      <p class="hl-disc">App chỉ giúp nhớ đã dùng hay chưa, không kiểm tra liều hay tương tác thuốc. Hỏi bác sĩ hoặc dược sĩ trước khi bắt đầu, đổi liều hay ngừng thuốc.</p>
+      <div class="hl-acts">
+        <div class="row" style="gap:6px;">${m ? `<button type="button" class="btn btn-ghost" onclick="hlMedStop('${m.id}')">${m.arch ? "Dùng lại" : "Ngừng dùng"}</button><button type="button" class="btn btn-ghost" style="color:var(--bad)" onclick="hlMedDel('${m.id}')">Xóa</button>` : ""}</div>
+        <div class="row" style="gap:6px;"><button type="button" class="btn btn-ghost" onclick="hlMedBack()">Hủy</button><button type="button" class="btn btn-primary" id="hlDone" onclick="hlMedSave()">${m ? "Lưu" : "Thêm"}</button></div>
+      </div>
+    </div>`;
+}
+function hlMedBack() { const k = hlEd && hlEd.back; if (k) { hlEd = { mode: "day", k }; hlRender(); } else closeHl(); }
+function hlMedSave() {
+  const d = hlEd.d, n = (d.n || "").trim();
+  if (!n) { showToast("Nhập tên thuốc hoặc TPCN", "bad"); const i = $("hlMedN"); if (i) i.focus(); return; }
+  if (!dateOk(d.sd) || !d.sd) { showToast("Ngày bắt đầu không hợp lệ", "bad"); return; }
+  if (d.ed && (!dateOk(d.ed) || d.ed < d.sd)) { showToast("Ngày kết thúc phải sau ngày bắt đầu", "bad"); return; }
+  const h = hlH(), o = { n: n.slice(0, 60), kind: d.kind === "med" ? "med" : "sup", dose: (d.dose || "").trim().slice(0, 40), sched: d.sched === "prn" ? "prn" : "daily", times: d.sched === "prn" ? 1 : Math.min(4, Math.max(1, d.times || 1)), sd: d.sd, mt: Date.now() };
+  let m = hlEd.id ? h.meds.find(x => x.id === hlEd.id) : null;
+  if (m) { Object.assign(m, o); delete m.demo; if (d.ed) m.ed = d.ed; else delete m.ed; }
+  else { m = { id: nid("m"), ...o, ...(d.ed ? { ed: d.ed } : {}) }; h.meds.push(m); }
+  save();
+  showToast(`Đã lưu "${m.n}"`, "ok");
+  hlMedBack(); draw();
+}
+function hlMedStop(id) {
+  const m = hlH().meds.find(x => x.id === id);
+  if (!m) return;
+  if (m.arch) delete m.arch; else m.arch = 1;
+  m.mt = Date.now();
+  save(); hlMedBack(); draw();
+}
+function hlMedDel(id) {
+  const h = hlH(), i = h.meds.findIndex(x => x.id === id);
+  if (i < 0) return;
+  const m = h.meds[i];
+  h.meds.splice(i, 1);
+  save(); hlMedBack(); draw();
+  offerUndo(`Đã xóa "${m.n}" (lịch sử đã dùng vẫn giữ)`, () => { if (!h.meds.some(x => x.id === id)) h.meds.splice(Math.min(i, h.meds.length), 0, m); });
+}
+function hlChkOpen() {
+  hlEd = { mode: "chk", d: { p: [null, null], g: [null, null] } };
+  LF = document.activeElement;
+  $("hlOverlay").classList.add("open");
+  hlRender();
+}
+function hlChkRender() {
+  const d = hlEd.d, q = (part, i) => `<div class="hl-q"><span class="hl-ql">${HL_Q[part][i]}</span><div class="hl-scale hl-ans">${HL_ANS.map((lb, v) => `<button type="button" class="hl-m ${d[part][i] === v ? "on" : ""}" aria-pressed="${d[part][i] === v}" onclick="hlEd.d.${part}[${i}]=${v}; hlRender()">${lb}</button>`).join("")}</div></div>`;
+  const done = [...d.p, ...d.g].every(x => x !== null);
+  $("hlTitle").textContent = "Kiểm tra nhanh 4 câu";
+  $("hlBody").innerHTML = `
+    <div class="hl-sheet">
+      <p class="set-note">Trong 2 tuần qua, bạn có thường gặp những điều sau không?</p>
+      ${q("p", 0)}${q("p", 1)}${q("g", 0)}${q("g", 1)}
+      <p class="hl-disc">PHQ-2 và GAD-2 là bài sàng lọc ngắn, không phải chẩn đoán. Nếu có ý nghĩ làm hại bản thân, gọi 115 hoặc đến cơ sở y tế gần nhất ngay.</p>
+      <div class="hl-acts"><span></span><div class="row" style="gap:6px;"><button type="button" class="btn btn-ghost" onclick="closeHl()">Hủy</button><button type="button" class="btn btn-primary" id="hlDone" onclick="hlChkSave()" ${done ? "" : "disabled"}>Lưu</button></div></div>
+    </div>`;
+}
+function hlChkSave() {
+  const d = hlEd.d;
+  if (![...d.p, ...d.g].every(x => x !== null)) return;
+  hlH().chk[tk] = { p: d.p.slice(), g: d.g.slice(), mt: Date.now() };
+  save();
+  const phq = d.p[0] + d.p[1], gad = d.g[0] + d.g[1];
+  closeHl();
+  showToast(phq >= 3 || gad >= 3 ? `PHQ-2 ${phq}/6, GAD-2 ${gad}/6: nên nói chuyện với bác sĩ hoặc chuyên gia tâm lý` : `PHQ-2 ${phq}/6, GAD-2 ${gad}/6: chưa có dấu hiệu đáng lo`, phq >= 3 || gad >= 3 ? "bad" : "ok");
+}
+// Tổng kết tuần: sức khỏe của tuần
+function hlWeekHTML(ws) {
+  const ks = [0, 1, 2, 3, 4, 5, 6].map(j => ky(ad(ws, j))).filter(k => k <= tk), days = S.health && S.health.days || {};
+  if (!ks.some(k => days[k])) return "";
+  const md = hlAvg(ks, "mood"), sl = hlAvg(ks, "sleep"), f = {};
+  ks.forEach(k => Object.keys((days[k] || {}).sy || {}).forEach(s => { f[s] = (f[s] || 0) + 1; }));
+  const top = Object.entries(f).sort((a, b) => b[1] - a[1]).slice(0, 3);
+  return `<div class="hl-wk">${md ? `<span>Tâm trạng <b>${r1(md.v)}/5</b></span>` : ""}${sl ? `<span>Ngủ <b>${r1(sl.v)}h</b> mỗi đêm</span>` : ""}<span>${top.length ? "Triệu chứng: " + top.map(([s, n]) => `<b>${esc(hlSyName(s))}</b> ${n} ngày`).join(", ") : "Không có triệu chứng"}</span></div>`;
+}
+
+/* ---------- Tab Tôi: hồ sơ, loại vốn, cài đặt ---------- */
+function hpSet(f, v) {
+  S.profile = S.profile || {};
+  if (v === "" || v == null) delete S.profile[f]; else S.profile[f] = v;
+  S.profile.mt = Date.now();
+  save(); draw();
+}
+const dobOk = v => v === "" || (/^\d{4}-\d\d-\d\d$/.test(v) && v >= "1900-01-01" && v <= tk);
+V.me = function () {
+  const p = hlProf(), w = hlLast("w"), h = hlLast("ht"), b = hlBmi(), age = hlAge();
+  const sx = (v, lb) => `<button type="button" class="${p.sex === v ? "on" : ""}" aria-pressed="${p.sex === v}" onclick="hpSet('sex', '${p.sex === v ? "" : v}')">${lb}</button>`;
+  return `
+    <div class="card me-card">
+      <div class="card-header"><div><h2 class="card-title">Hồ sơ</h2><div class="card-sub">Để tính tuổi, BMI, chu kỳ và gợi ý sức khỏe. Tên gọi là đủ.</div></div></div>
+      <div class="set-row"><label class="set-lbl" for="meName">Tên gọi</label><input id="meName" type="text" maxlength="40" value="${esc(p.n || "")}" placeholder="vd: Mai" onchange="hpSet('n', this.value.trim().slice(0, 40))"></div>
+      <div class="set-row"><label class="set-lbl" for="meDob">Ngày sinh<small>${age !== null ? age + " tuổi" : "Chưa nhập"}</small></label><input id="meDob" type="date" value="${p.dob || ""}" max="${tk}" onkeydown="dateKey(event)" onchange="dobSet(this)" onblur="dobSet(this, 1)"></div>
+      <div class="set-row"><span class="set-lbl">Giới tính<small>${p.sex === "f" ? "Có thêm theo dõi chu kỳ kinh nguyệt" : "Chọn Nữ để theo dõi chu kỳ"}</small></span><div class="set-seg">${sx("f", "Nữ")}${sx("m", "Nam")}${sx("o", "Khác")}</div></div>
+      <div class="set-row"><label class="set-lbl" for="meHt">Chiều cao (cm)<small>${h ? `ghi ${dm(h.k)}` : "Ghi vào hôm nay"}</small></label><input id="meHt" type="text" inputmode="decimal" value="${h ? r1(h.v) : ""}" placeholder="vd: 165" onchange="hlSetNum(tk, 'ht', this.value, 30, 260)"></div>
+      <div class="set-row"><label class="set-lbl" for="meW">Cân nặng (kg)<small>${w ? `ghi ${dm(w.k)}${b && b.cat ? ` · BMI ${r1(b.v)} · ${b.cat[0]}` : ""}` : "Ghi vào hôm nay"}</small></label><input id="meW" type="text" inputmode="decimal" value="${w ? r1(w.v) : ""}" placeholder="vd: 58,5" onchange="hlSetNum(tk, 'w', this.value, 2, 500)"></div>
+      <div class="set-row"><label class="set-lbl" for="meSync">Đồng bộ dữ liệu sức khỏe<small>${p.hSync === false ? "Tắt: nhật ký sức khỏe chỉ nằm trên máy này, không gửi lên tài khoản" : "Bật: nhật ký sức khỏe đi cùng tài khoản để iPhone và máy tính cùng thấy. Không bao giờ gửi sang Google Calendar."}</small></label>
+        <input type="checkbox" role="switch" class="set-switch" id="meSync" ${p.hSync === false ? "" : "checked"} onchange="hpSync(this.checked)"></div>
+    </div>
+    ${V.set()}
+    <div class="card"><div class="card-header"><div><h2 class="card-title">Cài đặt</h2><div class="card-sub">Giao diện, mặc định, đồng bộ, dữ liệu, Google Calendar</div></div><button type="button" class="btn btn-sm btn-primary" onclick="openSettingsModal()">Mở Cài đặt</button></div></div>`;
+};
+function dobSet(el, leaving) {
+  if (el.dataset.typing && !leaving) return;
+  const was = !!el.dataset.typing;
+  delete el.dataset.typing;
+  if (leaving && !was) return;
+  const v = el.value;
+  if ((el.validity && el.validity.badInput) || !dobOk(v)) { el.value = el.defaultValue; showToast("Ngày sinh không hợp lệ", "bad"); return; }
+  if (v !== el.defaultValue) { el.defaultValue = v; hpSet("dob", v); }
+}
+async function hpSync(on) {
+  if (!on && !(await ask({ title: "Tắt đồng bộ dữ liệu sức khỏe?", msg: "Nhật ký sức khỏe sẽ chỉ nằm trên máy này. Lần đồng bộ tới, bản trên tài khoản sẽ bỏ phần sức khỏe; máy khác vẫn giữ bản đang có.", ok: "Tắt" }))) { draw(); return; }
+  hpSet("hSync", on ? true : false);
+  showToast(on ? "Đã bật đồng bộ dữ liệu sức khỏe" : "Nhật ký sức khỏe chỉ còn trên máy này", "ok");
+}
+// Dữ liệu gửi lên tài khoản: bỏ nhật ký sức khỏe khi người dùng tắt đồng bộ phần này
+const cloudView = st => st && st.profile && st.profile.hSync === false ? { ...st, health: undefined } : st;
 
 // Khởi chạy ứng dụng
 (() => { // mở thẳng một dự án qua địa chỉ #pj/<mã>; nút Quay lại về danh sách dự án

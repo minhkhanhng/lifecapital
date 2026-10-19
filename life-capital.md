@@ -57,7 +57,7 @@
    - **Lưới 53 tuần**: Toàn cảnh cả năm có thanh cuộn và tự động định vị tuần hiện tại.
 3. ⚙️ **Trung Tâm Cài Đặt & Dữ Liệu Tinh Gọn (Settings Modal)**:
    - Nút `⚙️` trên header tập trung toàn bộ cấu hình: Chuyển theme (Sáng/Tối/Theo máy), Sao lưu JSON/CSV, Khôi phục, Đặt thời lượng mặc định, khung giờ xếp việc và giới hạn giờ mỗi ngày cho Xếp hết.
-   - Thanh điều hướng chính gồm 5 tab: **Lịch biểu**, **Hộp việc**, **Dự án**, **Tổng quan & 168h**, **Danh mục vốn** (điện thoại thêm ô Cài đặt ở thanh dưới đáy).
+   - Thanh điều hướng chính gồm 6 tab: **Lịch biểu**, **Hộp việc**, **Dự án**, **Sức khỏe**, **Tổng quan**, **Tôi** (hồ sơ, Danh mục vốn, Cài đặt).
 4. 🏆 **Bản Tin Tổng Kết Tuần Linh Hoạt (Weekly Review with Week Selector)**:
    - Cho phép chọn xem báo cáo tổng kết của **bất kỳ tuần nào** trong năm (từ W1 đến W52/53) qua bộ chuyển tuần `[ ◀ | ▶ ]` và menu thả xuống ngay trong popup.
    - Thẻ Cân bằng, Giờ đã ghi, Yếu nhất; Điểm sáng của tuần, Vốn cần bù, Bánh xe cuộc đời, Thói quen và gợi ý kế hoạch tuần mới.
@@ -131,6 +131,12 @@
    - **Tự đếm** các buổi cùng tên trên lịch (không phân biệt hoa thường, có dấu hay không) hoặc **tích tay** bằng nút ✓.
    - Chuỗi kiểu mềm: theo **số lần mỗi tuần** thì đếm số tuần liên tiếp đạt; **mỗi ngày** thì mỗi tuần được nghỉ 1 ngày. Hôm nay, tuần này chưa xong không làm đứt chuỗi.
    - Bảng chi tiết: chuỗi, kỷ lục, lưới 26 tuần, tích bù trong tuần, **Xếp 1 buổi**, lưu trữ, xóa có Hoàn tác. Popup hoạt động có ô **Theo dõi thành thói quen**; app gợi ý khi một hoạt động lặp lại 3 ngày trong 2 tuần; mốc 7/21/30/66 ngày hoặc 4/8/12/26/52 tuần báo bằng thông báo nhỏ.
+
+17. 🩺 **Sức Khỏe Và Hồ Sơ (v0.6.0)**:
+   - Tab **Sức khỏe** theo bố cục app Sức khỏe của iPhone: Tóm tắt (ghi nhanh hôm nay, Điểm nổi bật, thẻ ghim), Duyệt theo nhóm (Triệu chứng, Tâm lý, Giấc ngủ, Thuốc và TPCN, Cơ thể, Chu kỳ), Nhật ký từng ngày.
+   - Ghi mỗi ngày: tâm trạng, căng thẳng, giờ ngủ, triệu chứng (có sẵn và tự thêm, 3 mức), thuốc và TPCN đã dùng, cân nặng, chiều cao, ghi chú. Chu kỳ kinh nguyệt khi hồ sơ là Nữ: dự đoán kỳ tới, rụng trứng (kỳ tới − 14 ngày), giai đoạn dễ thụ thai.
+   - Gợi ý theo quy tắc cố định (không AI), có số cụ thể và dấu hiệu cần đi khám; dùng cả dữ liệu lịch (giờ làm việc, giờ cho Quan hệ, Sức khỏe). BMI theo ngưỡng châu Á; kiểm tra nhanh PHQ-2, GAD-2.
+   - Tab **Tôi**: hồ sơ (tên gọi, ngày sinh, giới tính, chiều cao, cân nặng), Danh mục vốn, Cài đặt. Công tắc đồng bộ dữ liệu sức khỏe; không bao giờ gửi sang Google Calendar.
 
 ---
 

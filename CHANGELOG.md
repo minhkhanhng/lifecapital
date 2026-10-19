@@ -25,6 +25,17 @@ Làm lại phần Dự án theo cách Asana tổ chức dự án, vì bản v0.5
 - Dữ liệu ghi số phiên bản 60; máy còn chạy bản cũ giữ nguyên phần, hạn, mốc khi lưu và đồng bộ.
 - Test gộp dữ liệu 28 tình huống (thêm 8 cho phần, hạn, mốc, cập nhật trạng thái).
 
+**Thêm trong UAT (20/10): Sức khỏe và hồ sơ** (PO yêu cầu thêm vào bản này)
+- Tab mới **Sức khỏe**, bố cục theo app Sức khỏe của iPhone: **Tóm tắt** (ghi nhanh hôm nay, Điểm nổi bật, thẻ ghim), **Duyệt** theo nhóm (Triệu chứng, Tâm lý, Giấc ngủ, Thuốc và thực phẩm chức năng, Cơ thể, Chu kỳ) với biểu đồ 7 ngày / 30 ngày / 6 tháng, **Nhật ký** từng ngày.
+- Ghi mỗi ngày: tâm trạng (5 mức), căng thẳng, giờ ngủ, triệu chứng (18 loại có sẵn + tự thêm, mỗi loại 3 mức nặng), thuốc và thực phẩm chức năng đã dùng, cân nặng, chiều cao, ghi chú. Ghi được cho ngày đã qua, không ghi trước cho ngày tới.
+- **Thuốc và TPCN:** tên, liều, hằng ngày (1–4 lần) hoặc khi cần, ngày bắt đầu và kết thúc; tích mỗi lần dùng; theo dõi tỷ lệ dùng đủ liều 7 ngày.
+- **Tâm lý:** tâm trạng, căng thẳng mỗi ngày; bài kiểm tra nhanh PHQ-2 và GAD-2 (4 câu) có lịch sử điểm.
+- **Chu kỳ (khi hồ sơ là Nữ):** ghi ngày hành kinh (ít / vừa / nhiều); dự đoán kỳ tới, ngày rụng trứng, giai đoạn dễ thụ thai theo độ dài chu kỳ tự tính từ các kỳ đã ghi hoặc theo số tự nhập; báo trễ kinh, chu kỳ không đều, kỳ kéo dài. Ghi rõ không dùng để tránh thai.
+- **Gợi ý theo quy tắc, không dùng AI**, có số liệu cụ thể: triệu chứng lặp lại kèm mẹo tự chăm sóc và dấu hiệu cần đi khám, triệu chứng nặng hoặc sốt kéo dài (đi khám), triệu chứng hay đi cùng ngày làm việc nhiều hay đêm ngủ ít (lấy từ lịch), giấc ngủ, tâm trạng thấp (gợi ý xếp giờ cho Quan hệ, Sức khỏe), cân nặng thay đổi nhanh, BMI theo ngưỡng châu Á kèm số kg cần đổi, uống thuốc chưa đều, chu kỳ. Luôn ghi chú không thay cho bác sĩ, cấp cứu gọi 115.
+- **Lịch:** thẻ ngày và chế độ Ngày có chip sức khỏe (tâm trạng, triệu chứng, hành kinh, dự kiến hành kinh, dễ thụ thai); bấm để ghi. Tổng kết tuần có mục Sức khỏe.
+- **Tab Tôi** thay ô Cài đặt ở thanh dưới điện thoại và tab Vốn: hồ sơ (tên gọi, ngày sinh và tuổi, giới tính, chiều cao, cân nặng theo ngày, BMI), Danh mục vốn, nút mở Cài đặt. Thanh dưới điện thoại: Lịch, Việc, Dự án, Sức khỏe, Số liệu, Tôi. Phím tắt 1–6.
+- **Riêng tư:** công tắc Đồng bộ dữ liệu sức khỏe (mặc định bật). Tắt thì nhật ký sức khỏe chỉ nằm trên máy, không gửi lên tài khoản. Dữ liệu sức khỏe không bao giờ gửi sang Google Calendar, không có trong tệp CSV. Đồng bộ gộp từng ngày; máy chạy bản cũ giữ nguyên hồ sơ và nhật ký.
+
 **Làm lại Cài đặt (20/10)**
 - Thanh kéo **Độ mờ nền** mượt: trước đây mỗi lần kéo làm cả trang tính lại và vẽ lại mọi lớp kính mờ (Chrome báo chặn giao diện ~200ms); giờ chỉ vẽ lại lớp ảnh nền. Có số độ mờ bên cạnh; thanh chỉ hiện khi đã chọn ảnh nền. Kính mờ của thẻ, thanh bên giữ một độ cố định.
 - Mỗi mục là một thẻ riêng; hàng cao đều, nhãn bên trái, nút và ô chọn bên phải, cùng cỡ; kẻ mảnh giữa các hàng. Nền bảng gần đặc để dễ đọc.
