@@ -892,6 +892,12 @@ body.hv-dragging .day-card { border-style: dashed; }
 .sch-note.warn { border-left-color: var(--wa); color: var(--tx); }
 .sch-note.bad { border-left-color: var(--bad); color: var(--tx); }
 @media (max-width: 480px) { .sch-row b { min-width: 76px; font-size: 12.5px; } }
+/* Màn cảm ứng: ô tích và nút ↑ ↓ đủ lớn để bấm bằng ngón tay */
+@media (pointer: coarse) {
+  .sch-row input[type=checkbox] { width: 22px; height: 22px; }
+  .sch-row .sch-mv .btn { min-width: 40px; min-height: 40px; }
+  .sch-row { padding: 2px 0; }
+}
 .ev-hb { display: inline-block; font-size: 10px; font-weight: 700; color: var(--ok-text); margin-right: 4px; vertical-align: 1px; }
 .hb-strip { display: flex; align-items: center; gap: 10px; margin: -4px 0 12px; min-width: 0; }
 .hb-lbl { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tx-sec); flex: none; }
@@ -1730,7 +1736,7 @@ button.tl-lab:hover { background: linear-gradient(color-mix(in srgb, var(--ac) 1
       <h3 class="modal-title" id="hbTitle">Thói quen</h3>
       <button type="button" class="btn btn-sm btn-ghost" onclick="closeHb()" title="Đóng (ESC)" aria-label="Đóng">✕</button>
     </div>
-    <div class="modal-body" id="hbBody" onkeydown="if (event.key === 'Enter' && event.target.tagName === 'INPUT') { event.preventDefault(); hbSave(); }"></div>
+    <div class="modal-body" id="hbBody" onkeydown="if (event.target.tagName === 'INPUT' && event.target.type !== 'checkbox') enterKey(event, () => hbSave())"></div>
   </div>
 </div>
 
@@ -4978,6 +4984,8 @@ function deleteCap(k) {
     return;
   }
   if (Object.values(S.ev).flat().some(e => e.c === k)) { showToast("Loại vốn đang được dùng. Đổi hoặc xóa các hoạt động trước.", "bad"); return; }
+  const hbUse = (S.habits || []).filter(h => h.c === k);
+  if (hbUse.length) { showToast(`Thói quen "${hbUse[0].n}" đang dùng loại vốn này. Đổi loại vốn của thói quen trước.`, "bad"); return; }
   const i = S.caps.findIndex(c => c.k === k), cap = S.caps[i], bl = S.bl[k];
   if (!cap) return;
   S.caps.splice(i, 1);
@@ -7935,13 +7943,16 @@ function hbSuggest() {
     (S.ev[k] || []).forEach(e => {
       const f = hbFold(e.t);
       if (!f || keys.has(f) || dis.has(f)) return;
-      const x = seen.get(f) || { t: e.t, c: e.c, days: new Set() };
+      const x = seen.get(f) || { names: new Map(), c: e.c, days: new Set() };
       x.days.add(k);
+      x.names.set(e.t, (x.names.get(e.t) || 0) + 1);
       seen.set(f, x);
     });
   }
   let best = null;
-  seen.forEach((x, f) => { if (x.days.size >= 3 && (!best || x.days.size > best.n)) best = { key: f, t: x.t, c: x.c, n: x.days.size }; });
+  // Tên hiển thị: cách viết dùng nhiều nhất (ưu tiên có chữ hoa đầu), viết hoa chữ đầu vì ghi nhanh hay gõ thường
+  const name = m => { const t = [...m].sort((a, b) => b[1] - a[1] || (/^\p{Lu}/u.test(b[0]) ? 1 : 0) - (/^\p{Lu}/u.test(a[0]) ? 1 : 0))[0][0].trim(); return t.charAt(0).toUpperCase() + t.slice(1); };
+  seen.forEach((x, f) => { if (x.days.size >= 3 && (!best || x.days.size > best.n)) best = { key: f, t: name(x.names), c: x.c, n: x.days.size }; });
   return best;
 }
 const hbLast = new Map();

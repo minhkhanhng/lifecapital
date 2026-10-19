@@ -47,6 +47,7 @@ Mọi hoạt động đều là đầu tư vào một loại vốn, nên app kh�
 - Mốc 7, 21, 30, 66 ngày (hoặc 4, 8, 12, 26, 52 tuần) báo bằng một thông báo nhỏ.
 - Tổng kết tuần và Tổng quan có thẻ Thói quen; tab Vốn có danh sách quản lý, gồm cả mục đã lưu trữ.
 - Đồng bộ: hai máy tích ngày khác nhau thì giữ cả hai; máy bản cũ giữ nguyên thói quen khi lưu.
+- Không xóa được loại vốn đang có thói quen dùng (báo tên thói quen); gợi ý dùng cách viết hay gặp nhất và viết hoa chữ đầu.
 
 **Thêm trong UAT (20/10): Xếp thông minh** (PO yêu cầu thêm vào bản này)
 - **Xếp hết** lách qua lịch bận, vẫn giữ đúng thứ tự các việc nhỏ.
@@ -54,7 +55,7 @@ Mọi hoạt động đều là đầu tư vào một loại vốn, nên app kh�
 - Có **hạn** thì xong trước hạn ít nhất 1 ngày. Hạn đứng trên mọi kiểu cân bằng: không kịp thì dồn làm sớm nhất (bỏ giới hạn mỗi ngày), vẫn không kịp thì nới khung giờ 06:00–24:00, cuối cùng mới báo "Không kịp hạn" và để phần còn lại trong hộp.
 - Cân bằng: không có hạn gấp thì để sau những tuần mà loại vốn của việc đã đạt mục tiêu.
 - Việc nhỏ đã qua giờ mà chưa xong được đánh dấu **lỡ**; nút **Xếp lại** dời chúng sang khoảng trống từ bây giờ. Cả lần Xếp hết có **Hoàn tác**.
-- Phần xem trước sửa được: đổi thứ tự (↑ ↓), bỏ bớt việc (ô tích).
+- Phần xem trước sửa được: đổi thứ tự (↑ ↓), bỏ bớt việc (ô tích). Trên màn cảm ứng ô tích và nút ↑ ↓ to hơn cho dễ bấm.
 - Sửa: bấm "Dời" ở việc chưa chia nhỏ đã có giờ báo nhầm "Không còn việc nhỏ để xếp".
 
 **Sửa trong UAT (19/10)**
