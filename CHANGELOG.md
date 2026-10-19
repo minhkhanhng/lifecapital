@@ -2,6 +2,28 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.6.0 · Dự án kiểu Asana · đang UAT trên staging
+
+Làm lại phần Dự án theo cách Asana tổ chức dự án, vì bản v0.5.0 khó theo dõi và khó dùng. Dữ liệu cũ dùng tiếp, không cần làm gì.
+
+**Mới**
+- Bấm một dự án để mở **trang riêng**, có nút ← và nút Quay lại của trình duyệt; trên app cài ở iPhone vuốt từ cạnh trái để quay lại. Máy tính rộng có cột danh sách dự án bên trái.
+- 4 chế độ xem trong mỗi dự án, nhớ chế độ dùng gần nhất:
+  - **Tổng quan:** cập nhật trạng thái (Đúng tiến độ / Có rủi ro / Chậm, kèm ghi chú và lịch sử), % việc xong, giờ đã dành, thời gian đã trôi, việc quá hạn và việc tiếp theo, mốc, mô tả, giờ theo tuần và theo loại vốn.
+  - **Danh sách:** các mục chia theo phần, cột loại vốn, ngày, tiến độ, giờ; xổ việc nhỏ hoặc các buổi ngay tại chỗ.
+  - **Bảng:** mỗi phần một cột, mỗi mục một thẻ.
+  - **Timeline:** thay biểu đồ Gantt cũ; mỗi việc hoặc chuỗi hoạt động một dòng, các buổi là vạch trong thanh, hạn và mốc là dấu ◆; thu phóng Ngày / Tuần / Tháng.
+- **Phần** (section) tự đặt tên cho từng dự án, có 2 mẫu bấm một lần (“Cần làm · Đang làm · Xong”, “Giai đoạn 1 · 2 · 3”). Đổi tên, đổi thứ tự, xóa phần (có Hoàn tác).
+- Hoạt động lặp lại cùng tên gom thành một **chuỗi** một dòng (vd 12 buổi “Chạy dài”), thay vì mỗi buổi một dòng.
+- Thêm việc ngay trong từng phần (gõ tên, Enter); tích xong có Hoàn tác; máy tính kéo thả mục sang phần khác, điện thoại dùng ô Chuyển.
+- **Bảng chi tiết** khi bấm một mục: sửa tên, phần, hạn, loại vốn, việc nhỏ, xếp lịch, xem các buổi. Máy tính trượt ra bên phải, điện thoại trượt từ dưới lên.
+- Việc có **hạn**, hiện cả ở Hộp việc; quá hạn thì nhãn đỏ.
+
+**Thay đổi**
+- Bỏ biểu đồ Gantt mỗi hoạt động một dòng và kiểu bấm dự án xổ ra tại chỗ.
+- Dữ liệu ghi số phiên bản 60; máy còn chạy bản cũ giữ nguyên phần, hạn, mốc khi lưu và đồng bộ.
+- Test gộp dữ liệu 28 tình huống (thêm 8 cho phần, hạn, mốc, cập nhật trạng thái).
+
 ## v0.5.1 · Dọn mã · 19/10/2026
 
 Không đổi giao diện hay tính năng.

@@ -3127,6 +3127,8 @@ function headerAdd() {
 }
 
 function switchTab(tabId) {
+  // Rời tab Dự án: bỏ #pj/<mã> khỏi địa chỉ để tải lại trang không nhảy về dự án
+  if (tabId !== "pj") try { if (history.state && history.state.pj) history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
   cur = tabId;
   draw(true);
 }
@@ -7296,6 +7298,8 @@ function pjOpenItem(kind, id) {
   renderPjItem(true);
   if (!pjDet) return;
   $("pjItOverlay").classList.add("open");
+  // Con trỏ vào bảng (nút Đóng: không bật bàn phím trên điện thoại); đóng thì về lại dòng vừa bấm
+  setTimeout(() => { const b = document.querySelector("#pjItOverlay .modal-header button"); if (b && pjDet) b.focus({ preventScroll: true }); }, 60);
 }
 function pjCloseItem() {
   if (!pjDet) return;
