@@ -1313,73 +1313,269 @@ body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(-
 .set-row > .btn { flex: none; white-space: nowrap; }
 @media (max-width: 899px) { .update-bar { top: auto; bottom: calc(146px + env(safe-area-inset-bottom, 0px)); } }
 .inst-steps { margin: 6px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
-/* ===== Dự án (v0.5.0) ===== */
-.pj-list { display: flex; flex-direction: column; gap: 12px; max-width: 980px; margin: 0 auto; }
+/* ===== Dự án (v0.6.0, kiểu Asana): danh sách dự án → trang dự án, 4 chế độ xem ===== */
+.pj-list { display: flex; flex-direction: column; gap: 10px; max-width: 980px; margin: 0 auto; }
+.pj-list-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 13px; color: var(--tx-sec); }
 .pj-empty { padding: 22px 20px; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; max-width: 640px; margin: 0 auto; }
 .pj-empty p { margin: 0; font-size: 13.5px; color: var(--tx-sec); line-height: 1.5; }
-.pj-item { padding: 0; overflow: hidden; border-left: 4px solid var(--pj); }
-.pj-bar { width: 100%; display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto auto; align-items: center; gap: 12px; padding: 14px 16px; border: 0; background: transparent; color: var(--tx); font: inherit; text-align: left; cursor: pointer; }
-.pj-bar:hover { background: color-mix(in srgb, var(--pj) 8%, transparent); }
-.pj-bar:focus-visible { outline: 2px solid var(--ac); outline-offset: -2px; }
 .pj-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--pj); flex: none; display: inline-block; }
+.pj-row { width: 100%; display: grid; grid-template-columns: auto minmax(0, 1fr) auto 110px 64px; align-items: center; gap: 12px; padding: 13px 16px; border-left: 4px solid var(--pj); color: var(--tx); font: inherit; text-align: left; cursor: pointer; }
+.pj-row:hover { background: var(--sheen), color-mix(in srgb, var(--pj) 10%, var(--glass-hi)); }
+.pj-row:focus-visible { outline: 2px solid var(--ac); outline-offset: 2px; }
 .pj-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .pj-name { font-size: 15.5px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pj-sub { font-size: 12.5px; color: var(--tx-sec); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.pj-tags { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.pj-tags { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; align-items: center; }
 .pj-tags .pill { font-size: 11px; }
-.pj-pr-h { background: color-mix(in srgb, var(--bad) 18%, transparent); color: var(--bad); }
-.pj-pr-m { background: color-mix(in srgb, var(--ac) 18%, transparent); color: var(--tx); }
-.pj-pr-l { background: color-mix(in srgb, var(--mu) 18%, transparent); color: var(--tx-sec); }
+.pj-hs { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 3px 9px; border-radius: 99px; background: color-mix(in srgb, var(--mu) 16%, transparent); color: var(--tx-sec); white-space: nowrap; }
+.pj-hs i { width: 8px; height: 8px; border-radius: 50%; background: var(--mu); }
+.pj-hs.hs-ok { background: color-mix(in srgb, var(--ok) 22%, transparent); color: var(--ok-text); }
+.pj-hs.hs-ok i { background: var(--ok); }
+.pj-hs.hs-risk { background: color-mix(in srgb, var(--wa) 20%, transparent); color: var(--wa-text); }
+.pj-hs.hs-risk i { background: var(--wa); }
+.pj-hs.hs-off { background: color-mix(in srgb, var(--bad) 18%, transparent); color: var(--bad); }
+.pj-hs.hs-off i { background: var(--bad); }
+.pj-prog { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--tx-sec); font-variant-numeric: tabular-nums; }
+.pj-pbar { flex: 1; height: 6px; border-radius: 99px; background: color-mix(in srgb, var(--tx) 9%, transparent); overflow: hidden; min-width: 40px; }
+.pj-pbar i { display: block; height: 100%; border-radius: 99px; background: var(--pj, var(--ac)); }
+.pj-pbar.wide { flex: none; width: 100%; }
 .pj-hours { display: flex; flex-direction: column; align-items: flex-end; font-variant-numeric: tabular-nums; }
-.pj-hours b { font-size: 17px; font-weight: 600; }
+.pj-hours b { font-size: 16px; font-weight: 600; }
 .pj-hours small { font-size: 11.5px; color: var(--tx-sec); white-space: nowrap; }
-.pj-chev { color: var(--mu); font-size: 13px; }
-.pj-time { height: 3px; background: color-mix(in srgb, var(--pj) 18%, transparent); }
-.pj-time i { display: block; height: 100%; background: var(--pj); }
-.pj-detail { padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--glass-bd); }
-.pj-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .pj-caps { display: flex; gap: 6px; flex-wrap: wrap; }
 .pj-caps .pill { font-size: 12px; }
 .pj-hint { margin: 0; font-size: 13px; color: var(--tx-sec); }
 .pj-closed-toggle { align-self: flex-start; }
 @media (max-width: 640px) {
-  .pj-bar { grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px 10px; padding: 12px 12px; }
+  .pj-row { grid-template-columns: auto minmax(0, 1fr) auto; gap: 6px 10px; padding: 12px; }
   .pj-tags { grid-column: 2 / -1; grid-row: 2; justify-content: flex-start; }
-  .pj-chev { display: none; }
-  .pj-detail { padding: 10px 12px 14px; }
+  .pj-prog { grid-column: 2 / -1; grid-row: 3; }
 }
-/* Gantt: cột nhãn đứng yên, trục thời gian cuộn ngang; mỗi dòng một hoạt động, cũ nhất ở trên */
-.gantt { --g-lab: 176px; display: flex; flex-direction: column; gap: 6px; }
-.g-scroll { overflow-x: auto; border: 1px solid var(--glass-bd); border-radius: 12px; background: color-mix(in srgb, var(--glass-hi) 60%, transparent); overscroll-behavior-x: contain; }
-.g-inner { position: relative; min-width: 100%; }
-.g-head, .g-row { display: flex; align-items: stretch; }
-.g-head { height: 38px; border-bottom: 1px solid var(--glass-bd); }
-.g-lab { position: sticky; left: 0; z-index: 2; flex: none; width: var(--g-lab); padding: 5px 10px; display: flex; flex-direction: column; justify-content: center; gap: 1px; background: var(--sheen), var(--glass-hi); border-right: 1px solid var(--glass-bd); min-width: 0; }
-.g-head .g-lab { font-size: 11px; font-weight: 600; color: var(--tx-sec); text-transform: uppercase; letter-spacing: 0.04em; }
-.g-lab small { font-size: 11px; color: var(--tx-sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.g-lab span { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.g-axis { position: relative; flex: none; }
-.g-lb, .g-mo { position: absolute; top: 3px; font-size: 10.5px; color: var(--tx-sec); padding-left: 3px; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.g-mo { top: auto; bottom: 3px; font-weight: 600; color: var(--tx); border-left: 1px solid var(--tx-sec); line-height: 1.1; }
-.g-body { position: relative; }
-.g-grid { position: absolute; top: 0; bottom: 0; left: var(--g-lab); pointer-events: none; z-index: 0; }
-.g-wk { position: absolute; top: 0; bottom: 0; width: 1px; background: color-mix(in srgb, var(--tx) 8%, transparent); }
-.g-today { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--bad); opacity: 0.8; }
-.g-edge { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1.5px dashed color-mix(in srgb, var(--pj, var(--ac)) 80%, var(--tx)); }
-.g-edge.end { margin-left: var(--g-dw, 0); }
-.g-row { width: 100%; border: 0; padding: 0; margin: 0; background: transparent; color: var(--tx); font: inherit; text-align: left; cursor: pointer; min-height: 40px; border-bottom: 1px solid color-mix(in srgb, var(--glass-bd) 60%, transparent); }
-.g-row:last-child { border-bottom: 0; }
-.g-row:hover .g-lab, .g-row:focus-visible .g-lab { background: var(--sheen), color-mix(in srgb, var(--ac) 14%, var(--glass-hi)); }
-.g-row:focus-visible { outline: none; }
-.g-track { position: relative; flex: none; z-index: 1; }
-.g-bar { position: absolute; top: 50%; height: 16px; margin-top: -8px; border-radius: 5px; background: color-mix(in srgb, var(--cap, var(--ac)) 78%, transparent); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); display: inline-block; }
-.g-bar.fut { background: color-mix(in srgb, var(--cap, var(--ac)) 18%, transparent); border: 1.5px dashed var(--cap, var(--ac)); box-shadow: none; }
+/* Trang dự án; máy tính rộng có cột danh sách dự án bên trái như thanh bên của Asana */
+.pj-shell { max-width: 1240px; margin: 0 auto; }
+.pj-side { display: none; }
+@media (min-width: 1100px) {
+  .pj-shell { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 16px; align-items: start; }
+  .pj-side { display: flex; flex-direction: column; gap: 2px; position: sticky; top: 12px; padding: 10px 8px; }
+}
+.pj-side-h { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--tx-sec); padding: 2px 8px 6px; }
+.pj-side button { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border: 0; border-radius: 8px; background: transparent; color: var(--tx); font: inherit; font-size: 13.5px; text-align: left; cursor: pointer; min-width: 0; }
+.pj-side button > span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pj-side button:hover { background: color-mix(in srgb, var(--tx) 6%, transparent); }
+.pj-side button.on { background: color-mix(in srgb, var(--pj) 20%, transparent); font-weight: 600; }
+.pj-side .pj-dot { width: 9px; height: 9px; }
+.pj-side .pj-side-all { color: var(--tx-sec); font-size: 12.5px; margin-top: 6px; }
+.pj-page { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.pj-head { display: flex; align-items: center; gap: 8px 10px; flex-wrap: wrap; padding: 12px 14px; border-left: 4px solid var(--pj); }
+.pj-back { font-size: 16px; padding: 4px 10px; }
+.pj-title { margin: 0; min-width: 0; flex: 0 1 auto; font-size: 19px; }
+.pj-title button { border: 0; background: none; padding: 0; color: var(--tx); font: 650 19px var(--font-ui); cursor: pointer; text-align: left; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
+.pj-title button:hover { text-decoration: underline; text-underline-offset: 3px; }
+.pj-head-acts { display: flex; gap: 6px; align-items: center; margin-left: auto; }
+.pj-head-meta { flex-basis: 100%; font-size: 12.5px; color: var(--tx-sec); padding-left: 52px; }
+.pj-mob-only { display: none; }
+@media (max-width: 640px) {
+  .pj-head { display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; gap: 4px 8px; padding: 10px 12px 12px; }
+  .pj-head-acts { margin-left: 0; }
+  .pj-add-ev { display: none; }
+  .pj-mob-only { display: block; }
+  .pj-head-hs { grid-column: 3 / -1; grid-row: 2; }
+  .pj-head-meta { grid-column: 3 / -1; padding-left: 0; }
+  .pj-title, .pj-title button { font-size: 17.5px; }
+  .pj-back { padding: 4px 8px; }
+}
+.pj-tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--glass-bd); overflow-x: auto; scrollbar-width: none; }
+.pj-tabs::-webkit-scrollbar { display: none; }
+.pj-tabs button { border: 0; background: transparent; color: var(--tx-sec); font: inherit; font-size: 14px; font-weight: 500; padding: 9px 12px; border-bottom: 2.5px solid transparent; margin-bottom: -1px; cursor: pointer; white-space: nowrap; }
+.pj-tabs button:hover { color: var(--tx); }
+.pj-tabs button.on { color: var(--tx); border-bottom-color: var(--pj); font-weight: 600; }
+.pj-toolbar { display: flex; gap: 8px 12px; align-items: center; flex-wrap: wrap; }
+.pj-tb-hint { font-size: 12px; color: var(--tx-sec); }
+.pj-tpl { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; font-size: 13px; color: var(--tx-sec); padding: 10px 12px; border: 1px dashed var(--glass-bd); border-radius: 12px; }
+.pj-menu { position: relative; }
+.pj-menu > summary { list-style: none; cursor: pointer; }
+.pj-menu > summary::-webkit-details-marker { display: none; }
+.pj-menu-pop { position: absolute; right: 0; top: calc(100% + 4px); z-index: 30; min-width: 180px; display: flex; flex-direction: column; padding: 6px; border-radius: 12px; background: var(--sheen), var(--glass-hi); -webkit-backdrop-filter: blur(24px) saturate(160%); backdrop-filter: blur(24px) saturate(160%); border: 1px solid var(--glass-bd); box-shadow: var(--shadow-lg); }
+.pj-menu-pop button { border: 0; background: transparent; color: var(--tx); font: inherit; font-size: 13.5px; text-align: left; padding: 8px 10px; border-radius: 8px; cursor: pointer; }
+.pj-menu-pop button:hover { background: color-mix(in srgb, var(--tx) 7%, transparent); }
+.pj-menu-pop .danger { color: var(--bad); }
+.pj-over { outline: 2px dashed var(--ac); outline-offset: 2px; }
+.pj-add { width: 100%; border: 1px dashed transparent; background: transparent; font: inherit; font-size: 13.5px; padding: 8px 10px; border-radius: 8px; color: var(--tx); }
+.pj-add::placeholder { color: var(--tx-sec); }
+.pj-add:hover { border-color: var(--glass-bd); }
+.pj-add:focus { border-style: solid; border-color: var(--ac); background: var(--glass-hi); outline: none; }
+.pj-sec-in { font-size: 14px; font-weight: 600; padding: 4px 8px; min-width: 0; flex: 1; }
+/* Danh sách */
+.pjl { padding: 4px 0 8px; }
+.pjl-sec { padding: 2px 0 6px; border-radius: 12px; }
+.pjl-sh { display: flex; align-items: center; gap: 6px; padding: 10px 12px 6px; }
+.pjl-sh b { font-size: 14.5px; }
+.pjl-sh small { color: var(--tx-sec); font-size: 12px; margin-right: auto; }
+.pjl-tog, .pjr-tog { border: 0; background: transparent; color: var(--tx-sec); cursor: pointer; font-size: 12px; width: 22px; height: 22px; padding: 0; border-radius: 6px; }
+.pjl-tog:hover, .pjr-tog:not(:disabled):hover { background: color-mix(in srgb, var(--tx) 7%, transparent); }
+.pjr-tog:disabled { cursor: default; }
+.pjl-sec > .pj-add { width: calc(100% - 24px); margin: 2px 12px 0 46px; width: calc(100% - 58px); }
+.pjl-more { border: 0; background: transparent; color: var(--tx-sec); font: inherit; font-size: 12.5px; padding: 6px 12px 6px 58px; cursor: pointer; text-align: left; }
+.pjl-more:hover { color: var(--tx); text-decoration: underline; }
+.pjl-new { padding: 8px 12px 0; display: flex; }
+.pjr { display: grid; grid-template-columns: 22px 22px minmax(0, 1fr) 120px 130px 150px 52px; align-items: center; gap: 8px; min-height: 42px; padding: 0 12px; border-top: 1px solid color-mix(in srgb, var(--glass-bd) 70%, transparent); font-size: 13.5px; }
+.pjr-info { display: contents; }
+.pjr:hover { background: color-mix(in srgb, var(--tx) 4%, transparent); }
+.pjr-head { min-height: 30px; border-top: 0; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--tx-sec); }
+.pjr-head:hover { background: transparent; }
+.pjr-chk { display: flex; align-items: center; justify-content: center; }
+.pjr-name { border: 0; background: transparent; color: var(--tx); font: inherit; text-align: left; padding: 9px 0; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.pjr-name:hover { text-decoration: underline; text-underline-offset: 3px; }
+.pjr-name small { color: var(--tx-sec); }
+.pjr.done .pjr-name { color: var(--tx-sec); text-decoration: line-through; }
+.pjr-cap { display: flex; align-items: center; gap: 6px; color: var(--tx-sec); font-size: 12.5px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; min-width: 0; }
+.pjr-cap i { width: 8px; height: 8px; border-radius: 50%; background: var(--cap); flex: none; }
+.pjr-date, .pjr-prog { font-size: 12.5px; color: var(--tx-sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; min-width: 0; }
+.pjr-date.late, .pjc-meta .late { color: var(--bad); font-weight: 600; }
+.pjr-h { text-align: right; font-variant-numeric: tabular-nums; font-size: 12.5px; }
+.pjr-ser { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; font-size: 10.5px; line-height: 1; color: var(--cap); border: 1.5px solid var(--cap); flex: none; }
+.pjr-ser.past { background: color-mix(in srgb, var(--cap) 25%, transparent); }
+.pjr-sub { display: grid; grid-template-columns: 18px minmax(0, 1fr) auto auto; gap: 8px; align-items: center; padding: 4px 12px 4px 58px; font-size: 12.5px; color: var(--tx-sec); }
+.pjr-sub.done > span { text-decoration: line-through; }
+@media (max-width: 760px) {
+  .pjr { grid-template-columns: 22px minmax(0, 1fr) auto; grid-template-areas: "c n h" ". i i"; gap: 0 8px; padding: 6px 12px; }
+  .pjr-head, .pjr-tog { display: none; }
+  .pjr-chk { grid-area: c; } .pjr-name { grid-area: n; padding: 4px 0 2px; } .pjr-h { grid-area: h; }
+  .pjr-info { grid-area: i; display: flex; gap: 4px 12px; flex-wrap: wrap; padding-bottom: 4px; }
+  .pjl-sec > .pj-add { margin-left: 12px; width: calc(100% - 24px); }
+  .pjl-more, .pjr-sub { padding-left: 42px; }
+}
+/* Bảng */
+.pjb { display: flex; gap: 12px; overflow-x: auto; padding: 2px 2px 12px; align-items: flex-start; min-height: 280px; overscroll-behavior-x: contain; scroll-snap-type: x proximity; }
+.pjb-col { flex: 0 0 280px; scroll-snap-align: start; display: flex; flex-direction: column; gap: 8px; padding: 10px; border-radius: 14px; background: color-mix(in srgb, var(--glass-hi) 55%, transparent); border: 1px solid var(--glass-bd); }
+.pjb-h { display: flex; align-items: center; gap: 8px; font-size: 14px; padding: 2px 2px 2px 4px; min-height: 32px; }
+.pjb-h small { color: var(--tx-sec); margin-right: auto; }
+.pjb-new { background: transparent; border-style: dashed; }
+.pjb .pjl-more { padding: 4px; }
+.pjc { display: flex; flex-direction: column; gap: 6px; padding: 10px 10px 10px 12px; border-radius: 10px; background: var(--sheen), var(--glass-hi); border: 1px solid var(--glass-bd); border-left: 4px solid var(--cap); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); }
+.pjc[draggable="true"] { cursor: grab; }
+.pjc.done { opacity: 0.62; }
+.pjc.done .pjc-name { text-decoration: line-through; }
+.pjc-top { display: flex; gap: 8px; align-items: flex-start; }
+.pjc-top input, .pjc-top .pjr-ser { margin-top: 1px; }
+.pjc-name { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--tx); font: inherit; font-size: 13.5px; font-weight: 500; text-align: left; padding: 0; cursor: pointer; line-height: 1.35; overflow-wrap: anywhere; }
+.pjc-meta { display: flex; gap: 4px 10px; flex-wrap: wrap; font-size: 12px; color: var(--tx-sec); align-items: center; }
+.pjc-mv { font-size: 12px; padding: 2px 6px; min-height: 26px; max-width: 120px; margin-left: auto; }
+@media (max-width: 760px) { .pjb { scroll-snap-type: x mandatory; } .pjb-col { flex-basis: 85%; } }
+/* Timeline: cột tên đứng yên, trục thời gian cuộn ngang; mỗi mục một dòng, buổi là vạch trong thanh */
+.tl { --tl-lab: 220px; display: flex; flex-direction: column; gap: 6px; }
+.tl-scroll { overflow-x: auto; border: 1px solid var(--glass-bd); border-radius: 12px; background: color-mix(in srgb, var(--glass-hi) 60%, transparent); overscroll-behavior-x: contain; }
+.tl-inner { position: relative; min-width: 100%; }
+.tl-head, .tl-row, .tl-secrow { display: flex; align-items: stretch; }
+.tl-head { height: 40px; border-bottom: 1px solid var(--glass-bd); }
+.tl-lab { position: sticky; left: 0; z-index: 3; flex: none; width: var(--tl-lab); padding: 5px 10px; display: flex; flex-direction: column; justify-content: center; gap: 1px; background: linear-gradient(var(--glass-hi), var(--glass-hi)), var(--bg); /* đặc, để nhãn trục không lộ qua khi cuộn */ border: 0; border-right: 1px solid var(--glass-bd); min-width: 0; color: var(--tx); font: inherit; text-align: left; }
+button.tl-lab { cursor: pointer; }
+button.tl-lab:hover { background: linear-gradient(color-mix(in srgb, var(--ac) 14%, var(--glass-hi)), color-mix(in srgb, var(--ac) 14%, var(--glass-hi))), var(--bg); }
+.tl-lab b { font-size: 13px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tl-lab small { font-size: 11px; color: var(--tx-sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tl-lab-h { font-size: 11px; font-weight: 600; color: var(--tx-sec); text-transform: uppercase; letter-spacing: 0.04em; }
+.tl-axis { position: relative; flex: none; }
+.tl-lb, .tl-mo { position: absolute; top: 3px; font-size: 10.5px; color: var(--tx-sec); padding-left: 3px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.tl-lb.we { color: var(--mu); }
+.tl-mo { top: auto; bottom: 3px; font-weight: 600; color: var(--tx); border-left: 1px solid var(--tx-sec); line-height: 1.1; }
+.tl-body { position: relative; }
+.tl-grid { position: absolute; top: 0; bottom: 0; left: var(--tl-lab); pointer-events: none; z-index: 0; }
+.tl-gl { position: absolute; top: 0; bottom: 0; width: 1px; background: color-mix(in srgb, var(--tx) 8%, transparent); }
+.tl-today { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--bad); opacity: 0.8; }
+.tl-edge { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1.5px dashed color-mix(in srgb, var(--pj, var(--ac)) 80%, var(--tx)); }
+.tl-row { min-height: 42px; border-bottom: 1px solid color-mix(in srgb, var(--glass-bd) 60%, transparent); }
+.tl-row.done .tl-lab b { color: var(--tx-sec); text-decoration: line-through; }
+.tl-secrow { border-bottom: 1px solid var(--glass-bd); }
+.tl-secrow .tl-lab { min-height: 28px; display: block; line-height: 28px; padding-block: 0; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--tx-sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; background: linear-gradient(color-mix(in srgb, var(--tx) 5%, var(--glass-hi)), color-mix(in srgb, var(--tx) 5%, var(--glass-hi))), var(--bg); }
+.tl-track { position: relative; flex: none; z-index: 1; }
+.tl-bar { position: absolute; top: 50%; height: 22px; margin-top: -11px; border-radius: 6px; background: color-mix(in srgb, var(--cap) 18%, transparent); border: 1px solid color-mix(in srgb, var(--cap) 50%, transparent); padding: 0; cursor: pointer; }
+.tl-bar:hover { background: color-mix(in srgb, var(--cap) 30%, transparent); }
+.tl-tick { position: absolute; top: 50%; height: 12px; margin-top: -6px; border-radius: 3px; background: var(--cap); border: 0; padding: 0; cursor: pointer; z-index: 2; }
+.tl-tick.fut { background: color-mix(in srgb, var(--cap) 15%, var(--glass-hi)); border: 1.5px dashed var(--cap); }
+.tl-dia { position: absolute; top: 50%; width: 11px; height: 11px; margin: -6px 0 0 -6px; transform: rotate(45deg); background: var(--cap); border: 1.5px solid var(--glass-hi); padding: 0; cursor: pointer; z-index: 2; }
+.tl-dia.late { background: var(--bad); }
+.tl-dia.ms { background: var(--pj, var(--ac)); cursor: default; }
+.tl-dia.ms.done { opacity: 0.45; }
+.tl-mslab { position: absolute; top: 50%; transform: translateY(-50%); margin-left: 10px; font-size: 11px; color: var(--tx-sec); white-space: nowrap; z-index: 2; }
+.tl-none { position: absolute; top: 50%; transform: translateY(-50%); font-size: 11.5px; color: var(--tx-sec); white-space: nowrap; padding-left: 6px; }
+.tl-key { display: inline-block; width: 16px; height: 10px; border-radius: 3px; background: var(--tx-sec); }
+.tl-key.fut { background: transparent; border: 1.5px dashed var(--tx-sec); }
+.tl-dia-key { display: inline-block; width: 9px; height: 9px; transform: rotate(45deg); background: var(--tx-sec); }
 .g-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 11.5px; color: var(--tx-sec); align-items: center; }
 .g-legend span { display: inline-flex; align-items: center; gap: 5px; }
-.g-legend .g-bar { position: static; margin: 0; width: 18px; height: 10px; --cap: var(--tx-sec); }
 .g-today-key { display: inline-block; width: 2px; height: 12px; background: var(--bad); }
-.g-edge-key { display: inline-block; width: 0; height: 12px; border-left: 1.5px dashed var(--tx-sec); }
-@media (max-width: 640px) { .gantt { --g-lab: 128px; } .g-lab span { font-size: 12.5px; } }
+@media (max-width: 640px) { .tl { --tl-lab: 128px; } .tl-lab b { font-size: 12.5px; } }
+/* Tổng quan */
+.pjo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start; }
+.pjo-col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.pjo .card { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+@media (max-width: 860px) {
+  .pjo { display: flex; flex-direction: column; align-items: stretch; }
+  .pjo-col { display: contents; }
+  .pjo-st { order: 1; } .pjo-nu { order: 2; } .pjo-at { order: 3; } .pjo-ms-card { order: 4; } .pjo-de { order: 5; } .pjo-wk { order: 6; }
+}
+.pjo-h { display: flex; justify-content: space-between; align-items: center; gap: 8px; min-height: 30px; }
+.pjo-h b { font-size: 14.5px; }
+.pjo-h small { font-size: 12px; color: var(--tx-sec); }
+.pjo-upform { display: flex; flex-direction: column; gap: 8px; }
+.pjo-upform textarea, .pjo-desc { width: 100%; resize: vertical; font: inherit; font-size: 13.5px; }
+.pjo-desc { min-height: 92px; }
+.pjo-nums { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.pjo-num { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.pjo-num span, .pjo-num small { font-size: 11.5px; color: var(--tx-sec); }
+.pjo-num b { font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.pjo-list { display: flex; flex-direction: column; gap: 2px; }
+.pjo-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; border: 0; background: transparent; color: var(--tx); font: inherit; font-size: 13.5px; text-align: left; padding: 7px 6px; border-radius: 8px; cursor: pointer; }
+.pjo-item span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pjo-item:hover { background: color-mix(in srgb, var(--tx) 6%, transparent); }
+.pjo-item small { color: var(--tx-sec); white-space: nowrap; font-size: 12px; }
+.pjo-item.late small { color: var(--bad); font-weight: 600; }
+.pj-up { display: flex; flex-direction: column; gap: 4px; padding: 6px 0; }
+.pj-up small { font-size: 11.5px; color: var(--tx-sec); margin-left: 4px; }
+.pj-up p { margin: 0; font-size: 13.5px; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; }
+.pjo-older > summary { cursor: pointer; font-size: 12.5px; color: var(--tx-sec); padding: 4px 0; }
+.pjo-older .pj-up { border-top: 1px solid color-mix(in srgb, var(--glass-bd) 70%, transparent); }
+.pjo-ms { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 8px; align-items: center; font-size: 13.5px; }
+.pjo-ms small { color: var(--tx-sec); font-variant-numeric: tabular-nums; }
+.pjo-ms.late small, .pjo-ms.late span { color: var(--bad); }
+.pjo-ms.done span { text-decoration: line-through; color: var(--tx-sec); }
+.pjo-add { display: flex; gap: 6px; flex-wrap: wrap; }
+.pjo-add input[type="text"] { flex: 1 1 140px; min-width: 0; }
+.pjo-add input[type="date"] { flex: 0 1 150px; min-width: 0; }
+/* Bảng chi tiết: máy tính trượt ra bên phải, điện thoại là tờ trượt từ dưới lên */
+#pjItOverlay { z-index: 990; } /* dưới popup hoạt động và Xếp lịch mở từ đây */
+#pjItOverlay .modal-sheet { border-top-color: var(--pj, var(--ac)); }
+@media (min-width: 768px) {
+  #pjItOverlay { align-items: stretch; justify-content: flex-end; padding: 12px; background: rgba(0, 0, 0, 0.08); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  #pjItOverlay .modal-sheet { max-width: 440px; max-height: none; transform: translateX(28px); border-top-width: 1px; border-left: 4px solid var(--pj, var(--ac)); }
+  #pjItOverlay.open .modal-sheet { transform: none; }
+}
+#pjItTitle { font-size: 13.5px; font-weight: 500; color: var(--tx-sec); }
+#pjItTitle .pj-dot { width: 9px; height: 9px; }
+.pjd { display: flex; flex-direction: column; gap: 16px; }
+.pjd-top { display: flex; gap: 10px; align-items: center; }
+.pjd-chk { width: 20px; height: 20px; flex: none; }
+.pjd-name { flex: 1; min-width: 0; font-size: 17px; font-weight: 600; }
+.pjd-fields { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 8px 12px; align-items: center; font-size: 13px; }
+.pjd-fields > span, .pjd-fields > label { color: var(--tx-sec); }
+.pjd-fields b { font-weight: 600; }
+.pjd-fields b.late { color: var(--bad); }
+.pjd-sec { display: flex; flex-direction: column; gap: 4px; }
+.pjd-sec > b { font-size: 13.5px; margin-bottom: 2px; }
+.pjd-sec > b small { font-weight: 400; color: var(--tx-sec); margin-left: 6px; }
+.pjd-li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto auto; gap: 8px; align-items: center; font-size: 13px; padding: 4px 0; border-top: 1px solid color-mix(in srgb, var(--glass-bd) 60%, transparent); }
+.pjd-li small { color: var(--tx-sec); }
+.pjd-li.done > span { text-decoration: line-through; color: var(--tx-sec); }
+.pjd .pj-add { margin-top: 4px; }
+.pjd-ev { display: flex; justify-content: space-between; gap: 8px; width: 100%; border: 0; background: transparent; color: var(--tx); font: inherit; font-size: 13px; padding: 6px 6px; border-radius: 8px; cursor: pointer; text-align: left; font-variant-numeric: tabular-nums; }
+.pjd-ev:hover { background: color-mix(in srgb, var(--tx) 6%, transparent); }
+.pjd-ev.past { color: var(--tx-sec); }
+.pjd-acts { display: flex; gap: 8px; justify-content: space-between; flex-wrap: wrap; padding-top: 4px; }
+/* Hộp việc: hạn của việc */
+.hv-due { position: relative; display: inline-flex; align-items: center; cursor: pointer; white-space: nowrap; }
+.hv-due:not(.on) { color: var(--tx-sec); }
+.hv-due input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; border: 0; padding: 0; min-height: 0; }
+.hv-due.late { color: var(--bad); font-weight: 600; border-color: color-mix(in srgb, var(--bad) 40%, transparent); }
 /* Bảng dự án */
 .pj-form { display: flex; flex-direction: column; gap: 12px; }
 .pj-swatches { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -1507,6 +1703,15 @@ body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(-
       <button type="button" class="btn btn-sm btn-ghost" onclick="closeProject()" title="Đóng (ESC)" aria-label="Đóng">✕</button>
     </div>
     <div class="modal-body" id="pjBody"></div>
+  </div>
+</div>
+<div class="modal-overlay" id="pjItOverlay" onclick="if (event.target.id === 'pjItOverlay') pjCloseItem()">
+  <div class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="pjItTitle">
+    <div class="modal-header">
+      <h3 class="modal-title" id="pjItTitle">Chi tiết</h3>
+      <button type="button" class="btn btn-sm btn-ghost" onclick="pjCloseItem()" title="Đóng (ESC)" aria-label="Đóng">✕</button>
+    </div>
+    <div class="modal-body" id="pjItBody"></div>
   </div>
 </div>
 <div class="modal-overlay" id="settingsModalOverlay" onclick="handleSettingsBackdropClick(event)">
@@ -1757,7 +1962,7 @@ const save = () => {
    hay cửa sổ khác đã ghi mà tab này không nhận được (tab bị trình duyệt tạm dừng, trang khôi phục từ
    bộ nhớ đệm, bản cũ của app không biết lắng nghe…): gộp hai bên thay vì ghi đè.
    Dữ liệu do bản này ghi có sv = 2. Bên ghi không có sv (bản cũ) thì chỉ cộng thêm, không xóa gì. */
-const APPV = 50; // v0.5.0
+const APPV = 60; // v0.6.0
 const SV = 3; // 3 (v0.4.0): hoạt động có mã riêng và thời điểm sửa; bản ghi sv khác được gộp kiểu cộng thêm
 let lastRaw = rawSaved, oldWriterSeen = 0;
 // Đồng bộ giữa các thiết bị (v0.4.0, xem phần ĐỒNG BỘ ở cuối tệp)
@@ -1766,7 +1971,7 @@ let cloudBusy = false, cloudAgain = false, cloudT = null, cloudApplying = false,
 let cloud = { st: "off", n: 0, at: 0, msg: "" }; // st: off · sync · ok · wait · offline · auth · setup · err
 function readDisk() { try { return localStorage.getItem("lc2"); } catch (e) { return null; } }
 const evKey = e => [e.t, e.s, e.h, e.c, e.m, e.r || "", e.demo ? 1 : 0, e.tk || ""].join("|");
-const evCore = e => [e.t, e.s, e.h, e.c, e.m, e.r || "", e.tk || "", e.demo ? 1 : 0, e.pj || "", extraSig(e)].join("|");
+const evCore = e => [e.t, e.s, e.h, e.c, e.m, e.r || "", e.tk || "", e.demo ? 1 : 0, e.pj || "", e.sec || "", extraSig(e)].join("|");
 // Mã cho hoạt động có từ trước v0.4.0: suy từ ngày + nội dung + thứ tự trong các bản giống hệt, nên mọi máy
 // cấp ra cùng một mã cho cùng một hoạt động. Hoạt động mới được cấp mã ngẫu nhiên khi lưu (stampEdits).
 function fnv(str) { let h = 0x811c9dc5; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); } return (h >>> 0).toString(36); }
@@ -1832,7 +2037,7 @@ function mergeEv(base, mine, theirs, trust, oldT) {
   const idx = st => { const m = new Map(); if (st) Object.keys(st.ev).forEach(k => st.ev[k].forEach(e => { if (e.id) m.set(e.id, [k, e]); })); return m; };
   const B = idx(base), M = idx(mine), T = idx(theirs), out = {};
   // Bên kia là bản cũ (không có trường pj): so sánh như thể nó giữ nguyên nhãn dự án của gốc/máy này
-  const same = (a, b) => !!a && !!b && a[0] === b[0] && (oldT ? evCore({ ...a[1], pj: "" }) === evCore({ ...b[1], pj: "" }) : evCore(a[1]) === evCore(b[1]));
+  const same = (a, b) => !!a && !!b && a[0] === b[0] && (oldT ? evCore({ ...a[1], pj: "", sec: "" }) === evCore({ ...b[1], pj: "", sec: "" }) : evCore(a[1]) === evCore(b[1]));
   const put = ([k, e]) => (out[k] = out[k] || []).push(e);
   // hoạt động chưa có mã (vừa tạo, chưa lưu) giữ nguyên
   [mine, theirs].forEach(st => Object.keys(st.ev).forEach(k => st.ev[k].forEach(e => { if (!e.id && st === mine) put([k, e]); })));
@@ -1845,7 +2050,7 @@ function mergeEv(base, mine, theirs, trust, oldT) {
       else if (trust && same(t, b)) w = m;      // chỉ máy này sửa
       else w = (t[1].mt || 0) > (m[1].mt || 0) ? t : m;
       const o = w === m ? t : m;
-      if (oldT && w === t && !w[1].pj && m[1].pj) w[1].pj = m[1].pj; // máy bản cũ không biết dự án: giữ nhãn
+      if (oldT && w === t) ["pj", "sec"].forEach(f => { if (!w[1][f] && m[1][f]) w[1][f] = m[1][f]; }); // máy bản cũ không biết dự án: giữ nhãn, phần
       if (!w[1].gid && o[1].gid) w[1].gid = o[1].gid; // giữ liên kết Google, tránh tạo bản trùng
       if (!w[1].gi && o[1].gi) w[1].gi = o[1].gi;
       put(w);
@@ -1895,7 +2100,7 @@ function mergeStates(base, mine, theirs, trust) {
     let x;
     if (m && t) {
       x = sameJ(m, t) ? m : trust && b && sameJ(m, b) ? t : trust && b && sameJ(t, b) ? m : (t.mt || 0) > (m.mt || 0) ? t : m;
-      if (oldT && x === t && !t.pj && m.pj) x = { ...t, pj: m.pj }; // máy bản cũ không biết dự án
+      if (oldT && x === t) ["pj", "sec", "due"].forEach(f => { if (!x[f] && m[f]) x = { ...x, [f]: m[f] }; }); // máy bản cũ không biết dự án, phần, hạn
     }
     else x = trust && b && sameJ(m || t, b) ? null : (m || t); // một bên xóa: xóa theo, trừ khi bên kia đã sửa
     if (x) tasks.push(x);
@@ -2902,12 +3107,18 @@ function renderNav() {
   $("pageTitle").textContent = t.label;
   $("pageSub").textContent = t.sub;
   document.body.dataset.tab = cur;
-  $("addBtn").title = cur === "hv" ? "Thêm việc vào hộp (N)" : cur === "pj" ? "Thêm dự án (N)" : "Thêm hoạt động hôm nay (N)";
+  $("addBtn").title = cur === "hv" ? "Thêm việc vào hộp (N)" : cur === "pj" ? (pjOpenId ? "Thêm việc vào dự án (N)" : "Thêm dự án (N)") : "Thêm hoạt động hôm nay (N)";
 }
 
 // Nút Thêm trên header: ở Hộp việc thì thêm việc, ở Lịch thì thêm hoạt động
 function headerAdd() {
-  if (cur === "pj") { openProject(); return; }
+  if (cur === "pj") {
+    if (!pjOpenId || !findPj(pjOpenId)) { openProject(); return; }
+    if (pjViewOf(pjOpenId) !== "li" && pjViewOf(pjOpenId) !== "bo") pjSetView("li");
+    const i = document.querySelector("#v .pj-add");
+    if (i) { i.scrollIntoView({ block: "center", behavior: "smooth" }); i.focus(); }
+    return;
+  }
   if (cur === "hv") {
     const i = document.querySelector("#v .hv-add");
     if (i) { i.scrollIntoView({ block: "center", behavior: "smooth" }); i.focus(); return; }
@@ -4401,6 +4612,7 @@ function closeEditor() {
   ed = null;
   ei = null;
   edPjPreset = null;
+  edSecPreset = null;
   restoreFocus();
 }
 
@@ -4681,6 +4893,7 @@ async function saveEventFromForm(keepOpen) {
   if (c.err) { showToast(c.err, "bad"); return; }
   const pjv = $("inpPj") ? $("inpPj").value : "";
   const o = { t: title, c: $("inpCap").value, m: $("inpMode").value, h: hours, s: start, pj: pjv || undefined }; // undefined: bỏ nhãn khi lưu
+  if (ei == null && edSecPreset && pjv && pjv === edPjPreset) o.sec = edSecPreset; // thêm từ một phần của trang dự án
   const cur0 = ei != null ? (S.ev[ed] || [])[ei] : null;
   const ser = $("inpSeries"), applySeries = !!(cur0 && cur0.r && ser && ser.checked);
   const rp0 = !applySeries && $("inpRepeat") ? $("inpRepeat").value : "";
@@ -4872,9 +5085,10 @@ function cleanCap(c) {
 function cleanEv(e) {
   if (!e || typeof e.t !== "string" || !(+e.h > 0 && +e.h <= 24) || !SAFE_K.test(e.c || "")) return null;
   return {
-    ...extras(e, ["id", "mt", "t", "c", "m", "h", "s", "r", "tk", "pj", "gid", "gi", "ds", "demo"]),
+    ...extras(e, ["id", "mt", "t", "c", "m", "h", "s", "r", "tk", "pj", "sec", "gid", "gi", "ds", "demo"]),
     ...(SAFE_K.test(e.id || "") ? { id: e.id } : {}),
-    ...(SAFE_K.test(e.pj || "") ? { pj: e.pj } : {}), // dự án (v0.5.0)            // mã riêng (v0.4.0), thiếu thì cleanState cấp
+    ...(SAFE_K.test(e.pj || "") ? { pj: e.pj } : {}), // dự án (v0.5.0)
+    ...(SAFE_K.test(e.sec || "") ? { sec: e.sec } : {}), // phần trong dự án (v0.6.0)            // mã riêng (v0.4.0), thiếu thì cleanState cấp
     ...(Number.isFinite(+e.mt) && +e.mt > 0 ? { mt: +e.mt } : {}), // lần sửa gần nhất, để bản sửa sau cùng thắng
     t: e.t.slice(0, 120), c: e.c, m: e.m === "d" ? "d" : "u", h: +e.h,
     s: /^([01]\d|2[0-3]):[0-5]\d$/.test(e.s || "") ? e.s : "",
@@ -5037,6 +5251,7 @@ function draw(jump) {
   PV = nv;
   if (cur === "su" && CH.size) $("v").insertAdjacentHTML("afterbegin", '<div style="margin-bottom:10px;font-size:12.5px;color:var(--mu)">Số <b class="chg">tô nền</b> vừa thay đổi. <button class="btn btn-sm btn-ghost" onclick="CH=new Set();draw()">Bỏ đánh dấu</button></div>');
   mark();
+  pjAfterDraw();
   TABDIR = 0;
   // Giữ con trỏ khi vẽ lại (Tab / Shift+Tab sang ô kế tiếp)
   if (ai >= 0) setTimeout(() => {
@@ -5109,6 +5324,7 @@ document.addEventListener("keydown", e => {
   if (shortcut(e)) { e.preventDefault(); return; }
   if (e.key === "Escape") {
     if (pjForm) { closeProject(); return; } // bảng dự án nằm trên popup hoạt động: đóng từng lớp
+    if (pjDet && !ed && !sch) { pjCloseItem(); return; } // bảng chi tiết nằm dưới popup hoạt động, Xếp lịch
     if (ed) closeEditor();
     closeSched();
     closeReviewModal();
@@ -5195,7 +5411,7 @@ function cleanProject(x) {
   const D = /^\d{4}-\d\d-\d\d$/;
   const caps = Array.isArray(x.caps) ? [...new Set(x.caps.filter(k => SAFE_K.test(k || "")))].slice(0, 20) : [];
   return {
-    ...extras(x, ["id", "n", "col", "st", "pr", "sd", "ed", "caps", "mt"]),
+    ...extras(x, ["id", "n", "col", "st", "pr", "sd", "ed", "caps", "mt", "desc", "secs", "ms", "ups"]),
     id: x.id, n: x.n.trim().slice(0, 60),
     col: /^#[0-9a-f]{6}$/i.test(x.col || "") ? x.col : "#E0A3BB",
     st: ["todo", "run", "pause", "done", "cancel"].indexOf(x.st) >= 0 ? x.st : "run",
@@ -5203,8 +5419,18 @@ function cleanProject(x) {
     sd: D.test(x.sd || "") ? x.sd : ky(new Date()),
     ...(D.test(x.ed || "") ? { ed: x.ed } : {}),
     caps,
+    // v0.6.0: mô tả, phần (section), mốc, cập nhật trạng thái (mới nhất ở đầu)
+    ...(typeof x.desc === "string" && x.desc.trim() ? { desc: x.desc.slice(0, 2000) } : {}),
+    ...nz("secs", arr(x.secs, 20, s => typeof s.n === "string" && s.n.trim() ? { id: s.id, n: s.n.trim().slice(0, 40) } : null)),
+    ...nz("ms", arr(x.ms, 50, m => typeof m.n === "string" && m.n.trim() && D.test(m.d || "") ? { id: m.id, n: m.n.trim().slice(0, 80), d: m.d, ...(m.done ? { done: 1 } : {}) } : null)),
+    ...nz("ups", arr(x.ups, 30, u => D.test(u.d || "") && ["ok", "risk", "off"].indexOf(u.hs) >= 0 ? { id: u.id, d: u.d, hs: u.hs, note: typeof u.note === "string" ? u.note.slice(0, 280) : "" } : null)),
     ...(Number.isFinite(+x.mt) && +x.mt > 0 ? { mt: +x.mt } : {})
   };
+  function nz(k, l) { return l.length ? { [k]: l } : {}; } // danh sách rỗng thì không ghi, dữ liệu dự án cũ giữ nguyên dạng
+  function arr(l, max, f) {
+    const seen = new Set();
+    return (Array.isArray(l) ? l : []).filter(y => y && SAFE_K.test(y.id || "") && !seen.has(y.id) && seen.add(y.id)).map(f).filter(Boolean).slice(0, max);
+  }
 }
 function cleanSub(x) {
   if (!x || !SAFE_K.test(x.id || "") || typeof x.t !== "string" || !x.t.trim()) return null;
@@ -5214,9 +5440,11 @@ function cleanSub(x) {
 function cleanTask(x) {
   if (!x || !SAFE_K.test(x.id || "") || typeof x.t !== "string" || !x.t.trim()) return null;
   return {
-    ...extras(x, ["id", "t", "c", "m", "subs", "done", "demo", "mt", "pj"]),
+    ...extras(x, ["id", "t", "c", "m", "subs", "done", "demo", "mt", "pj", "sec", "due"]),
     id: x.id, t: x.t.slice(0, 160), c: SAFE_K.test(x.c || "") ? x.c : "sk", m: x.m === "d" ? "d" : "u",
     ...(SAFE_K.test(x.pj || "") ? { pj: x.pj } : {}),
+    ...(SAFE_K.test(x.sec || "") ? { sec: x.sec } : {}),
+    ...(/^\d{4}-\d\d-\d\d$/.test(x.due || "") ? { due: x.due } : {}),
     subs: Array.isArray(x.subs) ? x.subs.map(cleanSub).filter(Boolean).slice(0, 100) : [],
     ...(x.done ? { done: 1 } : {}), ...(x.demo ? { demo: 1 } : {}),
     ...(Number.isFinite(+x.mt) && +x.mt > 0 ? { mt: +x.mt } : {})
@@ -5295,10 +5523,19 @@ function hvInputEnter(el) {
     draw();
     setTimeout(() => { const i = $(el.id); if (i) { i.value = ""; i.focus(); } }, 0);
   } else if (el.dataset.hv === "edit") saveHvEdit();
+  else if (el.dataset.hv === "pjadd") pjAddTask(el);
+  else if (el.dataset.hv === "pjsec") pjSecSave(el);
+  else if (el.dataset.hv === "pjsub") {
+    if (!addSub(el.dataset.task, el.value)) return;
+    draw();
+    renderPjItem(true);
+    pjFocus(el.id);
+  }
 }
 function hvKeydown(e) {
   const el = e.target;
   if (e.key === "Escape" && el.dataset.hv === "edit") { e.preventDefault(); e.stopPropagation(); hvEdit = null; draw(); return; }
+  if (e.key === "Escape" && el.dataset.hv === "pjsec") { e.preventDefault(); e.stopPropagation(); pjSecEdit = null; draw(); return; }
   if (e.key !== "Enter" || e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) return;
   if (e.isComposing || e.keyCode === 229) { hvAfterCompose = el; return; }
   e.preventDefault();
@@ -5725,6 +5962,7 @@ function inboxHTML(where) {
             ${S.caps.map(c => `<option value="${c.k}" ${c.k === t.c ? "selected" : ""}>${esc(c.n)}</option>`).join("")}
           </select>
           <button type="button" class="hv-mini ${t.m === "u" ? "up" : "down"}" onclick="setTaskField('${t.id}','m','${t.m === "u" ? "d" : "u"}')" title="Đổi tác động">${t.m === "u" ? "▲ Nạp" : "▼ Tiêu"}</button>
+          <label class="hv-mini hv-due ${t.due ? "on" : ""} ${t.due && t.due < tk && !taskDone(t) ? "late" : ""}">${t.due ? (t.due < tk && !taskDone(t) ? "Quá hạn " : "Hạn ") + dm(t.due) : "+ Hạn"}<input type="date" value="${t.due || ""}" onclick="try { this.showPicker(); } catch (e) {}" onchange="pjSetDue('${t.id}', this.value)" aria-label="Hạn của ${esc(t.t)}"></label>
           ${(S.projects || []).length ? `<select class="hv-mini" onchange="setTaskPj('${t.id}', this.value)" aria-label="Dự án" ${t.pj && findPj(t.pj) ? `style="--pj:${findPj(t.pj).col}" data-pj="1"` : ""}>
             <option value="">Không dự án</option>
             ${(S.projects || []).filter(p => pjIsOpen(p) || p.id === t.pj).sort(pjCmp).map(p => `<option value="${p.id}" ${p.id === t.pj ? "selected" : ""}>${esc(p.n)}</option>`).join("")}
@@ -6380,8 +6618,97 @@ function pjStats(id) {
   return { evs, h, wk, byCap, tasks: tasks.length, done: tasks.filter(taskDone).length };
 }
 
-/* ---- Tab Dự án ---- */
+/* ---- Tab Dự án (v0.6.0, kiểu Asana): danh sách dự án → trang dự án với 4 chế độ xem ----
+   Mục (item) của dự án: một việc trong Hộp việc (kèm việc nhỏ và các buổi đã xếp từ nó),
+   hoặc một chuỗi hoạt động (hoạt động gắn dự án, không đến từ việc nào, gom theo tên). */
+const PJ_HS = { ok: "Đúng tiến độ", risk: "Có rủi ro", off: "Chậm" };
+const PJ_VIEWS = [["ov", "Tổng quan"], ["li", "Danh sách"], ["bo", "Bảng"], ["tl", "Timeline"]];
+const PJ_TPL = [["Cần làm", "Đang làm", "Xong"], ["Giai đoạn 1", "Giai đoạn 2", "Giai đoạn 3"]];
+let pjDet = null;          // bảng chi tiết đang mở: { kind: "task" | "ser", id, pj }
+let pjSecEdit = null;      // phần đang đổi tên; "+" = đang thêm phần mới
+let pjUpOpen = false, pjUpHs = "ok";
+let pjDrag = null;         // { kind, id } khi kéo mục sang phần khác (máy tính)
+let edSecPreset = null;    // popup hoạt động mở từ trang dự án: phần định sẵn
+let pjTlPos = { key: "", left: 0 }, pjBoScroll = 0;
+const pjExp = new Set(), pjFold = new Set();
+// Lựa chọn riêng của máy này: chế độ xem từng dự án, hiện mục đã xong, mức thu phóng Timeline
+const pjPref = (() => { try { return JSON.parse(localStorage.getItem("lc_pjv") || "{}") || {}; } catch (e) { return {}; } })();
+function pjPrefSet(k, v) { pjPref[k] = v; try { localStorage.setItem("lc_pjv", JSON.stringify(pjPref)); } catch (e) {} }
+const pjViewOf = id => pjPref["v_" + id] || "li";
+const nowHM = () => new Date().toTimeString().slice(0, 5);
+const evPast = (k, e) => k < tk || (k === tk && (!e.s || e.s <= nowHM()));
+const pjHealth = p => p.ups && p.ups[0] ? p.ups[0].hs : "";
+function pjHealthPill(p) {
+  if (!pjIsOpen(p)) return `<span class="pill pill-neutral">${PJ_ST[p.st]}</span>`;
+  const h = pjHealth(p);
+  return `<span class="pj-hs ${h ? "hs-" + h : ""}"><i></i>${h ? PJ_HS[h] : "Chưa cập nhật"}</span>`;
+}
+
+function pjModel(p) {
+  const secIds = new Set((p.secs || []).map(s => s.id)), own = new Map(), ser = new Map(), items = [];
+  S.tasks.forEach(t => {
+    if (t.pj !== p.id) return;
+    const it = { kind: "task", id: t.id, t: t.t, c: t.c, task: t, evs: [], sec: secIds.has(t.sec) ? t.sec : "", due: t.due || "", done: taskDone(t) };
+    own.set(t.id, it);
+    t.subs.forEach(s => own.set(s.id, it));
+    items.push(it);
+  });
+  Object.keys(S.ev).forEach(k => S.ev[k].forEach((e, i) => {
+    const ti = e.tk && own.get(e.tk);
+    if (ti) { ti.evs.push({ k, i, e }); return; }
+    if (e.pj !== p.id) return;
+    const key = "t:" + (fold(e.t) || "_");
+    let it = ser.get(key);
+    if (!it) { it = { kind: "ser", id: key, evs: [] }; ser.set(key, it); items.push(it); }
+    it.evs.push({ k, i, e });
+  }));
+  items.forEach(it => {
+    it.evs.sort((a, b) => a.k.localeCompare(b.k) || (a.e.s || "").localeCompare(b.e.s || ""));
+    it.h = it.evs.reduce((a, x) => a + x.e.h, 0);
+    it.next = it.evs.find(x => !evPast(x.k, x.e)) || null;
+    it.first = it.evs.length ? it.evs[0].k : "";
+    it.last = it.evs.length ? it.evs[it.evs.length - 1].k : "";
+    if (it.kind === "task") {
+      const us = units(it.task), on = new Set(it.evs.map(x => x.e.tk));
+      it.nU = us.length; it.nS = us.filter(u => on.has(u.tk)).length; it.nD = us.filter(u => u.done).length;
+      it.late = !it.done && !!it.due && it.due < tk;
+    } else {
+      const le = it.evs[it.evs.length - 1].e, ws = [...it.evs].reverse().find(x => secIds.has(x.e.sec));
+      it.t = le.t; it.c = le.c; it.sec = ws ? ws.e.sec : "";
+      it.nPast = it.evs.filter(x => evPast(x.k, x.e)).length;
+      it.done = it.nPast === it.evs.length;
+    }
+    it.sk = it.first || it.due || "~"; // cũ nhất ở trên (quyết định PO 17/10), chưa có ngày ở cuối
+  });
+  return items.sort((a, b) => (a.done - b.done) || a.sk.localeCompare(b.sk) || a.t.localeCompare(b.t, "vi"));
+}
+function pjGroups(p, items) {
+  const secs = (p.secs || []).map(s => ({ id: s.id, n: s.n, items: [] })), un = { id: "", n: "Chưa phân loại", items: [] };
+  const m = new Map(secs.map(s => [s.id, s]));
+  items.forEach(it => (m.get(it.sec) || un).items.push(it));
+  return (un.items.length || !secs.length ? [un] : []).concat(secs);
+}
+const pjWhen = x => whenLabel({ date: x.k, s: x.e.s });
+function pjDateLabel(it) {
+  if (it.late) return `Quá hạn ${dm(it.due)}`;
+  if (it.next) return pjWhen(it.next);
+  if (it.kind === "task" && it.due) return `Hạn ${dm(it.due)}`;
+  return it.last ? `Gần nhất ${dm(it.last)}` : "Chưa có ngày";
+}
+function pjProgLabel(it) {
+  if (it.kind === "ser") return `${it.nPast}/${it.evs.length} buổi đã qua`;
+  if (it.done) return "Xong";
+  if (it.nU > 1) return `${it.nD}/${it.nU} việc nhỏ · xếp ${it.nS}`;
+  return it.nS ? "Đã xếp lịch" : "Chưa xếp lịch";
+}
+
+/* ---- Danh sách dự án ---- */
 V.pj = function () {
+  const p = pjOpenId && findPj(pjOpenId);
+  if (pjOpenId && !p) pjOpenId = null;
+  return p ? pjPageHTML(p) : pjListHTML();
+};
+function pjListHTML() {
   const ps = (S.projects || []).slice().sort(pjCmp);
   if (!ps.length) {
     return `
@@ -6394,59 +6721,698 @@ V.pj = function () {
   const open = ps.filter(pjIsOpen), closed = ps.filter(p => !pjIsOpen(p));
   return `
     <div class="pj-list">
-      ${open.length ? open.map(pjItemHTML).join("") : `<div class="card pj-empty"><p>Không có dự án nào đang mở.</p></div>`}
+      <div class="pj-list-head"><span>${open.length} dự án đang mở</span><button type="button" class="btn btn-sm btn-primary" onclick="openProject()">+ Dự án</button></div>
+      ${open.length ? open.map(pjCardHTML).join("") : `<div class="card pj-empty"><p>Không có dự án nào đang mở.</p></div>`}
       ${closed.length ? `
         <button type="button" class="btn btn-sm btn-ghost pj-closed-toggle" onclick="pjShowClosed=!pjShowClosed; draw()" aria-expanded="${pjShowClosed}">${pjShowClosed ? "▾" : "▸"} Đã đóng (${closed.length})</button>
-        ${pjShowClosed ? closed.map(pjItemHTML).join("") : ""}` : ""}
-    </div>`;
-};
-
-function pjItemHTML(p) {
-  const s = pjStats(p.id), open = pjOpenId === p.id;
-  const late = pjIsOpen(p) && p.ed && p.ed < tk;
-  let timePct = null;
-  if (p.ed && p.sd) {
-    const tot = Math.max(1, dayDiff(p.sd, p.ed) + 1);
-    timePct = Math.max(0, Math.min(100, Math.round((dayDiff(p.sd, tk) + 1) / tot * 100)));
-  }
-  return `
-    <div class="card pj-item ${open ? "open" : ""}" style="--pj:${p.col}">
-      <button type="button" class="pj-bar" onclick="pjToggle('${p.id}')" aria-expanded="${open}">
-        <span class="pj-dot" aria-hidden="true"></span>
-        <span class="pj-main">
-          <b class="pj-name">${esc(p.n)}</b>
-          <span class="pj-sub">${dm(p.sd)}${p.ed ? " – " + dm(p.ed) : " · không hạn"} · ${s.evs.length} hoạt động${s.tasks ? ` · việc ${s.done}/${s.tasks}` : ""}</span>
-        </span>
-        <span class="pj-tags">
-          ${late ? `<span class="pill pill-bad">Quá hạn</span>` : ""}
-          <span class="pill pj-pr-${p.pr}">${PJ_PR[p.pr]}</span>
-          <span class="pill pill-neutral">${PJ_ST[p.st]}</span>
-        </span>
-        <span class="pj-hours"><b>${r1(s.h)}h</b><small>tuần này ${r1(s.wk)}h</small></span>
-        <span class="pj-chev" aria-hidden="true">${open ? "▾" : "▸"}</span>
-      </button>
-      ${timePct !== null ? `<div class="pj-time" title="Thời gian đã trôi: ${timePct}%"><i style="width:${timePct}%"></i></div>` : ""}
-      ${open ? pjDetailHTML(p, s) : ""}
+        ${pjShowClosed ? closed.map(pjCardHTML).join("") : ""}` : ""}
     </div>`;
 }
+function pjCardHTML(p) {
+  const s = pjStats(p.id), pct = s.tasks ? Math.round(s.done / s.tasks * 100) : null;
+  const late = pjIsOpen(p) && p.ed && p.ed < tk;
+  return `
+    <button type="button" class="card pj-row" style="--pj:${p.col}" onclick="pjOpen('${p.id}')">
+      <span class="pj-dot" aria-hidden="true"></span>
+      <span class="pj-main">
+        <b class="pj-name">${esc(p.n)}</b>
+        <span class="pj-sub">Ưu tiên ${PJ_PR[p.pr].toLowerCase()} · ${p.ed ? "hạn " + dm(p.ed) : "không hạn"} · ${s.tasks ? `việc ${s.done}/${s.tasks}` : `${s.evs.length} hoạt động`}</span>
+      </span>
+      <span class="pj-tags">${late ? `<span class="pill pill-bad">Quá hạn</span>` : ""}${pjHealthPill(p)}</span>
+      <span class="pj-prog" title="${pct === null ? "Chưa có việc" : `Việc xong ${pct}%`}">${pct === null ? "" : `<span class="pj-pbar"><i style="width:${pct}%"></i></span><small>${pct}%</small>`}</span>
+      <span class="pj-hours"><b>${r1(s.wk)}h</b><small>tuần này</small></span>
+    </button>`;
+}
 
-function pjToggle(id) {
-  pjOpenId = pjOpenId === id ? null : id;
+/* ---- Trang một dự án ---- */
+function pjOpen(id) {
+  pjOpenId = id;
+  pjSecEdit = null; pjUpOpen = false;
+  try {
+    if (history.state && history.state.pj) history.replaceState({ pj: id }, "", "#pj/" + id); // đổi dự án: nút Quay lại vẫn về danh sách
+    else history.pushState({ pj: id }, "", "#pj/" + id);
+  } catch (e) {}
+  cur = "pj";
+  draw(true);
+  window.scrollTo(0, 0);
+}
+function pjBack() {
+  if (history.state && history.state.pj) { history.back(); return; } // popstate vẽ lại
+  pjOpenId = null;
+  draw(true);
+}
+window.addEventListener("popstate", ev => {
+  const id = ev.state && ev.state.pj;
+  if (id && findPj(id)) { pjOpenId = id; cur = "pj"; }
+  else if (pjOpenId) pjOpenId = null;
+  else return;
+  pjCloseItem();
+  draw(true);
+});
+// App cài trên iPhone không có cử chỉ vuốt lùi của Safari: vuốt từ cạnh trái để về danh sách dự án
+(() => {
+  const standalone = navigator.standalone || (window.matchMedia && matchMedia("(display-mode: standalone)").matches);
+  if (!standalone) return;
+  let sx = null, sy = 0;
+  document.addEventListener("touchstart", e => {
+    const t = e.touches[0];
+    sx = cur === "pj" && pjOpenId && t.clientX < 28 && !document.querySelector(".modal-overlay.open") ? t.clientX : null;
+    sy = t.clientY;
+  }, { passive: true });
+  document.addEventListener("touchend", e => {
+    if (sx === null) return;
+    const t = e.changedTouches[0];
+    if (t.clientX - sx > 80 && Math.abs(t.clientY - sy) < 60) pjBack();
+    sx = null;
+  }, { passive: true });
+})();
+function pjSetView(v) {
+  pjPrefSet("v_" + pjOpenId, v);
+  pjSecEdit = null;
   draw();
 }
-
-function pjDetailHTML(p, s) {
-  const caps = Object.keys(s.byCap).sort((a, b) => s.byCap[b] - s.byCap[a]);
+function pjPageHTML(p) {
+  const v = pjViewOf(p.id), items = pjModel(p);
+  const caps = p.caps.map(k => CM(k)).filter(Boolean).map(c => esc(c.n)).join(", ");
+  const side = (S.projects || []).filter(x => pjIsOpen(x) || x.id === p.id).sort(pjCmp);
+  const body = v === "ov" ? pjOverviewHTML(p, items) : v === "bo" ? pjBoardHTML(p, items) : v === "tl" ? pjTimelineHTML(p, items) : pjListViewHTML(p, items);
   return `
-    <div class="pj-detail">
-      <div class="pj-actions">
-        <button type="button" class="btn btn-sm btn-primary" onclick="pjAddEvent('${p.id}')">Thêm hoạt động</button>
-        <button type="button" class="btn btn-sm" onclick="openProject('${p.id}')">Sửa dự án</button>
+    <div class="pj-shell" style="--pj:${p.col}">
+      <aside class="card pj-side" aria-label="Các dự án">
+        <div class="pj-side-h">Dự án</div>
+        ${side.map(x => `<button type="button" class="${x.id === p.id ? "on" : ""}" style="--pj:${x.col}" onclick="pjOpen('${x.id}')" ${x.id === p.id ? 'aria-current="page"' : ""}><span class="pj-dot"></span><span>${esc(x.n)}</span></button>`).join("")}
+        <button type="button" class="pj-side-all" onclick="pjBack()">Tất cả dự án</button>
+      </aside>
+      <div class="pj-page">
+        <div class="card pj-head">
+          <button type="button" class="btn btn-sm btn-ghost pj-back" onclick="pjBack()" aria-label="Về danh sách dự án" title="Về danh sách dự án">←</button>
+          <span class="pj-dot" aria-hidden="true"></span>
+          <h2 class="pj-title"><button type="button" onclick="openProject('${p.id}')" title="Sửa dự án">${esc(p.n)}</button></h2>
+          <span class="pj-head-hs">${pjHealthPill(p)}</span>
+          <span class="pj-head-acts">
+            <button type="button" class="btn btn-sm pj-add-ev" onclick="pjAddEvent('${p.id}')">+ Hoạt động</button>
+            <details class="pj-menu">
+              <summary class="btn btn-sm btn-ghost" aria-label="Thao tác khác với dự án">⋯</summary>
+              <div class="pj-menu-pop">
+                <button type="button" class="pj-mob-only" onclick="pjAddEvent('${p.id}')">Thêm hoạt động</button>
+                <button type="button" onclick="openProject('${p.id}')">Sửa dự án</button>
+                ${pjIsOpen(p) ? `<button type="button" onclick="pjFinish('${p.id}')">Đánh dấu hoàn thành</button>` : ""}
+                <button type="button" class="danger" onclick="deleteProject('${p.id}')">Xóa dự án</button>
+              </div>
+            </details>
+          </span>
+          <div class="pj-head-meta">${dm(p.sd)}${p.ed ? " – " + dm(p.ed) : " · không hạn"} · ưu tiên ${PJ_PR[p.pr].toLowerCase()} · ${caps}</div>
+        </div>
+        <div class="pj-tabs" role="tablist" aria-label="Chế độ xem">
+          ${PJ_VIEWS.map(([k, n]) => `<button type="button" role="tab" class="${k === v ? "on" : ""}" aria-selected="${k === v}" onclick="pjSetView('${k}')">${n}</button>`).join("")}
+        </div>
+        ${body}
       </div>
-      ${s.evs.length ? pjWeeksHTML(p, s.evs) : ""}
-      ${caps.length ? `<div class="pj-caps" aria-label="Giờ theo loại vốn">${caps.map(k => { const c = CM(k); return `<span class="pill" style="${capInk(c.c)}">${esc(c.n)} ${r1(s.byCap[k])}h</span>`; }).join("")}</div>` : ""}
-      ${ganttHTML(p, s.evs)}
     </div>`;
+}
+function pjFinish(id) {
+  const p = findPj(id);
+  if (!p) return;
+  const st = p.st;
+  p.st = "done";
+  save(); draw();
+  offerUndo(`Đã đóng dự án "${p.n}"`, () => { const q = findPj(id); if (q) q.st = st; }, []);
+}
+
+/* ---- Thanh công cụ, phần (section) ---- */
+function pjToolbarHTML(p) {
+  const all = !!pjPref.all;
+  return `
+    <div class="pj-toolbar">
+      <div class="set-seg" role="group" aria-label="Lọc mục">
+        <button type="button" class="${all ? "" : "on"}" aria-pressed="${!all}" onclick="pjPrefSet('all', 0); draw()">Chưa xong</button>
+        <button type="button" class="${all ? "on" : ""}" aria-pressed="${all}" onclick="pjPrefSet('all', 1); draw()">Tất cả</button>
+      </div>
+      <span class="pj-tb-hint">${CAN_DRAG ? "Kéo mục sang phần khác để đổi phần" : ""}</span>
+    </div>
+    ${(p.secs || []).length ? "" : `
+      <div class="pj-tpl">
+        <span>Chia dự án thành phần:</span>
+        ${PJ_TPL.map((t, i) => `<button type="button" class="btn btn-sm" onclick="pjSecTpl(${i})">${t.map((n, j) => j ? n.replace(/^Giai đoạn /, "") : n).join(" · ")}</button>`).join("")}
+        <button type="button" class="btn btn-sm btn-ghost" onclick="pjSecEdit='+'; draw(); pjFocus('pjSecIn')">Tự đặt tên</button>
+      </div>`}`;
+}
+function pjSecName(g) {
+  return pjSecEdit === g.id && g.id
+    ? `<input id="pjSecIn" class="pj-sec-in" data-hv="pjsec" data-sec="${g.id}" value="${esc(g.n)}" maxlength="40" onkeydown="hvKeydown(event)" onblur="pjSecSave(this)" aria-label="Tên phần">`
+    : `<b>${esc(g.n)}</b>`;
+}
+function pjSecMenu(p, g) {
+  if (!g.id) return "";
+  const i = p.secs.findIndex(s => s.id === g.id);
+  return `
+    <details class="pj-menu">
+      <summary class="btn btn-sm btn-ghost" aria-label="Thao tác với phần ${esc(g.n)}">⋯</summary>
+      <div class="pj-menu-pop">
+        <button type="button" onclick="pjSecEdit='${g.id}'; draw(); pjFocus('pjSecIn', true)">Đổi tên</button>
+        ${i > 0 ? `<button type="button" onclick="pjSecMove('${g.id}', -1)">Lên trước</button>` : ""}
+        ${i < p.secs.length - 1 ? `<button type="button" onclick="pjSecMove('${g.id}', 1)">Ra sau</button>` : ""}
+        <button type="button" class="danger" onclick="pjSecDel('${g.id}')">Xóa phần</button>
+      </div>
+    </details>`;
+}
+const pjNewSecHTML = cls => pjSecEdit === "+"
+  ? `<input id="pjSecIn" class="pj-sec-in ${cls}" data-hv="pjsec" data-sec="+" maxlength="40" placeholder="Tên phần mới, Enter để thêm" onkeydown="hvKeydown(event)" onblur="pjSecSave(this)" aria-label="Tên phần mới">`
+  : `<button type="button" class="btn btn-sm btn-ghost ${cls}" onclick="pjSecEdit='+'; draw(); pjFocus('pjSecIn')">+ Thêm phần</button>`;
+const pjAddHTML = g => `<input id="pjAdd-${g.id || "_"}" class="pj-add" data-hv="pjadd" data-sec="${g.id}" maxlength="160" placeholder="+ Thêm việc${g.id ? " vào " + esc(g.n) : ""}" onkeydown="hvKeydown(event)" aria-label="Thêm việc vào phần ${esc(g.n)}">`;
+const pjDropAttrs = g => CAN_DRAG ? `ondragover="pjOver(event)" ondragleave="pjLeave(event)" ondrop="pjDrop(event,'${g.id}')"` : "";
+const pjDragAttrs = it => CAN_DRAG ? `draggable="true" ondragstart="pjDragStart(event,'${it.kind}','${it.id}')" ondragend="pjDrag=null"` : "";
+function pjFocus(id, select) {
+  setTimeout(() => { const i = $(id); if (i) { i.focus(); if (select) i.select(); } }, 0);
+}
+
+/* ---- Danh sách (List) ---- */
+function pjListViewHTML(p, items) {
+  const all = !!pjPref.all;
+  const groups = pjGroups(p, items).map(g => {
+    const vis = g.items.filter(i => all || !i.done), hid = g.items.length - vis.length, folded = pjFold.has(p.id + ":" + g.id);
+    const h = g.items.reduce((a, i) => a + i.h, 0);
+    return `
+      <section class="pjl-sec" ${pjDropAttrs(g)}>
+        <div class="pjl-sh">
+          <button type="button" class="pjl-tog" onclick="pjFoldSec('${g.id}')" aria-expanded="${!folded}" aria-label="${folded ? "Mở" : "Thu gọn"} phần ${esc(g.n)}">${folded ? "▸" : "▾"}</button>
+          ${pjSecName(g)}
+          <small>${g.items.length} mục${h ? " · " + hrs(h) : ""}</small>
+          ${pjSecMenu(p, g)}
+        </div>
+        ${folded ? "" : `
+          ${vis.map(pjRowHTML).join("")}
+          ${hid ? `<button type="button" class="pjl-more" onclick="pjPrefSet('all', 1); draw()">${hid} mục đã xong đang ẩn · Hiện</button>` : ""}
+          ${pjAddHTML(g)}`}
+      </section>`;
+  }).join("");
+  return `
+    ${pjToolbarHTML(p)}
+    <div class="card pjl">
+      <div class="pjr pjr-head" aria-hidden="true"><span></span><span></span><span>Tên</span><span class="pjr-info"><span>Loại vốn</span><span>Ngày</span><span>Tiến độ</span></span><span class="pjr-h">Giờ</span></div>
+      ${groups}
+      <div class="pjl-new">${pjNewSecHTML("")}</div>
+    </div>`;
+}
+function pjRowHTML(it) {
+  const c = CM(it.c) || { c: "var(--mu)", n: "" }, key = it.kind + it.id, ex = pjExp.has(key);
+  const canEx = it.kind === "task" ? it.task.subs.length > 0 : it.evs.length > 1;
+  let subs = "";
+  if (ex && canEx) {
+    if (it.kind === "task") {
+      const m = new Map(it.evs.map(x => [x.e.tk, x]));
+      subs = it.task.subs.map(s => { const x = m.get(s.id); return `
+        <div class="pjr-sub ${s.done ? "done" : ""}">
+          <input type="checkbox" ${s.done ? "checked" : ""} onchange="toggleDone('sub','${s.id}')" aria-label="Xong: ${esc(s.t)}">
+          <span>${esc(s.t)}</span><small>${hrs(s.h)}</small>
+          ${x ? `<button type="button" class="hv-when" onclick="openEditor('${x.k}', ${x.i})">${pjWhen(x)}</button>` : `<button type="button" class="btn btn-sm" onclick="openSched('sub','${s.id}')">Xếp</button>`}
+        </div>`; }).join("");
+    } else {
+      subs = it.evs.slice(-8).map(x => `
+        <div class="pjr-sub ${evPast(x.k, x.e) ? "done" : ""}"><span></span><span>${esc(x.e.t)}</span><small>${hrs(x.e.h)}</small>
+          <button type="button" class="hv-when" onclick="openEditor('${x.k}', ${x.i})">${pjWhen(x)}</button></div>`).join("")
+        + (it.evs.length > 8 ? `<button type="button" class="pjl-more" onclick="pjOpenItem('ser','${it.id}')">Xem cả ${it.evs.length} buổi</button>` : "");
+    }
+  }
+  return `
+    <div class="pjr ${it.done ? "done" : ""}" style="--cap:${c.c}" ${pjDragAttrs(it)}>
+      <span class="pjr-chk">${it.kind === "task"
+        ? `<input type="checkbox" ${it.done ? "checked" : ""} onchange="pjToggleTask('${it.id}')" aria-label="Xong: ${esc(it.t)}">`
+        : `<span class="pjr-ser ${it.done ? "past" : ""}" title="${it.done ? "Các buổi đã qua hết" : "Còn buổi sắp tới"}" aria-hidden="true">${it.done ? "✓" : "◷"}</span>`}</span>
+      <button type="button" class="pjr-tog" ${canEx ? `onclick="pjToggleExp('${key}')" aria-expanded="${ex}" aria-label="${ex ? "Thu gọn" : "Mở"} ${esc(it.t)}"` : 'tabindex="-1" aria-hidden="true" disabled'}>${canEx ? (ex ? "▾" : "▸") : ""}</button>
+      <button type="button" class="pjr-name" onclick="pjOpenItem('${it.kind}','${it.id}')">${esc(it.t)}${it.kind === "ser" && it.evs.length > 1 ? ` <small>· ${it.evs.length} buổi</small>` : ""}</button>
+      <span class="pjr-info">
+        <span class="pjr-cap"><i></i>${esc(c.n)}</span>
+        <span class="pjr-date ${it.late ? "late" : ""}">${pjDateLabel(it)}</span>
+        <span class="pjr-prog">${pjProgLabel(it)}</span>
+      </span>
+      <span class="pjr-h">${it.h ? hrs(it.h) : "–"}</span>
+    </div>${subs}`;
+}
+function pjToggleExp(key) { pjExp.has(key) ? pjExp.delete(key) : pjExp.add(key); draw(); }
+function pjFoldSec(id) { const k = pjOpenId + ":" + id; pjFold.has(k) ? pjFold.delete(k) : pjFold.add(k); draw(); }
+
+/* ---- Bảng (Board) ---- */
+function pjBoardHTML(p, items) {
+  const all = !!pjPref.all, groups = pjGroups(p, items);
+  const card = it => {
+    const c = CM(it.c) || { c: "var(--mu)", n: "" };
+    return `
+      <div class="pjc ${it.done ? "done" : ""}" style="--cap:${c.c}" ${pjDragAttrs(it)}>
+        <div class="pjc-top">
+          ${it.kind === "task" ? `<input type="checkbox" ${it.done ? "checked" : ""} onchange="pjToggleTask('${it.id}')" aria-label="Xong: ${esc(it.t)}">` : `<span class="pjr-ser ${it.done ? "past" : ""}" aria-hidden="true">${it.done ? "✓" : "◷"}</span>`}
+          <button type="button" class="pjc-name" onclick="pjOpenItem('${it.kind}','${it.id}')">${esc(it.t)}</button>
+        </div>
+        <div class="pjc-meta">
+          <span class="${it.late ? "late" : ""}">${pjDateLabel(it)}</span>
+          <span>${pjProgLabel(it)}</span>
+          ${it.h ? `<span>${hrs(it.h)}</span>` : ""}
+          ${groups.length > 1 ? `<select class="pjc-mv" onchange="pjSetSec('${it.kind}','${it.id}', this.value)" aria-label="Chuyển ${esc(it.t)} sang phần khác">
+            <option value="" disabled selected>Chuyển…</option>
+            ${groups.filter(g => g.id !== it.sec).map(g => `<option value="${g.id || "-"}">${esc(g.n)}</option>`).join("")}
+          </select>` : ""}
+        </div>
+      </div>`;
+  };
+  return `
+    ${pjToolbarHTML(p)}
+    <div class="pjb" onscroll="pjBoScroll=this.scrollLeft">
+      ${groups.map(g => {
+        const vis = g.items.filter(i => all || !i.done), hid = g.items.length - vis.length;
+        return `
+          <section class="pjb-col" ${pjDropAttrs(g)}>
+            <div class="pjb-h">${pjSecName(g)}<small>${g.items.length}</small>${pjSecMenu(p, g)}</div>
+            ${vis.map(card).join("")}
+            ${hid ? `<button type="button" class="pjl-more" onclick="pjPrefSet('all', 1); draw()">${hid} đã xong đang ẩn</button>` : ""}
+            ${pjAddHTML(g)}
+          </section>`;
+      }).join("")}
+      <section class="pjb-col pjb-new">${pjNewSecHTML("")}</section>
+    </div>`;
+}
+
+/* ---- Timeline: mỗi mục một dòng, buổi là vạch trong thanh của mục ---- */
+function pjTimelineHTML(p, items) {
+  const z = pjPref.z || "w", dw = { d: 30, w: 12, m: 4 }[z];
+  const dates = [p.sd, p.ed, tk, ...(p.ms || []).map(m => m.d)];
+  items.forEach(i => dates.push(i.first, i.last, i.kind === "task" ? i.due : ""));
+  const ds = dates.filter(Boolean).sort(), padD = { d: 3, w: 7, m: 21 }[z];
+  const start = ky(ad(new Date(ds[0] + "T00:00"), -padD)), end = ky(ad(new Date(ds[ds.length - 1] + "T00:00"), padD));
+  const days = dayDiff(start, end) + 1, W2 = days * dw, x = k => dayDiff(start, k) * dw;
+  let grid = "", top = "", bot = "";
+  // Nhãn tháng ở đầu trục chỉ hiện khi còn đủ chỗ trước ngày 1 của tháng kế tiếp, tránh chồng chữ
+  const s0 = new Date(start + "T00:00"), gap0 = (new Date(s0.getFullYear(), s0.getMonth() + 1, 1) - s0) / 864e5 * dw;
+  for (let i = 0; i < days; i++) {
+    const d = ad(new Date(start + "T00:00"), i), k = ky(d), L = i * dw, mon = d.getDay() === 1, d1 = d.getDate() === 1 || (i === 0 && gap0 >= 64);
+    if (z === "d") {
+      top += `<span class="tl-lb ${d.getDay() % 6 === 0 ? "we" : ""}" style="left:${L}px; width:${dw}px">${d.getDate()}</span>`;
+      if (mon) grid += `<i class="tl-gl" style="left:${L}px"></i>`;
+      if (d1) bot += `<span class="tl-mo" style="left:${L}px">Th${d.getMonth() + 1}/${d.getFullYear()}</span>`;
+    } else if (z === "w") {
+      if (mon) { grid += `<i class="tl-gl" style="left:${L}px"></i>`; top += `<span class="tl-lb" style="left:${L}px">${dm(k)}</span>`; }
+      if (d1) bot += `<span class="tl-mo" style="left:${L}px">Th${d.getMonth() + 1}${d.getMonth() === 0 || i === 0 || L < 64 ? "/" + d.getFullYear() : ""}</span>`;
+    } else {
+      if (d1) { grid += `<i class="tl-gl" style="left:${L}px"></i>`; top += `<span class="tl-lb" style="left:${L}px">Th${d.getMonth() + 1}</span>`; }
+      if (d1 && (d.getMonth() === 0 || L < 64)) bot += `<span class="tl-mo" style="left:${L}px">${d.getFullYear()}</span>`;
+    }
+  }
+  const mark = (k, cls, title) => k >= start && k <= end ? `<i class="${cls}" style="left:${x(k) + (cls === "tl-today" ? dw / 2 : 0)}px" title="${title}"></i>` : "";
+  grid += mark(tk, "tl-today", "Hôm nay") + mark(p.sd, "tl-edge", "Bắt đầu dự án") + (p.ed ? mark(ky(ad(new Date(p.ed + "T00:00"), 1)), "tl-edge", "Kết thúc dự án") : "");
+  const row = it => {
+    const c = CM(it.c) || { c: "var(--mu)", n: "" };
+    let track = "";
+    if (it.evs.length) {
+      const L = x(it.first), R = x(it.last) + dw;
+      track += `<button type="button" class="tl-bar" style="left:${L}px; width:${Math.max(dw, R - L)}px" onclick="pjOpenItem('${it.kind}','${it.id}')" aria-label="${esc(it.t)}: ${dm(it.first)} – ${dm(it.last)}"></button>`;
+      track += it.evs.map(v => {
+        const min = v.e.s ? minOf(v.e.s) : 0, left = x(v.k) + (z === "d" && v.e.s ? min / 1440 * dw : z === "d" ? 0 : dw * 0.15);
+        const w = Math.max(3, z === "d" ? (v.e.s ? v.e.h / 24 : 1) * dw : dw * 0.7);
+        return `<button type="button" class="tl-tick ${evPast(v.k, v.e) ? "" : "fut"}" style="left:${left}px; width:${w}px" onclick="openEditor('${v.k}', ${v.i})" title="${esc(v.e.t)} · ${pjWhen(v)} · ${hrs(v.e.h)}" aria-label="${esc(v.e.t)} ${pjWhen(v)}"></button>`;
+      }).join("");
+    }
+    if (it.kind === "task" && it.due) track += `<button type="button" class="tl-dia ${it.late ? "late" : ""}" style="left:${x(it.due) + dw / 2}px" onclick="pjOpenItem('task','${it.id}')" title="Hạn ${dm(it.due)}" aria-label="Hạn ${dm(it.due)}"></button>`;
+    else if (!it.evs.length) track += `<span class="tl-none" style="left:${x(tk) + dw}px">Chưa xếp lịch</span>`;
+    return `
+      <div class="tl-row ${it.done ? "done" : ""}" style="--cap:${c.c}">
+        <button type="button" class="tl-lab" onclick="pjOpenItem('${it.kind}','${it.id}')"><b>${esc(it.t)}</b><small>${pjProgLabel(it)}${it.h ? " · " + hrs(it.h) : ""}</small></button>
+        <div class="tl-track" style="width:${W2}px">${track}</div>
+      </div>`;
+  };
+  const ms = (p.ms || []).slice().sort((a, b) => a.d.localeCompare(b.d));
+  const all = !!pjPref.all, groups = pjGroups(p, items);
+  const rows = groups.map(g => {
+    const vis = g.items.filter(i => all || !i.done);
+    if (!vis.length && !g.id) return "";
+    return `<div class="tl-secrow"><span class="tl-lab">${esc(g.n)} · ${vis.length}</span><span class="tl-track" style="width:${W2}px"></span></div>${vis.map(row).join("")}`;
+  }).join("");
+  return `
+    <div class="pj-toolbar">
+      <div class="set-seg" role="group" aria-label="Thu phóng">
+        ${[["d", "Ngày"], ["w", "Tuần"], ["m", "Tháng"]].map(([k, n]) => `<button type="button" class="${z === k ? "on" : ""}" aria-pressed="${z === k}" onclick="pjPrefSet('z','${k}'); draw()">${n}</button>`).join("")}
+      </div>
+      <div class="set-seg" role="group" aria-label="Lọc mục">
+        <button type="button" class="${all ? "" : "on"}" aria-pressed="${!all}" onclick="pjPrefSet('all', 0); draw()">Chưa xong</button>
+        <button type="button" class="${all ? "on" : ""}" aria-pressed="${all}" onclick="pjPrefSet('all', 1); draw()">Tất cả</button>
+      </div>
+      <button type="button" class="btn btn-sm btn-ghost" onclick="pjTlToday()">Hôm nay</button>
+    </div>
+    <div class="tl" aria-label="Timeline dự án, cũ nhất ở trên">
+      <div class="tl-scroll" data-today="${x(tk)}" data-key="${p.id + z}" onscroll="pjTlPos={key:this.dataset.key, left:this.scrollLeft}">
+        <div class="tl-inner" style="width:calc(var(--tl-lab) + ${W2}px)">
+          <div class="tl-head"><span class="tl-lab tl-lab-h">${items.length} mục</span><span class="tl-axis" style="width:${W2}px">${top}${bot}</span></div>
+          <div class="tl-body">
+            <div class="tl-grid" style="width:${W2}px">${grid}</div>
+            ${ms.length ? `<div class="tl-row tl-msrow"><span class="tl-lab"><b>Mốc</b><small>${ms.filter(m => m.done).length}/${ms.length} đã đạt</small></span><div class="tl-track" style="width:${W2}px">${ms.map(m => `<span class="tl-dia ms ${m.done ? "done" : m.d < tk ? "late" : ""}" style="left:${x(m.d) + dw / 2}px" title="${esc(m.n)} · ${dm(m.d)}"></span><span class="tl-mslab" style="left:${x(m.d) + dw / 2}px">${esc(m.n)}</span>`).join("")}</div></div>` : ""}
+            ${rows || `<div class="tl-row"><span class="tl-lab"><small>Chưa có mục nào</small></span><div class="tl-track" style="width:${W2}px"></div></div>`}
+          </div>
+        </div>
+      </div>
+      <div class="g-legend"><span><i class="tl-key"></i> Buổi đã qua</span><span><i class="tl-key fut"></i> Sắp tới</span><span><i class="tl-dia-key"></i> Hạn / mốc</span><span><i class="g-today-key"></i> Hôm nay</span></div>
+    </div>`;
+}
+function pjTlToday() { pjTlPos = { key: "", left: 0 }; draw(); }
+
+/* ---- Tổng quan ---- */
+function pjOverviewHTML(p, items) {
+  const s = pjStats(p.id), tasks = items.filter(i => i.kind === "task"), nDone = tasks.filter(i => i.done).length;
+  let timePct = null;
+  if (p.ed) timePct = Math.max(0, Math.min(100, Math.round((dayDiff(p.sd, tk) + 1) / Math.max(1, dayDiff(p.sd, p.ed) + 1) * 100)));
+  const late = tasks.filter(i => i.late);
+  const nextKey = i => i.next ? i.next.k + " " + (i.next.e.s || "") : i.due || "~";
+  const next = items.filter(i => !i.done && !i.late).sort((a, b) => nextKey(a).localeCompare(nextKey(b))).slice(0, 4);
+  const ms = (p.ms || []).slice().sort((a, b) => a.d.localeCompare(b.d));
+  const ups = p.ups || [];
+  const upHTML = u => `<div class="pj-up"><div><span class="pj-hs hs-${u.hs}"><i></i>${PJ_HS[u.hs]}</span> <small>${dm(u.d)}/${u.d.slice(0, 4)}</small></div>${u.note ? `<p>${esc(u.note)}</p>` : ""}</div>`;
+  const itemBtn = (i, lab, cls) => `<button type="button" class="pjo-item ${cls || ""}" onclick="pjOpenItem('${i.kind}','${i.id}')"><span>${esc(i.t)}</span><small>${lab}</small></button>`;
+  const caps = Object.keys(s.byCap).sort((a, b) => s.byCap[b] - s.byCap[a]);
+  const cSt = `
+      <div class="card pjo-st">
+        <div class="pjo-h"><b>Trạng thái</b>${pjUpOpen ? "" : `<button type="button" class="btn btn-sm btn-primary" onclick="pjUpOpen=true; pjUpHs=pjHealth(findPj(pjOpenId))||'ok'; draw(); pjFocus('pjUpNote')">Cập nhật trạng thái</button>`}</div>
+        ${pjUpOpen ? `
+          <div class="pjo-upform">
+            <div class="set-seg" role="group" aria-label="Sức khỏe dự án">
+              ${Object.keys(PJ_HS).map(k => `<button type="button" class="${pjUpHs === k ? "on" : ""}" onclick="pjUpHs='${k}'; this.parentNode.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === this))">${PJ_HS[k]}</button>`).join("")}
+            </div>
+            <textarea id="pjUpNote" maxlength="280" rows="3" placeholder="1–2 câu: tuần này thế nào, vướng gì, việc tiếp theo"></textarea>
+            <div class="row" style="gap:8px; justify-content:flex-end;">
+              <button type="button" class="btn btn-sm btn-ghost" onclick="pjUpOpen=false; draw()">Hủy</button>
+              <button type="button" class="btn btn-sm btn-primary" onclick="pjUpSave()">Lưu</button>
+            </div>
+          </div>` : ""}
+        ${ups.length ? upHTML(ups[0]) + (ups.length > 1 ? `
+          <details class="pjo-older"><summary>Các lần trước (${ups.length - 1})</summary>${ups.slice(1).map(upHTML).join("")}</details>` : "")
+          : pjUpOpen ? "" : `<p class="pj-hint">Chưa có cập nhật. Mỗi tuần ghi một dòng ngắn để biết dự án đang ở đâu.</p>`}
+      </div>`;
+  const cNu = `
+      <div class="card pjo-nu">
+        <div class="pjo-h"><b>Số liệu</b></div>
+        <div class="pjo-nums">
+          <div class="pjo-num"><span>Việc xong</span><b>${tasks.length ? Math.round(nDone / tasks.length * 100) + "%" : "–"}</b><small>${nDone}/${tasks.length} việc</small></div>
+          <div class="pjo-num"><span>Giờ đã dành</span><b>${r1(s.h)}h</b><small>tuần này ${r1(s.wk)}h</small></div>
+          <div class="pjo-num"><span>Thời gian đã trôi</span><b>${timePct === null ? "–" : timePct + "%"}</b><small>${p.ed ? "đến " + dm(p.ed) : "không hạn"}</small></div>
+        </div>
+        ${timePct !== null ? `<div class="pj-pbar wide" title="Thời gian đã trôi ${timePct}%"><i style="width:${timePct}%"></i></div>` : ""}
+      </div>`;
+  const cAt = `
+      <div class="card pjo-at">
+        <div class="pjo-h"><b>Cần chú ý</b></div>
+        ${late.length || next.length ? `<div class="pjo-list">
+          ${late.map(i => itemBtn(i, "Quá hạn " + dm(i.due), "late")).join("")}
+          ${next.map(i => itemBtn(i, pjDateLabel(i))).join("")}
+        </div>` : `<p class="pj-hint">Không có việc quá hạn hay sắp tới.</p>`}
+      </div>`;
+  const cMs = `
+      <div class="card pjo-ms-card">
+        <div class="pjo-h"><b>Mốc</b><small>${ms.filter(m => m.done).length}/${ms.length} đã đạt</small></div>
+        ${ms.map(m => `
+          <div class="pjo-ms ${m.done ? "done" : m.d < tk ? "late" : ""}">
+            <input type="checkbox" ${m.done ? "checked" : ""} onchange="pjMsToggle('${m.id}')" aria-label="Đạt mốc ${esc(m.n)}">
+            <span>${esc(m.n)}</span><small>${dm(m.d)}</small>
+            <button type="button" class="btn btn-sm btn-ghost hv-del" onclick="pjMsDel('${m.id}')" aria-label="Xóa mốc ${esc(m.n)}">✕</button>
+          </div>`).join("")}
+        <div class="pjo-add">
+          <input id="pjMsName" type="text" maxlength="80" placeholder="Mốc mới, vd: Chạy 21 km" onkeydown="if (event.key === 'Enter' && !event.isComposing) pjMsAdd()" aria-label="Tên mốc">
+          <input id="pjMsDate" type="date" aria-label="Ngày của mốc" value="${p.ed || ""}">
+          <button type="button" class="btn btn-sm" onclick="pjMsAdd()">Thêm</button>
+        </div>
+      </div>`;
+  const cDe = `
+      <div class="card pjo-de">
+        <div class="pjo-h"><b>Mô tả</b></div>
+        <textarea class="pjo-desc" maxlength="2000" placeholder="Mục tiêu, đích đến, ghi chú của dự án" onchange="pjSetDesc(this.value)" aria-label="Mô tả dự án">${esc(p.desc || "")}</textarea>
+      </div>`;
+  const cWk = `
+      <div class="card pjo-wk">
+        <div class="pjo-h"><b>Giờ theo tuần</b></div>
+        ${s.evs.length ? pjWeeksHTML(p, s.evs) : `<p class="pj-hint">Chưa có hoạt động nào gắn dự án này.</p>`}
+        ${caps.length ? `<div class="pj-caps" aria-label="Giờ theo loại vốn">${caps.map(k => { const c = CM(k); return c ? `<span class="pill" style="${capInk(c.c)}">${esc(c.n)} ${r1(s.byCap[k])}h</span>` : ""; }).join("")}</div>` : ""}
+      </div>`;
+  return `
+    <div class="pjo">
+      <div class="pjo-col">${cSt}${cAt}${cDe}</div>
+      <div class="pjo-col">${cNu}${cMs}${cWk}</div>
+    </div>`;
+}
+function pjUpSave() {
+  const p = findPj(pjOpenId);
+  if (!p) return;
+  const note = (($("pjUpNote") || {}).value || "").trim().slice(0, 280);
+  p.ups = [{ id: nid("u"), d: tk, hs: pjUpHs, note }, ...(p.ups || [])].slice(0, 30);
+  pjUpOpen = false;
+  save(); draw();
+  showToast("Đã cập nhật trạng thái", "ok");
+}
+function pjMsAdd() {
+  const p = findPj(pjOpenId), n = ($("pjMsName").value || "").trim(), d = $("pjMsDate").value;
+  if (!p) return;
+  if (!n || !d) { showToast(n ? "Chọn ngày của mốc" : "Nhập tên mốc", "bad"); return; }
+  if ((p.ms || []).length >= 50) { showToast("Tối đa 50 mốc", "bad"); return; }
+  p.ms = [...(p.ms || []), { id: nid("m"), n: n.slice(0, 80), d }];
+  save(); draw();
+  pjFocus("pjMsName");
+}
+function pjMsToggle(id) {
+  const p = findPj(pjOpenId), m = p && (p.ms || []).find(x => x.id === id);
+  if (!m) return;
+  if (m.done) delete m.done; else m.done = 1;
+  save(); draw();
+}
+function pjMsDel(id) {
+  const p = findPj(pjOpenId), i = p ? (p.ms || []).findIndex(x => x.id === id) : -1;
+  if (i < 0) return;
+  const m = p.ms.splice(i, 1)[0];
+  if (!p.ms.length) delete p.ms;
+  save(); draw();
+  offerUndo(`Đã xóa mốc "${m.n}"`, () => { const q = findPj(p.id); if (q) { q.ms = q.ms || []; q.ms.splice(Math.min(i, q.ms.length), 0, m); } }, []);
+}
+function pjSetDesc(v) {
+  const p = findPj(pjOpenId);
+  if (!p) return;
+  v = String(v || "").slice(0, 2000);
+  if (v.trim()) p.desc = v; else delete p.desc;
+  save();
+}
+
+/* ---- Thao tác trên mục và phần ---- */
+function pjAddTask(el) {
+  const p = findPj(pjOpenId), title = String(el.value || "").trim();
+  if (!p || !title) return;
+  const sec = el.dataset.sec || "";
+  S.tasks.unshift({ id: nid("t"), t: title.slice(0, 160), c: pjCap(p, guess(title)), m: guessMode(title), subs: [], pj: p.id, ...(sec ? { sec } : {}) });
+  save(); draw();
+  showToast(`Đã thêm "${title.slice(0, 40)}"`, "ok");
+  pjFocus(el.id);
+}
+function pjToggleTask(id) {
+  const t = findTask(id);
+  if (!t) return;
+  const was = taskDone(t), before = { done: t.done, subs: t.subs.map(s => s.done) };
+  if (t.subs.length) t.subs.forEach(s => { if (was) delete s.done; else s.done = 1; });
+  else if (was) delete t.done; else t.done = 1;
+  save(); draw();
+  if (!was) offerUndo(`Đã xong "${t.t}"`, () => {
+    const x = findTask(id);
+    if (!x) return;
+    if (before.done) x.done = before.done; else delete x.done;
+    x.subs.forEach((s, i) => { if (before.subs[i]) s.done = before.subs[i]; else delete s.done; });
+  }, []);
+}
+function pjSetSec(kind, id, sec) {
+  const p = findPj(pjOpenId);
+  if (!p) return;
+  if (sec === "-") sec = "";
+  if (kind === "task") {
+    const t = findTask(id);
+    if (!t) return;
+    if (sec) t.sec = sec; else delete t.sec;
+  } else {
+    const it = pjModel(p).find(i => i.kind === "ser" && i.id === id);
+    if (!it) return;
+    it.evs.forEach(({ e }) => { if (sec) e.sec = sec; else delete e.sec; });
+  }
+  save(); draw();
+}
+function pjSetDue(id, v) {
+  const t = findTask(id);
+  if (!t) return;
+  if (/^\d{4}-\d\d-\d\d$/.test(v || "")) t.due = v; else delete t.due;
+  save(); draw();
+}
+function pjDragStart(ev, kind, id) {
+  pjDrag = { kind, id };
+  ev.dataTransfer.effectAllowed = "move";
+  try { ev.dataTransfer.setData("text/plain", id); } catch (e) {}
+}
+function pjOver(ev) { if (!pjDrag) return; ev.preventDefault(); ev.currentTarget.classList.add("pj-over"); }
+function pjLeave(ev) { if (!ev.currentTarget.contains(ev.relatedTarget)) ev.currentTarget.classList.remove("pj-over"); }
+function pjDrop(ev, sec) {
+  ev.preventDefault();
+  ev.currentTarget.classList.remove("pj-over");
+  const d = pjDrag;
+  pjDrag = null;
+  if (d) pjSetSec(d.kind, d.id, sec);
+}
+function pjSecTpl(i) {
+  const p = findPj(pjOpenId);
+  if (!p) return;
+  p.secs = PJ_TPL[i].map(n => ({ id: nid("x"), n }));
+  save(); draw();
+}
+function pjSecSave(el) {
+  if (pjSecEdit === null) return; // Enter rồi mất con trỏ: chỉ lưu một lần
+  const p = findPj(pjOpenId), n = String(el.value || "").trim().slice(0, 40), id = el.dataset.sec;
+  pjSecEdit = null;
+  if (p && n) {
+    if (id === "+") {
+      if ((p.secs || []).length >= 20) showToast("Tối đa 20 phần", "bad");
+      else p.secs = [...(p.secs || []), { id: nid("x"), n }];
+    } else {
+      const s = (p.secs || []).find(x => x.id === id);
+      if (s) s.n = n;
+    }
+    save();
+  }
+  draw();
+}
+function pjSecMove(id, d) {
+  const p = findPj(pjOpenId), L = p && p.secs, i = L ? L.findIndex(s => s.id === id) : -1;
+  if (i < 0 || i + d < 0 || i + d >= L.length) return;
+  [L[i], L[i + d]] = [L[i + d], L[i]];
+  save(); draw();
+}
+function pjSecDel(id) {
+  const p = findPj(pjOpenId), i = p ? (p.secs || []).findIndex(s => s.id === id) : -1;
+  if (i < 0) return;
+  const s = p.secs.splice(i, 1)[0];
+  if (!p.secs.length) delete p.secs;
+  save(); draw(); // các mục của phần này hiện ở "Chưa phân loại"; hoàn tác là trả phần về, mục tự về theo
+  offerUndo(`Đã xóa phần "${s.n}"`, () => { const q = findPj(p.id); if (q) { q.secs = q.secs || []; q.secs.splice(Math.min(i, q.secs.length), 0, s); } }, []);
+}
+
+/* ---- Bảng chi tiết của một mục ---- */
+function pjOpenItem(kind, id) {
+  pjDet = { kind, id, pj: pjOpenId };
+  LF = document.activeElement;
+  renderPjItem(true);
+  if (!pjDet) return;
+  $("pjItOverlay").classList.add("open");
+}
+function pjCloseItem() {
+  if (!pjDet) return;
+  pjDet = null;
+  $("pjItOverlay").classList.remove("open");
+  restoreFocus();
+}
+function renderPjItem(force) {
+  if (!pjDet) return;
+  const body = $("pjItBody"), a = document.activeElement;
+  // Đang gõ trong bảng chi tiết (đồng bộ hay đổi ngày vẽ lại giữa chừng): để yên, lần vẽ sau sẽ cập nhật
+  if (!force && body.contains(a) && (a.tagName === "TEXTAREA" || (a.tagName === "INPUT" && /^(text|search|)$/.test(a.type)))) return;
+  const p = findPj(pjDet.pj), it = p && pjModel(p).find(i => i.kind === pjDet.kind && i.id === pjDet.id);
+  if (!it) { pjCloseItem(); return; }
+  const c = CM(it.c) || { c: "var(--mu)", n: "" };
+  const secOpts = [{ id: "", n: "Chưa phân loại" }].concat(p.secs || []).map(g => `<option value="${g.id || "-"}" ${g.id === it.sec ? "selected" : ""}>${esc(g.n)}</option>`).join("");
+  const capOpts = S.caps.map(x => `<option value="${x.k}" ${x.k === it.c ? "selected" : ""}>${esc(x.n)}</option>`).join("");
+  const evList = list => list.map(x => `<button type="button" class="pjd-ev ${evPast(x.k, x.e) ? "past" : ""}" onclick="openEditor('${x.k}', ${x.i})"><span>${pjWhen(x)}${it.kind === "task" ? " · " + esc(x.e.t) : ""}</span><span>${hrs(x.e.h)}</span></button>`).join("");
+  $("pjItTitle").innerHTML = `<span class="pj-dot" style="--pj:${p.col}"></span>${esc(p.n)}`;
+  $("pjItOverlay").style.setProperty("--pj", p.col);
+  if (it.kind === "task") {
+    const t = it.task, m = new Map(it.evs.map(x => [x.e.tk, x])), tot = units(t).reduce((s2, u) => s2 + u.h, 0);
+    body.innerHTML = `
+      <div class="pjd" style="--cap:${c.c}">
+        <div class="pjd-top">
+          <input type="checkbox" class="pjd-chk" ${it.done ? "checked" : ""} onchange="pjToggleTask('${t.id}')" aria-label="Xong">
+          <input class="pjd-name" value="${esc(t.t)}" maxlength="160" onchange="pjRenameTask('${t.id}', this.value)" onkeydown="if (event.key === 'Enter' && !event.isComposing) this.blur()" aria-label="Tên việc">
+        </div>
+        <div class="pjd-fields">
+          <span>Trạng thái</span><b class="${it.late ? "late" : ""}">${it.late ? "Quá hạn · " : ""}${pjProgLabel(it)}</b>
+          <label for="pjdSec">Phần</label><select id="pjdSec" onchange="pjSetSec('task','${t.id}', this.value)">${secOpts}</select>
+          <label for="pjdDue">Hạn</label><input id="pjdDue" type="date" value="${t.due || ""}" onchange="pjSetDue('${t.id}', this.value)">
+          <label for="pjdCap">Loại vốn</label><select id="pjdCap" onchange="setTaskField('${t.id}','c',this.value)" style="${capInk(c.c)}">${capOpts}</select>
+        </div>
+        <div class="pjd-sec">
+          <b>Việc nhỏ <small>${t.subs.length ? `${it.nD}/${t.subs.length} xong · tổng ${hrs(tot)}` : "chưa chia nhỏ"}</small></b>
+          ${t.subs.map(s => { const x = m.get(s.id); return `
+            <div class="pjd-li ${s.done ? "done" : ""}">
+              <input type="checkbox" ${s.done ? "checked" : ""} onchange="toggleDone('sub','${s.id}')" aria-label="Xong: ${esc(s.t)}">
+              <span>${esc(s.t)}</span><small>${hrs(s.h)}</small>
+              ${x ? `<button type="button" class="hv-when" onclick="openEditor('${x.k}', ${x.i})">${pjWhen(x)}</button>` : s.done ? "<span></span>" : `<button type="button" class="btn btn-sm" onclick="openSched('sub','${s.id}')">Xếp</button>`}
+              <button type="button" class="btn btn-sm btn-ghost hv-del" onclick="deleteSub('${s.id}')" aria-label="Xóa ${esc(s.t)}">✕</button>
+            </div>`; }).join("")}
+          <input id="pjdSubIn" class="pj-add" data-hv="pjsub" data-task="${t.id}" placeholder="+ Việc nhỏ, vd: Đặt vé 30p" onkeydown="hvKeydown(event)" aria-label="Thêm việc nhỏ">
+        </div>
+        <div class="pjd-sec">
+          <b>Các buổi trên lịch <small>${it.evs.length ? `${it.evs.length} buổi · ${hrs(it.h)}` : "chưa xếp"}</small></b>
+          ${evList(it.evs)}
+        </div>
+        <div class="pjd-acts">
+          ${it.done ? "<span></span>" : `<button type="button" class="btn btn-sm btn-primary" onclick="openSched('task','${t.id}')">${t.subs.length ? "Xếp các việc nhỏ" : it.nS ? "Dời lịch" : "Xếp lịch"}</button>`}
+          <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad)" onclick="deleteTask('${t.id}')">Xóa việc</button>
+        </div>
+      </div>`;
+  } else {
+    const up = it.evs.filter(x => !evPast(x.k, x.e)), past = it.evs.filter(x => evPast(x.k, x.e));
+    body.innerHTML = `
+      <div class="pjd" style="--cap:${c.c}">
+        <div class="pjd-top">
+          <span class="pjr-ser ${it.done ? "past" : ""}" aria-hidden="true">${it.done ? "✓" : "◷"}</span>
+          <input class="pjd-name" value="${esc(it.t)}" maxlength="120" onchange="pjSerEdit('t', this.value)" onkeydown="if (event.key === 'Enter' && !event.isComposing) this.blur()" aria-label="Tên hoạt động">
+        </div>
+        <div class="pjd-fields">
+          <span>Tổng</span><b>${it.evs.length} buổi · ${hrs(it.h)}</b>
+          <label for="pjdSec">Phần</label><select id="pjdSec" onchange="pjSetSec('ser','${it.id}', this.value)">${secOpts}</select>
+          <label for="pjdCap">Loại vốn</label><select id="pjdCap" onchange="pjSerEdit('c', this.value)" style="${capInk(c.c)}">${capOpts}</select>
+        </div>
+        <div class="pjd-sec"><b>Sắp tới <small>${up.length} buổi</small></b>${up.length ? evList(up) : `<p class="pj-hint">Không còn buổi nào sắp tới.</p>`}</div>
+        ${past.length ? `<div class="pjd-sec"><b>Đã qua <small>${past.length} buổi</small></b>${evList(past.slice().reverse())}</div>` : ""}
+        <div class="pjd-acts">
+          <button type="button" class="btn btn-sm btn-primary" onclick="pjAddEvent('${p.id}', '${it.sec}', decodeURIComponent('${encodeURIComponent(it.t)}'), '${it.c}')">+ Buổi</button>
+        </div>
+      </div>`;
+  }
+}
+// Sau mỗi lần vẽ: giữ chỗ cuộn ngang của Timeline và Bảng, cập nhật bảng chi tiết đang mở
+function pjAfterDraw() {
+  if (pjDet) renderPjItem();
+  if (cur !== "pj" || !pjOpenId) return;
+  const sc = document.querySelector("#v .tl-scroll");
+  if (sc) {
+    if (pjTlPos.key === sc.dataset.key) sc.scrollLeft = pjTlPos.left;
+    else {
+      const lab = sc.querySelector(".tl-lab");
+      sc.scrollLeft = Math.max(0, +sc.dataset.today - (sc.clientWidth - (lab ? lab.offsetWidth : 0)) * 0.3);
+      pjTlPos = { key: sc.dataset.key, left: sc.scrollLeft };
+    }
+  }
+  const bo = document.querySelector("#v .pjb");
+  if (bo) bo.scrollLeft = pjBoScroll;
+}
+document.addEventListener("click", e => {
+  document.querySelectorAll("details.pj-menu[open]").forEach(d => { if (!d.contains(e.target)) d.open = false; });
+});
+function pjRenameTask(id, v) {
+  const t = findTask(id), n = String(v || "").trim();
+  if (!t || !n) { renderPjItem(true); return; }
+  t.t = n.slice(0, 160);
+  save(); draw();
+}
+// Đổi tên hoặc loại vốn của cả chuỗi: hỏi áp dụng cho buổi sắp tới hay mọi buổi
+async function pjSerEdit(field, v) {
+  const p = pjDet && findPj(pjDet.pj), it = p && pjModel(p).find(i => i.kind === "ser" && i.id === pjDet.id);
+  v = String(v || "").trim();
+  if (!it || !v) { renderPjItem(true); return; }
+  if (field === "t") v = v.slice(0, 120);
+  const up = it.evs.filter(x => !evPast(x.k, x.e));
+  let list = it.evs;
+  if (up.length && up.length < it.evs.length) {
+    const a = await ask({ title: field === "t" ? "Đổi tên cho buổi nào?" : "Đổi loại vốn cho buổi nào?", msg: `${up.length} buổi sắp tới, ${it.evs.length - up.length} buổi đã qua.`, ok: "Tất cả buổi", alt: "Các buổi sắp tới" });
+    if (!a) { renderPjItem(true); return; }
+    if (a === "alt") list = up;
+  }
+  list.forEach(({ e }) => { e[field] = v; delete e.demo; markPending(e); });
+  if (field === "t") pjDet.id = "t:" + (fold(v) || "_");
+  save(); gcalFlush(); draw();
+  renderPjItem(true);
 }
 
 // Giờ từng tuần của dự án (tối đa 26 tuần gần nhất), cột tuần này tô đậm
@@ -6485,58 +7451,12 @@ function pjWeekRowsHTML(ws) {
   }).join("")}</div>`;
 }
 
-function ganttHTML(p, evs) {
-  if (!evs.length) {
-    return `<p class="pj-hint">Chưa có hoạt động nào. Bấm “Thêm hoạt động”, chọn dự án trong popup, hoặc gõ <b>#${esc(p.n.split(/\s+/)[0].toLowerCase())}</b> ở ô ghi nhanh.</p>`;
-  }
-  const first = evs[0].k, last = evs[evs.length - 1].k;
-  const start = [p.sd, first].filter(Boolean).sort()[0];
-  const end = [p.ed || last, last].sort().pop();
-  const days = dayDiff(start, end) + 1;
-  const dw = Math.max(8, Math.min(44, Math.floor(640 / days))); // bề rộng một ngày (px)
-  const W2 = days * dw;
-  const x = k => dayDiff(start, k) * dw;
-  // Vạch tuần (thứ 2), nhãn ngày khi đủ chỗ, nhãn tháng ở ngày 1
-  let grid = "", axis = "";
-  for (let i = 0; i < days; i++) {
-    const d = ad(new Date(start + "T00:00"), i), k = ky(d), left = i * dw;
-    if (d.getDay() === 1) {
-      grid += `<i class="g-wk" style="left:${left}px"></i>`;
-      if (dw * 7 >= 46) axis += `<span class="g-lb" style="left:${left}px">${dm(k)}</span>`;
-    }
-    if (d.getDate() === 1) axis += `<span class="g-mo" style="left:${left}px">Th${d.getMonth() + 1}</span>`;
-  }
-  const mark = (k, cls, title) => k >= start && k <= end ? `<i class="${cls}" style="left:${x(k) + (cls === "g-today" ? dw / 2 : 0)}px" title="${title}"></i>` : "";
-  grid += mark(tk, "g-today", "Hôm nay") + mark(p.sd, "g-edge", "Bắt đầu dự án") + (p.ed ? mark(p.ed, "g-edge end", "Kết thúc dự án") : "");
-  const rows = evs.map(({ k, i, e }) => {
-    const c = CM(e.c), dt = new Date(k + "T00:00");
-    const min = e.s ? +e.s.slice(0, 2) * 60 + +e.s.slice(3, 5) : 0;
-    const left = x(k) + (e.s ? min / 1440 * dw : 0), w = Math.max(10, (e.s ? e.h / 24 : 1) * dw);
-    const fut = k > tk || (k === tk && e.s && e.s > new Date().toTimeString().slice(0, 5));
-    return `
-      <button type="button" class="g-row" onclick="openEditor('${k}', ${i})" title="${esc(e.t)} · ${dm(k)}${e.s ? " " + e.s : ""} · ${r1(e.h)}h · ${esc(c.n)}">
-        <span class="g-lab"><small>${DN_VI[(dt.getDay() + 6) % 7].replace("Thứ ", "T").replace("Chủ Nhật", "CN")} ${dm(k)}${e.s ? " · " + e.s : ""} · ${r1(e.h)}h</small><span>${esc(e.t)}</span></span>
-        <span class="g-track" style="width:${W2}px"><i class="g-bar ${fut ? "fut" : ""}" style="left:${left}px; width:${w}px; --cap:${c.c}"></i></span>
-      </button>`;
-  }).join("");
-  return `
-    <div class="gantt" aria-label="Biểu đồ Gantt: ${evs.length} hoạt động, cũ nhất ở trên">
-      <div class="g-scroll">
-        <div class="g-inner" style="width:calc(var(--g-lab) + ${W2}px)">
-          <div class="g-head"><span class="g-lab">${evs.length} hoạt động</span><span class="g-axis" style="width:${W2}px">${axis}</span></div>
-          <div class="g-body">
-            <div class="g-grid" style="width:${W2}px">${grid}</div>
-            ${rows}
-          </div>
-        </div>
-      </div>
-      <div class="g-legend"><span><i class="g-bar"></i> Đã qua</span><span><i class="g-bar fut"></i> Sắp tới</span><span><i class="g-today-key"></i> Hôm nay</span><span><i class="g-edge-key"></i> Bắt đầu / kết thúc</span></div>
-    </div>`;
-}
-
-function pjAddEvent(id) {
+// Thêm hoạt động từ trang dự án; "+ Buổi" của một chuỗi điền sẵn tên, loại vốn và phần
+function pjAddEvent(id, sec, t, c) {
   edPjPreset = id;
+  edSecPreset = sec || null;
   openEditor(tk);
+  if (t) setTimeout(() => { const i = $("inpTitle"), cp = $("inpCap"); if (i) i.value = t; if (cp && c) { cp.value = c; capTouched = true; } }, 0);
 }
 
 /* ---- Bảng tạo / sửa dự án ---- */
@@ -6630,12 +7550,13 @@ function saveProject() {
   } else {
     p = { id: nid("p"), ...clean };
     S.projects.push(p);
-    pjOpenId = p.id;
   }
   save();
   gcalFlush();
   closeProject();
-  if (cur !== "pj" && !ed) switchTab("pj"); else draw();
+  if (!f.id && !ed) pjOpen(p.id); // dự án mới: mở luôn trang của nó
+  else if (cur !== "pj" && !ed) switchTab("pj");
+  else draw();
   if (ed) renderEditorSheet(); // tạo từ popup hoạt động hoặc ô ghi nhanh: có ngay trong danh sách
   showToast(`Đã lưu dự án "${p.n}"`, "ok");
 }
@@ -6650,7 +7571,11 @@ async function deleteProject(id) {
   const evObjs = evs.map(x => x.e);
   evObjs.forEach(e => { delete e.pj; markPending(e); });
   tasks.forEach(t => delete t.pj);
-  if (pjOpenId === id) pjOpenId = null;
+  if (pjOpenId === id) {
+    pjOpenId = null;
+    pjCloseItem();
+    try { if (history.state && history.state.pj) history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+  }
   save();
   gcalFlush();
   closeProject();
@@ -6735,12 +7660,34 @@ function pjDemo() {
   const has = k => S.caps.some(c => c.k === k);
   const caps = ["sk", "tc"].filter(has);
   if (!caps.length) return;
-  const p = { id: nid("p"), n: "Marathon 2027", col: "#97A13B", st: "run", pr: "h", sd: ky(ad(new Date(tk + "T00:00"), -14)), ed: ky(ad(new Date(tk + "T00:00"), 120)), caps, demo: 1 };
+  const d = n => ky(ad(new Date(tk + "T00:00"), n));
+  const secs = ["Chuẩn bị", "Tập luyện", "Thi đấu"].map(n => ({ id: nid("x"), n }));
+  const p = { id: nid("p"), n: "Marathon 2027", col: "#97A13B", st: "run", pr: "h", sd: d(-14), ed: d(120), caps, demo: 1, secs,
+    desc: "Hoàn thành marathon đầu tiên dưới 4 giờ 30 phút. Tập 4 buổi mỗi tuần, tăng quãng chạy dài thêm 2 km mỗi tuần.",
+    ms: [{ id: nid("m"), n: "Chạy 21 km", d: d(45) }, { id: nid("m"), n: "Về đích 42 km", d: d(120) }],
+    ups: [{ id: nid("u"), d: d(-7), hs: "ok", note: "Đã đều 3 buổi một tuần. Tuần tới thêm buổi chạy dài Chủ nhật." }] };
   S.projects.push(p);
-  Object.values(S.ev).forEach(l => l.forEach(e => { if (e.demo && e.c === caps[0]) e.pj = p.id; }));
+  Object.values(S.ev).forEach(l => l.forEach(e => { if (e.demo && e.c === caps[0]) { e.pj = p.id; e.sec = secs[1].id; } }));
+  // Chuỗi chạy dài Chủ nhật: 2 buổi đã qua, 3 buổi sắp tới
+  const sun = ad(new Date(tk + "T00:00"), (7 - new Date(tk + "T00:00").getDay()) % 7);
+  [-14, -7, 0, 7, 14].forEach((n, i) => {
+    const k = ky(ad(sun, n)), L = S.ev[k] = S.ev[k] || [];
+    if (!L.some(e => e.s && e.s < "08:30" && e.s >= "05:30")) { L.push({ t: "Chạy dài", c: caps[0], m: "u", h: 1.5 + i * 0.25, s: "06:00", pj: p.id, sec: secs[1].id, demo: 1 }); sortL(L); }
+  });
+  const task = (t, sec, extra) => S.tasks.push({ id: nid("t"), t, c: caps[0], m: "u", subs: [], pj: p.id, sec: sec.id, demo: 1, ...extra });
+  task("Đăng ký giải chạy", secs[0], { due: d(5), subs: [["Chọn giải tháng 2", 0.5], ["Đóng phí đăng ký", 0.25]].map(([t, h]) => ({ id: nid("s"), t, h })) });
+  task("Khám sức khỏe tổng quát", secs[0], { due: d(-2) });
+  task("Mua giày chạy", secs[0], { done: 1 });
+  task("Chuẩn bị đồ ngày thi", secs[2], { due: d(118) });
 }
 
 // Khởi chạy ứng dụng
+(() => { // mở thẳng một dự án qua địa chỉ #pj/<mã>; nút Quay lại về danh sách dự án
+  const m = /^#pj\/([\w-]{1,24})$/.exec(location.hash);
+  if (!m) return;
+  try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+  if (findPj(m[1])) pjOpen(m[1]);
+})();
 draw(true);
 gcalFlush(); // đẩy các thay đổi còn chờ từ lần mở trước
 cloudInit(); // đã đăng nhập đồng bộ: tải thư viện, nhận phiên, đồng bộ lần đầu
