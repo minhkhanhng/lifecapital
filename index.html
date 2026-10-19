@@ -3072,8 +3072,11 @@ function weekStatsHTML(ws) {
   let n = 0, h = 0;
   for (let i = 0; i < 7; i++) (S.ev[ky(ad(ws, i))] || []).forEach(e => { n++; h += e.h; });
   const wi = W.findIndex(w => +w === +ws), bal = wi >= 0 ? balanceOf(wi) : { score: null, weakest: null };
+  // Tổng giờ gồm cả giờ cố định mỗi tuần (tab Vốn), khớp "Giờ đã ghi" ở Tổng kết tuần và Tổng quan
+  const fixed = S.caps.reduce((a, c) => a + blH(c.k), 0);
+  if (wi >= 0) h = al(wi);
   const tile = (lb, v, cls, tip) => `<div class="stat-tile"${tip ? ` title="${esc(tip)}"` : ""}><span>${lb}</span><b${cls ? ` class="${cls}"` : ""}>${v}</b></div>`;
-  return `<div class="stat-row" aria-label="Số liệu tuần">${tile("Hoạt động", n)}${tile("Tổng giờ", r1(h))}${tile("Cân bằng", bal.score == null ? "–" : bal.score + "%", "", bal.score == null ? "Cần mục tiêu và giờ đã ghi" : balanceLabel(bal.score))}${tile("Yếu nhất", bal.weakest ? esc(bal.weakest.c.n) : "–", "txt", bal.weakest ? `${bal.weakest.c.n}: ${r1(bal.weakest.h)}h / ${r1(bal.weakest.c.tg)}h` : "")}</div>` + hbStripHTML();
+  return `<div class="stat-row" aria-label="Số liệu tuần">${tile("Hoạt động", n)}${tile("Tổng giờ", r1(h), "", fixed ? `Gồm ${r1(fixed)}h cố định mỗi tuần` : "")}${tile("Cân bằng", bal.score == null ? "–" : bal.score + "%", "", bal.score == null ? "Cần mục tiêu và giờ đã ghi" : balanceLabel(bal.score))}${tile("Yếu nhất", bal.weakest ? esc(bal.weakest.c.n) : "–", "txt", bal.weakest ? `${bal.weakest.c.n}: ${r1(bal.weakest.h)}h / ${r1(bal.weakest.c.tg)}h` : "")}</div>` + hbStripHTML();
 }
 
 function renderNav() {
@@ -3840,7 +3843,7 @@ function yearMobileHTML() {
     return `<button type="button" class="yr-day ${k === tk ? "today" : ""} ${dt.getFullYear() !== activeYear ? "out" : ""}" style="${bg}" onclick="openDayFromYear(${i}, ${j})" aria-label="${DN_VI[j]} ${dt.getDate()}/${dt.getMonth() + 1}${tot ? `, ${r1(tot)} giờ` : ""}">${dt.getDate()}</button>`;
   };
   const row = i => {
-    const tot = evs(i).reduce((a, e) => a + e.h, 0);
+    const tot = al(i); // gồm giờ cố định, khớp bảng năm trên máy tính
     return `<div class="yr-row ${i === CW ? "cur" : ""}"><span class="yr-wk">W${i + 1}</span>${[0, 1, 2, 3, 4, 5, 6].map(j => day(i, j)).join("")}<span class="yr-net">${tot ? r1(tot) + "h" : ""}</span></div>`;
   };
   const M = ["T1–T3", "T4–T6", "T7–T9", "T10–T12"];
