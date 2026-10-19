@@ -25,6 +25,17 @@ Làm lại phần Dự án theo cách Asana tổ chức dự án, vì bản v0.5
 - Dữ liệu ghi số phiên bản 60; máy còn chạy bản cũ giữ nguyên phần, hạn, mốc khi lưu và đồng bộ.
 - Test gộp dữ liệu 28 tình huống (thêm 8 cho phần, hạn, mốc, cập nhật trạng thái).
 
+**Thêm trong UAT (20/10): Thói quen** (PO yêu cầu thêm vào bản này)
+- **Dải Thói quen** ngay dưới 4 ô số liệu ở tab Lịch: mỗi thói quen một chip gồm tên, số chuỗi và 7 chấm của tuần. Trên điện thoại dải vuốt ngang.
+- Hai cách đếm: **tự đếm** các buổi cùng tên trên lịch (không phân biệt hoa thường, có dấu hay không), hoặc **tích tay** bằng nút ✓ cho việc nhỏ không cần xếp lịch.
+- Chuỗi kiểu mềm: **số lần mỗi tuần** thì đếm số tuần liên tiếp đạt; **mỗi ngày** thì mỗi tuần được nghỉ 1 ngày không đứt chuỗi. Hôm nay hay tuần này chưa xong không làm đứt chuỗi; buổi đã xếp cho ngày tới chưa tính là đã làm.
+- Bấm một chip mở bảng chi tiết: chuỗi, kỷ lục, lưới 26 tuần, sửa tên, cách đếm, loại vốn, tần suất; tích bù các ngày trong tuần; lưu trữ, xóa (có Hoàn tác). Thói quen tự đếm còn thiếu lần trong tuần có nút **Xếp 1 buổi**.
+- Popup hoạt động có ô **Theo dõi thành thói quen**; thẻ hoạt động thuộc thói quen có dấu ✓.
+- App **gợi ý** khi một hoạt động có từ 3 ngày trở lên trong 2 tuần; Bỏ qua thì không hỏi lại trên máy đó.
+- Mốc 7, 21, 30, 66 ngày (hoặc 4, 8, 12, 26, 52 tuần) báo bằng một thông báo nhỏ.
+- Tổng kết tuần và Tổng quan có thẻ Thói quen; tab Vốn có danh sách quản lý, gồm cả mục đã lưu trữ.
+- Đồng bộ: hai máy tích ngày khác nhau thì giữ cả hai; máy bản cũ giữ nguyên thói quen khi lưu.
+
 **Thêm trong UAT (20/10): Xếp thông minh** (PO yêu cầu thêm vào bản này)
 - **Xếp hết** lách qua lịch bận, vẫn giữ đúng thứ tự các việc nhỏ.
 - Rải sang nhiều ngày, chỉ trong **khung giờ xếp việc** (mặc định 08:00–22:00) và **tối đa 2 giờ mỗi ngày** cho một việc; cả hai đổi được trong Cài đặt › Mặc định.

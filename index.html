@@ -956,6 +956,56 @@ body.hv-dragging .day-card { border-style: dashed; }
 .sch-note.warn { border-left-color: var(--wa); color: var(--tx); }
 .sch-note.bad { border-left-color: var(--bad); color: var(--tx); }
 @media (max-width: 480px) { .sch-row b { min-width: 76px; font-size: 12.5px; } }
+.ev-hb { display: inline-block; font-size: 10px; font-weight: 700; color: var(--ok-text); margin-right: 4px; vertical-align: 1px; }
+.hb-strip { display: flex; align-items: center; gap: 10px; margin: -4px 0 12px; min-width: 0; }
+.hb-lbl { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tx-sec); flex: none; }
+.hb-list { display: flex; gap: 8px; flex-wrap: wrap; min-width: 0; align-items: center; }
+.hb-chip { display: flex; align-items: stretch; border-radius: 14px; background: var(--sheen, transparent), var(--glass-hi, var(--card)); border: 1px solid var(--glass-bd, var(--bd)); box-shadow: inset 4px 0 0 var(--cap); overflow: hidden; flex: none; padding-left: 4px; }
+.hb-chip.behind { border-color: color-mix(in srgb, var(--wa) 60%, transparent); }
+.hb-main { font: inherit; display: flex; align-items: center; gap: 8px; padding: 6px 10px; background: none; border: 0; color: var(--tx); cursor: pointer; min-height: 40px; text-align: left; }
+.hb-n { font-size: 13px; font-weight: 600; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hb-st { font-size: 12px; color: var(--tx-sec); white-space: nowrap; }
+.hb-st b { font-size: 14px; color: var(--tx); font-variant-numeric: tabular-nums; }
+.hb-wk { font-size: 11.5px; font-weight: 600; color: var(--tx-sec); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.hb-chip.behind .hb-wk { color: var(--wa-text); }
+.hb-dots { display: inline-flex; gap: 5px; align-items: center; }
+.hb-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: color-mix(in srgb, var(--mu) 30%, transparent); }
+.hb-dot.on { background: var(--cap, var(--ok)); }
+.hb-dot.today { outline: 1.5px solid var(--ac-text, var(--ac)); outline-offset: 1.5px; }
+.hb-dot.fut { opacity: 0.4; }
+.hb-tick { font: inherit; font-weight: 700; width: 40px; flex: none; border: 0; border-right: 1px solid var(--glass-bd, var(--bd)); background: transparent; color: var(--mu); cursor: pointer; font-size: 15px; }
+.hb-tick[aria-pressed="true"] { background: color-mix(in srgb, var(--cap) 55%, transparent); color: var(--btn-ink, var(--tx)); }
+.hb-add { font: inherit; font-size: 12.5px; font-weight: 600; border: 1px dashed var(--bd); border-radius: 14px; background: transparent; color: var(--tx-sec); padding: 6px 12px; min-height: 40px; cursor: pointer; flex: none; }
+.hb-sug { align-items: center; gap: 6px; padding: 4px 6px 4px 10px; border-style: dashed; }
+.hb-sug-t { font-size: 12.5px; color: var(--tx-sec); white-space: nowrap; }
+.hb-dots-lg { gap: 6px; flex-wrap: wrap; }
+.hb-dots-lg .hb-dot { width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--bd); cursor: pointer; font: 600 11px var(--font-ui); color: var(--tx-sec); display: inline-flex; align-items: center; justify-content: center; --cap: var(--ok); }
+.hb-dots-lg .hb-dot.on { color: var(--btn-ink, var(--tx)); border-color: transparent; }
+.hb-dots-lg .hb-dot.today { outline-width: 2px; }
+.hb-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.hb-stats > div { background: var(--card-subtle); border: 1px solid var(--bd); border-radius: var(--radius-md); padding: 8px 10px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.hb-stats span { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--tx-sec); }
+.hb-stats b { font: 600 16px var(--font-ui); }
+.hb-heat { display: flex; gap: 2px; overflow-x: auto; padding-bottom: 2px; }
+.hb-hcol { display: flex; flex-direction: column; gap: 2px; }
+.hb-hcol i { width: 9px; height: 9px; border-radius: 2px; background: color-mix(in srgb, var(--mu) 18%, transparent); }
+.hb-hcol i.on { background: var(--ok); }
+.hb-hcol i.fut { opacity: 0.3; }
+.hb-rows { display: flex; flex-direction: column; gap: 6px; }
+.hb-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px; padding: 6px 0; border-bottom: 1px dashed var(--bd); }
+.hb-row:last-child { border-bottom: 0; }
+.hb-row-n { min-width: 0; flex: 1 1 120px; }
+.hb-row-st { color: var(--tx-sec); font-size: 12.5px; }
+.hb-ok { color: var(--ok-text); font-weight: 600; }
+.hb-miss { color: var(--wa-text); font-weight: 600; }
+.hb-arch { margin-top: 6px; opacity: 0.75; }
+.hb-ed { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--tx-sec); flex-wrap: wrap; }
+.hb-ed small { color: var(--mu); }
+@media (max-width: 699px) {
+  .hb-strip { flex-direction: column; align-items: stretch; gap: 6px; }
+  .hb-list { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -2px; padding: 0 2px 2px; -webkit-overflow-scrolling: touch; }
+  .hb-list::-webkit-scrollbar { display: none; }
+}
 .ev-linked { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--ac); margin-right: 5px; vertical-align: middle; }
 /* Cột bên lịch hẹp: bỏ nút lên/xuống (đổi thứ tự bằng kéo, hoặc ở tab Hộp việc), gom mỗi việc nhỏ về một dòng */
 .hv-box.panel .hv-mv { display: none; }
@@ -1739,6 +1789,17 @@ button.tl-lab:hover { background: linear-gradient(color-mix(in srgb, var(--ac) 1
   </div>
 </div>
 
+<!-- Modal Thói quen -->
+<div class="modal-overlay" id="hbOverlay" onclick="if (event.target.id === 'hbOverlay') closeHb()">
+  <div class="modal-sheet" style="max-width:520px;" role="dialog" aria-modal="true" aria-labelledby="hbTitle">
+    <div class="modal-header">
+      <h3 class="modal-title" id="hbTitle">Thói quen</h3>
+      <button type="button" class="btn btn-sm btn-ghost" onclick="closeHb()" title="Đóng (ESC)" aria-label="Đóng">✕</button>
+    </div>
+    <div class="modal-body" id="hbBody" onkeydown="if (event.key === 'Enter' && event.target.tagName === 'INPUT') { event.preventDefault(); hbSave(); }"></div>
+  </div>
+</div>
+
 <!-- Modal Xếp lịch (Hộp việc) -->
 <div class="modal-overlay" id="schedOverlay" onclick="if (event.target.id === 'schedOverlay') closeSched()">
   <div class="modal-sheet" style="max-width:520px;" role="dialog" aria-modal="true" aria-labelledby="schedTitle">
@@ -1848,6 +1909,7 @@ function defState() {
     gdel: [],
     tasks: [],
     projects: [],
+    habits: [],
     pm: "0",
     cfg: { defDuration: 2, burnoutHours: 6 }
   };
@@ -1870,6 +1932,7 @@ function loadDemo() {
       subs: [["Chốt ngày đi với cả nhà", 0.5], ["Đặt vé xe", 0.5], ["Đặt homestay", 1]].map(([t, h]) => ({ id: nid("s"), t, h })) });
   }
   pjDemo();
+  hbDemo();
   save();
   draw();
   showToast("Đã thêm dữ liệu mẫu", "ok");
@@ -1883,6 +1946,7 @@ function clearDemo() {
   S.tasks = S.tasks.filter(t => !t.demo);
   const demoPj = new Set((S.projects || []).filter(p => p.demo).map(p => p.id));
   S.projects = (S.projects || []).filter(p => !p.demo);
+  S.habits = (S.habits || []).filter(h => !h.demo);
   Object.values(S.ev).forEach(l => l.forEach(e => { if (demoPj.has(e.pj)) delete e.pj; }));
   S.tasks.forEach(t => { if (demoPj.has(t.pj)) delete t.pj; });
   save();
@@ -1921,6 +1985,7 @@ S.mem = S.mem || {};
 S.gdel = S.gdel || [];
 S.tasks = S.tasks || [];
 S.projects = S.projects || [];
+S.habits = S.habits || [];
 // Bản cũ ghi cả phỏng đoán của thanh ghi nhanh vào bộ nhớ (vd "học tiếng anh" → Quan hệ): xóa một lần
 if (S.memV !== 2) { S.mem = {}; S.memV = 2; }
 
@@ -2003,15 +2068,16 @@ function giveIds(ev) {
 }
 // Trước mỗi lần lưu: so với bản tab này đọc/ghi gần nhất (lastRaw), hoạt động hay việc nào đổi nội dung
 // thì ghi thời điểm sửa; hoạt động mới (hoặc trùng mã do sao chép) được cấp mã mới.
-let stampRaw, stampEv = new Map(), stampTk = new Map(), stampPj = new Map();
+let stampRaw, stampEv = new Map(), stampTk = new Map(), stampPj = new Map(), stampHb = new Map();
 const taskSig = t => JSON.stringify({ ...t, mt: 0 });
 // Mốc so sánh = dữ liệu tab này đang có ngay sau khi đọc, ghi hoặc nhận từ nơi khác (tab khác, máy khác).
 // Nhờ vậy thay đổi nhận về không bị tính là “máy này vừa sửa”.
 function stampBase(st) {
   stampRaw = lastRaw;
-  stampEv = new Map(); stampTk = new Map(); stampPj = new Map();
+  stampEv = new Map(); stampTk = new Map(); stampPj = new Map(); stampHb = new Map();
   if (!st) return;
   (st.projects || []).forEach(p => stampPj.set(p.id, taskSig(p)));
+  (st.habits || []).forEach(h => stampHb.set(h.id, taskSig(h)));
   Object.keys(st.ev).forEach(k => st.ev[k].forEach(e => { if (e.id) stampEv.set(e.id, k + "|" + evCore(e)); }));
   st.tasks.forEach(t => stampTk.set(t.id, taskSig(t)));
 }
@@ -2029,6 +2095,7 @@ function stampEdits() {
   }));
   S.tasks.forEach(t => { if (stampTk.get(t.id) !== taskSig(t)) t.mt = now; });
   (S.projects || []).forEach(p => { if (stampPj.get(p.id) !== taskSig(p)) p.mt = now; });
+  (S.habits || []).forEach(h => { if (stampHb.get(h.id) !== taskSig(h)) h.mt = now; });
 }
 const sameJ = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 // Gộp danh sách có mã (dự án): một bên sửa → bên đó; cả hai sửa → mt sau cùng; xóa thua sửa
@@ -2043,6 +2110,21 @@ function mergeById(B, M, T, trust) {
     if (x) out.push(x);
   });
   return out;
+}
+// Thói quen: như dự án, nhưng ngày đã tích gộp từng ngày (máy này tích hôm qua, máy kia tích hôm nay: giữ cả hai)
+function mergeHabits(B, M, T, trust) {
+  const out = mergeById(B, M, T, trust), by = L => new Map((L || []).map(x => [x.id, x]));
+  const mb = by(B), mm = by(M), mt = by(T);
+  return out.map(x => {
+    const m = mm.get(x.id), t = mt.get(x.id);
+    if (!m || !t) return x;
+    const b = (mb.get(x.id) || {}).ticks || {}, tm = m.ticks || {}, tt = t.ticks || {}, ticks = {};
+    new Set([...Object.keys(tm), ...Object.keys(tt)]).forEach(k => {
+      if (tm[k] && tt[k]) ticks[k] = 1;
+      else if (!(trust && b[k])) ticks[k] = 1; // chỉ một bên có: giữ, trừ khi bên kia vừa bỏ tích (có trong gốc chung)
+    });
+    return { ...x, ticks };
+  });
 }
 // Gộp hoạt động theo mã (v0.4.0):
 // - Chỉ một bên sửa so với gốc chung: lấy bên đã sửa. Cả hai cùng sửa: bản có thời điểm sửa (mt) sau cùng thắng.
@@ -2122,7 +2204,8 @@ function mergeStates(base, mine, theirs, trust) {
   });
   // Dự án: theo mã như việc; bản sửa sau cùng thắng; máy bản cũ không gửi dự án thì giữ của máy này
   const projects = oldT && !(theirs.projects || []).length ? (mine.projects || []) : mergeById(base && base.projects, mine.projects, theirs.projects, trust);
-  const known = ["ev", "caps", "bl", "mem", "cfg", "pm", "memV", "lb", "gdel", "tasks", "sv", "av", "projects"];
+  const habits = !(theirs.habits || []).length && !(base && (base.habits || []).length) ? (mine.habits || []) : mergeHabits(base && base.habits, mine.habits, theirs.habits, trust);
+  const known = ["ev", "caps", "bl", "mem", "cfg", "pm", "memV", "lb", "gdel", "tasks", "sv", "av", "projects", "habits"];
   const extra = {};
   [...new Set([...Object.keys(mine), ...Object.keys(theirs)])].filter(k => known.indexOf(k) < 0).forEach(k => {
     extra[k] = (trust && base && sameJ(mine[k], base[k])) || !(k in mine) ? theirs[k] : mine[k];
@@ -2134,6 +2217,7 @@ function mergeStates(base, mine, theirs, trust) {
     gdel: [...new Set([...(mine.gdel || []), ...(theirs.gdel || [])])].slice(-500),
     tasks,
     projects,
+    habits,
     sv: SV
   };
 }
@@ -3023,6 +3107,12 @@ function openWeeklyReviewModal(wIdx = sel) {
         ${pjWeekRowsHTML(W[wIdx])}
       </div>` : ""}
 
+      ${hbList().length ? `
+      <div style="border:1px solid var(--bd); border-radius:var(--radius-md); padding:12px; background:var(--card);">
+        <div style="font-weight:600; font-size:14px; margin-bottom:8px;">Thói quen</div>
+        ${hbWeekRowsHTML(W[wIdx])}
+      </div>` : ""}
+
       <!-- BÁNH XE CUỘC ĐỜI CỦA TUẦN ĐÓ -->
       <div style="border:1px solid var(--bd); border-radius:var(--radius-md); padding:12px; background:var(--card);">
         <div style="font-weight:600; font-size:14px; margin-bottom:4px; text-align:center;">
@@ -3144,7 +3234,7 @@ function weekStatsHTML(ws) {
   let n = 0, h = 0, up = 0, dn = 0;
   for (let i = 0; i < 7; i++) (S.ev[ky(ad(ws, i))] || []).forEach(e => { n++; h += e.h; if (e.m === "u") up += e.h; else dn += e.h; });
   const tile = (lb, v, cls) => `<div class="stat-tile ${cls || ""}"><span>${lb}</span><b>${v}</b></div>`;
-  return `<div class="stat-row" aria-label="Số liệu tuần">${tile("Hoạt động", n)}${tile("Tổng giờ", r1(h))}${tile("▲ Nạp", r1(up) + "h", "up")}${tile("▼ Tiêu", r1(dn) + "h", "down")}</div>`;
+  return `<div class="stat-row" aria-label="Số liệu tuần">${tile("Hoạt động", n)}${tile("Tổng giờ", r1(h))}${tile("▲ Nạp", r1(up) + "h", "up")}${tile("▼ Tiêu", r1(dn) + "h", "down")}</div>` + hbStripHTML();
 }
 
 function renderNav() {
@@ -4172,7 +4262,7 @@ const V = {
                 return `
                   <div class="event-item" style="--cap: ${cap.c}" onclick="openEditor('${k}', ${idx})">
                     <div class="event-item-top">
-                      <span class="event-title" title="${esc(e.t)}">${e.pj && findPj(e.pj) ? `<span class="ev-pj" style="--pj:${findPj(e.pj).col}" title="Dự án: ${esc(findPj(e.pj).n)}"></span>` : ""}${e.tk ? '<span class="ev-linked" title="Từ Hộp việc"></span>' : ""}${esc(e.t)}</span>
+                      <span class="event-title" title="${esc(e.t)}">${e.pj && findPj(e.pj) ? `<span class="ev-pj" style="--pj:${findPj(e.pj).col}" title="Dự án: ${esc(findPj(e.pj).n)}"></span>` : ""}${e.tk ? '<span class="ev-linked" title="Từ Hộp việc"></span>' : ""}${hbOfTitle(e.t) ? `<span class="ev-hb" title="Thói quen: ${esc(hbOfTitle(e.t).n)}">✓</span>` : ""}${esc(e.t)}</span>
                       <span class="${e.m === 'u' ? 'event-mode-up' : 'event-mode-down'}">${e.m === 'u' ? '▲' : '▼'}</span>
                     </div>
                     <div class="event-meta">
@@ -4234,7 +4324,7 @@ const V = {
           <div class="timeline-event-block"
                style="top:${topPx}px; height:${heightPx}px; ${capInk(cap.c)}"
                onclick="openEditor('${activeDate}', ${idx})">
-            <b>${e.s} – ${tt(e.s, e.h)}</b> · ${e.m === 'u' ? '▲' : '▼'} ${esc(e.t)} (${r1(e.h)}h)${e.pj && findPj(e.pj) ? ` <span class="tl-pj" style="--pj:${findPj(e.pj).col}">${esc(findPj(e.pj).n)}</span>` : ""}
+            <b>${e.s} – ${tt(e.s, e.h)}</b> · ${e.m === 'u' ? '▲' : '▼'} ${hbOfTitle(e.t) ? `<span class="ev-hb" title="Thói quen">✓</span>` : ""}${esc(e.t)} (${r1(e.h)}h)${e.pj && findPj(e.pj) ? ` <span class="tl-pj" style="--pj:${findPj(e.pj).col}">${esc(findPj(e.pj).n)}</span>` : ""}
           </div>
         `;
       }).join("");
@@ -4564,7 +4654,13 @@ const V = {
         <button type="button" class="btn btn-sm btn-ghost" onclick="switchTab('pj')">Xem dự án</button></div>
         ${pjWeekRowsHTML(W[sel])}
       </div>` : "";
-    return selectorBar + insightCard + wheelCard + pjCard + f168 + reportTable;
+    const hbCard = hbList().length ? `
+      <div class="card">
+        <div class="card-header"><div><h2 class="card-title">Thói quen</h2><div class="card-sub">Tuần W${sel + 1}</div></div>
+        <button type="button" class="btn btn-sm btn-ghost" onclick="switchTab('set')">Quản lý</button></div>
+        ${hbWeekRowsHTML(W[sel])}
+      </div>` : "";
+    return selectorBar + insightCard + wheelCard + hbCard + pjCard + f168 + reportTable;
   },
   // --- TAB 3: CÀI ĐẶT LOẠI VỐN (SETTINGS) ---
   set() {
@@ -4651,6 +4747,7 @@ const V = {
           </table>
         </div>
       </div>
+      ${hbManageHTML()}
       ${keywordCards}
     `;
   },
@@ -4893,6 +4990,10 @@ function renderEditorSheet() {
         </div>
       </div>
 
+      ${(() => { const hm = X ? hbOfTitle(X.t) : null; return hm
+        ? `<div class="hb-ed">Thuộc thói quen <b>${esc(hm.n)}</b> · chuỗi ${hbStats(hm).cur} ${hbUnit(hm)}</div>`
+        : `<label class="hb-ed"><input type="checkbox" id="inpHabit"> Theo dõi thành thói quen <small>tự đếm các buổi cùng tên, 3 lần/tuần</small></label>`; })()}
+
       <div class="form-row">
         <div class="form-group">
           <label class="form-label" for="inpStart">Giờ bắt đầu</label>
@@ -5033,6 +5134,10 @@ async function saveEventFromForm(keepOpen) {
   }
 
   sortL(L);
+  if ($("inpHabit") && $("inpHabit").checked && !hbOfTitle(title) && hbFold(title)) {
+    const hb = hbAdd({ n: title, c: o.c, kind: "auto", per: "week", tgt: 3, match: title });
+    setTimeout(() => showToast(`Đang theo dõi thói quen "${hb.n}"`, "ok"), 0);
+  }
   save();
   gcalFlush();
   draw();
@@ -5203,7 +5308,8 @@ function cleanState(d) {
   const gdel = Array.isArray(d.gdel) ? [...new Set(d.gdel.filter(g => typeof g === "string" && GID.test(g)))].slice(-500) : [];
   const tasks = Array.isArray(d.tasks) ? d.tasks.map(cleanTask).filter(Boolean).slice(0, 500) : [];
   const projects = Array.isArray(d.projects) ? d.projects.map(cleanProject).filter(Boolean).slice(0, 200) : [];
-  return { ...extras(d, ["ev", "caps", "bl", "mem", "memV", "cfg", "gdel", "tasks", "pm", "lb", "sv", "projects"]), projects, ev, caps, bl, mem, memV: d.memV === 2 ? 2 : 0, cfg, gdel, tasks, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
+  const hbSeen = new Set(), habits = Array.isArray(d.habits) ? d.habits.map(cleanHabit).filter(h => h && !hbSeen.has(h.id) && hbSeen.add(h.id)).slice(0, 100) : [];
+  return { ...extras(d, ["ev", "caps", "bl", "mem", "memV", "cfg", "gdel", "tasks", "pm", "lb", "sv", "projects", "habits"]), projects, habits, ev, caps, bl, mem, memV: d.memV === 2 ? 2 : 0, cfg, gdel, tasks, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
 }
 
 async function saveFile(filename, content, mime) {
@@ -5272,6 +5378,11 @@ function importData(inputEl) {
             x[f] = x[f].slice(0, max);
           });
           if (!x.desc && p.desc) x.desc = p.desc;
+        });
+        S.habits = S.habits || [];
+        (d.habits || []).forEach(h => {
+          const x = S.habits.find(y => y.id === h.id);
+          if (!x) S.habits.push(h); else x.ticks = { ...(h.ticks || {}), ...(x.ticks || {}) };
         });
         const sg = e => [e.t, e.s, e.c, e.m, e.h, e.r, e.pj || ""].join("|");
         Object.keys(d.ev).forEach(k => { const L = S.ev[k] = S.ev[k] || []; d.ev[k].forEach(e => { if (!L.some(y => sg(y) === sg(e))) L.push(e); }); sortL(L); });
@@ -5425,6 +5536,7 @@ document.addEventListener("keydown", e => {
     if (pjDet && !ed && !sch) { pjCloseItem(); return; } // bảng chi tiết nằm dưới popup hoạt động, Xếp lịch
     if (ed) closeEditor();
     closeSched();
+    closeHb();
     closeReviewModal();
     closeSettingsModal();
   }
@@ -5502,6 +5614,21 @@ let dragItem = null;        // { kind: "sub" | "task", id }
 let inboxPanel = true;
 try { inboxPanel = localStorage.getItem("lc_inbox_panel") !== "0"; } catch (e) {}
 
+// Thói quen (v0.6.0). Không dùng fold() ở đây: cleanState chạy trước khi fold được khai báo.
+function cleanHabit(x) {
+  if (!x || !SAFE_K.test(x.id || "") || typeof x.n !== "string" || !x.n.trim()) return null;
+  const D = /^\d{4}-\d\d-\d\d$/, ticks = {}, kind = x.kind === "tick" ? "tick" : "auto", per = x.per === "day" ? "day" : "week";
+  if (x.ticks && typeof x.ticks === "object") Object.keys(x.ticks).filter(k => D.test(k) && x.ticks[k]).sort().slice(-1000).forEach(k => { ticks[k] = 1; });
+  return {
+    ...extras(x, ["id", "n", "c", "kind", "key", "per", "tgt", "ticks", "sd", "arch", "mt"]),
+    id: x.id, n: x.n.trim().slice(0, 60), c: SAFE_K.test(x.c || "") ? x.c : "sk", kind,
+    ...(kind === "auto" && typeof x.key === "string" && /^[a-z0-9]{1,80}$/.test(x.key) ? { key: x.key } : {}),
+    per, tgt: per === "day" ? 7 : Math.min(7, Math.max(1, Math.round(+x.tgt) || 3)),
+    ticks, sd: D.test(x.sd || "") ? x.sd : ky(new Date()),
+    ...(x.arch ? { arch: 1 } : {}),
+    ...(Number.isFinite(+x.mt) && +x.mt > 0 ? { mt: +x.mt } : {})
+  };
+}
 // Dự án (v0.5.0). Hàm khai báo: cleanState gọi lúc mở app, không dùng hằng ở dưới.
 function cleanProject(x) {
   if (!x || !SAFE_K.test(x.id || "") || typeof x.n !== "string" || !x.n.trim()) return null;
@@ -7968,6 +8095,380 @@ function pjDemo() {
   task("Khám sức khỏe tổng quát", secs[0], { due: d(-2) });
   task("Mua giày chạy", secs[0], { done: 1 });
   task("Chuẩn bị đồ ngày thi", secs[2], { due: d(118) });
+}
+
+
+/* ==========================================================================
+   THÓI QUEN (v0.6.0, thêm trong UAT 20/10)
+   S.habits: [{ id, n, c (vốn), kind: "auto" (tự đếm buổi cùng tên trên lịch) | "tick" (tích tay),
+               key (tên hoạt động đã bỏ dấu, chỉ auto), per: "week" (tgt lần/tuần) | "day" (mỗi ngày, nghỉ 1 ngày/tuần),
+               tgt, ticks: { "YYYY-MM-DD": 1 }, sd, arch?, mt }]
+   Chuỗi kiểu mềm: theo tuần thì đếm số tuần liên tiếp đạt; mỗi ngày thì mỗi tuần được nghỉ 1 ngày không đứt chuỗi.
+   Tuần hoặc ngày hôm nay chưa xong không làm đứt chuỗi.
+   ========================================================================== */
+const HB_MS = { day: [7, 21, 30, 66, 100, 200, 365], week: [4, 8, 12, 26, 52] };
+const hbFoldM = new Map();
+function hbFold(t) {
+  let v = hbFoldM.get(t);
+  if (v === undefined) { v = fold(t); if (hbFoldM.size > 5000) hbFoldM.clear(); hbFoldM.set(t, v); }
+  return v;
+}
+const hbKey = h => h.key || fold(h.n);
+const hbList = (arch = false) => (S.habits || []).filter(h => !!h.arch === arch);
+const findHb = id => (S.habits || []).find(h => h.id === id);
+const hbUnit = h => h.per === "day" ? "ngày" : "tuần";
+const monKey = k => { const d = new Date(k + "T00:00"); return ky(ad(d, -((d.getDay() + 6) % 7))); };
+// Thói quen tự đếm mà hoạt động này thuộc về
+function hbOfTitle(t) {
+  const f = hbFold(t);
+  return f ? hbList().find(h => h.kind === "auto" && hbKey(h) === f) : null;
+}
+// Các ngày đã làm
+function hbDays(h) {
+  if (h.kind === "tick") return new Set(Object.keys(h.ticks || {}));
+  const key = hbKey(h), out = new Set();
+  if (!key) return out;
+  Object.keys(S.ev).forEach(k => { if (S.ev[k].some(e => hbFold(e.t) === key)) out.add(k); });
+  return out;
+}
+// Chuỗi hiện tại, kỷ lục, số lần tuần này
+function hbStats(h, days = hbDays(h)) {
+  const today = tk, list = [...days].filter(k => k <= today).sort(), wk0 = monKey(today);
+  // chỉ tính ngày đã qua và hôm nay: buổi đã xếp cho những ngày tới chưa phải là đã làm
+  const weekCount = w => { let n = 0; for (let j = 0; j < 7; j++) { const k = ky(ad(new Date(w + "T00:00"), j)); if (k <= today && days.has(k)) n++; } return n; };
+  const thisWeek = weekCount(wk0);
+  let cur = 0, best = 0;
+  if (list.length) {
+    if (h.per === "week") {
+      for (let w = monKey(list[0]); w <= wk0; w = ky(ad(new Date(w + "T00:00"), 7))) {
+        if (weekCount(w) >= h.tgt) cur++;
+        else if (w !== wk0) cur = 0;
+        best = Math.max(best, cur);
+      }
+    } else {
+      let miss = new Map();
+      for (let d = new Date(list[0] + "T00:00"), k = list[0]; k <= today; d = ad(d, 1), k = ky(d)) {
+        if (days.has(k)) cur++;
+        else if (k !== today) {
+          const w = monKey(k), n = (miss.get(w) || 0) + 1;
+          miss.set(w, n);
+          if (n > 1) { cur = 0; miss = new Map(); }
+        }
+        best = Math.max(best, cur);
+      }
+    }
+  }
+  const left = 7 - ((new Date(today + "T00:00").getDay() + 6) % 7); // số ngày còn lại trong tuần, gồm hôm nay
+  const need = h.per === "week" ? Math.max(0, h.tgt - thisWeek) : 0;
+  return { cur, best, thisWeek, total: list.length, need, behind: need > 0 && need >= left - 1, doneToday: days.has(today), days };
+}
+function hbDots(h, days, wk0, tickable) {
+  return [0, 1, 2, 3, 4, 5, 6].map(j => {
+    const k = ky(ad(new Date(wk0 + "T00:00"), j)), on = days.has(k), cls = `${on ? "on" : ""} ${k === tk ? "today" : ""} ${k > tk ? "fut" : ""}`;
+    const lb = `${DN_SHORT[j]} ${dm(k)}: ${k > tk ? (on ? "đã xếp lịch" : "chưa tới") : on ? "đã làm" : "chưa làm"}`;
+    return tickable && k <= tk
+      ? `<button type="button" class="hb-dot ${cls}" onclick="hbTick('${h.id}','${k}')" aria-pressed="${on}" aria-label="${lb}"><span>${DN_SHORT[j]}</span></button>`
+      : `<i class="hb-dot ${cls}" title="${lb}"></i>`;
+  }).join("");
+}
+// Gợi ý: hoạt động có từ 3 ngày trở lên trong 14 ngày qua, chưa là thói quen, chưa bị bỏ qua trên máy này
+function hbDismissed() { try { return JSON.parse(localStorage.getItem("lc_hb_dis") || "[]"); } catch (e) { return []; } }
+function hbSuggest() {
+  const keys = new Set((S.habits || []).map(hbKey)), dis = new Set(hbDismissed()), seen = new Map();
+  for (let j = 0; j < 14; j++) {
+    const k = ky(ad(new Date(tk + "T00:00"), -j));
+    (S.ev[k] || []).forEach(e => {
+      const f = hbFold(e.t);
+      if (!f || keys.has(f) || dis.has(f)) return;
+      const x = seen.get(f) || { t: e.t, c: e.c, days: new Set() };
+      x.days.add(k);
+      seen.set(f, x);
+    });
+  }
+  let best = null;
+  seen.forEach((x, f) => { if (x.days.size >= 3 && (!best || x.days.size > best.n)) best = { key: f, t: x.t, c: x.c, n: x.days.size }; });
+  return best;
+}
+const hbLast = new Map();
+function hbStripHTML() {
+  const L = hbList(), sug = hbSuggest(), wk0 = monKey(tk), msg = [];
+  const chips = L.map(h => {
+    const st = hbStats(h), cap = CM(h.c), tick = h.kind === "tick";
+    const prev = hbLast.get(h.id);
+    if (prev != null && st.cur > prev && HB_MS[h.per].includes(st.cur)) msg.push(`${h.n}: ${st.cur} ${hbUnit(h)} liên tiếp`);
+    hbLast.set(h.id, st.cur);
+    const prog = h.per === "week" ? `${st.thisWeek}/${h.tgt}` : "";
+    return `<div class="hb-chip ${st.behind ? "behind" : ""} ${st.doneToday ? "done" : ""}" style="--cap:${cap.c}">
+      ${tick ? `<button type="button" class="hb-tick" onclick="hbTick('${h.id}')" aria-pressed="${st.doneToday}" aria-label="${st.doneToday ? "Bỏ tích" : "Tích"} hôm nay: ${esc(h.n)}">✓</button>` : ""}
+      <button type="button" class="hb-main" onclick="hbOpen('${h.id}')" title="${esc(h.n)}: chuỗi ${st.cur} ${hbUnit(h)}, kỷ lục ${st.best}${st.behind ? `, tuần này còn thiếu ${st.need} lần` : ""}">
+        <span class="hb-n">${esc(h.n)}</span>
+        <span class="hb-st"><b>${st.cur}</b> ${hbUnit(h)}</span>
+        <span class="hb-dots" aria-hidden="true">${hbDots(h, st.days, wk0, false)}</span>
+        ${prog ? `<span class="hb-wk">${st.behind ? `thiếu ${st.need}` : prog}</span>` : ""}
+      </button>
+    </div>`;
+  }).join("");
+  if (msg.length) setTimeout(() => showToast(msg.join(" · "), "ok"), 0);
+  const sugHTML = sug ? `<div class="hb-chip hb-sug" style="--cap:${CM(sug.c).c}">
+      <span class="hb-sug-t">Gợi ý: <b>${esc(sug.t)}</b> · ${sug.n} ngày trong 2 tuần</span>
+      <button type="button" class="btn btn-sm btn-primary" onclick="hbFromSuggest()">Theo dõi</button>
+      <button type="button" class="btn btn-sm btn-ghost" onclick="hbDismiss('${sug.key}')" aria-label="Bỏ qua gợi ý">Bỏ qua</button>
+    </div>` : "";
+  return `<div class="hb-strip" aria-label="Thói quen">
+    <span class="hb-lbl">Thói quen</span>
+    <div class="hb-list">${chips}${sugHTML}<button type="button" class="hb-add" onclick="hbOpen()">${L.length ? "+" : "+ Thêm thói quen"}</button></div>
+  </div>`;
+}
+function hbTick(id, k = tk) {
+  const h = findHb(id);
+  if (!h || h.kind !== "tick" || k > tk) return;
+  h.ticks = h.ticks || {};
+  if (h.ticks[k]) delete h.ticks[k]; else h.ticks[k] = 1;
+  save(); draw();
+  if (hbEd && hbEd.id === id) hbRender();
+}
+function hbDismiss(key) {
+  const d = hbDismissed();
+  d.push(key);
+  try { localStorage.setItem("lc_hb_dis", JSON.stringify(d.slice(-200))); } catch (e) {}
+  draw();
+}
+function hbAdd(o) {
+  const h = { id: nid("h"), n: o.n.trim().slice(0, 60), c: o.c, kind: o.kind, per: o.per, tgt: o.per === "day" ? 7 : o.tgt, ticks: {}, sd: tk };
+  if (h.kind === "auto") h.key = fold(o.match || o.n);
+  S.habits = S.habits || [];
+  S.habits.push(h);
+  return h;
+}
+function hbFromSuggest() {
+  const sug = hbSuggest();
+  if (!sug) return;
+  const h = hbAdd({ n: sug.t, c: sug.c, kind: "auto", per: "week", tgt: 3, match: sug.t });
+  save(); draw();
+  showToast(`Đã theo dõi "${h.n}": 3 lần mỗi tuần, đổi được khi bấm vào`, "ok");
+}
+
+/* Bảng thói quen: thêm, sửa, xem lịch sử */
+let hbEd = null; // { id, d: bản nháp }
+function hbOpen(id) {
+  const h = id ? findHb(id) : null;
+  if (id && !h) return;
+  hbEd = { id: h ? h.id : null, d: h ? { n: h.n, c: h.c, kind: h.kind, per: h.per, tgt: h.per === "day" ? 3 : h.tgt, match: h.kind === "auto" ? hbMatchTitle(h) : h.n }
+                                     : { n: "", c: S.caps[0] ? S.caps[0].k : "sk", kind: "auto", per: "week", tgt: 3, match: "" } };
+  LF = document.activeElement;
+  hbRender();
+  $("hbOverlay").classList.add("open");
+  // Sửa: giữ phần chuỗi, kỷ lục ở đầu bảng trong tầm nhìn (đặt con trỏ vào nút Lưu mà không cuộn xuống)
+  setTimeout(() => { const i = $("hbName"); if (i && !id) i.focus(); else { const b = $("hbSave"); if (b) b.focus({ preventScroll: true }); $("hbBody").scrollTop = 0; } }, 80);
+}
+function closeHb() {
+  if (!hbEd) return;
+  hbEd = null;
+  $("hbOverlay").classList.remove("open");
+  restoreFocus();
+}
+// Tên hoạt động gần nhất khớp thói quen (để hiện có dấu)
+function hbMatchTitle(h) {
+  const key = hbKey(h), ks = Object.keys(S.ev).sort().reverse();
+  for (const k of ks) { const e = S.ev[k].find(x => hbFold(x.t) === key); if (e) return e.t; }
+  return h.n;
+}
+function hbSet(f, v) {
+  if (!hbEd) return;
+  hbEd.d[f] = v;
+  if (f === "n" && hbEd.d.kind === "auto" && !hbEd.id && !hbEd.matchTouched) hbEd.d.match = v;
+  if (f === "match") hbEd.matchTouched = true;
+  if (["kind", "per", "tgt", "c"].includes(f)) hbRender();
+  else if (f === "match" || f === "n") { const m = $("hbMatchInfo"); if (m) m.innerHTML = hbMatchInfo(); }
+}
+function hbMatchInfo() {
+  const key = fold(hbEd.d.match || "");
+  if (!key) return "Nhập tên hoạt động như khi ghi trên lịch.";
+  let n = 0;
+  for (let j = 0; j < 30; j++) n += (S.ev[ky(ad(new Date(tk + "T00:00"), -j))] || []).filter(e => hbFold(e.t) === key).length;
+  return n ? `Khớp ${n} buổi trong 30 ngày qua. Không phân biệt hoa thường, có dấu hay không.` : "Chưa có buổi nào cùng tên trong 30 ngày qua; buổi ghi sau này sẽ được đếm.";
+}
+function hbHeat(h, days) {
+  // 26 tuần gần nhất, mỗi cột một tuần (T2 trên cùng)
+  const wk0 = new Date(monKey(tk) + "T00:00"), cols = [];
+  for (let w = 25; w >= 0; w--) {
+    const m = ad(wk0, -7 * w);
+    cols.push(`<div class="hb-hcol">${[0, 1, 2, 3, 4, 5, 6].map(j => { const k = ky(ad(m, j)); return `<i class="${days.has(k) ? "on" : ""} ${k > tk ? "fut" : ""}" title="${dm(k)}"></i>`; }).join("")}</div>`);
+  }
+  return `<div class="hb-heat" role="img" aria-label="${days.size} ngày đã làm trong 26 tuần">${cols.join("")}</div>`;
+}
+function hbRender() {
+  if (!hbEd) return;
+  const d = hbEd.d, h = hbEd.id ? findHb(hbEd.id) : null;
+  if (hbEd.id && !h) { closeHb(); return; }
+  const seg = (f, v, lb) => `<button type="button" class="${d[f] === v ? "on" : ""}" aria-pressed="${d[f] === v}" onclick="hbSet('${f}','${v}')">${lb}</button>`;
+  let stats = "";
+  if (h) {
+    const st = hbStats(h);
+    stats = `
+      <div class="hb-stats">
+        <div><span>Chuỗi</span><b>${st.cur} ${hbUnit(h)}</b></div>
+        <div><span>Kỷ lục</span><b>${st.best} ${hbUnit(h)}</b></div>
+        <div><span>${h.per === "week" ? "Tuần này" : "Tổng"}</span><b>${h.per === "week" ? `${st.thisWeek}/${h.tgt} lần` : `${st.total} ngày`}</b></div>
+      </div>
+      ${h.kind === "tick" ? `<div class="form-group"><span class="form-label">Tuần này · bấm để tích hoặc bỏ tích</span><div class="hb-dots hb-dots-lg">${hbDots(h, st.days, monKey(tk), true)}</div></div>` : ""}
+      <div class="form-group"><span class="form-label">26 tuần gần nhất</span>${hbHeat(h, st.days)}</div>
+      ${h.kind === "auto" && st.need > 0 && !h.arch ? `<div class="sch-note ${st.behind ? "warn" : ""}">Tuần này còn thiếu ${st.need} lần. <button type="button" class="btn btn-sm" onclick="hbPlanOne('${h.id}')">Xếp 1 buổi</button></div>` : ""}`;
+  }
+  $("hbTitle").textContent = h ? h.n : "Thêm thói quen";
+  $("hbBody").innerHTML = `
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      ${stats}
+      <div class="form-group">
+        <label class="form-label" for="hbName">Tên</label>
+        <input id="hbName" value="${esc(d.n)}" maxlength="60" placeholder="vd: Chạy bộ, Uống đủ nước" oninput="hbSet('n', this.value)">
+      </div>
+      <div class="form-group">
+        <span class="form-label">Cách đếm</span>
+        <div class="set-seg">${seg("kind", "auto", "Tự đếm từ lịch")}${seg("kind", "tick", "Tích tay")}</div>
+        ${d.kind === "auto" ? `
+          <input id="hbMatch" value="${esc(d.match)}" maxlength="80" placeholder="Tên hoạt động trên lịch" aria-label="Tên hoạt động trên lịch" oninput="hbSet('match', this.value)" style="margin-top:6px;">
+          <small id="hbMatchInfo" style="color:var(--mu);">${hbMatchInfo()}</small>`
+        : `<small style="color:var(--mu);">Cho việc nhỏ không cần xếp lịch: bấm ✓ trên dải Thói quen mỗi ngày.</small>`}
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="hbCap">Loại vốn</label>
+          <select id="hbCap" onchange="hbSet('c', this.value)">${S.caps.map(c => `<option value="${c.k}" ${c.k === d.c ? "selected" : ""}>${esc(c.n)}</option>`).join("")}</select>
+        </div>
+        <div class="form-group">
+          <span class="form-label">Tần suất</span>
+          <div class="set-seg">${seg("per", "week", "Mỗi tuần")}${seg("per", "day", "Mỗi ngày")}</div>
+        </div>
+      </div>
+      ${d.per === "week" ? `
+        <div class="form-group">
+          <label class="form-label" for="hbTgt">Số lần mỗi tuần</label>
+          <select id="hbTgt" onchange="hbSet('tgt', +this.value)">${[1, 2, 3, 4, 5, 6, 7].map(n => `<option value="${n}" ${n === d.tgt ? "selected" : ""}>${n} lần</option>`).join("")}</select>
+          <small style="color:var(--mu);">Chuỗi đếm số tuần liên tiếp đạt; bỏ một ngày không sao.</small>
+        </div>` : `<small style="color:var(--mu);">Mỗi tuần được nghỉ 1 ngày mà không đứt chuỗi.</small>`}
+      <div style="display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-top:4px;">
+        <div class="row" style="gap:6px;">
+          ${h ? `<button type="button" class="btn btn-ghost" onclick="hbArchive('${h.id}')">${h.arch ? "Theo dõi lại" : "Lưu trữ"}</button>
+          <button type="button" class="btn btn-ghost" style="color:var(--bad)" onclick="hbDelete('${h.id}')">Xóa</button>` : ""}
+        </div>
+        <div class="row" style="gap:6px;">
+          <button type="button" class="btn btn-ghost" onclick="closeHb()">Hủy</button>
+          <button type="button" class="btn btn-primary" id="hbSave" onclick="hbSave()">${h ? "Lưu" : "Thêm"}</button>
+        </div>
+      </div>
+    </div>`;
+}
+function hbSave() {
+  if (!hbEd) return;
+  const d = hbEd.d, n = (($("hbName") || {}).value || d.n || "").trim();
+  if (!n) { showToast("Nhập tên thói quen", "bad"); const i = $("hbName"); if (i) i.focus(); return; }
+  const match = d.kind === "auto" ? ((($("hbMatch") || {}).value || d.match || n).trim()) : "";
+  const key = d.kind === "auto" ? fold(match) : "";
+  if (d.kind === "auto" && !key) { showToast("Nhập tên hoạt động để đếm", "bad"); return; }
+  const dup = key && (S.habits || []).find(x => x.id !== hbEd.id && x.kind === "auto" && hbKey(x) === key);
+  if (dup) { showToast(`"${dup.n}" đã theo dõi hoạt động này`, "bad"); return; }
+  let h = hbEd.id ? findHb(hbEd.id) : null;
+  if (!h) h = hbAdd({ ...d, n, match });
+  else {
+    Object.assign(h, { n: n.slice(0, 60), c: d.c, kind: d.kind, per: d.per, tgt: d.per === "day" ? 7 : d.tgt });
+    if (d.kind === "auto") h.key = key; else delete h.key;
+    h.ticks = h.ticks || {};
+  }
+  save(); closeHb(); draw();
+  showToast(hbEd === null ? `Đã lưu "${h.n}"` : "Đã lưu", "ok");
+}
+function hbArchive(id) {
+  const h = findHb(id);
+  if (!h) return;
+  if (h.arch) delete h.arch; else h.arch = 1;
+  save(); closeHb(); draw();
+  showToast(h.arch ? `Đã lưu trữ "${h.n}"` : `Đang theo dõi lại "${h.n}"`, "ok");
+}
+function hbDelete(id) {
+  const i = (S.habits || []).findIndex(h => h.id === id);
+  if (i < 0) return;
+  const h = S.habits[i];
+  S.habits.splice(i, 1);
+  save(); closeHb(); draw();
+  offerUndo(`Đã xóa thói quen "${h.n}"`, () => { if (!findHb(h.id)) S.habits.splice(Math.min(i, S.habits.length), 0, h); });
+}
+// Thói quen tự đếm còn thiếu lần trong tuần: mở popup thêm hoạt động ở khoảng trống sớm nhất
+function hbPlanOne(id) {
+  const h = findHb(id);
+  if (!h) return;
+  const key = hbKey(h), past = [];
+  Object.keys(S.ev).forEach(k => S.ev[k].forEach(e => { if (hbFold(e.t) === key) past.push(e.h); }));
+  past.sort((a, b) => a - b);
+  const dur = past.length ? past[past.length >> 1] : 1, c = schCfg(), days = hbDays(h);
+  const left = 7 - ((new Date(tk + "T00:00").getDay() + 6) % 7);
+  let at = null;
+  for (let j = 0; j < Math.max(left, 1) + 7 && !at; j++) {
+    const k = ky(ad(new Date(tk + "T00:00"), j));
+    if (days.has(k)) continue;
+    const g = gapAt(k, k === tk ? Math.max(c.from, nowMin()) : c.from, c.to, dur, new Set());
+    if (g != null) at = { k, s: hmOf(g) };
+  }
+  if (!at) { showToast("Không còn khoảng trống trong tuần", "bad"); return; }
+  const title = hbMatchTitle(h);
+  closeHb();
+  openEditor(at.k);
+  capTouched = true;
+  $("inpTitle").value = title;
+  $("inpCap").value = h.c;
+  $("inpStart").value = at.s;
+  $("inpHours").value = dur;
+}
+// Tổng kết tuần, Tổng quan: mỗi thói quen một dòng
+let hbShowArch = false;
+function hbManageHTML() {
+  const L = hbList(), A = hbList(true);
+  const row = h => { const st = hbStats(h); return `
+    <div class="hb-row" style="--cap:${CM(h.c).c}">
+      <span class="dot" style="background:${CM(h.c).c}"></span>
+      <b class="hb-row-n">${esc(h.n)}</b>
+      <span class="hb-row-st">${h.kind === "auto" ? "Tự đếm" : "Tích tay"} · ${h.per === "week" ? `${h.tgt} lần/tuần` : "mỗi ngày"} · chuỗi ${st.cur} ${hbUnit(h)} · kỷ lục ${st.best}</span>
+      <button type="button" class="btn btn-sm" onclick="hbOpen('${h.id}')">Sửa</button>
+    </div>`; };
+  return `
+    <div class="card" style="margin-top:16px;">
+      <div class="card-header">
+        <div><h2 class="card-title">Thói quen</h2><div class="card-sub">Mỗi thói quen thuộc một loại vốn; tự đếm các buổi cùng tên trên lịch hoặc tích tay</div></div>
+        <button type="button" class="btn btn-primary btn-sm" onclick="hbOpen()">Thêm thói quen</button>
+      </div>
+      ${L.length ? `<div class="hb-rows">${L.map(row).join("")}</div>` : `<p style="color:var(--mu); font-size:13px; margin:0;">Chưa có thói quen. Ghi một hoạt động vài lần, app sẽ gợi ý trên tab Lịch.</p>`}
+      ${A.length ? `<button type="button" class="btn btn-sm btn-ghost" style="margin-top:8px;" onclick="hbShowArch = !hbShowArch; draw()">${hbShowArch ? "Ẩn" : "Xem"} đã lưu trữ (${A.length})</button>${hbShowArch ? `<div class="hb-rows hb-arch">${A.map(row).join("")}</div>` : ""}` : ""}
+    </div>`;
+}
+function hbWeekRowsHTML(ws) {
+  const L = hbList();
+  if (!L.length) return "";
+  const w0 = ky(ws);
+  return `<div class="hb-rows">${L.map(h => {
+    const st = hbStats(h);
+    let n = 0;
+    for (let j = 0; j < 7; j++) { const k = ky(ad(ws, j)); if (k <= tk && st.days.has(k)) n++; }
+    const goal = h.per === "week" ? h.tgt : 6, ok = n >= goal;
+    return `<div class="hb-row" style="--cap:${CM(h.c).c}">
+      <span class="dot" style="background:${CM(h.c).c}"></span>
+      <b class="hb-row-n">${esc(h.n)}</b>
+      <span class="${ok ? "hb-ok" : w0 < monKey(tk) ? "hb-miss" : ""}">${n}/${h.per === "week" ? h.tgt + " lần" : "7 ngày"}</span>
+      <span class="hb-row-st">chuỗi ${st.cur} ${hbUnit(h)} · kỷ lục ${st.best}</span>
+    </div>`;
+  }).join("")}</div>`;
+}
+function hbDemo() {
+  if ((S.habits || []).some(h => h.demo)) return;
+  const sk = S.caps.some(c => c.k === "sk") ? "sk" : (S.caps[0] || {}).k;
+  if (!sk) return;
+  S.habits = S.habits || [];
+  const ticks = {};
+  for (let j = 1; j <= 20; j++) if (j % 6) ticks[ky(ad(new Date(tk + "T00:00"), -j))] = 1;
+  // 3 tuần trước mỗi tuần 2 buổi Chạy bộ: chuỗi mẫu 3 tuần
+  const m0 = new Date(monKey(tk) + "T00:00");
+  [-21, -19, -14, -11, -7, -5].forEach(n => { const k = ky(ad(m0, n)), L = S.ev[k] = S.ev[k] || []; if (!L.some(e => e.t === "Chạy bộ")) { L.push({ t: "Chạy bộ", c: sk, m: "u", h: 1, s: "06:30", demo: 1 }); sortL(L); } });
+  S.habits.push({ id: nid("h"), n: "Chạy bộ", c: sk, kind: "auto", key: fold("Chạy bộ"), per: "week", tgt: 2, ticks: {}, sd: tk, demo: 1 },
+                { id: nid("h"), n: "Uống đủ nước", c: sk, kind: "tick", per: "day", tgt: 7, ticks, sd: tk, demo: 1 });
 }
 
 // Khởi chạy ứng dụng
