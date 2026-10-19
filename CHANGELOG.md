@@ -2,6 +2,15 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.5.1 · Dọn mã · 19/10/2026
+
+Không đổi giao diện hay tính năng.
+
+- Bỏ 122 khai báo CSS đã bị khai báo sau ghi đè và 11 quy tắc CSS rỗng, phần còn sót từ lần làm lại giao diện kính.
+- Bỏ các biến JavaScript không còn dùng và biểu tượng emoji trong danh sách tab (không còn hiển thị).
+- README.md và life-capital.md không còn chép nguyên mã app (mỗi tệp từ khoảng 362 KB còn 18 KB); mục Mã nguồn trỏ tới `index.html`, ghi chú phát hành và test.
+- Đã so kiểu hiển thị của mọi phần tử giữa bản cũ và bản mới trên 88 màn hình (máy tính, điện thoại, cửa sổ hẹp; sáng, tối, giảm hiệu ứng): giống hệt. Test gộp dữ liệu 20/20 đạt.
+
 ## v0.5.0 · Dự án · 18/10/2026
 
 Gắn hoạt động và việc vào dự án để biết thời gian đang dồn vào mục tiêu lớn nào. Không bắt buộc: ăn cơm, di chuyển… cứ để trống.
