@@ -1120,12 +1120,13 @@ details.fold[open] > summary .set-sum { display: none; }
   --glass-bd: rgba(255, 255, 255, 0.62);
   --sheen: linear-gradient(135deg, rgba(255, 255, 255, 0.58) 0%, rgba(255, 255, 255, 0.16) 42%, rgba(255, 255, 255, 0.05) 100%);
   --glass-shadow: 0 8px 32px rgba(100, 40, 65, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.75), inset 0 -1px 1px rgba(255, 255, 255, 0.18);
-  --blur: blur(calc(8px + var(--bg-blur, 8px) * 0.6)) saturate(170%);
+  --blur: blur(14px) saturate(170%); /* kính mờ cố định: trước đây đi theo thanh độ mờ nền, kéo một lần phải vẽ lại cả trang (~200ms) */
   --pill-sheen: rgba(255, 255, 255, 0.62);
   --pill-mix: 50%;
   --veil: rgba(255, 255, 255, 0.18);
   --font-ui: ui-rounded, "SF Pro Rounded", "Helvetica Neue", Helvetica, "Segoe UI", Arial, sans-serif;
   --field: rgba(255, 255, 255, 0.42);
+  --set-sheet: color-mix(in srgb, var(--bg) 86%, transparent);
   --overlay: rgba(60, 30, 45, 0.14);
   --card: rgba(255, 255, 255, 0.40);
   --card-subtle: rgba(255, 255, 255, 0.26);
@@ -1156,7 +1157,7 @@ details.fold[open] > summary .set-sum { display: none; }
 }
 
 /* Ảnh nền riêng: phủ một lớp mờ cho dịu, các tấm kính làm mờ thêm lần nữa */
-body::before { filter: blur(var(--bg-blur, 8px)); }
+body::before { filter: blur(8px); will-change: filter; } /* độ mờ thật đặt trong <style id="bgBlurCss"> */
 body.has-bg::before { background: linear-gradient(var(--veil), var(--veil)), var(--bg-img) center / cover no-repeat, var(--bg); }
 
 .card, .quick-capture-box, .app-header, .sidebar, .day-card, .timeline-container, .stat-tile, .inbox-aside, .table-wrapper, .review-prompt-banner, .modal-sheet, .toast, .hv-task {
@@ -1212,7 +1213,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--ac); box-shadow:
 table.calendar-table th { background: var(--sheen), var(--glass-hi); color: var(--tx); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); }
 .save-alert { background: linear-gradient(135deg, var(--pill-sheen), color-mix(in srgb, var(--bad) 35%, transparent)), var(--glass); }
 /* Thanh kéo độ mờ: tự vẽ để nút kéo đủ lớn cho ngón tay; touch-action none để iPhone không cuộn bảng khi kéo */
-.bg-range { -webkit-appearance: none; appearance: none; flex: 1 1 150px; min-width: 120px; max-width: 220px; height: 32px; margin: 0; background: transparent; touch-action: none; cursor: pointer; }
+.bg-range { -webkit-appearance: none; appearance: none; flex: 1 1 150px; min-width: 120px; max-width: 260px; height: 32px; margin: 0; background: transparent; touch-action: none; cursor: pointer; }
 .bg-range::-webkit-slider-runnable-track { height: 6px; border-radius: 99px; background: linear-gradient(90deg, color-mix(in srgb, var(--ac) 70%, transparent), color-mix(in srgb, var(--tx) 22%, transparent)); }
 .bg-range::-webkit-slider-thumb { -webkit-appearance: none; width: 26px; height: 26px; margin-top: -10px; border-radius: 50%; background: #fff; border: 1px solid color-mix(in srgb, var(--tx) 18%, transparent); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22); }
 .bg-range::-moz-range-track { height: 6px; border-radius: 99px; background: color-mix(in srgb, var(--tx) 22%, transparent); }
@@ -1220,7 +1221,10 @@ table.calendar-table th { background: var(--sheen), var(--glass-hi); color: var(
 .bg-range::-moz-range-thumb { width: 26px; height: 26px; border-radius: 50%; background: #fff; border: 1px solid color-mix(in srgb, var(--tx) 18%, transparent); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22); }
 .bg-range:focus-visible { outline: 2px solid var(--ac); outline-offset: 4px; border-radius: 99px; }
 /* Hàng chứa thanh kéo luôn có sẵn đệm và viền trong suốt: lúc kéo chỉ đổi màu, không xê dịch dưới ngón tay */
-.set-row.bg-blur-row { margin-inline: -13px; padding: 8px 12px; border: 1px solid transparent; border-radius: 14px; }
+.set-row.bg-blur-row { margin-inline: -14px; padding: 8px 14px; border: 1px solid transparent; border-top-color: var(--bd); }
+body.bg-peek .set-row.bg-blur-row { border-radius: 14px; border-top-color: var(--glass-bd); }
+/* thanh kéo không mang khung của ô nhập */
+.set-row input.bg-range { height: 32px; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
 .bg-range:disabled { opacity: 0.45; }
 body.bg-peek .modal-sheet, body.bg-peek .modal-sheet * { transition: none !important; }
 html.bg-peek, html.bg-peek * { scrollbar-color: transparent transparent; }
@@ -1233,19 +1237,47 @@ body.bg-peek .modal-sheet .modal-header, body.bg-peek .modal-body > *:not(.set-b
 body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(--glass-hi); border-color: var(--glass-bd); box-shadow: var(--glass-shadow); }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 .chg { font-weight: 600; background: color-mix(in srgb, var(--ac) 22%, transparent); border-radius: 4px; padding: 0 3px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ac) 45%, transparent); }
-.set-sec { padding: 14px 0; border-bottom: 1px solid var(--bd); }
-.set-sec:first-child { padding-top: 0; }
-.set-sec:last-child { border-bottom: none; padding-bottom: 0; }
-.set-h { margin: 0 0 6px; font-size: 11.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--mu); }
+/* Cài đặt: mỗi mục một thẻ; hàng cao đều, nhãn trái, điều khiển phải, kẻ mảnh giữa các hàng */
+#settingsModalOverlay .modal-sheet { background: var(--sheen), var(--set-sheet); }
+#settingsModalOverlay .modal-body { display: flex; flex-direction: column; gap: 12px; }
+.set-sec { background: var(--card); border: 1px solid var(--glass-bd); border-radius: 16px; padding: 0 14px; }
+.set-h { margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tx-sec); }
+details.set-sec > summary { min-height: 48px; }
+details.set-sec[open] > summary { margin-bottom: 0; border-bottom: 1px solid var(--bd); }
+.set-danger { border-color: color-mix(in srgb, var(--bad) 35%, transparent); }
 .set-danger .set-h { color: var(--bad); }
-.set-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 6px 0; }
-.set-lbl { display: flex; flex-direction: column; gap: 2px; font-size: 13.5px; color: var(--tx); }
-.set-lbl small { font-size: 12px; font-weight: 400; color: var(--mu); }
-.set-note { margin: 0 0 10px; font-size: 12.5px; color: var(--mu); }
-.set-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+.set-row { display: flex; align-items: center; justify-content: space-between; gap: 10px 16px; min-height: 52px; padding: 8px 0; }
+.set-row + .set-row, .set-note + .set-row, .set-row + .set-actions, #cloudSec + .set-row { border-top: 1px solid var(--bd); }
+.set-lbl { display: flex; flex-direction: column; gap: 2px; font-size: 14px; color: var(--tx); min-width: 0; flex: 1 1 160px; }
+.set-lbl small { font-size: 12px; font-weight: 400; color: var(--mu); line-height: 1.4; }
+.set-val { font-size: 13px; color: var(--tx-sec); overflow-wrap: anywhere; }
+.set-note { margin: 10px 0 2px; font-size: 12.5px; line-height: 1.45; color: var(--tx-sec); }
+.set-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; padding: 10px 0; }
 .set-inline { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
-.set-row select { min-width: 0; width: auto; }
-.set-seg { display: inline-flex; border: 1px solid var(--glass-bd); border-radius: var(--radius-full); overflow: hidden; }
+.set-top { align-items: flex-start; }
+.set-list { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
+.set-stack { flex-direction: column; align-items: stretch; }
+.set-stack .set-lbl { flex: none; }
+.set-row select, .set-row input[type=text] { min-width: 0; width: auto; height: 36px; padding: 0 10px; border-radius: 10px; font-size: 13.5px; }
+.set-row .btn-sm { min-height: 36px; padding-inline: 14px; }
+.set-mono { width: 100% !important; font: 12.5px ui-monospace, SFMono-Regular, Menlo, monospace; }
+/* Công tắc bật/tắt */
+.set-switch { -webkit-appearance: none; appearance: none; flex: none; width: 46px; height: 28px; margin: 0; border-radius: 99px; background: color-mix(in srgb, var(--mu) 35%, transparent); border: 1px solid var(--glass-bd); position: relative; cursor: pointer; transition: background 0.15s; }
+.set-switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25); transition: transform 0.15s; }
+.set-switch:checked { background: var(--c-olive, var(--ok)); }
+.set-switch:checked::after { transform: translateX(18px); }
+.set-switch:focus-visible { outline: 2px solid var(--ac); outline-offset: 2px; }
+.bg-blur-ctl { flex: 1 1 200px; flex-wrap: nowrap; }
+.bg-blur-ctl output { min-width: 2ch; text-align: right; font: 600 13px var(--font-ui); font-variant-numeric: tabular-nums; color: var(--tx-sec); }
+body.bg-peek .set-sec { background: transparent; border-color: transparent; }
+body.bg-peek #settingsModalOverlay .modal-sheet { background: transparent; }
+@media (max-width: 480px) {
+  .set-row { flex-wrap: wrap; }
+  .set-row > .set-inline, .set-row > select, .set-row > .btn { margin-left: auto; }
+  .set-list { align-items: stretch; width: 100%; }
+  .set-list .set-inline { justify-content: space-between; }
+}
+.set-seg { display: inline-flex; border: 1px solid var(--bd); border-radius: var(--radius-full); overflow: hidden; background: var(--field); }
 .set-seg button { border: 0; background: transparent; color: var(--tx); padding: 6px 12px; font: inherit; font-size: 13px; cursor: pointer; white-space: nowrap; }
 .set-seg { flex: none; }
 @media (max-width: 480px) { .set-row:has(> .set-seg) { flex-wrap: wrap; gap: 8px; } .set-row:has(> .set-seg) .set-lbl { flex: 1 1 100%; } }
@@ -3649,22 +3681,25 @@ function renderSettingsModal() {
         <div class="set-seg">${seg("light", "Sáng")}${seg("dark", "Tối")}${seg("auto", "Theo máy")}</div>
       </div>
       <div class="set-row">
-        <span class="set-lbl">Ảnh nền<small>Chỉ lưu trên máy này</small></span>
+        <span class="set-lbl">Ảnh nền<small>${document.body.classList.contains("has-bg") ? "Chỉ lưu trên máy này" : "Chọn ảnh để chỉnh được độ mờ nền"}</small></span>
         <div class="set-inline">
           <button type="button" class="btn btn-sm" onclick="$('bgFile').click()">${document.body.classList.contains("has-bg") ? "Đổi ảnh" : "Chọn ảnh"}</button>
           ${document.body.classList.contains("has-bg") ? `<button type="button" class="btn btn-sm btn-ghost" onclick="removeBg()">Bỏ ảnh</button>` : ""}
           <input id="bgFile" type="file" accept="image/*" onchange="chooseBg(this)" style="display:none">
         </div>
       </div>
+      ${document.body.classList.contains("has-bg") ? `<div class="set-row bg-blur-row">
+        <label class="set-lbl" for="bgBlurRange">Độ mờ nền<small>Kéo phải để mờ hơn</small></label>
+        <div class="set-inline bg-blur-ctl">
+          <input id="bgBlurRange" class="bg-range" type="range" min="0" max="40" step="1" value="${bgBlur()}"
+                 oninput="setBgBlur(this.value, false)" onchange="setBgBlur(this.value)"
+                 onpointerdown="bgPeek(true)" onpointerup="bgPeek(false)" onpointercancel="bgPeek(false)" onkeydown="bgPeek(true)" onkeyup="bgPeek(false)" onblur="bgPeek(false)">
+          <output id="bgBlurVal" for="bgBlurRange">${bgBlur()}</output>
+        </div>
+      </div>` : ""}
       <div class="set-row">
         <span class="set-lbl">Giảm hiệu ứng<small>Bỏ kính mờ và chuyển động, mượt hơn trên máy cũ</small></span>
         <div class="set-seg">${["auto", "on", "off"].map(v => `<button type="button" class="${liteMode() === v ? "on" : ""}" aria-pressed="${liteMode() === v}" onclick="setLite('${v}')">${{ auto: "Tự động", on: "Bật", off: "Tắt" }[v]}</button>`).join("")}</div>
-      </div>
-      <div class="set-row bg-blur-row">
-        <label class="set-lbl" for="bgBlurRange">Độ mờ nền<small>${document.body.classList.contains("has-bg") ? "Kéo phải để mờ hơn" : "Cần chọn ảnh nền"}</small></label>
-        <input id="bgBlurRange" class="bg-range" type="range" min="0" max="40" step="1" value="${bgBlur()}" ${document.body.classList.contains("has-bg") ? "" : "disabled"}
-               oninput="setBgBlur(this.value, false)" onchange="setBgBlur(this.value)"
-               onpointerdown="bgPeek(true)" onpointerup="bgPeek(false)" onpointercancel="bgPeek(false)" onkeydown="bgPeek(true)" onkeyup="bgPeek(false)" onblur="bgPeek(false)">
       </div>
     </details>
 
@@ -3703,13 +3738,15 @@ function renderSettingsModal() {
 
     <details class="set-sec" ${setSecOpen("data")} ontoggle="setSecToggle('data', this.open)">
       <summary class="set-h">Dữ liệu<span class="set-sum">${S.lb || sbUser ? total + " hoạt động" : `<span style="color:var(--bad)">chưa sao lưu</span>`}</span></summary>
-      <p class="set-note">${total} hoạt động · ${kb} KB · ${backup}</p>
-      <div class="set-actions">
-        <button type="button" class="btn btn-primary btn-sm" onclick="exportData('json')">Sao lưu</button>
-        <button type="button" class="btn btn-sm" onclick="exportData('csv')">Xuất CSV</button>
+      <div class="set-row">
+        <span class="set-lbl">Sao lưu<small>${total} hoạt động · ${kb} KB · ${backup}</small></span>
+        <div class="set-inline">
+          <button type="button" class="btn btn-sm" onclick="exportData('csv')">Xuất CSV</button>
+          <button type="button" class="btn btn-primary btn-sm" onclick="exportData('json')">Sao lưu</button>
+        </div>
       </div>
       <div class="set-row">
-        <label class="set-lbl" for="importModeSelect">Khôi phục</label>
+        <label class="set-lbl" for="importModeSelect">Khôi phục<small>Gộp: thêm phần còn thiếu. Ghi đè: thay toàn bộ.</small></label>
         <div class="set-inline">
           <select id="importModeSelect">
             <option value="merge">Gộp</option>
@@ -3719,15 +3756,15 @@ function renderSettingsModal() {
           <input id="setFile" type="file" accept=".json,application/json" onchange="importData(this)" style="display:none">
         </div>
       </div>
-      <div class="set-row" style="align-items:flex-start;">
+      <div class="set-row set-top">
         <span class="set-lbl">Bản tự lưu<small>Mỗi ngày một bản, giữ 7 ngày. Gộp lại chỉ thêm phần thiếu.</small></span>
-        <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-end;">
+        <div class="set-list">
           ${snapKeys().reverse().map(k => {
             let n = "?";
             try { n = Object.values(JSON.parse(localStorage.getItem(k)).ev).flat().length; } catch (e) {}
             const d = k.slice(SNAP.length);
-            return `<div class="set-inline" style="gap:6px;"><span style="font-size:12.5px; color:var(--tx-sec);">${d.slice(8, 10)}/${d.slice(5, 7)} · ${n} hoạt động</span><button type="button" class="btn btn-sm" onclick="restoreSnapshot('${k}')">Gộp lại</button></div>`;
-          }).join("") || `<span style="font-size:12.5px; color:var(--mu);">Chưa có</span>`}
+            return `<div class="set-inline"><span class="set-val">${d.slice(8, 10)}/${d.slice(5, 7)} · ${n} hoạt động</span><button type="button" class="btn btn-sm" onclick="restoreSnapshot('${k}')">Gộp lại</button></div>`;
+          }).join("") || `<span class="set-val">Chưa có</span>`}
         </div>
       </div>
     </details>
@@ -3735,36 +3772,24 @@ function renderSettingsModal() {
     <details class="set-sec" ${setSecOpen("gc") || (gcalConfigErr ? "open" : "")} ontoggle="setSecToggle('gc', this.open)">
       <summary class="set-h">Google Calendar<span class="set-sum"><span class="pill ${isGCalConnected() ? 'pill-ok' : 'pill-neutral'}" style="font-size:11px;">${isGCalConnected() ? 'Đã kết nối' : 'Chưa kết nối'}</span></span></summary>
       ${gcalConfigErr ? `<p class="set-note" style="color:var(--bad);" role="alert">${esc(gcalConfigErr)}</p>` : ""}
-      <p style="font-size:12px; color:var(--tx-sec); margin-bottom:12px; line-height:1.45;">
-        Gửi một chiều khi thêm, sửa, xóa. Sửa trên Google không cập nhật về app.
-      </p>
+      <p class="set-note">Gửi một chiều khi thêm, sửa, xóa. Sửa trên Google không cập nhật về app.</p>
 
-      <div class="set-row">
-        <label class="set-lbl" for="inpGCalClientId">
-          Google Client ID
-          <small>Từ Google Cloud Console</small>
-        </label>
-        <input id="inpGCalClientId" type="text"
+      <div class="set-row set-stack">
+        <label class="set-lbl" for="inpGCalClientId">Google Client ID<small>Từ Google Cloud Console</small></label>
+        <input id="inpGCalClientId" type="text" class="set-mono"
                placeholder="xxxxxx.apps.googleusercontent.com"
                value="${esc((S.cfg && S.cfg.gcalClientId) || localStorage.getItem('gcal_client_id') || '')}"
-               onchange="if(!S.cfg) S.cfg={}; S.cfg.gcalClientId=this.value.trim(); localStorage.setItem('gcal_client_id', this.value.trim()); save();"
-               style="width:100%; max-width:280px; font-size:12px; font-family:monospace; background:var(--card);">
+               onchange="if(!S.cfg) S.cfg={}; S.cfg.gcalClientId=this.value.trim(); localStorage.setItem('gcal_client_id', this.value.trim()); save();">
       </div>
 
       <div class="set-row">
-        <span class="set-lbl">
-          Tự động đồng bộ
-          <small>Gửi ngay khi có thay đổi</small>
-        </span>
-        <label class="row" style="gap:6px; cursor:pointer;">
-          <input type="checkbox" id="chkGCalAutoSync"
-                 ${(S.cfg && S.cfg.gcalAutoSync !== false) ? 'checked' : ''}
-                 onchange="toggleGCalAutoSync(this.checked)">
-          <span style="font-size:13px; font-weight:600;">Bật</span>
-        </label>
+        <label class="set-lbl" for="chkGCalAutoSync">Tự động đồng bộ<small>Gửi ngay khi có thay đổi</small></label>
+        <input type="checkbox" role="switch" class="set-switch" id="chkGCalAutoSync"
+               ${(S.cfg && S.cfg.gcalAutoSync !== false) ? 'checked' : ''}
+               onchange="toggleGCalAutoSync(this.checked)">
       </div>
 
-      <div class="set-actions" style="margin-top:12px; align-items:center;">
+      <div class="set-actions">
         ${!isGCalConnected() ? `
           <button type="button" class="btn btn-primary btn-sm" onclick="connectGoogleCalendar()">Kết nối</button>
         ` : `
@@ -6177,11 +6202,22 @@ function bgBlur() {
   try { const x = parseInt(localStorage.getItem("lc_bg_blur"), 10); if (x >= 0 && x <= 40) v = x; } catch (e) {}
   return v;
 }
-// Cập nhật theo nhịp vẽ của màn hình (không vẽ lại nền mờ ở mỗi sự kiện kéo); chỉ lưu khi thả tay
+// Độ mờ nằm trong một quy tắc riêng chỉ cho lớp nền (body::before): kéo chỉ vẽ lại lớp đó.
+// Đặt biến CSS ở gốc trang thì mọi phần tử phải tính lại kiểu, kính mờ vẽ lại hết: mỗi lần kéo ~200ms.
+// Cập nhật theo nhịp vẽ của màn hình; chỉ lưu khi thả tay.
 let bgBlurRAF = 0, bgBlurNext = 8;
+function bgBlurApply() {
+  bgBlurRAF = 0;
+  let st = document.getElementById("bgBlurCss");
+  if (!st) { st = document.createElement("style"); st.id = "bgBlurCss"; document.head.appendChild(st); }
+  st.textContent = `body::before { filter: blur(${bgBlurNext}px); }`;
+  const o = document.getElementById("bgBlurVal");
+  if (o) o.textContent = bgBlurNext;
+}
 function setBgBlur(v, persist) {
   bgBlurNext = Math.max(0, Math.min(40, parseInt(v, 10) || 0));
-  if (!bgBlurRAF) bgBlurRAF = requestAnimationFrame(() => { bgBlurRAF = 0; document.documentElement.style.setProperty("--bg-blur", bgBlurNext + "px"); });
+  if (persist === undefined) bgBlurApply(); // lúc mở app, lúc thả tay: áp dụng ngay
+  else if (!bgBlurRAF) bgBlurRAF = requestAnimationFrame(bgBlurApply);
   if (persist !== false) { try { localStorage.setItem("lc_bg_blur", String(bgBlurNext)); } catch (e) {} }
 }
 // Trong lúc kéo: popup Cài đặt tạm trong suốt, chỉ còn thanh trượt, để thấy nền đổi ngay
@@ -6603,9 +6639,11 @@ async function cloudBadgeClick() {
 function cloudSecHTML() {
   if (!sbUser) {
     return `
-      <p class="set-note">Đăng nhập để dùng chung dữ liệu giữa iPhone và máy tính, và không mất dữ liệu khi đổi máy. Không đăng nhập vẫn dùng bình thường.</p>
       ${cloud.st === "auth" ? `<p class="set-note" style="color:var(--bad)">Phiên đăng nhập đã hết hạn. Các thay đổi vẫn nằm trên máy này, đăng nhập lại để gửi tiếp.</p>` : ""}
-      <div class="set-actions"><button type="button" class="btn btn-primary btn-sm" onclick="cloudLogin()">Đăng nhập bằng Google</button></div>`;
+      <div class="set-row">
+        <span class="set-lbl">Tài khoản<small>Dùng chung dữ liệu giữa iPhone và máy tính, không mất khi đổi máy. Không bắt buộc.</small></span>
+        <button type="button" class="btn btn-primary btn-sm" onclick="cloudLogin()">Đăng nhập Google</button>
+      </div>`;
   }
   const n = cloudPendingCount();
   return `

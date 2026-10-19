@@ -25,6 +25,12 @@ Làm lại phần Dự án theo cách Asana tổ chức dự án, vì bản v0.5
 - Dữ liệu ghi số phiên bản 60; máy còn chạy bản cũ giữ nguyên phần, hạn, mốc khi lưu và đồng bộ.
 - Test gộp dữ liệu 28 tình huống (thêm 8 cho phần, hạn, mốc, cập nhật trạng thái).
 
+**Làm lại Cài đặt (20/10)**
+- Thanh kéo **Độ mờ nền** mượt: trước đây mỗi lần kéo làm cả trang tính lại và vẽ lại mọi lớp kính mờ (Chrome báo chặn giao diện ~200ms); giờ chỉ vẽ lại lớp ảnh nền. Có số độ mờ bên cạnh; thanh chỉ hiện khi đã chọn ảnh nền. Kính mờ của thẻ, thanh bên giữ một độ cố định.
+- Mỗi mục là một thẻ riêng; hàng cao đều, nhãn bên trái, nút và ô chọn bên phải, cùng cỡ; kẻ mảnh giữa các hàng. Nền bảng gần đặc để dễ đọc.
+- Dữ liệu: Sao lưu, Xuất CSV, Khôi phục thành từng hàng có giải thích. Đồng bộ: nút Đăng nhập Google nằm cùng hàng mô tả. Google Calendar: ô Client ID rộng hết hàng, Tự động đồng bộ là công tắc bật/tắt. Mục Xóa dữ liệu viền đỏ.
+- Điện thoại: hàng tự xuống dòng khi không đủ chỗ, không ép mọi hàng thành hai dòng.
+
 **Thống nhất số giờ (20/10)**
 - Mọi chỗ hiển thị số giờ dùng dấu phẩy thập phân: "32,5h", "1,5h" (trước đây chỗ "32.5h", chỗ "0,5h"), gồm cả đoạn sao chép Tổng kết tuần và mô tả sự kiện Google Calendar. Ô nhập số không đổi.
 - Ô **Tổng giờ** ở tab Lịch và cột giờ tuần của lịch năm trên điện thoại cộng cả giờ cố định mỗi tuần (tab Vốn), khớp Giờ đã ghi ở Tổng kết tuần, Tổng quan và lịch năm trên máy tính.
