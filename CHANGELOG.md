@@ -92,6 +92,10 @@ Mọi hoạt động đều là đầu tư vào một loại vốn, nên app kh�
 - Ô ngày (Hạn, Xếp lịch): gõ tay tới chữ số đầu của năm là lưu luôn năm 0002 rồi mất con trỏ. Nay gõ tay thì lưu khi Enter hoặc rời ô, chọn trên lịch thì lưu ngay; năm phải trong 2000–2100, gõ dở rồi bỏ thì giữ ngày cũ.
 - Chuyển tab khi con trỏ đang ở một ô nhập thì con trỏ nhảy vào một ô bất kỳ của trang mới (Bảng bị kéo về cột đầu).
 
+**Sửa trong UAT (20/10)**
+- Bấm Lưu ở popup dự án (và lưu hoạt động, xếp lịch, thói quen, cập nhật trạng thái, nhật ký sức khỏe) chặn giao diện khoảng 300ms vì vẽ lại cả trang cùng lúc đóng popup. Nay popup đóng ngay, trang vẽ lại ngay sau đó (khoảng 10ms cho lần bấm).
+- Cập nhật trạng thái dự án ghi nhầm thì xóa được: mỗi cập nhật có nút Xóa, có Hoàn tác.
+
 ## v0.5.1 · Dọn mã · 19/10/2026
 
 Không đổi giao diện hay tính năng.

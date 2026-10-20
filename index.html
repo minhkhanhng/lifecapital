@@ -1697,6 +1697,8 @@ button.tl-lab:hover { background: linear-gradient(color-mix(in srgb, var(--ac) 1
 .pjo-item.late small { color: var(--bad); font-weight: 600; }
 .pj-up { display: flex; flex-direction: column; gap: 4px; padding: 6px 0; }
 .pj-up small { font-size: 11.5px; color: var(--tx-sec); margin-left: 4px; }
+.pj-up-h { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.pj-up-del { margin-left: auto; color: var(--tx-sec); font-size: 12px; padding: 2px 8px; min-height: 28px; }
 .pj-up p { margin: 0; font-size: 13.5px; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; }
 .pjo-older > summary { cursor: pointer; font-size: 12.5px; color: var(--tx-sec); padding: 4px 0; }
 .pjo-older .pj-up { border-top: 1px solid color-mix(in srgb, var(--glass-bd) 70%, transparent); }
@@ -5116,12 +5118,12 @@ async function saveEventFromForm(keepOpen) {
     setTimeout(() => showToast(`Đang theo dõi thói quen "${hb.n}"`, "ok"), 0);
   }
   save();
-  gcalFlush();
-  draw();
   if (keepOpen === true && !wasEdit) {
     renderEditorSheet();
     setTimeout(() => { const i = $("inpTitle"); if (i) i.focus(); }, 50);
   } else closeEditor();
+  setTimeout(gcalFlush, 0);
+  drawSoon();
 }
 
 function handleTimelineGridClick(event, dateStr) {
@@ -5399,6 +5401,19 @@ const vals = () => { const o = {}, t = document.createElement("div"); t.innerHTM
 const mark = () => document.querySelectorAll("[data-k]").forEach(e => e.classList.toggle("chg", CH.has(e.dataset.k)));
 
 let drawnView = ""; // trang vừa vẽ: chỉ giữ con trỏ khi vẽ lại cùng trang
+// Vẽ lại sau khung hình kế tiếp: cú bấm (đóng popup, đổi nút) hiện ra ngay, phần vẽ lại cả trang làm sau.
+// Trước đây bấm Lưu vừa đóng popup kính mờ vừa vẽ lại cả trang trong cùng một khung: máy chậm bị chặn ~300ms.
+// Thẻ đang ẩn không có khung hình: vẽ ngay.
+let drawQ = 0;
+function drawSoon() {
+  if (document.hidden) { draw(); return; }
+  if (drawQ) return;
+  drawQ = 1;
+  let done = false;
+  const go = () => { if (done) return; done = true; drawQ = 0; draw(); };
+  requestAnimationFrame(() => setTimeout(go, 0));
+  setTimeout(go, 120);
+}
 function draw(jump) {
   const badge = $("brandYearBadge");
   if (badge) badge.textContent = activeYear;
@@ -6237,7 +6252,7 @@ async function confirmSched() {
   const gone = moved.size ? pullEvents(e => e.tk && moved.has(e.tk)) : [];
   const made = createPlan(tg.task, r.out), days = [...new Set(r.out.map(p => p.date))];
   closeSched();
-  draw();
+  drawSoon();
   const where = days.length === 1 ? dayDesc(days[0]) : `${days.length} ngày, từ ${dayDesc(days[0])}`;
   offerUndo(`Đã xếp ${made.length} việc vào ${where}${r.left.length ? ` · ${r.left.length} việc còn trong hộp` : ""}`, () => {
     const mine = new Set(made);
@@ -7508,7 +7523,7 @@ function pjOverviewHTML(p, items) {
   const next = items.filter(i => !i.done && !i.late).sort((a, b) => nextKey(a).localeCompare(nextKey(b))).slice(0, 4);
   const ms = (p.ms || []).slice().sort((a, b) => a.d.localeCompare(b.d));
   const ups = p.ups || [];
-  const upHTML = u => `<div class="pj-up"><div><span class="pj-hs hs-${u.hs}"><i></i>${PJ_HS[u.hs]}</span> <small>${dm(u.d)}/${u.d.slice(0, 4)}</small></div>${u.note ? `<p>${esc(u.note)}</p>` : ""}</div>`;
+  const upHTML = u => `<div class="pj-up"><div class="pj-up-h"><span class="pj-hs hs-${u.hs}"><i></i>${PJ_HS[u.hs]}</span> <small>${dm(u.d)}/${u.d.slice(0, 4)}</small><button type="button" class="btn btn-sm btn-ghost pj-up-del" onclick="pjUpDel('${u.id}')" aria-label="Xóa cập nhật ${dm(u.d)}" title="Xóa cập nhật này">Xóa</button></div>${u.note ? `<p>${esc(u.note)}</p>` : ""}</div>`;
   const itemBtn = (i, lab, cls) => `<button type="button" class="pjo-item ${cls || ""}" onclick="pjOpenItem('${i.kind}','${i.id}')"><span>${esc(i.t)}</span><small>${lab}</small></button>`;
   const caps = Object.keys(s.byCap).sort((a, b) => s.byCap[b] - s.byCap[a]);
   const cSt = `
@@ -7585,8 +7600,20 @@ function pjUpSave() {
   const note = (($("pjUpNote") || {}).value || "").trim().slice(0, 280);
   p.ups = [{ id: nid("u"), d: tk, hs: pjUpHs, note }, ...(p.ups || [])].slice(0, 30);
   pjUpOpen = false;
-  save(); draw();
+  save(); drawSoon();
   showToast("Đã cập nhật trạng thái", "ok");
+}
+// Xóa một lần cập nhật trạng thái (vd nhập nhầm), có Hoàn tác
+function pjUpDel(id) {
+  const p = findPj(pjOpenId);
+  if (!p || !p.ups) return;
+  const i = p.ups.findIndex(u => u.id === id);
+  if (i < 0) return;
+  const u = p.ups[i];
+  p.ups.splice(i, 1);
+  if (!p.ups.length) delete p.ups;
+  save(); draw();
+  offerUndo(`Đã xóa cập nhật ${dm(u.d)}`, () => { p.ups = p.ups || []; if (!p.ups.some(x => x.id === id)) p.ups.splice(Math.min(i, p.ups.length), 0, u); });
 }
 function pjMsAdd() {
   const p = findPj(pjOpenId), n = ($("pjMsName").value || "").trim(), d = $("pjMsDate").value;
@@ -8004,11 +8031,11 @@ function saveProject() {
     S.projects.push(p);
   }
   save();
-  gcalFlush();
   closeProject();
+  setTimeout(gcalFlush, 0);
   if (!f.id && !ed) pjOpen(p.id); // dự án mới: mở luôn trang của nó
   else if (cur !== "pj" && !ed) switchTab("pj");
-  else draw();
+  else drawSoon();
   if (ed) renderEditorSheet(); // tạo từ popup hoạt động hoặc ô ghi nhanh: có ngay trong danh sách
   showToast(`Đã lưu dự án "${p.n}"`, "ok");
 }
@@ -8414,14 +8441,14 @@ function hbSave() {
     if (d.kind === "auto") h.key = key; else delete h.key;
     h.ticks = h.ticks || {};
   }
-  save(); closeHb(); draw();
+  save(); closeHb(); drawSoon();
   showToast(hbEd === null ? `Đã lưu "${h.n}"` : "Đã lưu", "ok");
 }
 function hbArchive(id) {
   const h = findHb(id);
   if (!h) return;
   if (h.arch) delete h.arch; else h.arch = 1;
-  save(); closeHb(); draw();
+  save(); closeHb(); drawSoon();
   showToast(h.arch ? `Đã lưu trữ "${h.n}"` : `Đang theo dõi lại "${h.n}"`, "ok");
 }
 function hbDelete(id) {
@@ -8429,7 +8456,7 @@ function hbDelete(id) {
   if (i < 0) return;
   const h = S.habits[i];
   S.habits.splice(i, 1);
-  save(); closeHb(); draw();
+  save(); closeHb(); drawSoon();
   offerUndo(`Đã xóa thói quen "${h.n}"`, () => { if (!findHb(h.id)) S.habits.splice(Math.min(i, S.habits.length), 0, h); });
 }
 // Thói quen tự đếm còn thiếu lần trong tuần: mở popup thêm hoạt động ở khoảng trống sớm nhất
@@ -8595,8 +8622,8 @@ function hlDayEmpty(d) { return !d || !Object.keys(d).some(f => f !== "mt" && !(
 function hlTouch(k) {
   const h = hlH(), d = h.days[k];
   if (d) { d.mt = Date.now(); delete d.demo; if (hlDayEmpty(d)) delete h.days[k]; } // đã sửa thì là dữ liệu thật
-  save(); draw();
-  if (hlEd) hlRender();
+  save();
+  if (hlEd) { hlRender(); drawSoon(); } else draw();
 }
 function hlGet(k) { const h = hlH(); return h.days[k] = h.days[k] || {}; }
 function hlSet(k, f, v) {
@@ -9073,7 +9100,7 @@ function closeHl() {
   hlEd = null;
   $("hlOverlay").classList.remove("open");
   restoreFocus();
-  draw();
+  drawSoon();
 }
 function hlShift(n) {
   const k = hlKAdd(hlEd.k, n);
