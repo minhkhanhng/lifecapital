@@ -823,7 +823,7 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
 
 /* Banner Thông báo tổng kết tuần */
 .review-prompt-banner {
-  background: linear-gradient(135deg, var(--c-blush), var(--card));
+  background: var(--c-blush);
   border: 1.5px solid var(--ac);
   border-radius: var(--radius-md);
   padding: 12px 16px;
@@ -1184,7 +1184,6 @@ body[data-tab="hl"] .quick-capture-box, body[data-tab="su"] .quick-capture-box, 
 .day-card-header { background: transparent; border-bottom: 1px solid var(--glass-bd); }
 .day-card.today { border: 1.5px solid var(--ac); }
 .day-card-add-btn { background: transparent; }
-.timeline-days-nav, .timeline-container > div[style*="background:var(--card)"] { background: transparent !important; }
 .modal-sheet { border: 1px solid var(--glass-bd); }
 .btn { border-radius: 12px; }
 .segmented-control { border: 1px solid var(--glass-bd); border-radius: 12px; }
@@ -1264,7 +1263,7 @@ details.fold[open] > summary .set-sum { display: none; }
   --glass: rgba(255, 255, 255, 0.30);
   --glass-hi: rgba(255, 255, 255, 0.46);
   --glass-bd: rgba(255, 255, 255, 0.62);
-  --sheen: linear-gradient(135deg, rgba(255, 255, 255, 0.58) 0%, rgba(255, 255, 255, 0.16) 42%, rgba(255, 255, 255, 0.05) 100%);
+  --sheen: none; /* bỏ vệt sáng chuyển màu: mọi bề mặt một màu */
   --glass-shadow: 0 8px 32px rgba(100, 40, 65, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.75), inset 0 -1px 1px rgba(255, 255, 255, 0.18);
   --blur: blur(14px) saturate(170%); /* kính mờ cố định: trước đây đi theo thanh độ mờ nền, kéo một lần phải vẽ lại cả trang (~200ms) */
   --pill-sheen: rgba(255, 255, 255, 0.62);
@@ -1283,7 +1282,7 @@ details.fold[open] > summary .set-sum { display: none; }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --glass: rgba(28, 22, 25, 0.36); --glass-hi: rgba(34, 27, 31, 0.55); --glass-bd: rgba(255, 255, 255, 0.10);
-    --sheen: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 45%, rgba(255, 255, 255, 0) 100%);
+    --sheen: none; /* bỏ vệt sáng chuyển màu: mọi bề mặt một màu */
     --glass-shadow: 0 10px 32px rgba(0, 0, 0, 0.40), inset 0 1px 1px rgba(255, 255, 255, 0.08);
     --pill-sheen: rgba(255, 255, 255, 0.07); --pill-mix: 42%; --veil: rgba(16, 11, 14, 0.45); --field: rgba(0, 0, 0, 0.22); --overlay: rgba(0, 0, 0, 0.35);
     --card: rgba(36, 29, 33, 0.45); --card-subtle: rgba(255, 255, 255, 0.05); --bar: rgba(255, 255, 255, 0.07);
@@ -1292,7 +1291,7 @@ details.fold[open] > summary .set-sum { display: none; }
 }
 :root[data-theme="dark"] {
   --glass: rgba(28, 22, 25, 0.36); --glass-hi: rgba(34, 27, 31, 0.55); --glass-bd: rgba(255, 255, 255, 0.10);
-  --sheen: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 45%, rgba(255, 255, 255, 0) 100%);
+  --sheen: none; /* bỏ vệt sáng chuyển màu: mọi bề mặt một màu */
   --glass-shadow: 0 10px 32px rgba(0, 0, 0, 0.40), inset 0 1px 1px rgba(255, 255, 255, 0.08);
   --pill-sheen: rgba(255, 255, 255, 0.07); --pill-mix: 42%; --veil: rgba(16, 11, 14, 0.45); --field: rgba(0, 0, 0, 0.22); --overlay: rgba(0, 0, 0, 0.35);
     --card: rgba(36, 29, 33, 0.45); --card-subtle: rgba(255, 255, 255, 0.05); --bar: rgba(255, 255, 255, 0.07);
@@ -1317,8 +1316,6 @@ body.has-bg::before { background: linear-gradient(var(--veil), var(--veil)), var
 .modal-sheet { background: var(--sheen), var(--glass-hi); -webkit-backdrop-filter: blur(30px) saturate(170%); backdrop-filter: blur(30px) saturate(170%); }
 .modal-overlay { background: var(--overlay); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
 .modal-header { background: transparent; border-bottom-color: var(--glass-bd); }
-.day-card.today { background: linear-gradient(135deg, var(--pill-sheen), color-mix(in srgb, var(--ac) 20%, transparent)), var(--glass); }
-.day-card.today .day-card-header { background: linear-gradient(135deg, var(--pill-sheen), color-mix(in srgb, var(--ac) var(--today-mix), transparent)); }
 .day-card.today .day-card-header, .day-card.today .day-card-header .day-name, .day-card.today .day-card-header .day-date { color: var(--btn-ink); }
 .cal-with-inbox.collapsed { grid-template-columns: minmax(0, 1fr) 52px; }
 .inbox-rail { position: sticky; top: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 0; border-radius: 16px; border: 1px solid var(--glass-bd); background: var(--sheen), var(--glass); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); box-shadow: var(--glass-shadow); color: var(--tx-sec); cursor: pointer; font: inherit; font-size: 12px; }
@@ -1328,25 +1325,25 @@ body.has-bg::before { background: linear-gradient(var(--veil), var(--veil)), var
 @media (max-width: 1023px) { .cal-with-inbox.collapsed { grid-template-columns: minmax(0, 1fr); } .inbox-rail { display: none; } }
 @media (max-width: 899px) { .sidebar { background: var(--sheen), var(--glass-hi); } }
 
-/* Nút: kính trong, loang từ trắng sang màu của nút */
+/* Nút: một màu, không chuyển màu. Thường: nền trắng viền mảnh; chính: hồng đặc; phụ nổi bật: oliu đặc */
 .btn {
-  background: linear-gradient(135deg, var(--pill-sheen), rgba(255, 255, 255, 0.14));
-  border: 1px solid var(--glass-bd);
+  background: var(--surface);
+  border: 1px solid var(--line);
   color: var(--tx);
-  -webkit-backdrop-filter: blur(12px) saturate(160%);
-  backdrop-filter: blur(12px) saturate(160%);
-  box-shadow: 0 2px 10px rgba(100, 40, 65, 0.06), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: 0 1px 2px rgba(70, 25, 45, 0.06);
 }
-.btn:hover { background: linear-gradient(135deg, var(--pill-sheen), color-mix(in srgb, var(--ac) 22%, transparent)); border-color: var(--glass-bd); }
-.btn.btn-primary { background: linear-gradient(135deg, var(--pill-sheen) 0%, color-mix(in srgb, var(--ac) var(--btn-mix), transparent) 100%); color: var(--btn-ink); border-color: color-mix(in srgb, var(--ac) 55%, transparent); }
-.btn.btn-accent-olive { background: linear-gradient(135deg, var(--pill-sheen) 0%, color-mix(in srgb, var(--c-olive) var(--btn-mix), transparent) 100%); color: var(--olive-ink); border-color: color-mix(in srgb, var(--c-olive) 55%, transparent); }
-.btn.btn-primary:hover, .btn.btn-accent-olive:hover { filter: saturate(1.15) brightness(1.03); box-shadow: 0 4px 14px rgba(100, 40, 65, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.6); }
+.btn:hover { background: color-mix(in srgb, var(--ac) 14%, var(--surface)); border-color: var(--line); }
+.btn.btn-primary { background: var(--ac); color: var(--on-ac); border-color: var(--ac); }
+.btn.btn-accent-olive { background: var(--c-olive); color: var(--on-olive); border-color: var(--c-olive); }
+.btn.btn-primary:hover, .btn.btn-accent-olive:hover { filter: brightness(0.95); box-shadow: 0 2px 8px rgba(70, 25, 45, 0.14); }
 .btn.btn-ghost { background: transparent; border-color: transparent; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
-.btn.btn-ghost:hover { background: linear-gradient(135deg, var(--pill-sheen), rgba(255, 255, 255, 0.10)); border-color: var(--glass-bd); }
-.segmented-control { background: var(--sheen), var(--glass); }
-.segmented-control button.active, .set-seg button.on { background: linear-gradient(135deg, var(--pill-sheen) 0%, color-mix(in srgb, var(--ac) var(--btn-mix), transparent) 100%); color: var(--btn-ink); box-shadow: 0 2px 8px var(--ac-soft), inset 0 1px 1px rgba(255, 255, 255, 0.5); }
-nav.main-nav button.active { background: var(--sheen), var(--glass-hi); }
-.nav-count { background: linear-gradient(135deg, var(--pill-sheen), color-mix(in srgb, var(--ac) var(--btn-mix), transparent)); color: var(--btn-ink); }
+.btn.btn-ghost:hover { background: var(--surface-2); border-color: transparent; }
+.segmented-control { background: var(--surface-2); border-color: var(--line-2); }
+.segmented-control button.active, .set-seg button.on { background: var(--ac); color: var(--on-ac); box-shadow: 0 1px 2px rgba(70, 25, 45, 0.12); }
+nav.main-nav button.active { background: var(--surface); }
+.nav-count { background: var(--ac); color: var(--on-ac); }
 
 /* Ô nhập */
 input, select, textarea { background: var(--field); border-color: var(--glass-bd); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
@@ -1354,13 +1351,11 @@ input:focus, select:focus, textarea:focus { border-color: var(--ac); box-shadow:
 .quick-capture-input { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
 
 /* Hoạt động và nhãn loại vốn: kính loang màu, chữ theo màu chữ giao diện */
-.event-item { background: linear-gradient(135deg, var(--pill-sheen), color-mix(in srgb, var(--cap) var(--pill-mix), transparent)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cap) 35%, transparent), inset 0 1px 1px rgba(255, 255, 255, 0.45); }
-.timeline-event-block { border: 1px solid color-mix(in srgb, var(--cap, #888888) 40%, transparent); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); box-shadow: 0 2px 10px rgba(100, 40, 65, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.4); }
-table.calendar-table th { background: var(--sheen), var(--glass-hi); color: var(--tx); -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur); }
-.save-alert { background: linear-gradient(135deg, var(--pill-sheen), color-mix(in srgb, var(--bad) 35%, transparent)), var(--glass); }
+table.calendar-table th { background: var(--surface); color: var(--tx-sec); -webkit-backdrop-filter: none; backdrop-filter: none; }
+.save-alert { background: color-mix(in srgb, var(--bad) 16%, var(--surface)); border-left-color: var(--bad); }
 /* Thanh kéo độ mờ: tự vẽ để nút kéo đủ lớn cho ngón tay; touch-action none để iPhone không cuộn bảng khi kéo */
 .bg-range { -webkit-appearance: none; appearance: none; flex: 1 1 150px; min-width: 120px; max-width: 260px; height: 32px; margin: 0; background: transparent; touch-action: none; cursor: pointer; }
-.bg-range::-webkit-slider-runnable-track { height: 6px; border-radius: 99px; background: linear-gradient(90deg, color-mix(in srgb, var(--ac) 70%, transparent), color-mix(in srgb, var(--tx) 22%, transparent)); }
+.bg-range::-webkit-slider-runnable-track { height: 6px; border-radius: 99px; background: color-mix(in srgb, var(--ac) 60%, transparent); }
 .bg-range::-webkit-slider-thumb { -webkit-appearance: none; width: 26px; height: 26px; margin-top: -10px; border-radius: 50%; background: #fff; border: 1px solid color-mix(in srgb, var(--tx) 18%, transparent); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22); }
 .bg-range::-moz-range-track { height: 6px; border-radius: 99px; background: color-mix(in srgb, var(--tx) 22%, transparent); }
 .bg-range::-moz-range-progress { height: 6px; border-radius: 99px; background: color-mix(in srgb, var(--ac) 70%, transparent); }
@@ -1430,7 +1425,7 @@ body.bg-peek #settingsModalOverlay .modal-sheet { background: transparent; }
 .set-seg button { border: 0; background: transparent; color: var(--tx); padding: 6px 12px; font: inherit; font-size: 13px; cursor: pointer; white-space: nowrap; }
 .set-seg { flex: none; }
 @media (max-width: 480px) { .set-row:has(> .set-seg) { flex-wrap: wrap; gap: 8px; } .set-row:has(> .set-seg) .set-lbl { flex: 1 1 100%; } }
-.set-seg button.on { background: linear-gradient(135deg, var(--pill-sheen) 0%, color-mix(in srgb, var(--ac) var(--btn-mix), transparent) 100%); color: var(--btn-ink); font-weight: 600; }
+.set-seg button.on { background: var(--ac); color: var(--on-ac); font-weight: 600; }
 
 /* Phím tắt */
 .sidebar-keys { width: 100%; justify-content: flex-start; border-radius: 12px; margin-top: auto; }
@@ -1895,6 +1890,61 @@ button.tl-lab:hover { background: linear-gradient(color-mix(in srgb, var(--ac) 1
 .btn.x-del:hover:not([disabled]) { color: var(--bad); background: var(--bad-soft); border-color: transparent; }
 .btn.ic-btn[disabled] { opacity: 0.35; }
 @media (hover: none), (pointer: coarse) { .btn.ic-btn { width: 40px; height: 40px; min-width: 40px; min-height: 40px; font-size: 15px; } }
+
+/* Chế độ Ngày: cùng ngôn ngữ với Tuần (đầu cột, hôm nay, hoạt động) */
+.timeline-days-nav { gap: 6px; padding: 8px; background: var(--surface-2); border-bottom: 1px solid var(--line); }
+.tl-dchip { flex: 1 0 64px; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 6px 4px; border: 1px solid transparent; border-radius: 10px; background: transparent; color: var(--tx); font: inherit; cursor: pointer; }
+.tl-dchip span { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--tx-sec); }
+.tl-dchip b { font: 700 14px/1.2 var(--font-ui); font-variant-numeric: tabular-nums; }
+.tl-dchip:hover { background: var(--surface); border-color: var(--line-2); }
+.tl-dchip.wkend:not(.on) { background: color-mix(in srgb, var(--tx) 5%, transparent); }
+.tl-dchip.past:not(.on) b, .tl-dchip.past:not(.on) span { color: var(--mu); }
+.tl-dchip.today:not(.on) b { color: var(--ac-text); }
+.tl-dchip.today:not(.on) { border-color: var(--ac); }
+.tl-dchip.on { background: var(--surface); border-color: var(--line); box-shadow: var(--elev); }
+.tl-dchip.on.today { border: 2px solid var(--ac); }
+.tl-dchip.on b { color: var(--tx); }
+.tl-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.tl-head-l { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; min-width: 0; }
+.tl-head .day-date { font-size: 18px; }
+.tl-head.today .day-name { color: var(--ac-text); }
+.tl-head.today .day-date { color: var(--on-ac); background: var(--ac); border-radius: 99px; padding: 1px 10px; }
+.tl-head.past .day-date, .tl-head.past .day-name { color: var(--mu); }
+.timeline-grid { background: repeating-linear-gradient(to bottom, transparent 0px, transparent 47px, var(--line-2) 48px); }
+.timeline-hour-mark { color: var(--tx-sec); font-variant-numeric: tabular-nums; }
+.timeline-event-block { color: var(--tx); background: color-mix(in srgb, var(--cap, #888888) 18%, var(--surface)); border: 1px solid color-mix(in srgb, var(--cap, #888888) 30%, transparent); box-shadow: inset 3px 0 0 var(--cap, #888888); border-radius: 8px; padding: 4px 8px 4px 11px; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.timeline-event-block:hover { transform: none; background: color-mix(in srgb, var(--cap, #888888) 26%, var(--surface)); }
+.timeline-event-block b { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* Chế độ Năm: bảng là thẻ chính; đầu bảng, tuần này, hôm nay, ngày đã qua theo cùng quy ước với Tuần */
+.table-wrapper { border-radius: 14px; }
+table.calendar-table { min-width: 860px; table-layout: fixed; }
+table.calendar-table th { font-size: 11.5px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; border-bottom: 1px solid var(--line); box-shadow: none; background: color-mix(in srgb, var(--tx) 3%, var(--surface)); }
+table.calendar-table th.wkend { background: color-mix(in srgb, var(--tx) 7%, var(--surface)); }
+table.calendar-table td { border-top: 1px solid var(--line-2); border-left: 1px solid var(--line-2); }
+table.calendar-table td:first-child { border-left: 0; }
+td.yr-wkc { text-align: left; white-space: nowrap; padding-left: 12px; }
+td.yr-wkc b { display: block; font-size: 12.5px; }
+td.yr-wkc small { font-size: 11px; color: var(--mu); font-variant-numeric: tabular-nums; }
+table.calendar-table td.cal-day-cell { text-align: left; height: 70px; min-width: 0; }
+td.cal-day-cell.wkend { background: color-mix(in srgb, var(--tx) 3%, transparent); }
+td.cal-day-cell:hover { background: color-mix(in srgb, var(--ac) 8%, var(--surface)); }
+.cd-date { display: inline-block; font: 600 12px/1.3 var(--font-ui); color: var(--tx); font-variant-numeric: tabular-nums; margin-bottom: 3px; }
+td.cal-day-cell.past .cd-date { color: var(--mu); }
+td.cal-day-cell.is-today { background: color-mix(in srgb, var(--ac) 8%, var(--surface)); outline: 2px solid var(--ac); outline-offset: -2px; }
+td.cal-day-cell.is-today .cd-date { color: var(--on-ac); background: var(--ac); border-radius: 99px; padding: 0 7px; }
+.cd-ev { margin-top: 3px; padding: 2px 6px 2px 8px; border-radius: 6px; font-size: 11px; color: var(--tx); background: color-mix(in srgb, var(--cap) 16%, var(--surface)); box-shadow: inset 3px 0 0 var(--cap); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+tr.past-week .cd-ev { opacity: 0.78; }
+tr.current-week td { background: color-mix(in srgb, var(--ac) 6%, var(--surface)); }
+tr.current-week td.yr-wkc { box-shadow: inset 4px 0 0 var(--ac); }
+tr.current-week td.yr-wkc b { color: var(--ac-text); }
+td.yr-tot { text-align: right; padding-right: 12px; }
+.day-h.over { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 40%, transparent); }
+/* Năm trên điện thoại: ô ngày cùng quy ước */
+.yr-day { border-color: var(--line-2); background: var(--surface-2); }
+.yr-day.today { outline: 2px solid var(--ac); outline-offset: 1px; font-weight: 700; color: var(--ac-text); }
+.yr-row.cur { background: color-mix(in srgb, var(--ac) 8%, transparent); border-radius: 8px; box-shadow: inset 3px 0 0 var(--ac); }
+.yr-row.cur .yr-wk { padding-left: 6px; }
 </style>
 <script>
   try {
@@ -2261,7 +2311,7 @@ const $ = i => document.getElementById(i);
 // Nhãn và khối theo loại vốn: kính loang từ trắng sang màu loại vốn, chữ dùng màu chữ của giao diện để luôn đọc rõ
 function capInk(hex) {
   if (!/^#[0-9a-f]{6}$/i.test(hex || "")) hex = "#888888";
-  return `--cap:${hex}; background: linear-gradient(135deg, var(--pill-sheen) 0%, color-mix(in srgb, ${hex} var(--pill-mix), transparent) 100%); color: var(--tx); border-color: color-mix(in srgb, ${hex} 40%, transparent);`;
+  return `--cap:${hex}; background: color-mix(in srgb, ${hex} 26%, var(--surface)); color: var(--tx); border-color: color-mix(in srgb, ${hex} 40%, transparent);`;
 }
 // Số giờ để hiển thị: làm tròn 1 chữ số, dấu phẩy thập phân kiểu Việt ("32,5"). Ô nhập số vẫn dùng số thô.
 const r1 = n => (Math.round((n || 0) * 10) / 10).toString().replace(".", ",");
@@ -3304,7 +3354,7 @@ function openWeeklyReviewModal(wIdx = sel) {
       </div>
 
       <!-- Insight 4: Kế hoạch hành động cụ thể cho tuần tới -->
-      <div style="padding:14px; background:linear-gradient(135deg, var(--pill-sheen), color-mix(in srgb, var(--c-blush) var(--pill-mix), transparent)); border-radius:var(--radius-md); font-size:13px; color:var(--tx); border:1px solid color-mix(in srgb, var(--ac) 40%, transparent);">
+      <div style="padding:14px; background:var(--surface-2); border-left:4px solid var(--ac) !important; border-radius:var(--radius-md); font-size:13px; color:var(--tx); border:1px solid color-mix(in srgb, var(--ac) 40%, transparent);">
         <div style="font-weight:600; font-size:13.5px; margin-bottom:6px; display:flex; align-items:center; gap:6px;">
           <span>Gợi ý tuần tới</span>
         </div>
@@ -4250,7 +4300,7 @@ function shiftDay(d) {
   draw();
   const box = document.querySelector(".timeline-container");
   if (box) box.classList.add(d > 0 ? "slide-l" : "slide-r");
-  const chip = document.querySelector(".timeline-days-nav .btn-primary");
+  const chip = document.querySelector(".timeline-days-nav .tl-dchip.on");
   if (chip && chip.scrollIntoView) chip.scrollIntoView({ inline: "center", block: "nearest" });
 }
 
@@ -4409,11 +4459,7 @@ const V = {
             const dkStr = ky(d);
             const isSelected = idx === timelineDayIdx;
             const isToday = dkStr === tk;
-            return `
-              <button class="btn btn-sm ${isSelected ? 'btn-primary' : 'btn-ghost'}" onclick="timelineDayIdx=${idx}; draw();">
-                ${DN_SHORT[idx]} ${d.getDate()}/${d.getMonth()+1} ${isToday ? '•' : ''}
-              </button>
-            `;
+            return `<button type="button" class="tl-dchip ${isSelected ? 'on' : ''} ${isToday ? 'today' : dkStr < tk ? 'past' : ''} ${idx > 4 ? 'wkend' : ''}" aria-pressed="${isSelected}" onclick="timelineDayIdx=${idx}; draw();"><span>${DN_SHORT[idx]}</span><b>${d.getDate()}/${d.getMonth() + 1}</b></button>`;
           }).join("")}
         </div>
       `;
@@ -4436,7 +4482,7 @@ const V = {
 
         return `
           <div class="timeline-event-block"
-               style="top:${topPx}px; height:${heightPx}px; ${capInk(cap.c)}"
+               style="top:${topPx}px; height:${heightPx}px; --cap:${cap.c}"
                onclick="openEditor('${activeDate}', ${idx})">
             <b>${e.s} – ${tt(e.s, e.h)}</b> · ${hbOfTitle(e.t) ? `<span class="ev-hb" title="Thói quen">✓</span>` : ""}${esc(e.t)} (${r1(e.h)}h)${e.pj && findPj(e.pj) ? ` <span class="tl-pj" style="--pj:${findPj(e.pj).col}">${esc(findPj(e.pj).n)}</span>` : ""}
           </div>
@@ -4457,12 +4503,13 @@ const V = {
       return headerBar + weekStatsHTML(selWeekStart) + withInbox(`
         <div class="timeline-container">
           ${dayNav}
-          <div style="padding:10px 14px; background:var(--card); display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--bd);">
-            <div>
-              <b style="font-size:15px;">${DN_VI[timelineDayIdx]}, ${ad(selWeekStart, timelineDayIdx).toLocaleDateString("vi-VN")}</b>
-              ${dh ? `<span style="margin-left:8px; font-size:12.5px; color:var(--tx-sec);">${r1(dh)}h</span>` : ""}
+          <div class="tl-head ${isViewingToday ? "today" : activeDate < tk ? "past" : ""}">
+            <div class="tl-head-l">
+              <span class="day-name">${DN_VI[timelineDayIdx]}</span>
+              <span class="day-date">${ad(selWeekStart, timelineDayIdx).toLocaleDateString("vi-VN")}</span>
               ${hlChips(activeDate, hlIsF() ? hlCycle() : null)}
             </div>
+            ${dh ? `<span class="day-h" title="Tổng giờ trong ngày">${r1(dh)}h</span>` : ""}
           </div>
           <div class="timeline-grid" onclick="handleTimelineGridClick(event, '${activeDate}')" ondragover="tlOver(event, '${activeDate}')" ondragleave="tlLeave(event)" ondrop="tlDrop(event, '${activeDate}')">
             ${hourMarkers}
@@ -4494,9 +4541,8 @@ const V = {
     let tbl = `<div class="table-wrapper" id="yearTableWrapper"><table class="calendar-table">
       <thead>
         <tr>
-          <th style="width:50px">Năm</th>
-          <th style="width:55px">Tuần</th>
-          ${DN_SHORT.map(d => `<th>${d}</th>`).join("")}
+          <th style="width:76px">Tuần</th>
+          ${DN_SHORT.map((d, j) => `<th class="${j > 4 ? "wkend" : ""}">${d}</th>`).join("")}
           <th style="width:80px">Giờ</th>
         </tr>
       </thead>
@@ -4507,8 +4553,7 @@ const V = {
       const isCurWeek = i === CW;
 
       tbl += `<tr class="${isCurWeek ? 'current-week' : (CW >= 0 && i < CW) ? 'past-week' : ''}" id="${isCurWeek ? 'cw' : ''}">
-        <td>${m.getFullYear()}</td>
-        <td><b>W${i + 1}</b></td>`;
+        <td class="yr-wkc"><b>Tuần ${i + 1}</b><small>${m.getDate()}/${m.getMonth() + 1}</small></td>`;
 
       for (let j = 0; j < 7; j++) {
         const dt = ad(m, j);
@@ -4516,27 +4561,16 @@ const V = {
         const es = S.ev[k] || [];
         const isToday = k === tk;
 
-        tbl += `<td class="cal-day-cell ${isToday ? 'is-today' : ''}" tabindex="0" onclick="openEditor('${k}')">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <small>${dt.toLocaleDateString("vi-VN", { month: "numeric", day: "numeric" })}</small>
-            ${isToday ? '<span class="pill pill-ok" style="font-size:9px; padding:0 4px;">Nay</span>' : ''}
-          </div>
+        tbl += `<td class="cal-day-cell ${isToday ? 'is-today' : k < tk ? 'past' : ''} ${j > 4 ? 'wkend' : ''}" tabindex="0" onclick="openEditor('${k}')" aria-label="${DN_VI[j]} ${dt.getDate()}/${dt.getMonth() + 1}${isToday ? ", hôm nay" : ""}">
+          <span class="cd-date">${dt.getDate()}/${dt.getMonth() + 1}</span>
           ${es.map((e, idx) => `
-            <div onclick="event.stopPropagation(); openEditor('${k}', ${idx})"
-                 style="${capInk(CM(e.c).c)} border-radius:4px; padding:2px 5px; margin-top:2px; font-size:11px; text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer;"
-                 title="${esc(e.t)} (${e.s || ''} ${r1(e.h)}h)">
-              ${e.s ? e.s + ' ' : ''}${esc(e.t)} · ${r1(e.h)}h
-            </div>
+            <div class="cd-ev" style="--cap:${CM(e.c).c}" onclick="event.stopPropagation(); openEditor('${k}', ${idx})" title="${esc(e.t)} (${e.s || ''} ${r1(e.h)}h)">${e.s ? e.s + ' ' : ''}${esc(e.t)} · ${r1(e.h)}h</div>
           `).join("")}
         </td>`;
       }
 
       const tot = al(i);
-      tbl += `<td style="font-size:12px;">
-        <span style="font-weight:600; color:${tot > 168 ? 'var(--bad)' : 'var(--tx-sec)'};">
-          ${r1(tot)}h
-        </span>
-      </td></tr>`;
+      tbl += `<td class="yr-tot">${tot ? `<span class="day-h${tot > 168 ? " over" : ""}">${r1(tot)}h</span>` : ""}</td></tr>`;
     }
 
     tbl += `</tbody></table></div>`;

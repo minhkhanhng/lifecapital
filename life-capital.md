@@ -150,6 +150,7 @@
    - Tổng kết theo loại vốn ở tab Lịch và đầu popup Tổng kết: mỗi loại vốn một ô (giờ trong tuần / mục tiêu, thanh màu, đánh dấu vốn yếu nhất), dòng trên ghi tổng giờ, số hoạt động, điểm cân bằng.
    - Thứ bậc chính phụ: tiêu đề và hàng chọn tuần nằm trên nền, thẻ nội dung nền đặc viền rõ, phần phụ nền nhạt. Lịch tuần mỗi ngày một cột có viền, đầu cột thứ/ngày/tổng giờ, hôm nay viền màu nhấn, ngày đã qua nhạt hơn; từ 960px là 7 cột.
    - Nút cùng loại cùng kiểu: xóa trên một dòng luôn là ✕, đổi thứ tự luôn là ↑ ↓.
+   - Chế độ Ngày và Năm dùng cùng quy ước với Tuần (đầu cột thứ/ngày, hôm nay viền màu nhấn và ngày tô nền, ngày đã qua nhạt, hoạt động nền màu vốn nhạt có vạch trái). Mọi nút và thanh một màu, không chuyển màu.
 
 ---
 

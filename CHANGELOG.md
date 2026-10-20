@@ -112,6 +112,11 @@ Mọi hoạt động đều là đầu tư vào một loại vốn, nên app kh�
 - Lịch tuần theo kiểu lịch phổ biến: mỗi ngày một cột có viền, đầu cột tách riêng (thứ chữ nhỏ, ngày chữ lớn, tổng giờ bên phải); hôm nay viền màu nhấn và ngày tô nền; ngày đã qua nhạt hơn; cuối tuần đầu cột hơi đậm; hoạt động nền màu loại vốn nhạt với vạch màu bên trái. Đủ rộng (từ 960px) thì 7 cột một hàng.
 - Tổng kết theo 5 loại vốn: ở tab Lịch và đầu popup Tổng kết, mỗi loại vốn một ô ghi số giờ trong tuần / mục tiêu kèm thanh màu, đánh dấu vốn yếu nhất; dòng trên ghi tổng giờ, số hoạt động, điểm cân bằng. Thay 4 ô Hoạt động · Tổng giờ · Cân bằng · Yếu nhất. Popup Tổng kết bỏ 3 thẻ cũ và nhận định 168 giờ; thứ tự: giờ theo loại vốn, bánh xe, nhận định, rồi dự án, sức khỏe, thói quen.
 
+**Rà soát UX/UI vòng 3 (20/10): Ngày, Năm cùng kiểu Tuần; mọi nút một màu**
+- Chế độ Ngày: hàng chọn ngày như đầu cột tuần (thứ chữ nhỏ, ngày chữ lớn; hôm nay viền màu nhấn, ngày đã qua nhạt, cuối tuần hơi đậm); đầu ngày ghi thứ, ngày (hôm nay tô nền), tổng giờ ở ô tròn; khối hoạt động nền màu loại vốn nhạt, vạch màu bên trái, chữ tối thay cho khối chuyển màu chữ trắng.
+- Chế độ Năm: bỏ cột Năm lặp lại mỗi dòng; cột Tuần ghi "Tuần 43" và ngày đầu tuần; đầu bảng chữ nhỏ in hoa, Thứ 7 và CN tô nhẹ; tuần này có vạch màu nhấn; hôm nay viền màu nhấn và ngày tô nền (bỏ nhãn "Nay"); ngày đã qua nhạt; hoạt động trong ô cùng kiểu ở Tuần; tổng giờ ở ô tròn, đỏ khi quá 168h. Điện thoại: tuần này có vạch màu nhấn.
+- Nút, thanh và nhãn một màu, bỏ hết kiểu chuyển màu (gradient) và vệt sáng trên kính: nút thường nền trắng viền mảnh, nút chính hồng đặc, nút Tổng kết oliu đặc, nút đang chọn (Tuần/Ngày/Năm, các lựa chọn trong Cài đặt) hồng đặc, số đếm trên tab, ô chọn loại vốn, thông báo lỗi lưu, thanh độ mờ nền, khối Gợi ý tuần tới.
+
 ## v0.5.1 · Dọn mã · 19/10/2026
 
 Không đổi giao diện hay tính năng.
