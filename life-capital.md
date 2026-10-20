@@ -151,6 +151,7 @@
    - Thứ bậc chính phụ: tiêu đề và hàng chọn tuần nằm trên nền, thẻ nội dung nền đặc viền rõ, phần phụ nền nhạt. Lịch tuần mỗi ngày một cột có viền, đầu cột thứ/ngày/tổng giờ, hôm nay viền màu nhấn, ngày đã qua nhạt hơn; từ 960px là 7 cột.
    - Nút cùng loại cùng kiểu: xóa trên một dòng luôn là ✕, đổi thứ tự luôn là ↑ ↓.
    - Chế độ Ngày và Năm dùng cùng quy ước với Tuần (đầu cột thứ/ngày, hôm nay viền màu nhấn và ngày tô nền, ngày đã qua nhạt, hoạt động nền màu vốn nhạt có vạch trái). Mọi nút và thanh một màu, không chuyển màu.
+   - Popup và thông báo cùng thứ bậc: đầu popup dải nền nhạt, chân popup luôn ở đáy (Xóa trái, Hủy và nút chính phải); banner và toast có vạch màu bên trái theo loại. Thẻ kính hơi trong, làm mờ nền; chữ đạt WCAG AA 4.5:1, viền ô nhập 3:1 ở cả Sáng, Tối, Bỏ kính mờ.
 
 ---
 

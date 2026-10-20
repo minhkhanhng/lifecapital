@@ -117,6 +117,12 @@ Mọi hoạt động đều là đầu tư vào một loại vốn, nên app kh�
 - Chế độ Năm: bỏ cột Năm lặp lại mỗi dòng; cột Tuần ghi "Tuần 43" và ngày đầu tuần; đầu bảng chữ nhỏ in hoa, Thứ 7 và CN tô nhẹ; tuần này có vạch màu nhấn; hôm nay viền màu nhấn và ngày tô nền (bỏ nhãn "Nay"); ngày đã qua nhạt; hoạt động trong ô cùng kiểu ở Tuần; tổng giờ ở ô tròn, đỏ khi quá 168h. Điện thoại: tuần này có vạch màu nhấn.
 - Nút, thanh và nhãn một màu, bỏ hết kiểu chuyển màu (gradient) và vệt sáng trên kính: nút thường nền trắng viền mảnh, nút chính hồng đặc, nút Tổng kết oliu đặc, nút đang chọn (Tuần/Ngày/Năm, các lựa chọn trong Cài đặt) hồng đặc, số đếm trên tab, ô chọn loại vốn, thông báo lỗi lưu, thanh độ mờ nền, khối Gợi ý tuần tới.
 
+**Rà soát UX/UI vòng 4 (20/10): popup và thông báo cùng thứ bậc; kính mờ mềm, tương phản chuẩn**
+- Popup (hoạt động, Tổng kết, xếp lịch, thói quen, sức khỏe, thuốc, dự án, bảng chi tiết, Cài đặt): đầu popup là dải nền nhạt có vạch dưới, tiêu đề đậm, nút đóng ✕ cùng kiểu nút trên dòng; nhóm bên trong nền nhạt viền mảnh; chân popup luôn nằm ở đáy (không phải cuộn mới thấy nút Lưu), tràn hết bề ngang, nút Xóa bên trái chữ đỏ, Hủy rồi nút chính bên phải.
+- Thông báo: banner và thông báo nhỏ (toast) một kiểu, nền kính gần đặc, vạch màu bên trái theo loại (hồng: thông tin, oliu: xong, đỏ: lỗi).
+- Kính mờ mềm: thẻ, thanh bên, ô ghi nhanh hơi trong suốt và làm mờ nền phía sau; popup trong hơn một chút trên lớp phủ tối nhẹ. Viền khung đậm hơn và có bóng đổ để vẫn tách khỏi nền. Chế độ "Bỏ kính mờ" giữ thẻ và popup gần như đặc.
+- Tương phản theo WCAG 2.1 AA, đo bằng script trên mọi tab, chế độ xem và popup, cả Sáng, Tối, Bỏ kính mờ và điện thoại: mọi chữ ≥ 4.5:1 (chữ lớn ≥ 3:1), viền ô nhập ≥ 3:1. Đổi: chữ phụ đậm hơn (sáng #67595f, tối #a3949b), chữ phụ thứ hai #54484e, chữ xanh oliu #596021, chữ đỏ riêng (#a83a4a, tối #f08591), viền ô nhập #85737c, viền khi đặt con trỏ màu hồng đậm; tên nhóm ở Sức khỏe thành chữ đậm kèm chấm màu thay cho chữ màu nhạt; tên loại vốn trong thẻ hoạt động ngả màu vốn nhưng đủ đậm; ngày, tuần đã qua làm nhạt nền thay vì làm mờ chữ; nhãn giờ hiện tại ở chế độ Ngày đủ tương phản.
+
 ## v0.5.1 · Dọn mã · 19/10/2026
 
 Không đổi giao diện hay tính năng.

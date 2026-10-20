@@ -40,8 +40,8 @@
   --bg: #fdfcfd;
   --bg-color-mixed: color-mix(in srgb, #faf7f8 95%, #ffffff 5%);
   --tx: #251d21;
-  --tx-sec: #594d53;
-  --mu: #796b71;
+  --tx-sec: #54484e;
+  --mu: #67595f;   /* chữ phụ: ≥ 4.5:1 cả trên popup kính và nền hồng */
   --bd: #ebdde2;
   --bd-focus: #E0A3BB;
 
@@ -57,7 +57,7 @@
   --shadow-md: 0 4px 14px rgba(100, 40, 65, 0.07);
   --shadow-lg: 0 12px 32px rgba(100, 40, 65, 0.14);
 
-  --on-ac: #421629; --ac-text: #8a3f5f; --ok-text: #6c732a; --wa-text: #906525;            /* Chữ trên nền hồng phấn --ac: luôn tối để rõ nét */
+  --on-ac: #421629; --ac-text: #8a3f5f; --ok-text: #596021; --wa-text: #906525;            /* Chữ trên nền hồng phấn --ac: luôn tối để rõ nét */
   --on-olive: #1f2608;         /* Chữ trên nền xanh oliu đậm --c-olive */
   --on-cyan: #1a4245;          /* Chữ trên nền xanh mây --c-cyan */
   --on-blush: #642841;         /* Chữ trên nền blush --c-blush */
@@ -76,7 +76,7 @@
     --bg-color-mixed: #151113;
     --tx: #f8eff3;
     --tx-sec: #b9abb2;
-    --mu: #94858d;
+    --mu: #a3949b;
     --ac: #E0A3BB;
     --ac-hover: #ebbcd0;
     --ac-soft: rgba(224, 163, 187, 0.2);
@@ -113,7 +113,7 @@
   --bg-color-mixed: #151113;
   --tx: #f8eff3;
   --tx-sec: #b9abb2;
-  --mu: #94858d;
+  --mu: #a3949b;
   --ac: #E0A3BB;
   --ac-hover: #ebbcd0;
   --ac-soft: rgba(224, 163, 187, 0.2);
@@ -319,7 +319,7 @@ nav.main-nav button.active {
   border-radius: var(--radius-sm);
 }
 .btn.btn-danger {
-  color: var(--bad);
+  color: var(--bad-text);
   border-color: var(--bad-soft);
 }
 .btn.btn-danger:hover {
@@ -350,7 +350,7 @@ input[type="time"] { min-width: 105px; }
   font-weight: 500;
 }
 .pill.pill-ok { background: var(--ok-soft); color: var(--ok-text); }
-.pill.pill-bad { background: var(--bad-soft); color: var(--bad); }
+.pill.pill-bad { background: var(--bad-soft); color: var(--bad-text); }
 .pill.pill-cyan { background: var(--c-cyan); color: var(--on-cyan); }
 .pill.pill-blush { background: var(--c-blush); color: var(--on-blush); }
 .pill.pill-neutral { background: var(--bar); color: var(--tx-sec); }
@@ -621,7 +621,7 @@ tr.current-week td:first-child, tr.current-week td:nth-child(2) {
   color: var(--ac-text);
 }
 tr.past-week td {
-  opacity: 0.85;
+  background: color-mix(in srgb, var(--tx) 2%, transparent);
 }
 
 /* Bánh xe cuộc đời Radar Chart */
@@ -875,7 +875,7 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
 .hv-tray-acts { display: inline-flex; gap: 2px; margin-left: auto; }
 .hv-count { font-size: 12.5px; color: var(--mu); margin: 0 0 8px; }
 .hv-dueT { font-weight: 600; color: var(--tx-sec); }
-.hv-dueT.late { color: var(--bad); }
+.hv-dueT.late { color: var(--bad-text); }
 .hv-meta > span:not(:last-child)::after { content: "·"; margin-left: 6px; color: var(--mu); font-weight: 400; }
 .hv-pjT { display: inline-flex; align-items: center; gap: 4px; }
 .hv-pjT i { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
@@ -944,7 +944,8 @@ body.hv-dragging .day-card { border-style: dashed; }
 .hl-disc { margin: 8px 0 0; font-size: 12px; color: var(--mu); line-height: 1.45; }
 .hl-pins { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
 .hl-pin { font: inherit; text-align: left; display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border-radius: 16px; border: 1px solid var(--glass-bd); background: var(--sheen), var(--card); color: var(--tx); cursor: pointer; min-width: 0; }
-.hl-pin-t { font-size: 13px; font-weight: 600; color: var(--hc); }
+.hl-pin-t { font-size: 13px; font-weight: 600; color: var(--tx); display: inline-flex; align-items: center; gap: 6px; }
+.hl-pin-t::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--hc); flex: none; } /* màu nhóm ở chấm, chữ luôn đậm màu để đủ tương phản */
 .hl-pin b { font: 600 26px/1.15 var(--font-ui); font-variant-numeric: tabular-nums; }
 .hl-pin b small { font-size: 14px; font-weight: 500; color: var(--tx-sec); }
 .hl-pin > small { font-size: 12px; color: var(--tx-sec); }
@@ -957,12 +958,12 @@ body.hv-dragging .day-card { border-style: dashed; }
 .hl-ic { width: 28px; height: 28px; border-radius: 8px; background: var(--hc); flex: none; opacity: 0.85; }
 .hl-chev { margin-left: auto; width: 8px; height: 8px; border-right: 2px solid var(--mu); border-top: 2px solid var(--mu); transform: rotate(45deg); }
 .hl-back { display: flex; align-items: center; gap: 8px; }
-.hl-back .card-title { color: var(--hc); }
+.hl-back .card-title { color: var(--tx); box-shadow: inset 0 -3px 0 color-mix(in srgb, var(--hc) 55%, transparent); }
 .hl-tbl { display: flex; flex-direction: column; gap: 8px; }
 .hl-tr { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(60px, 2fr) auto; gap: 10px; align-items: center; font-size: 13px; }
 .hl-meter { height: 8px; border-radius: 99px; background: var(--bar); overflow: hidden; }
 .hl-meter i { display: block; height: 100%; background: #e5a13c; border-radius: 99px; }
-.hl-hi { color: var(--bad); }
+.hl-hi { color: var(--bad-text); }
 .hl-log { display: flex; flex-direction: column; }
 .hl-lrow { font: inherit; text-align: left; display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border: 0; border-top: 1px solid var(--bd); background: transparent; color: var(--tx); cursor: pointer; }
 .hl-lrow b { font-size: 13.5px; } .hl-lrow span { font-size: 12.5px; color: var(--tx-sec); }
@@ -1036,7 +1037,7 @@ body.hv-dragging .day-card { border-style: dashed; }
 .me-card .set-row input[type=text], .me-card .set-row input[type=date] { width: 180px; max-width: 100%; }
 @media (pointer: coarse) { .hl-m, .hl-chip, .hl-chip.med button { min-height: 40px; } }
 @media (max-width: 480px) { .hl-pins { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; } .hl-pin { padding: 12px; } .hl-pin b { font-size: 22px; } .hl-2 { flex-direction: column; } }
-.ev-hb { display: inline-block; font-size: 10px; font-weight: 700; color: var(--ok-text); margin-right: 4px; vertical-align: 1px; }
+.ev-hb { display: inline-block; font-size: 10px; font-weight: 700; color: var(--tx); margin-right: 4px; vertical-align: 1px; }
 .hb-strip { display: flex; align-items: center; gap: 10px; margin: -4px 0 12px; min-width: 0; }
 .hb-lbl { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tx-sec); flex: none; }
 .hb-list { display: flex; gap: 8px; flex-wrap: wrap; min-width: 0; align-items: center; }
@@ -1379,7 +1380,7 @@ body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(-
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 [data-k] { transition: background-color .6s ease, box-shadow .6s ease; }
 .demo-line { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 10px; font-size: 12.5px; color: var(--tx-sec); padding: 2px 4px 8px; }
-.demo-line .btn { color: var(--bad); }
+.demo-line .btn { color: var(--bad-text); }
 .chg { font-weight: 600; background: color-mix(in srgb, var(--ac) 22%, transparent); border-radius: 4px; padding: 0 3px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ac) 45%, transparent); }
 /* Cài đặt: mỗi mục một thẻ; hàng cao đều, nhãn trái, điều khiển phải, kẻ mảnh giữa các hàng */
 #settingsModalOverlay .modal-sheet { background: var(--sheen), var(--set-sheet); }
@@ -1389,7 +1390,7 @@ body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(-
 details.set-sec > summary { min-height: 48px; }
 details.set-sec[open] > summary { margin-bottom: 0; border-bottom: 1px solid var(--bd); }
 .set-danger { border-color: color-mix(in srgb, var(--bad) 35%, transparent); }
-.set-danger .set-h { color: var(--bad); }
+.set-danger .set-h { color: var(--bad-text); }
 .set-row { display: flex; align-items: center; justify-content: space-between; gap: 10px 16px; min-height: 52px; padding: 8px 0; }
 .set-row + .set-row, .set-note + .set-row, .set-row + .set-actions, #cloudSec + .set-row { border-top: 1px solid var(--bd); }
 .set-lbl { display: flex; flex-direction: column; gap: 2px; font-size: 14px; color: var(--tx); min-width: 0; flex: 1 1 160px; }
@@ -1513,7 +1514,7 @@ body.bg-peek #settingsModalOverlay .modal-sheet { background: transparent; }
 .pj-hs.hs-ok i { background: var(--ok); }
 .pj-hs.hs-risk { background: color-mix(in srgb, var(--wa) 20%, transparent); color: var(--wa-text); }
 .pj-hs.hs-risk i { background: var(--wa); }
-.pj-hs.hs-off { background: color-mix(in srgb, var(--bad) 18%, transparent); color: var(--bad); }
+.pj-hs.hs-off { background: color-mix(in srgb, var(--bad) 18%, transparent); color: var(--bad-text); }
 .pj-hs.hs-off i { background: var(--bad); }
 .pj-prog { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--tx-sec); font-variant-numeric: tabular-nums; }
 .pj-pbar { flex: 1; height: 6px; border-radius: 99px; background: color-mix(in srgb, var(--tx) 9%, transparent); overflow: hidden; min-width: 40px; }
@@ -1575,12 +1576,12 @@ body.bg-peek #settingsModalOverlay .modal-sheet { background: transparent; }
 .pj-menu-pop { position: absolute; right: 0; top: calc(100% + 4px); z-index: 30; min-width: 180px; display: flex; flex-direction: column; padding: 6px; border-radius: 12px; background: var(--sheen), var(--glass-hi); -webkit-backdrop-filter: blur(24px) saturate(160%); backdrop-filter: blur(24px) saturate(160%); border: 1px solid var(--glass-bd); box-shadow: var(--shadow-lg); }
 .pj-menu-pop button { border: 0; background: transparent; color: var(--tx); font: inherit; font-size: 13.5px; text-align: left; padding: 8px 10px; border-radius: 8px; cursor: pointer; }
 .pj-menu-pop button:hover { background: color-mix(in srgb, var(--tx) 7%, transparent); }
-.pj-menu-pop .danger { color: var(--bad); }
+.pj-menu-pop .danger { color: var(--bad-text); }
 .pj-over { outline: 2px dashed var(--ac); outline-offset: 2px; }
-.pj-add { width: 100%; border: 1px dashed transparent; background: transparent; font: inherit; font-size: 13.5px; padding: 8px 10px; border-radius: 8px; color: var(--tx); }
+.pj-add { width: 100%; border: 1px dashed var(--field-bd); background: transparent; font: inherit; font-size: 13.5px; padding: 8px 10px; border-radius: 8px; color: var(--tx); }
 .pj-add::placeholder { color: var(--tx-sec); }
-.pj-add:hover { border-color: var(--glass-bd); }
-.pj-add:focus { border-style: solid; border-color: var(--ac); background: var(--glass-hi); outline: none; }
+.pj-add:hover { border-color: var(--tx-sec); }
+.pj-add:focus { border-style: solid; border-color: var(--ac-text); background: var(--sheet-solid); outline: none; box-shadow: 0 0 0 3px var(--ac-soft); }
 .pj-sec-in { font-size: 14px; font-weight: 600; padding: 4px 8px; min-width: 0; flex: 1; }
 /* Danh sách */
 .pjl { padding: 4px 0 8px; }
@@ -1608,7 +1609,7 @@ body.bg-peek #settingsModalOverlay .modal-sheet { background: transparent; }
 .pjr-cap { display: flex; align-items: center; gap: 6px; color: var(--tx-sec); font-size: 12.5px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; min-width: 0; }
 .pjr-cap i { width: 8px; height: 8px; border-radius: 50%; background: var(--cap); flex: none; }
 .pjr-date, .pjr-prog { font-size: 12.5px; color: var(--tx-sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-variant-numeric: tabular-nums; min-width: 0; }
-.pjr-date.late, .pjc-meta .late { color: var(--bad); font-weight: 600; }
+.pjr-date.late, .pjc-meta .late { color: var(--bad-text); font-weight: 600; }
 .pjr-h { text-align: right; font-variant-numeric: tabular-nums; font-size: 12.5px; }
 .pjr-ser { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; font-size: 10.5px; line-height: 1; color: var(--cap); border: 1.5px solid var(--cap); flex: none; }
 .pjr-ser.past { background: color-mix(in srgb, var(--cap) 25%, transparent); }
@@ -1706,7 +1707,7 @@ button.tl-lab:hover { background: linear-gradient(color-mix(in srgb, var(--ac) 1
 .pjo-item span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pjo-item:hover { background: color-mix(in srgb, var(--tx) 6%, transparent); }
 .pjo-item small { color: var(--tx-sec); white-space: nowrap; font-size: 12px; }
-.pjo-item.late small { color: var(--bad); font-weight: 600; }
+.pjo-item.late small { color: var(--bad-text); font-weight: 600; }
 .pj-up { display: flex; flex-direction: column; gap: 4px; padding: 6px 0; }
 .pj-up small { font-size: 11.5px; color: var(--tx-sec); margin-left: 4px; }
 .pj-up-h { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
@@ -1716,7 +1717,7 @@ button.tl-lab:hover { background: linear-gradient(color-mix(in srgb, var(--ac) 1
 .pjo-older .pj-up { border-top: 1px solid color-mix(in srgb, var(--glass-bd) 70%, transparent); }
 .pjo-ms { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 8px; align-items: center; font-size: 13.5px; }
 .pjo-ms small { color: var(--tx-sec); font-variant-numeric: tabular-nums; }
-.pjo-ms.late small, .pjo-ms.late span { color: var(--bad); }
+.pjo-ms.late small, .pjo-ms.late span { color: var(--bad-text); }
 .pjo-ms.done span { text-decoration: line-through; color: var(--tx-sec); }
 .pjo-add { display: flex; gap: 6px; flex-wrap: wrap; }
 .pjo-add input[type="text"] { flex: 1 1 140px; min-width: 0; }
@@ -1738,7 +1739,7 @@ button.tl-lab:hover { background: linear-gradient(color-mix(in srgb, var(--ac) 1
 .pjd-fields { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 8px 12px; align-items: center; font-size: 13px; }
 .pjd-fields > span, .pjd-fields > label { color: var(--tx-sec); }
 .pjd-fields b { font-weight: 600; }
-.pjd-fields b.late { color: var(--bad); }
+.pjd-fields b.late { color: var(--bad-text); }
 .pjd-sec { display: flex; flex-direction: column; gap: 4px; }
 .pjd-sec > b { font-size: 13.5px; margin-bottom: 2px; }
 .pjd-sec > b small { font-weight: 400; color: var(--tx-sec); margin-left: 6px; }
@@ -1754,7 +1755,7 @@ button.tl-lab:hover { background: linear-gradient(color-mix(in srgb, var(--ac) 1
 .hv-due { position: relative; display: inline-flex; align-items: center; cursor: pointer; white-space: nowrap; }
 .hv-due:not(.on) { color: var(--tx-sec); }
 .hv-due input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; border: 0; padding: 0; min-height: 0; }
-.hv-due.late { color: var(--bad); font-weight: 600; border-color: color-mix(in srgb, var(--bad) 40%, transparent); }
+.hv-due.late { color: var(--bad-text); font-weight: 600; border-color: color-mix(in srgb, var(--bad) 40%, transparent); }
 /* Bảng dự án */
 .pj-form { display: flex; flex-direction: column; gap: 12px; }
 .pj-swatches { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -1791,16 +1792,22 @@ button.tl-lab:hover { background: linear-gradient(color-mix(in srgb, var(--ac) 1
    Tầng 1 nội dung chính: thẻ đặc, viền rõ, bóng nhẹ (thẻ ngày, dòng thời gian, thẻ nội dung).
    Tầng 2 phần phụ bên trong: nền nhạt, không bóng (việc trong hộp, ô tổng kết, thẻ ghim). */
 :root {
-  --surface: rgba(255, 255, 255, 0.88);
-  --surface-2: rgba(120, 70, 95, 0.045);
-  --line: rgba(110, 60, 85, 0.16);
-  --line-2: rgba(110, 60, 85, 0.09);
-  --elev: 0 1px 2px rgba(70, 25, 45, 0.06), 0 6px 18px rgba(70, 25, 45, 0.07);
+  --surface: rgba(255, 255, 255, 0.74);
+  --surface-2: rgba(120, 70, 95, 0.05);
+  --line: rgba(100, 52, 76, 0.30);   /* viền khung: ~1.6:1 với mặt thẻ, cùng bóng đổ để tách khỏi nền */
+  --line-2: rgba(110, 60, 85, 0.11);
+  --elev: 0 1px 2px rgba(70, 25, 45, 0.05), 0 8px 24px rgba(70, 25, 45, 0.08);
+  --sheet: rgba(255, 255, 255, 0.82);
+  --sheet-solid: rgba(255, 255, 255, 0.94);
+  --frost: blur(20px) saturate(150%);
+  --field-bd: #85737c;   /* viền ô nhập: tương phản ≥ 3:1 với nền (WCAG 1.4.11) */
+  --bad-text: #a83a4a;   /* chữ đỏ: ≥ 4.5:1 cả trên nền hồng nhạt */
+  --on-bad: #ffffff;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --surface: rgba(32, 25, 29, 0.90); --surface-2: rgba(255, 255, 255, 0.045); --line: rgba(255, 255, 255, 0.13); --line-2: rgba(255, 255, 255, 0.07); --elev: 0 1px 2px rgba(0, 0, 0, 0.45), 0 8px 22px rgba(0, 0, 0, 0.35); }
+  :root:not([data-theme="light"]) { --surface: rgba(32, 25, 29, 0.78); --surface-2: rgba(255, 255, 255, 0.05); --line: rgba(255, 255, 255, 0.22); --line-2: rgba(255, 255, 255, 0.08); --elev: 0 1px 2px rgba(0, 0, 0, 0.45), 0 8px 24px rgba(0, 0, 0, 0.35); --sheet: rgba(34, 27, 31, 0.86); --sheet-solid: rgba(34, 27, 31, 0.96); --field-bd: #8a7b83; --bad-text: #f08591; --on-bad: #2a0f14; }
 }
-:root[data-theme="dark"] { --surface: rgba(32, 25, 29, 0.90); --surface-2: rgba(255, 255, 255, 0.045); --line: rgba(255, 255, 255, 0.13); --line-2: rgba(255, 255, 255, 0.07); --elev: 0 1px 2px rgba(0, 0, 0, 0.45), 0 8px 22px rgba(0, 0, 0, 0.35); }
+:root[data-theme="dark"] { --surface: rgba(32, 25, 29, 0.78); --surface-2: rgba(255, 255, 255, 0.05); --line: rgba(255, 255, 255, 0.22); --line-2: rgba(255, 255, 255, 0.08); --elev: 0 1px 2px rgba(0, 0, 0, 0.45), 0 8px 24px rgba(0, 0, 0, 0.35); --sheet: rgba(34, 27, 31, 0.86); --sheet-solid: rgba(34, 27, 31, 0.96); --field-bd: #8a7b83; --bad-text: #f08591; --on-bad: #2a0f14; }
 
 /* Tầng 0 */
 .app-header { background: transparent; border: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; padding-inline: 4px; }
@@ -1838,14 +1845,14 @@ button.tl-lab:hover { background: linear-gradient(color-mix(in srgb, var(--ac) 1
 .day-card.today .day-card-header .day-date { color: var(--on-ac); background: var(--ac); border-radius: 99px; padding: 1px 9px; }
 .day-card.wkend:not(.today) .day-card-header { background: color-mix(in srgb, var(--tx) 6%, transparent); }
 .day-card.past:not(.today) .day-date, .day-card.past:not(.today) .day-name { color: var(--mu); }
-.day-card.past .event-item { opacity: 0.78; }
+.day-card.past .event-item { background: color-mix(in srgb, var(--cap) 8%, var(--surface)); }
 .day-events-list { padding: 8px 8px 4px; gap: 6px; }
 .day-empty { color: var(--mu); font-size: 12px; text-align: center; margin: auto 0; padding: 14px 0; }
 .day-card-add-btn { margin: 4px 8px 8px; border: 1px dashed var(--line); color: var(--mu); }
 /* Hoạt động: nền màu loại vốn nhạt, vạch màu bên trái, chữ đậm rõ */
 .event-item { background: color-mix(in srgb, var(--cap) 15%, var(--surface)); box-shadow: inset 3px 0 0 var(--cap); border-radius: 8px; padding: 6px 9px 6px 11px; }
 .event-item:hover { background: color-mix(in srgb, var(--cap) 24%, var(--surface)); transform: none; box-shadow: inset 3px 0 0 var(--cap), 0 1px 4px rgba(0, 0, 0, 0.08); }
-.event-meta > span:last-child { color: color-mix(in srgb, var(--cap) 70%, var(--tx)) !important; }
+.event-meta > span:last-child { color: color-mix(in srgb, var(--cap) 40%, var(--tx)) !important; } /* tên vốn: ngả màu vốn nhưng đủ 4.5:1 */
 
 /* Tổng kết theo loại vốn (Lịch, popup Tổng kết): phần phụ, nằm phẳng */
 .cap-sum { margin-bottom: 14px; }
@@ -1860,7 +1867,7 @@ button.tl-lab:hover { background: linear-gradient(color-mix(in srgb, var(--ac) 1
 .cap-s b small { font-size: 12px; font-weight: 500; color: var(--mu); margin-left: 1px; }
 .cap-s-bar { display: block; height: 4px; border-radius: 99px; background: var(--line-2); overflow: hidden; }
 .cap-s-bar > i { display: block; height: 100%; border-radius: 99px; background: var(--cap); }
-.cap-s.weak .cap-s-n::after { content: " · yếu nhất"; color: var(--bad); font-weight: 600; }
+.cap-s.weak .cap-s-n::after { content: " · yếu nhất"; color: var(--bad-text); font-weight: 600; }
 .review-modal .cap-sum, #reviewSheetBody .cap-sum { margin-bottom: 0; }
 @media (max-width: 640px) {
   /* điện thoại: 5 loại vốn trên một hàng, chỉ số giờ; mục tiêu xem ở thanh màu và khi bấm giữ */
@@ -1870,7 +1877,7 @@ button.tl-lab:hover { background: linear-gradient(color-mix(in srgb, var(--ac) 1
   .cap-s b { font-size: 16px; }
   .cap-s-tg { display: none; }
   .cap-s.weak .cap-s-n::after { content: ""; }
-  .cap-s.weak .cap-s-n { color: var(--bad); font-weight: 600; }
+  .cap-s.weak .cap-s-n { color: var(--bad-text); font-weight: 600; }
   .page-title { font-size: 23px; }
   .day-card-header { display: flex; align-items: baseline; gap: 8px; }
   .day-card-header .day-h { margin-left: auto; align-self: center; }
@@ -1885,9 +1892,9 @@ button.tl-lab:hover { background: linear-gradient(color-mix(in srgb, var(--ac) 1
 .rv-sec-h { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tx-sec); margin-bottom: 8px; }
 
 /* Nút biểu tượng trên dòng: ✕ xóa, ↑ ↓ đổi thứ tự. Cùng cỡ, cùng màu ở mọi nơi */
-.btn.ic-btn { width: 28px; height: 28px; min-width: 28px; padding: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; line-height: 1; color: var(--mu); border-radius: 8px; flex: none; }
+.btn.ic-btn { width: 28px; height: 28px; min-width: 28px; padding: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; line-height: 1; color: var(--tx-sec); border-radius: 8px; flex: none; }
 .btn.ic-btn:hover:not([disabled]) { color: var(--tx); background: var(--surface-2); border-color: var(--line-2); }
-.btn.x-del:hover:not([disabled]) { color: var(--bad); background: var(--bad-soft); border-color: transparent; }
+.btn.x-del:hover:not([disabled]) { color: var(--bad-text); background: var(--bad-soft); border-color: transparent; }
 .btn.ic-btn[disabled] { opacity: 0.35; }
 @media (hover: none), (pointer: coarse) { .btn.ic-btn { width: 40px; height: 40px; min-width: 40px; min-height: 40px; font-size: 15px; } }
 
@@ -1934,17 +1941,72 @@ td.cal-day-cell.past .cd-date { color: var(--mu); }
 td.cal-day-cell.is-today { background: color-mix(in srgb, var(--ac) 8%, var(--surface)); outline: 2px solid var(--ac); outline-offset: -2px; }
 td.cal-day-cell.is-today .cd-date { color: var(--on-ac); background: var(--ac); border-radius: 99px; padding: 0 7px; }
 .cd-ev { margin-top: 3px; padding: 2px 6px 2px 8px; border-radius: 6px; font-size: 11px; color: var(--tx); background: color-mix(in srgb, var(--cap) 16%, var(--surface)); box-shadow: inset 3px 0 0 var(--cap); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
-tr.past-week .cd-ev { opacity: 0.78; }
+tr.past-week .cd-ev { background: color-mix(in srgb, var(--cap) 8%, var(--surface)); }
 tr.current-week td { background: color-mix(in srgb, var(--ac) 6%, var(--surface)); }
 tr.current-week td.yr-wkc { box-shadow: inset 4px 0 0 var(--ac); }
 tr.current-week td.yr-wkc b { color: var(--ac-text); }
 td.yr-tot { text-align: right; padding-right: 12px; }
-.day-h.over { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 40%, transparent); }
+.day-h.over { color: var(--bad-text); border-color: color-mix(in srgb, var(--bad) 40%, transparent); }
 /* Năm trên điện thoại: ô ngày cùng quy ước */
 .yr-day { border-color: var(--line-2); background: var(--surface-2); }
 .yr-day.today { outline: 2px solid var(--ac); outline-offset: 1px; font-weight: 700; color: var(--ac-text); }
 .yr-row.cur { background: color-mix(in srgb, var(--ac) 8%, transparent); border-radius: 8px; box-shadow: inset 3px 0 0 var(--ac); }
 .yr-row.cur .yr-wk { padding-left: 6px; }
+
+/* ===== Kính mờ mềm (20/10): thẻ hơi trong suốt, làm mờ nền phía sau; viền, bóng và màu chữ giữ tương phản chuẩn ===== */
+.card, .day-card, .timeline-container, .inbox-aside, .table-wrapper, .sidebar { -webkit-backdrop-filter: var(--frost); backdrop-filter: var(--frost); }
+.sidebar { background: var(--surface); border: 1px solid var(--line); box-shadow: var(--elev); }
+input, select, textarea { border-color: var(--field-bd); background: var(--sheet-solid); }
+input:hover, select:hover, textarea:hover { border-color: color-mix(in srgb, var(--field-bd) 70%, var(--tx)); }
+select.hv-mini, select[style*="--cap"], .hv-mini select { border-color: var(--field-bd) !important; }
+select[style*="--cap"] { border-left: 4px solid var(--cap) !important; }
+input:focus, select:focus, textarea:focus { border-color: var(--ac-text); box-shadow: 0 0 0 3px var(--ac-soft); } /* viền khi đặt con trỏ: ≥ 3:1 */
+.quick-capture-input { border-color: transparent; background: transparent; }
+.quick-capture-box { background: var(--surface); border: 1px solid var(--line); -webkit-backdrop-filter: var(--frost); backdrop-filter: var(--frost); }
+.set-row input.bg-range { border: 0; background: transparent; }
+input[type="checkbox"], input[type="radio"], input[type="color"] { background: transparent; }
+/* chữ đỏ, chữ lỗi */
+.btn-del, .btn.btn-ghost.btn-del { color: var(--bad-text); }
+.btn.btn-ghost.btn-del:hover { background: var(--bad-soft); }
+.hv-dueT.late, .hv-miss, .cap-s.weak .cap-s-n::after, .day-h.over, .set-note[role="alert"] { color: var(--bad-text); }
+
+/* ===== Popup: cùng thứ bậc với trang ===== */
+.modal-overlay { background: rgba(45, 20, 32, 0.30); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+.modal-sheet { background: var(--sheet); border: 1px solid var(--line); border-top: 3px solid var(--ac); box-shadow: 0 24px 64px rgba(50, 18, 34, 0.24), 0 2px 6px rgba(50, 18, 34, 0.08); -webkit-backdrop-filter: blur(28px) saturate(150%); backdrop-filter: blur(28px) saturate(150%); }
+#settingsModalOverlay .modal-sheet { background: var(--sheet); }
+/* Đầu popup: dải nền nhạt có vạch dưới, như đầu cột ngày; tiêu đề đậm, nút ✕ cùng kiểu nút trên dòng */
+.modal-header { padding: 10px 10px 10px 18px; background: var(--surface-2); border-bottom: 1px solid var(--line); gap: 10px; }
+.modal-title { font: 700 16px/1.3 var(--font-ui); color: var(--tx); min-width: 0; }
+.modal-body { gap: 14px; }
+/* Nhóm bên trong popup: nền nhạt, viền mảnh, không bóng */
+.modal-body .form-row[style*="card-subtle"] { background: var(--surface-2) !important; border: 1px solid var(--line-2) !important; border-radius: 12px !important; }
+.modal-body .rv-sec, .modal-body .cap-sum { margin: 0; }
+/* Chân popup: luôn thấy ở đáy, xóa bên trái, Hủy rồi nút chính bên phải */
+.sheet-foot, .pj-form-acts, .hl-acts, .pjd-acts { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; position: sticky; bottom: -18px; z-index: 3; margin: 6px -18px -18px; padding: 12px 18px 18px; background: var(--sheet-solid); border-top: 1px solid var(--line); }
+.sheet-foot.end { justify-content: flex-end; }
+.sheet-foot .btn:not(.btn-sm), .pj-form-acts .btn:not(.btn-sm), .hl-acts .btn:not(.btn-sm) { min-width: 84px; justify-content: center; }
+.hl-saved { color: var(--tx-sec); }
+/* Hộp hỏi xác nhận: cùng nền kính, nút chính bên phải */
+.ask-overlay .ask-sheet { background: var(--sheet); border: 1px solid var(--line); border-top: 3px solid var(--ac); }
+.ask-acts { padding-top: 12px; border-top: 1px solid var(--line-2); }
+/* Bảng chi tiết dự án trượt bên phải: vạch màu dự án giữ nguyên */
+#pjItOverlay .modal-sheet { border-top-color: var(--pj, var(--ac)); }
+
+/* ===== Thông báo: một kiểu cho banner và toast — nền kính, vạch màu bên trái theo loại ===== */
+.review-prompt-banner { background: var(--sheet); border: 1px solid var(--line); border-left: 4px solid var(--ac); border-radius: 14px; box-shadow: var(--elev); -webkit-backdrop-filter: var(--frost); backdrop-filter: var(--frost); }
+.review-prompt-banner b { color: var(--tx); }
+.review-prompt-banner div[style*="tx-sec"] { color: var(--tx-sec) !important; }
+.save-alert { border-left-color: var(--bad); background: color-mix(in srgb, var(--bad) 10%, var(--sheet-solid)); }
+.toast { background: var(--sheet-solid); color: var(--tx); border: 1px solid var(--line); border-left: 4px solid var(--ac); border-radius: 12px; box-shadow: 0 12px 32px rgba(50, 18, 34, 0.18); -webkit-backdrop-filter: var(--frost); backdrop-filter: var(--frost); }
+.toast.toast-ok { border-left-color: var(--c-olive); }
+.toast.toast-bad { border-left-color: var(--bad); }
+.toast .toast-act { font-weight: 600; }
+.demo-line .btn { color: var(--bad-text); }
+
+/* Chế độ "Bỏ kính mờ" (Cài đặt › Giao diện): không làm mờ nền nên thẻ và popup gần như đặc để chữ không lẫn với phía sau */
+:root.lite { --surface: rgba(255, 255, 255, 0.96); --sheet: rgba(255, 255, 255, 0.99); --sheet-solid: #ffffff; }
+@media (prefers-color-scheme: dark) { :root.lite:not([data-theme="light"]) { --surface: rgba(32, 25, 29, 0.97); --sheet: rgba(34, 27, 31, 0.99); --sheet-solid: #221b1f; } }
+:root.lite[data-theme="dark"] { --surface: rgba(32, 25, 29, 0.97); --sheet: rgba(34, 27, 31, 0.99); --sheet-solid: #221b1f; }
 </style>
 <script>
   try {
@@ -2010,7 +2072,7 @@ td.yr-tot { text-align: right; padding-right: 12px; }
   <div class="modal-sheet" id="modalSheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
     <div class="modal-header">
       <h3 class="modal-title" id="sheetTitle">Chi tiết ngày</h3>
-      <button class="btn btn-sm btn-ghost" onclick="closeEditor()" title="Đóng (ESC)">✕</button>
+      <button type="button" class="btn btn-sm btn-ghost ic-btn sheet-x" onclick="closeEditor()" title="Đóng (Esc)" aria-label="Đóng">✕</button>
     </div>
     <div class="modal-body" id="sheetBody"></div>
   </div>
@@ -2021,7 +2083,7 @@ td.yr-tot { text-align: right; padding-right: 12px; }
   <div class="modal-sheet" id="reviewModalSheet" style="max-width:720px;" role="dialog" aria-modal="true" aria-labelledby="reviewSheetTitle">
     <div class="modal-header">
       <h3 class="modal-title" id="reviewSheetTitle">Tổng kết tuần</h3>
-      <button class="btn btn-sm btn-ghost" onclick="closeReviewModal()" title="Đóng (ESC)">✕</button>
+      <button type="button" class="btn btn-sm btn-ghost ic-btn sheet-x" onclick="closeReviewModal()" title="Đóng (Esc)" aria-label="Đóng">✕</button>
     </div>
     <div class="modal-body" id="reviewSheetBody"></div>
   </div>
@@ -2032,7 +2094,7 @@ td.yr-tot { text-align: right; padding-right: 12px; }
   <div class="modal-sheet" style="max-width:560px;" role="dialog" aria-modal="true" aria-labelledby="pjTitle">
     <div class="modal-header">
       <h3 class="modal-title" id="pjTitle">Thêm dự án</h3>
-      <button type="button" class="btn btn-sm btn-ghost" onclick="closeProject()" title="Đóng (ESC)" aria-label="Đóng">✕</button>
+      <button type="button" class="btn btn-sm btn-ghost ic-btn sheet-x" onclick="closeProject()" title="Đóng (Esc)" aria-label="Đóng">✕</button>
     </div>
     <div class="modal-body" id="pjBody"></div>
   </div>
@@ -2041,7 +2103,7 @@ td.yr-tot { text-align: right; padding-right: 12px; }
   <div class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="pjItTitle">
     <div class="modal-header">
       <h3 class="modal-title" id="pjItTitle">Chi tiết</h3>
-      <button type="button" class="btn btn-sm btn-ghost" onclick="pjCloseItem()" title="Đóng (ESC)" aria-label="Đóng">✕</button>
+      <button type="button" class="btn btn-sm btn-ghost ic-btn sheet-x" onclick="pjCloseItem()" title="Đóng (Esc)" aria-label="Đóng">✕</button>
     </div>
     <div class="modal-body" id="pjItBody"></div>
   </div>
@@ -2050,7 +2112,7 @@ td.yr-tot { text-align: right; padding-right: 12px; }
   <div class="modal-sheet" id="settingsModalSheet" style="max-width:640px;" role="dialog" aria-modal="true" aria-labelledby="settingsSheetTitle">
     <div class="modal-header">
       <h3 class="modal-title" id="settingsSheetTitle">Cài đặt</h3>
-      <button type="button" class="btn btn-sm btn-ghost" onclick="closeSettingsModal()" title="Đóng (ESC)" aria-label="Đóng">✕</button>
+      <button type="button" class="btn btn-sm btn-ghost ic-btn sheet-x" onclick="closeSettingsModal()" title="Đóng (Esc)" aria-label="Đóng">✕</button>
     </div>
     <div class="modal-body" id="settingsSheetBody"></div>
   </div>
@@ -2061,7 +2123,7 @@ td.yr-tot { text-align: right; padding-right: 12px; }
   <div class="modal-sheet" style="max-width:560px;" role="dialog" aria-modal="true" aria-labelledby="hlTitle">
     <div class="modal-header">
       <h3 class="modal-title" id="hlTitle">Sức khỏe</h3>
-      <button type="button" class="btn btn-sm btn-ghost" onclick="closeHl()" title="Đóng (ESC)" aria-label="Đóng">✕</button>
+      <button type="button" class="btn btn-sm btn-ghost ic-btn sheet-x" onclick="closeHl()" title="Đóng (Esc)" aria-label="Đóng">✕</button>
     </div>
     <div class="modal-body" id="hlBody"></div>
   </div>
@@ -2072,7 +2134,7 @@ td.yr-tot { text-align: right; padding-right: 12px; }
   <div class="modal-sheet" style="max-width:520px;" role="dialog" aria-modal="true" aria-labelledby="hbTitle">
     <div class="modal-header">
       <h3 class="modal-title" id="hbTitle">Thói quen</h3>
-      <button type="button" class="btn btn-sm btn-ghost" onclick="closeHb()" title="Đóng (ESC)" aria-label="Đóng">✕</button>
+      <button type="button" class="btn btn-sm btn-ghost ic-btn sheet-x" onclick="closeHb()" title="Đóng (Esc)" aria-label="Đóng">✕</button>
     </div>
     <div class="modal-body" id="hbBody" onkeydown="if (event.target.tagName === 'INPUT' && event.target.type !== 'checkbox') enterKey(event, () => hbSave())"></div>
   </div>
@@ -2083,7 +2145,7 @@ td.yr-tot { text-align: right; padding-right: 12px; }
   <div class="modal-sheet" style="max-width:520px;" role="dialog" aria-modal="true" aria-labelledby="schedTitle">
     <div class="modal-header">
       <h3 class="modal-title" id="schedTitle">Xếp lịch</h3>
-      <button type="button" class="btn btn-sm btn-ghost" onclick="closeSched()" title="Đóng (ESC)" aria-label="Đóng">✕</button>
+      <button type="button" class="btn btn-sm btn-ghost ic-btn sheet-x" onclick="closeSched()" title="Đóng (Esc)" aria-label="Đóng">✕</button>
     </div>
     <div class="modal-body" id="schedBody" onkeydown="if (event.key === 'Enter' && event.target.tagName !== 'BUTTON') { event.preventDefault(); confirmSched(); }"></div>
   </div>
@@ -3299,7 +3361,7 @@ function openWeeklyReviewModal(wIdx = sel) {
       <div class="rv-nav">
         <div style="display:flex; align-items:center; gap:6px; flex:1 1 220px; min-width:0;">
           <button type="button" class="btn btn-sm" onclick="openWeeklyReviewModal(Math.max(0, ${wIdx} - 1))" title="Xem tuần trước">◀</button>
-          <select onchange="openWeeklyReviewModal(+this.value)" style="flex:1; min-width:0; text-overflow:ellipsis; font-weight:600; padding:5px 10px; font-size:13px; border-radius:var(--radius-sm); border:1px solid var(--bd); background:var(--card); color:var(--tx); cursor:pointer;">
+          <select onchange="openWeeklyReviewModal(+this.value)" aria-label="Chọn tuần" style="flex:1; min-width:0; text-overflow:ellipsis; font-weight:600; padding:5px 10px; font-size:13px; cursor:pointer;">
             ${W.map((m, i) => {
               const mEnd = ad(m, 6);
               const rStr = `${m.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" })} – ${mEnd.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" })}`;
@@ -3383,7 +3445,7 @@ function openWeeklyReviewModal(wIdx = sel) {
         ${hbWeekRowsHTML(W[wIdx])}
       </div>` : ""}
 
-      <div style="display:flex; justify-content:flex-end; gap:8px;">
+      <div class="sheet-foot end">
         <button type="button" class="btn" onclick="copyReviewToClipboard(${wIdx})">Sao chép</button>
         <button type="button" class="btn btn-primary" onclick="closeReviewModal()">Đóng</button>
       </div>
@@ -4006,7 +4068,7 @@ function renderSettingsModal() {
   const sc = schCfg(), hOpt = (v, cur) => opt(v, cur, hmOf(v));
   const opt = (v, cur, label) => `<option value="${v}" ${cur === v ? "selected" : ""}>${label}</option>`;
   const seg = (v, label) => `<button type="button" class="${curTheme === v ? "on" : ""}" aria-pressed="${curTheme === v}" onclick="setThemePreference('${v}')">${label}</button>`;
-  const backup = S.lb ? `sao lưu ${new Date(S.lb).toLocaleString("vi-VN", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "2-digit" })}` : sbUser ? "có bản trên tài khoản" : `<span style="color:var(--bad)">chưa sao lưu</span>`;
+  const backup = S.lb ? `sao lưu ${new Date(S.lb).toLocaleString("vi-VN", { hour: "2-digit", minute: "2-digit", day: "2-digit", month: "2-digit" })}` : sbUser ? "có bản trên tài khoản" : `<span style="color: var(--bad-text)">chưa sao lưu</span>`;
 
   $("settingsSheetBody").innerHTML = `
     <details class="set-sec set-bg" ${setSecOpen("ui")} ontoggle="setSecToggle('ui', this.open)">
@@ -4072,7 +4134,7 @@ function renderSettingsModal() {
     </details>
 
     <details class="set-sec" ${setSecOpen("data")} ontoggle="setSecToggle('data', this.open)">
-      <summary class="set-h">Dữ liệu<span class="set-sum">${S.lb || sbUser ? total + " hoạt động" : `<span style="color:var(--bad)">chưa sao lưu</span>`}</span></summary>
+      <summary class="set-h">Dữ liệu<span class="set-sum">${S.lb || sbUser ? total + " hoạt động" : `<span style="color: var(--bad-text)">chưa sao lưu</span>`}</span></summary>
       <div class="set-row">
         <span class="set-lbl">Sao lưu<small>${total} hoạt động · ${kb} KB · ${backup}</small></span>
         <div class="set-inline">
@@ -4106,7 +4168,7 @@ function renderSettingsModal() {
 
     <details class="set-sec" ${setSecOpen("gc") || (gcalConfigErr ? "open" : "")} ontoggle="setSecToggle('gc', this.open)">
       <summary class="set-h">Google Calendar<span class="set-sum"><span class="pill ${isGCalConnected() ? 'pill-ok' : 'pill-neutral'}" style="font-size:11px;">${isGCalConnected() ? 'Đã kết nối' : 'Chưa kết nối'}</span></span></summary>
-      ${gcalConfigErr ? `<p class="set-note" style="color:var(--bad);" role="alert">${esc(gcalConfigErr)}</p>` : ""}
+      ${gcalConfigErr ? `<p class="set-note" style="color: var(--bad-text);" role="alert">${esc(gcalConfigErr)}</p>` : ""}
       <p class="set-note">Gửi một chiều khi thêm, sửa, xóa. Sửa trên Google không cập nhật về app.</p>
 
       <div class="set-row set-stack">
@@ -4128,7 +4190,7 @@ function renderSettingsModal() {
         ${!isGCalConnected() ? `
           <button type="button" class="btn btn-primary btn-sm" onclick="connectGoogleCalendar()">Kết nối</button>
         ` : `
-          <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="disconnectGoogleCalendar()">Ngắt</button>
+          <button type="button" class="btn btn-sm btn-ghost btn-del" onclick="disconnectGoogleCalendar()">Ngắt</button>
           <button type="button" class="btn btn-sm" onclick="gcalSyncWeek(sel)" title="Gửi lại mọi hoạt động của tuần đang xem">Đồng bộ tuần</button>
         `}
       </div>
@@ -4496,7 +4558,7 @@ const V = {
         const curHr = now.getHours() + (now.getMinutes() / 60);
         if (curHr >= 6 && curHr <= 24) {
           const topNow = (curHr - 6) * 48;
-          timeNowIndicator = `<div style="position:absolute; left:0; right:0; top:${topNow}px; height:2px; background:var(--bad); z-index:4; pointer-events:none;"><span style="position:absolute; right:4px; top:-9px; font-size:10px; font-weight:600; background:var(--bad); color:#fff; padding:1px 4px; border-radius:3px;">${pad(now.getHours())}:${pad(now.getMinutes())}</span></div>`;
+          timeNowIndicator = `<div style="position:absolute; left:0; right:0; top:${topNow}px; height:2px; background:var(--bad); z-index:4; pointer-events:none;"><span style="position:absolute; right:4px; top:-9px; font-size:10px; font-weight:600; background:var(--bad-text); color:var(--on-bad); padding:1px 4px; border-radius:3px;">${pad(now.getHours())}:${pad(now.getMinutes())}</span></div>`;
         }
       }
 
@@ -4674,7 +4736,7 @@ const V = {
         <div class="card-header">
           <div>
             <h2 class="card-title">Giờ đã ghi · Tuần ${sel + 1}</h2>
-            <div class="card-sub">${A ? `${r1(A)}h, chia theo loại vốn` : "Chưa có hoạt động trong tuần này"}${A > 168 ? ` · <b style="color:var(--bad)">vượt 168h của một tuần, kiểm tra hoạt động trùng</b>` : ""}</div>
+            <div class="card-sub">${A ? `${r1(A)}h, chia theo loại vốn` : "Chưa có hoạt động trong tuần này"}${A > 168 ? ` · <b style="color: var(--bad-text)">vượt 168h của một tuần, kiểm tra hoạt động trùng</b>` : ""}</div>
           </div>
         </div>
         ${A ? `<div class="progress-168-bar">
@@ -5060,7 +5122,7 @@ function renderEditorSheet() {
         </div>` : "";
       })() : ""}
       <div class="form-group">
-        <label class="form-label" for="inpTitle">Tên hoạt động <span style="color:var(--bad)">*</span></label>
+        <label class="form-label" for="inpTitle">Tên hoạt động <span style="color: var(--bad-text)">*</span></label>
         <input id="inpTitle" placeholder="vd: Đọc sách"
                value="${X ? esc(X.t) : ''}"
                oninput="handleTitleInput(this.value)">
@@ -5121,12 +5183,12 @@ function renderEditorSheet() {
 
       <!-- NÚT HÀNH ĐỘNG TINH GỌN -->
       ${X ? `
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; gap:8px; flex-wrap:wrap;">
+        <div class="sheet-foot">
           <div class="row" style="gap:6px;">
-            <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="deleteCurrentEvent()">Xóa</button>
+            <button type="button" class="btn btn-sm btn-ghost btn-del" onclick="deleteCurrentEvent()">Xóa</button>
             ${X.r ? `
-              <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="delSeries(${ei}, 'future')" title="Giữ lại các buổi trước ngày này">Xóa từ đây</button>
-              <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad);" onclick="delSeries(${ei}, 'all')" title="Xóa mọi buổi của chuỗi, kể cả các ngày trước">Xóa chuỗi</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-del" onclick="delSeries(${ei}, 'future')" title="Giữ lại các buổi trước ngày này">Xóa từ đây</button>
+              <button type="button" class="btn btn-sm btn-ghost btn-del" onclick="delSeries(${ei}, 'all')" title="Xóa mọi buổi của chuỗi, kể cả các ngày trước">Xóa chuỗi</button>
             ` : ''}
           </div>
           <div class="row" style="gap:8px;">
@@ -5135,7 +5197,7 @@ function renderEditorSheet() {
           </div>
         </div>
       ` : `
-        <div style="display:flex; justify-content:flex-end; align-items:center; margin-top:10px; gap:8px;">
+        <div class="sheet-foot end">
           <button type="button" class="btn btn-ghost" onclick="closeEditor()">Hủy</button>
           <button type="button" class="btn btn-primary" onclick="saveEventFromForm()">Lưu</button>
         </div>
@@ -6337,7 +6399,7 @@ function renderSched() {
         <div style="font-size:12px; color:var(--mu);">${esc(dayDesc(sch.date))}</div>
       </div>
       ${mid}
-      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:4px;">
+      <div class="sheet-foot end">
         <button type="button" class="btn btn-ghost" onclick="closeSched()">Hủy</button>
         <button type="button" class="btn btn-primary" id="schedOk" onclick="confirmSched()" ${okDis}>${tg.whole ? "Xếp" : "Lưu"}</button>
       </div>
@@ -7030,7 +7092,7 @@ async function cloudBadgeClick() {
     html: `<span style="display:block">${esc((sbUser && sbUser.email) || "")}</span>
       <span style="display:block">Lần đồng bộ gần nhất: ${timeAgo(cloud.at)}</span>
       ${n ? `<span style="display:block">${n} thay đổi đang chờ gửi; dữ liệu vẫn an toàn trên máy này.</span>` : ""}
-      ${cloud.msg ? `<span style="display:block; color:var(--bad)">${esc(cloud.msg)}</span>` : ""}`,
+      ${cloud.msg ? `<span style="display:block; color: var(--bad-text)">${esc(cloud.msg)}</span>` : ""}`,
     ok: "Đồng bộ ngay", cancel: "Đóng"
   });
   if (a === "ok") { cloudFails = 0; cloudSync(); }
@@ -7039,7 +7101,7 @@ async function cloudBadgeClick() {
 function cloudSecHTML() {
   if (!sbUser) {
     return `
-      ${cloud.st === "auth" ? `<p class="set-note" style="color:var(--bad)">Phiên đăng nhập đã hết hạn. Các thay đổi vẫn nằm trên máy này, đăng nhập lại để gửi tiếp.</p>` : ""}
+      ${cloud.st === "auth" ? `<p class="set-note" style="color: var(--bad-text)">Phiên đăng nhập đã hết hạn. Các thay đổi vẫn nằm trên máy này, đăng nhập lại để gửi tiếp.</p>` : ""}
       <div class="set-row">
         <span class="set-lbl">Tài khoản<small>Dùng chung dữ liệu giữa iPhone và máy tính, không mất khi đổi máy. Không bắt buộc.</small></span>
         <button type="button" class="btn btn-primary btn-sm" onclick="cloudLogin()">Đăng nhập Google</button>
@@ -7050,15 +7112,15 @@ function cloudSecHTML() {
     <div class="set-row"><span class="set-lbl">Tài khoản</span><span class="set-val">${esc(sbUser.email || "")}</span></div>
     <div class="set-row"><span class="set-lbl">Trạng thái<small>${n ? n + " thay đổi chờ gửi" : "Lần gần nhất: " + timeAgo(cloud.at)}</small></span>
       <button type="button" class="btn btn-sm" onclick="cloudFails = 0; cloudSync()">Đồng bộ ngay</button></div>
-    ${cloud.msg ? `<p class="set-note" style="color:var(--bad)">${esc(cloud.msg)}</p>` : ""}
+    ${cloud.msg ? `<p class="set-note" style="color: var(--bad-text)">${esc(cloud.msg)}</p>` : ""}
     <div class="set-actions">
       <button type="button" class="btn btn-sm" onclick="cloudLogout()">Đăng xuất</button>
-      <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad)" onclick="cloudDeleteServer()">Xóa dữ liệu trên máy chủ</button>
+      <button type="button" class="btn btn-sm btn-ghost btn-del" onclick="cloudDeleteServer()">Xóa dữ liệu trên máy chủ</button>
     </div>`;
 }
 function cloudSummary() {
   if (sbUser) return `<span class="pill ${cloud.st === "ok" ? "pill-ok" : "pill-neutral"}" style="font-size:11px;">${CLOUD_TXT[cloud.st] || "Đã đăng nhập"}</span>`;
-  return cloud.st === "auth" ? `<span style="color:var(--bad)">cần đăng nhập lại</span>` : "chưa đăng nhập";
+  return cloud.st === "auth" ? `<span style="color: var(--bad-text)">cần đăng nhập lại</span>` : "chưa đăng nhập";
 }
 
 // Lời mời đăng nhập trên tab Lịch: chỉ khi đã có dữ liệu thật, bấm Để sau là không hiện lại
@@ -7938,7 +8000,7 @@ function renderPjItem(force) {
         </div>
         <div class="pjd-acts">
           ${it.done ? "<span></span>" : `<button type="button" class="btn btn-sm btn-primary" onclick="openSched('task','${t.id}')">${t.subs.length ? "Xếp các việc nhỏ" : it.nS ? "Dời lịch" : "Xếp lịch"}</button>`}
-          <button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad)" onclick="deleteTask('${t.id}')">Xóa việc</button>
+          <button type="button" class="btn btn-sm btn-ghost btn-del" onclick="deleteTask('${t.id}')">Xóa việc</button>
         </div>
       </div>`;
   } else {
@@ -8081,7 +8143,7 @@ function renderProjectForm() {
   $("pjBody").innerHTML = `
     <div class="pj-form">
       <div class="form-group">
-        <label class="form-label" for="pjName">Tên dự án <span style="color:var(--bad)">*</span></label>
+        <label class="form-label" for="pjName">Tên dự án <span style="color: var(--bad-text)">*</span></label>
         <input id="pjName" maxlength="60" placeholder="vd: Marathon 2027" value="${esc(f.n)}" oninput="pjForm.n=this.value">
       </div>
       <div class="form-group">
@@ -8117,7 +8179,7 @@ function renderProjectForm() {
         </div>
       </div>
       <div class="pj-form-acts">
-        ${f.id ? `<button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad)" onclick="deleteProject('${f.id}')">Xóa dự án</button>` : "<span></span>"}
+        ${f.id ? `<button type="button" class="btn btn-sm btn-ghost btn-del" onclick="deleteProject('${f.id}')">Xóa dự án</button>` : "<span></span>"}
         <div class="row" style="gap:8px;">
           <button type="button" class="btn btn-ghost" onclick="closeProject()">Hủy</button>
           <button type="button" class="btn btn-primary" onclick="saveProject()">Lưu</button>
@@ -8539,10 +8601,10 @@ function hbRender() {
           <select id="hbTgt" onchange="hbSet('tgt', +this.value)">${[1, 2, 3, 4, 5, 6, 7].map(n => `<option value="${n}" ${n === d.tgt ? "selected" : ""}>${n} lần</option>`).join("")}</select>
           <small style="color:var(--mu);">Chuỗi đếm số tuần liên tiếp đạt; bỏ một ngày không sao.</small>
         </div>` : `<small style="color:var(--mu);">Mỗi tuần được nghỉ 1 ngày mà không đứt chuỗi.</small>`}
-      <div style="display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-top:4px;">
+      <div class="sheet-foot">
         <div class="row" style="gap:6px;">
           ${h ? `<button type="button" class="btn btn-ghost" onclick="hbArchive('${h.id}')">${h.arch ? "Theo dõi lại" : "Lưu trữ"}</button>
-          <button type="button" class="btn btn-ghost" style="color:var(--bad)" onclick="hbDelete('${h.id}')">Xóa</button>` : ""}
+          <button type="button" class="btn btn-ghost btn-del" onclick="hbDelete('${h.id}')">Xóa</button>` : ""}
         </div>
         <div class="row" style="gap:6px;">
           <button type="button" class="btn btn-ghost" onclick="closeHb()">Hủy</button>
@@ -9298,7 +9360,7 @@ function hlMedRender() {
       </div>
       <p class="hl-disc">App chỉ giúp nhớ đã dùng hay chưa, không kiểm tra liều hay tương tác thuốc. Hỏi bác sĩ hoặc dược sĩ trước khi bắt đầu, đổi liều hay ngừng thuốc.</p>
       <div class="hl-acts">
-        <div class="row" style="gap:6px;">${m ? `<button type="button" class="btn btn-ghost" onclick="hlMedStop('${m.id}')">${m.arch ? "Dùng lại" : "Ngừng dùng"}</button><button type="button" class="btn btn-ghost" style="color:var(--bad)" onclick="hlMedDel('${m.id}')">Xóa</button>` : ""}</div>
+        <div class="row" style="gap:6px;">${m ? `<button type="button" class="btn btn-ghost" onclick="hlMedStop('${m.id}')">${m.arch ? "Dùng lại" : "Ngừng dùng"}</button><button type="button" class="btn btn-ghost btn-del" onclick="hlMedDel('${m.id}')">Xóa</button>` : ""}</div>
         <div class="row" style="gap:6px;"><button type="button" class="btn btn-ghost" onclick="hlMedBack()">Hủy</button><button type="button" class="btn btn-primary" id="hlDone" onclick="hlMedSave()">${m ? "Lưu" : "Thêm"}</button></div>
       </div>
     </div>`;
