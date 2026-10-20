@@ -391,7 +391,7 @@ input[type="time"] { min-width: 105px; }
 }
 /* Số cột theo bề rộng thật của lưới (hẹp lại khi mở cột Hộp việc), không theo bề rộng màn hình */
 .wk-wrap { container-type: inline-size; min-width: 0; }
-@container (max-width: 1039px) { .week-cards-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@container (max-width: 959px) { .week-cards-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 @container (max-width: 599px) { .week-cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 640px) { .week-cards-grid { grid-template-columns: minmax(0, 1fr) !important; } } /* điện thoại: một cột */
 @supports not (container-type: inline-size) {
@@ -873,7 +873,6 @@ table.sum-table tr:hover td { background: var(--card-subtle); }
 .hv-more.on { background: var(--card-subtle); color: var(--tx); }
 .hv-tray { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; flex-basis: 100%; padding-top: 6px; border-top: 1px dashed var(--bd); }
 .hv-tray-acts { display: inline-flex; gap: 2px; margin-left: auto; }
-.hv-tray .hv-del { color: var(--bad); }
 .hv-count { font-size: 12.5px; color: var(--mu); margin: 0 0 8px; }
 .hv-dueT { font-weight: 600; color: var(--tx-sec); }
 .hv-dueT.late { color: var(--bad); }
@@ -1716,7 +1715,7 @@ button.tl-lab:hover { background: linear-gradient(color-mix(in srgb, var(--ac) 1
 .pj-up { display: flex; flex-direction: column; gap: 4px; padding: 6px 0; }
 .pj-up small { font-size: 11.5px; color: var(--tx-sec); margin-left: 4px; }
 .pj-up-h { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
-.pj-up-del { margin-left: auto; color: var(--tx-sec); font-size: 12px; padding: 2px 8px; min-height: 28px; }
+.pj-up-h .x-del { margin-left: auto; }
 .pj-up p { margin: 0; font-size: 13.5px; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; }
 .pjo-older > summary { cursor: pointer; font-size: 12.5px; color: var(--tx-sec); padding: 4px 0; }
 .pjo-older .pj-up { border-top: 1px solid color-mix(in srgb, var(--glass-bd) 70%, transparent); }
@@ -1791,6 +1790,111 @@ button.tl-lab:hover { background: linear-gradient(color-mix(in srgb, var(--ac) 1
 .pj-wbar i { display: block; height: 100%; border-radius: 99px; background: var(--pj); }
 .pj-wval { font-variant-numeric: tabular-nums; color: var(--tx-sec); white-space: nowrap; font-size: 12.5px; }
 .hv-filter { width: 100%; font-size: 13px; }
+
+/* ===== Thứ bậc chính / phụ (20/10) =====
+   Tầng 0 khung trang: tiêu đề, hàng chọn tuần, dòng dữ liệu mẫu nằm thẳng trên nền, không hộp.
+   Tầng 1 nội dung chính: thẻ đặc, viền rõ, bóng nhẹ (thẻ ngày, dòng thời gian, thẻ nội dung).
+   Tầng 2 phần phụ bên trong: nền nhạt, không bóng (việc trong hộp, ô tổng kết, thẻ ghim). */
+:root {
+  --surface: rgba(255, 255, 255, 0.88);
+  --surface-2: rgba(120, 70, 95, 0.045);
+  --line: rgba(110, 60, 85, 0.16);
+  --line-2: rgba(110, 60, 85, 0.09);
+  --elev: 0 1px 2px rgba(70, 25, 45, 0.06), 0 6px 18px rgba(70, 25, 45, 0.07);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --surface: rgba(32, 25, 29, 0.90); --surface-2: rgba(255, 255, 255, 0.045); --line: rgba(255, 255, 255, 0.13); --line-2: rgba(255, 255, 255, 0.07); --elev: 0 1px 2px rgba(0, 0, 0, 0.45), 0 8px 22px rgba(0, 0, 0, 0.35); }
+}
+:root[data-theme="dark"] { --surface: rgba(32, 25, 29, 0.90); --surface-2: rgba(255, 255, 255, 0.045); --line: rgba(255, 255, 255, 0.13); --line-2: rgba(255, 255, 255, 0.07); --elev: 0 1px 2px rgba(0, 0, 0, 0.45), 0 8px 22px rgba(0, 0, 0, 0.35); }
+
+/* Tầng 0 */
+.app-header { background: transparent; border: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; padding-inline: 4px; }
+.card.wk-bar { background: transparent; border: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; padding: 0 2px; }
+.page-title { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+
+/* Tầng 1 */
+.card, .day-card, .timeline-container, .inbox-aside, .table-wrapper {
+  background: var(--surface); border: 1px solid var(--line); box-shadow: var(--elev);
+}
+.card, .timeline-container, .inbox-aside, .table-wrapper { border-radius: 18px; }
+
+/* Tầng 2 */
+.hv-task { background: var(--surface-2); border: 1px solid var(--line-2); box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+.hl-pin { background: var(--surface-2); border-color: var(--line-2); box-shadow: none; }
+.review-prompt-banner { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--ac); box-shadow: none; }
+
+/* Lịch tuần: mỗi ngày là một cột rõ ràng, đầu cột tách khỏi thân, hôm nay nổi bật */
+.week-cards-grid { gap: 12px; }
+.day-card { border-radius: 14px; min-height: 180px; }
+.day-card:hover { border-color: var(--line); box-shadow: var(--elev), 0 0 0 1px var(--line); }
+.day-card-header { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 6px; row-gap: 1px; white-space: nowrap; padding: 8px 10px 8px 12px; background: var(--surface-2); border-bottom: 1px solid var(--line); }
+.day-card-header .day-name { grid-column: 1; grid-row: 1; }
+.day-card-header .day-date { grid-column: 1; grid-row: 2; justify-self: start; }
+.day-card-header .day-h { grid-column: 2; grid-row: 1 / span 2; }
+.day-card { container-type: inline-size; }
+.day-card.hv-over, .hv-task.hv-over { background: color-mix(in srgb, var(--ac) 10%, var(--surface)); }
+@container (max-width: 175px) { .event-meta > span:last-child { display: none; } }
+.day-name { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--tx-sec); }
+.day-date { font: 700 17px/1.2 var(--font-ui); color: var(--tx); font-variant-numeric: tabular-nums; }
+.day-h { font-size: 11.5px; font-weight: 600; color: var(--tx-sec); background: var(--surface); border: 1px solid var(--line-2); border-radius: 99px; padding: 1px 8px; font-variant-numeric: tabular-nums; }
+.day-card.today { background: var(--surface); border: 2px solid var(--ac); box-shadow: var(--elev), 0 0 0 4px var(--ac-soft); }
+.day-card.today .day-card-header { background: color-mix(in srgb, var(--ac) 14%, var(--surface)); }
+.day-card.today .day-card-header .day-name { color: var(--ac-text); }
+.day-card.today .day-card-header .day-date { color: var(--on-ac); background: var(--ac); border-radius: 99px; padding: 1px 9px; }
+.day-card.wkend:not(.today) .day-card-header { background: color-mix(in srgb, var(--tx) 6%, transparent); }
+.day-card.past:not(.today) .day-date, .day-card.past:not(.today) .day-name { color: var(--mu); }
+.day-card.past .event-item { opacity: 0.78; }
+.day-events-list { padding: 8px 8px 4px; gap: 6px; }
+.day-empty { color: var(--mu); font-size: 12px; text-align: center; margin: auto 0; padding: 14px 0; }
+.day-card-add-btn { margin: 4px 8px 8px; border: 1px dashed var(--line); color: var(--mu); }
+/* Hoạt động: nền màu loại vốn nhạt, vạch màu bên trái, chữ đậm rõ */
+.event-item { background: color-mix(in srgb, var(--cap) 15%, var(--surface)); box-shadow: inset 3px 0 0 var(--cap); border-radius: 8px; padding: 6px 9px 6px 11px; }
+.event-item:hover { background: color-mix(in srgb, var(--cap) 24%, var(--surface)); transform: none; box-shadow: inset 3px 0 0 var(--cap), 0 1px 4px rgba(0, 0, 0, 0.08); }
+.event-meta > span:last-child { color: color-mix(in srgb, var(--cap) 70%, var(--tx)) !important; }
+
+/* Tổng kết theo loại vốn (Lịch, popup Tổng kết): phần phụ, nằm phẳng */
+.cap-sum { margin-bottom: 14px; }
+.cap-sum-h { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 12px; padding: 0 2px 6px; }
+.cap-sum-h b { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tx-sec); }
+.cap-sum-h span { font-size: 12.5px; color: var(--tx-sec); font-variant-numeric: tabular-nums; }
+.cap-sum-row { display: grid; grid-template-columns: repeat(var(--n, 5), minmax(0, 1fr)); gap: 8px; }
+.cap-s { display: flex; flex-direction: column; gap: 3px; min-width: 0; padding: 8px 10px 9px 12px; border-radius: 12px; background: var(--surface-2); box-shadow: inset 3px 0 0 var(--cap); }
+.cap-s-n { font-size: 12px; line-height: 1.25; color: var(--tx-sec); font-weight: 500; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere; }
+.cap-s b { margin-top: auto; }
+.cap-s b { font: 700 19px/1.15 var(--font-ui); color: var(--tx); font-variant-numeric: tabular-nums; }
+.cap-s b small { font-size: 12px; font-weight: 500; color: var(--mu); margin-left: 1px; }
+.cap-s-bar { display: block; height: 4px; border-radius: 99px; background: var(--line-2); overflow: hidden; }
+.cap-s-bar > i { display: block; height: 100%; border-radius: 99px; background: var(--cap); }
+.cap-s.weak .cap-s-n::after { content: " · yếu nhất"; color: var(--bad); font-weight: 600; }
+.review-modal .cap-sum, #reviewSheetBody .cap-sum { margin-bottom: 0; }
+@media (max-width: 640px) {
+  /* điện thoại: 5 loại vốn trên một hàng, chỉ số giờ; mục tiêu xem ở thanh màu và khi bấm giữ */
+  .cap-sum-row { gap: 5px; }
+  .cap-s { padding: 6px 6px 7px 9px; border-radius: 10px; gap: 2px; }
+  .cap-s-n { font-size: 10.5px; }
+  .cap-s b { font-size: 16px; }
+  .cap-s-tg { display: none; }
+  .cap-s.weak .cap-s-n::after { content: ""; }
+  .cap-s.weak .cap-s-n { color: var(--bad); font-weight: 600; }
+  .page-title { font-size: 23px; }
+  .day-card-header { display: flex; align-items: baseline; gap: 8px; }
+  .day-card-header .day-h { margin-left: auto; align-self: center; }
+}
+
+/* Thói quen: dải phụ, phẳng */
+.hb-chip { background: var(--surface-2); border-color: var(--line-2); }
+
+/* Popup Tổng kết: phần phụ có tiêu đề nhỏ, không khung */
+.rv-nav { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+.rv-sec { padding-top: 12px; border-top: 1px solid var(--line-2); }
+.rv-sec-h { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tx-sec); margin-bottom: 8px; }
+
+/* Nút biểu tượng trên dòng: ✕ xóa, ↑ ↓ đổi thứ tự. Cùng cỡ, cùng màu ở mọi nơi */
+.btn.ic-btn { width: 28px; height: 28px; min-width: 28px; padding: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; line-height: 1; color: var(--mu); border-radius: 8px; flex: none; }
+.btn.ic-btn:hover:not([disabled]) { color: var(--tx); background: var(--surface-2); border-color: var(--line-2); }
+.btn.x-del:hover:not([disabled]) { color: var(--bad); background: var(--bad-soft); border-color: transparent; }
+.btn.ic-btn[disabled] { opacity: 0.35; }
+@media (hover: none), (pointer: coarse) { .btn.ic-btn { width: 40px; height: 40px; min-width: 40px; min-height: 40px; font-size: 15px; } }
 </style>
 <script>
   try {
@@ -3130,8 +3234,6 @@ function openWeeklyReviewModal(wIdx = sel) {
 
   $("reviewSheetTitle").innerHTML = `<span>Tổng kết tuần ${wIdx + 1}</span>`;
 
-  const totalAlloc = al(wIdx);
-  const freeTime = Math.max(0, 168 - totalAlloc);
   const noData = evs(wIdx).length === 0;
   const bal = balanceOf(wIdx);
 
@@ -3141,22 +3243,10 @@ function openWeeklyReviewModal(wIdx = sel) {
   const laggingCap = [...capStats].filter(x => x.target > 0).sort((a, b) => a.diff - b.diff)[0];
   const neglectedCaps = capStats.filter(x => x.u === 0);
 
-  // Nhận định Quỹ 168 giờ
-  let timeInsight = "";
-  if (noData) {
-    timeInsight = "Chưa ghi giờ nào.";
-  } else if (totalAlloc > 168) {
-    timeInsight = `<b>Quá tải (+${r1(totalAlloc - 168)}h):</b> đã ghi ${r1(totalAlloc)}h, vượt tổng giờ của tuần. Lịch đang lấn vào giờ nghỉ.`;
-  } else if (totalAlloc >= 110) {
-    timeInsight = `<b>Lịch kín (${Math.round(totalAlloc/168*100)}%):</b> đã ghi ${r1(totalAlloc)}h, còn ${r1(freeTime)}h trống.`;
-  } else {
-    timeInsight = `<b>Còn nhiều giờ trống:</b> đã ghi ${r1(totalAlloc)}h, còn ${r1(freeTime)}h (${Math.round(freeTime/168*100)}%). Có thể thêm mục tiêu học tập hoặc vận động.`;
-  }
-
   const html = `
     <div style="display:flex; flex-direction:column; gap:14px;">
       <!-- BỘ CHỌN TUẦN TỔNG KẾT LINH HOẠT -->
-      <div style="display:flex; justify-content:space-between; align-items:center; background:var(--card-subtle); padding:10px 14px; border-radius:var(--radius-md); border:1px solid var(--bd); flex-wrap:wrap; gap:8px;">
+      <div class="rv-nav">
         <div style="display:flex; align-items:center; gap:6px; flex:1 1 220px; min-width:0;">
           <button type="button" class="btn btn-sm" onclick="openWeeklyReviewModal(Math.max(0, ${wIdx} - 1))" title="Xem tuần trước">◀</button>
           <select onchange="openWeeklyReviewModal(+this.value)" style="flex:1; min-width:0; text-overflow:ellipsis; font-weight:600; padding:5px 10px; font-size:13px; border-radius:var(--radius-sm); border:1px solid var(--bd); background:var(--card); color:var(--tx); cursor:pointer;">
@@ -3171,60 +3261,15 @@ function openWeeklyReviewModal(wIdx = sel) {
         <div style="display:flex; align-items:center; gap:8px;">
           ${CW >= 0 && wIdx !== CW ? `
             <button type="button" class="btn btn-sm btn-ghost" onclick="openWeeklyReviewModal(CW)" style="color:var(--ac-text); font-weight:600; font-size:12px;">Tuần này</button>
-          ` : wIdx === CW ? `<span class="pill pill-ok" style="font-size:11px;">Tuần hiện tại</span>` : ""}
+          ` : ""}
         </div>
       </div>
 
-      <!-- 3 THẺ CHỈ SỐ CỐT LÕI -->
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
-        <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
-          <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Cân bằng</div>
-          <div style="font:600 19px var(--font-ui); margin-top:4px; color:${bal.score == null ? 'var(--mu)' : bal.score >= 80 ? 'var(--ok-text)' : bal.score >= 50 ? 'var(--wa-text)' : 'var(--bad)'}">
-            ${bal.score == null ? (bal.tg.length ? 'Chưa có dữ liệu' : 'Chưa đặt mục tiêu') : bal.score + '%'}
-          </div>
-          <small style="color:var(--tx-sec)">${bal.score == null ? (bal.tg.length ? 'Ghi hoạt động để đánh giá' : 'Đặt giờ mỗi tuần cho từng vốn') : balanceLabel(bal.score)}</small>
-        </div>
-        <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
-          <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Giờ đã ghi</div>
-          <div style="font:600 19px var(--font-ui); margin-top:4px;">
-            ${r1(totalAlloc)}h <span style="font-size:13px; font-weight:400; color:var(--mu);">(${Math.round(totalAlloc/168*100)}%)</span>
-          </div>
-          <small style="color:${totalAlloc > 168 ? 'var(--bad)' : 'var(--ok-text)'}">
-            ${totalAlloc > 168 ? 'Vượt tổng giờ của tuần' : `Còn ${r1(freeTime)}h trống`}
-          </small>
-        </div>
-        <div style="background:var(--card-subtle); padding:12px; border-radius:var(--radius-md); border:1px solid var(--bd);">
-          <div style="font-size:11px; color:var(--mu); text-transform:uppercase; font-weight:600;">Yếu nhất</div>
-          <div style="font:600 19px var(--font-ui); margin-top:4px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:${bal.weakest ? 'var(--tx)' : 'var(--mu)'}">
-            ${bal.weakest ? esc(bal.weakest.c.n) : '–'}
-          </div>
-          <small style="color:var(--tx-sec)">${bal.weakest ? `${r1(bal.weakest.h)}h / ${r1(bal.weakest.c.tg)}h (${bal.weakest.pct}%)` : 'Chưa đánh giá được'}</small>
-        </div>
-      </div>
-
-      ${(S.projects || []).length ? `
-      <div style="border:1px solid var(--bd); border-radius:var(--radius-md); padding:12px; background:var(--card);">
-        <div style="font-weight:600; font-size:14px; margin-bottom:8px;">Giờ theo dự án</div>
-        ${pjWeekRowsHTML(W[wIdx])}
-      </div>` : ""}
-
-      ${hlWeekHTML(W[wIdx]) ? `
-      <div style="border:1px solid var(--bd); border-radius:var(--radius-md); padding:12px; background:var(--card);">
-        <div style="font-weight:600; font-size:14px; margin-bottom:8px;">Sức khỏe</div>
-        ${hlWeekHTML(W[wIdx])}
-      </div>` : ""}
-
-      ${hbList().length ? `
-      <div style="border:1px solid var(--bd); border-radius:var(--radius-md); padding:12px; background:var(--card);">
-        <div style="font-weight:600; font-size:14px; margin-bottom:8px;">Thói quen</div>
-        ${hbWeekRowsHTML(W[wIdx])}
-      </div>` : ""}
-
+      <!-- CHÍNH: giờ từng loại vốn trong tuần, rồi bánh xe -->
+      ${capSumHTML(wIdx)}
       <!-- BÁNH XE CUỘC ĐỜI CỦA TUẦN ĐÓ -->
-      <div style="border:1px solid var(--bd); border-radius:var(--radius-md); padding:12px; background:var(--card);">
-        <div style="font-weight:600; font-size:14px; margin-bottom:4px; text-align:center;">
-          Bánh xe cuộc đời
-        </div>
+      <div class="rv-sec">
+        <div class="rv-sec-h">Bánh xe cuộc đời</div>
         ${renderRadarChartSVG(wIdx)}
       </div>
 
@@ -3238,14 +3283,6 @@ function openWeeklyReviewModal(wIdx = sel) {
       ` : `
       <!-- PHÂN TÍCH CHUYÊN SÂU & INSIGHTS ĐA CHIỀU -->
       <div style="display:flex; flex-direction:column; gap:10px; font-size:13px;">
-        <!-- Insight 2: Giờ trong tuần -->
-        <div style="padding:12px 14px; background:var(--card-subtle); border-radius:var(--radius-md); border:1px solid var(--bd); border-left:4px solid var(--c-cyan);">
-          <div style="font-weight:600; font-size:13.5px; margin-bottom:4px; display:flex; align-items:center; gap:6px;">
-            <span>Giờ trong tuần</span>
-          </div>
-          <div style="color:var(--tx); line-height:1.5;">${timeInsight}</div>
-        </div>
-
         <!-- Insight 3: Đánh giá từng nguồn vốn -->
         <div style="display:flex; flex-direction:column; gap:6px;">
           ${starCap ? `
@@ -3277,6 +3314,24 @@ function openWeeklyReviewModal(wIdx = sel) {
         </div>
       </div>
       `}
+
+      ${(S.projects || []).length ? `
+      <div class="rv-sec">
+        <div class="rv-sec-h">Giờ theo dự án</div>
+        ${pjWeekRowsHTML(W[wIdx])}
+      </div>` : ""}
+
+      ${hlWeekHTML(W[wIdx]) ? `
+      <div class="rv-sec">
+        <div class="rv-sec-h">Sức khỏe</div>
+        ${hlWeekHTML(W[wIdx])}
+      </div>` : ""}
+
+      ${hbList().length ? `
+      <div class="rv-sec">
+        <div class="rv-sec-h">Thói quen</div>
+        ${hbWeekRowsHTML(W[wIdx])}
+      </div>` : ""}
 
       <div style="display:flex; justify-content:flex-end; gap:8px;">
         <button type="button" class="btn" onclick="copyReviewToClipboard(${wIdx})">Sao chép</button>
@@ -3316,18 +3371,27 @@ function openDayView() {
   draw();
 }
 
-// Số liệu tuần đang xem: số hoạt động, tổng giờ, điểm cân bằng, vốn yếu nhất
+// Giờ từng loại vốn trong một tuần (gồm giờ cố định): dùng chung ở tab Lịch và popup Tổng kết
+function capSumHTML(wi) {
+  const bal = balanceOf(wi), weak = bal.weakest && bal.weakest.c.k;
+  const cells = S.caps.map(c => {
+    const h = wk(wi, c.k), pct = c.tg ? Math.round(h / c.tg * 100) : null;
+    return `<div class="cap-s${c.k === weak ? " weak" : ""}" style="--cap:${c.c}" title="${esc(c.n)}: ${r1(h)}h${c.tg ? ` / mục tiêu ${r1(c.tg)}h (${pct}%)` : ", chưa đặt mục tiêu"}${c.k === weak ? " · yếu nhất" : ""}">
+      <span class="cap-s-n">${esc(c.n)}</span>
+      <b>${r1(h)}<small>h${c.tg ? `<span class="cap-s-tg"> / ${r1(c.tg)}h</span>` : ""}</small></b>
+      ${c.tg ? `<i class="cap-s-bar"><i style="width:${Math.min(100, pct)}%"></i></i>` : ""}
+    </div>`;
+  }).join("");
+  const meta = [`${r1(al(wi))}h`, `${evs(wi).length} hoạt động`, bal.score != null ? `cân bằng ${bal.score}%` : ""].filter(Boolean).join(" · ");
+  return `<section class="cap-sum" aria-label="Giờ theo loại vốn, tuần ${wi + 1}">
+    <div class="cap-sum-h"><b>Giờ theo loại vốn</b><span${bal.score != null ? ` title="${esc(balanceLabel(bal.score))}"` : ""}>${meta}</span></div>
+    <div class="cap-sum-row" style="--n:${Math.min(6, S.caps.length)}">${cells}</div>
+  </section>`;
+}
+// Tab Lịch: tổng kết tuần theo loại vốn, rồi dải thói quen
 function weekStatsHTML(ws) {
-  let n = 0, h = 0;
-  for (let i = 0; i < 7; i++) (S.ev[ky(ad(ws, i))] || []).forEach(e => { n++; h += e.h; });
-  const wi = W.findIndex(w => +w === +ws), bal = wi >= 0 ? balanceOf(wi) : { score: null, weakest: null };
-  // Tổng giờ gồm cả giờ cố định mỗi tuần (tab Vốn), khớp "Giờ đã ghi" ở Tổng kết tuần và Tổng quan
-  const fixed = S.caps.reduce((a, c) => a + blH(c.k), 0);
-  if (wi >= 0) h = al(wi);
-  const tile = (lb, v, cls, tip) => `<div class="stat-tile"${tip ? ` title="${esc(tip)}"` : ""}><span>${lb}</span><b${cls ? ` class="${cls}"` : ""}>${v}</b></div>`;
-  // Chưa có mục tiêu hoặc chưa có giờ: chỉ 2 ô, không hiện "–" vô nghĩa
-  const bt = bal.score == null ? "" : tile("Cân bằng", bal.score + "%", "", balanceLabel(bal.score)) + tile("Yếu nhất", bal.weakest ? esc(bal.weakest.c.n) : "–", "txt", bal.weakest ? `${bal.weakest.c.n}: ${r1(bal.weakest.h)}h / ${r1(bal.weakest.c.tg)}h` : "");
-  return `<div class="stat-row${bt ? "" : " two"}" aria-label="Số liệu tuần">${tile("Hoạt động", n)}${tile("Tổng giờ", r1(h), "", fixed ? `Gồm ${r1(fixed)}h cố định mỗi tuần` : "")}${bt}</div>` + hbStripHTML();
+  const wi = W.findIndex(w => +w === +ws);
+  return (wi >= 0 ? capSumHTML(wi) : "") + hbStripHTML();
 }
 
 function renderNav() {
@@ -4299,14 +4363,15 @@ const V = {
         const dh = dayH(k);
 
         cards += `
-          <div class="day-card ${isToday ? 'today' : ''}" ondragover="dayOver(event)" ondragleave="dayLeave(event)" ondrop="dayDrop(event, '${k}')">
+          <div class="day-card ${isToday ? 'today' : k < tk ? 'past' : ''} ${j > 4 ? 'wkend' : ''}" ondragover="dayOver(event)" ondragleave="dayLeave(event)" ondrop="dayDrop(event, '${k}')">
             <div class="day-card-header">
               <span class="day-name">${DN_VI[j]}</span>
-              <span class="day-date">${dt.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" })}${dh ? ` · ${r1(dh)}h` : ""}</span>
+              <span class="day-date">${dt.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" })}</span>
+              ${dh ? `<span class="day-h" title="Tổng giờ trong ngày">${r1(dh)}h</span>` : ""}
             </div>
             ${hlChips(k, cyc)}
             <div class="day-events-list">
-              ${es.length === 0 ? `<div style="color:var(--mu); font-size:12px; text-align:center; margin:auto 0; padding:12px 0;">Trống</div>` : ""}
+              ${es.length === 0 ? `<div class="day-empty">Trống</div>` : ""}
               ${es.map((e, idx) => {
                 const cap = CM(e.c);
                 return `
@@ -4678,7 +4743,7 @@ const V = {
             <input type="number" step="0.5" min="0" value="${blH(c.k)}" aria-label="Giờ cố định mỗi tuần của ${esc(c.n)}" onchange="setBl('${c.k}', this.value)">
           </td>
           ${capEdit ? `<td>
-            <button class="btn btn-sm btn-danger" onclick="deleteCap('${c.k}')" aria-label="Xóa loại vốn ${esc(c.n)}">Xóa</button>
+            ${xBtn(`deleteCap('${c.k}')`, "Xóa loại vốn " + esc(c.n))}
           </td>` : ""}
         </tr>
       `;
@@ -6205,8 +6270,8 @@ function renderSched() {
         <b>${when}</b>
         <span class="sch-nm">${esc(u.t)} · ${hrs(u.h)}${u.missed ? ` <span class="pill pill-blush">lỡ, xếp lại</span>` : ""}</span>
         <span class="sch-mv">
-          <button type="button" class="btn btn-sm btn-ghost" data-mv="${u.tk}" data-dir="-1" onclick="schedMove('${u.tk}', -1)" ${i ? "" : "disabled"} aria-label="Đưa ${esc(u.t)} lên">↑</button>
-          <button type="button" class="btn btn-sm btn-ghost" data-mv="${u.tk}" data-dir="1" onclick="schedMove('${u.tk}', 1)" ${i < tg.all.length - 1 ? "" : "disabled"} aria-label="Đưa ${esc(u.t)} xuống">↓</button>
+          <button type="button" class="btn btn-sm btn-ghost ic-btn" data-mv="${u.tk}" data-dir="-1" onclick="schedMove('${u.tk}', -1)" ${i ? "" : "disabled"} aria-label="Đưa ${esc(u.t)} lên">↑</button>
+          <button type="button" class="btn btn-sm btn-ghost ic-btn" data-mv="${u.tk}" data-dir="1" onclick="schedMove('${u.tk}', 1)" ${i < tg.all.length - 1 ? "" : "disabled"} aria-label="Đưa ${esc(u.t)} xuống">↓</button>
         </span>
       </div>`;
     }).join("");
@@ -6347,6 +6412,10 @@ function rowDrop(e, kind, id) {
 /* ---------- Giao diện hộp việc (tab riêng và cột bên lịch) ---------- */
 let capEdit = false, kwOpen = false; // tab Tôi: hiện nút Xóa loại vốn; mở phần Từ khóa
 let hvPjF = ""; // lọc Hộp việc: "" tất cả, "-" không thuộc dự án, hoặc mã dự án
+// Nút trên một dòng (việc, việc nhỏ, mốc, cập nhật, loại vốn, triệu chứng): cùng loại thì cùng kiểu.
+// Xóa luôn là dấu ✕, đổi thứ tự luôn là ↑ ↓; tên đầy đủ nằm ở aria-label và title.
+const xBtn = (on, label) => `<button type="button" class="btn btn-sm btn-ghost ic-btn x-del" onclick="${on}" aria-label="${label}" title="${label}">✕</button>`;
+const mvBtn = (on, up, dis, label) => `<button type="button" class="btn btn-sm btn-ghost ic-btn" onclick="${on}" ${dis ? "disabled" : ""} aria-label="${label}" title="${label}">${up ? "↑" : "↓"}</button>`;
 let hvMore = ""; // khay ⋯ đang mở: "task:<mã>" hoặc "sub:<mã>"
 function hvMoreT(key) {
   hvMore = hvMore === key ? "" : key;
@@ -6384,9 +6453,7 @@ function inboxHTML(where) {
           ${moreBtn("sub:" + s.id, s.t)}
         </span>
         ${hvMore === "sub:" + s.id ? `<div class="hv-tray">
-          <button type="button" class="btn btn-sm btn-ghost hv-mv" onclick="moveItem('sub','${s.id}',-1)" ${i ? "" : "disabled"}>↑ Lên</button>
-          <button type="button" class="btn btn-sm btn-ghost hv-mv" onclick="moveItem('sub','${s.id}',1)" ${i < t.subs.length - 1 ? "" : "disabled"}>↓ Xuống</button>
-          <button type="button" class="btn btn-sm btn-ghost hv-del" onclick="deleteSub('${s.id}')" aria-label="Xóa ${esc(s.t)}">Xóa</button>
+          <span class="hv-tray-acts">${mvBtn(`moveItem('sub','${s.id}',-1)`, 1, !i, "Đưa " + esc(s.t) + " lên")}${mvBtn(`moveItem('sub','${s.id}',1)`, 0, i >= t.subs.length - 1, "Đưa " + esc(s.t) + " xuống")}${xBtn(`deleteSub('${s.id}')`, "Xóa " + esc(s.t))}</span>
         </div>` : ""}
       </li>`;
   };
@@ -6424,9 +6491,8 @@ function inboxHTML(where) {
             ${(S.projects || []).filter(p => pjIsOpen(p) || p.id === t.pj).sort(pjCmp).map(p => `<option value="${p.id}" ${p.id === t.pj ? "selected" : ""}>${esc(p.n)}</option>`).join("")}
           </select>` : ""}
           <span class="hv-tray-acts">
-            ${list ? `<button type="button" class="btn btn-sm btn-ghost hv-mv" onclick="moveItem('task','${t.id}',-1)" ${i ? "" : "disabled"}>↑ Lên</button>
-            <button type="button" class="btn btn-sm btn-ghost hv-mv" onclick="moveItem('task','${t.id}',1)" ${i < list.length - 1 ? "" : "disabled"}>↓ Xuống</button>` : ""}
-            <button type="button" class="btn btn-sm btn-ghost hv-del" onclick="deleteTask('${t.id}')" aria-label="Xóa việc ${esc(t.t)}">Xóa</button>
+            ${list ? mvBtn(`moveItem('task','${t.id}',-1)`, 1, !i, "Đưa " + esc(t.t) + " lên") + mvBtn(`moveItem('task','${t.id}',1)`, 0, i >= list.length - 1, "Đưa " + esc(t.t) + " xuống") : ""}
+            ${xBtn(`deleteTask('${t.id}')`, "Xóa việc " + esc(t.t))}
           </span>
         </div>` : ""}
         ${open ? `
@@ -7549,7 +7615,7 @@ function pjOverviewHTML(p, items) {
   const next = items.filter(i => !i.done && !i.late).sort((a, b) => nextKey(a).localeCompare(nextKey(b))).slice(0, 4);
   const ms = (p.ms || []).slice().sort((a, b) => a.d.localeCompare(b.d));
   const ups = p.ups || [];
-  const upHTML = u => `<div class="pj-up"><div class="pj-up-h"><span class="pj-hs hs-${u.hs}"><i></i>${PJ_HS[u.hs]}</span> <small>${dm(u.d)}/${u.d.slice(0, 4)}</small><button type="button" class="btn btn-sm btn-ghost pj-up-del" onclick="pjUpDel('${u.id}')" aria-label="Xóa cập nhật ${dm(u.d)}" title="Xóa cập nhật này">Xóa</button></div>${u.note ? `<p>${esc(u.note)}</p>` : ""}</div>`;
+  const upHTML = u => `<div class="pj-up"><div class="pj-up-h"><span class="pj-hs hs-${u.hs}"><i></i>${PJ_HS[u.hs]}</span> <small>${dm(u.d)}/${u.d.slice(0, 4)}</small>${xBtn(`pjUpDel('${u.id}')`, "Xóa cập nhật " + dm(u.d))}</div>${u.note ? `<p>${esc(u.note)}</p>` : ""}</div>`;
   const itemBtn = (i, lab, cls) => `<button type="button" class="pjo-item ${cls || ""}" onclick="pjOpenItem('${i.kind}','${i.id}')"><span>${esc(i.t)}</span><small>${lab}</small></button>`;
   const caps = Object.keys(s.byCap).sort((a, b) => s.byCap[b] - s.byCap[a]);
   const cSt = `
@@ -7595,7 +7661,7 @@ function pjOverviewHTML(p, items) {
           <div class="pjo-ms ${m.done ? "done" : m.d < tk ? "late" : ""}">
             <input type="checkbox" ${m.done ? "checked" : ""} onchange="pjMsToggle('${m.id}')" aria-label="Đạt mốc ${esc(m.n)}">
             <span>${esc(m.n)}</span><small>${dm(m.d)}</small>
-            <button type="button" class="btn btn-sm btn-ghost hv-del" onclick="pjMsDel('${m.id}')" aria-label="Xóa mốc ${esc(m.n)}">✕</button>
+            ${xBtn(`pjMsDel('${m.id}')`, "Xóa mốc " + esc(m.n))}
           </div>`).join("")}
         <div class="pjo-add">
           <input id="pjMsName" type="text" maxlength="80" placeholder="Mốc mới, vd: Chạy 21 km" onkeydown="enterKey(event, pjMsAdd)" aria-label="Tên mốc">
@@ -7828,7 +7894,7 @@ function renderPjItem(force) {
               <input type="checkbox" ${s.done ? "checked" : ""} onchange="toggleDone('sub','${s.id}')" aria-label="Xong: ${esc(s.t)}">
               <span>${esc(s.t)}</span><small>${hrs(s.h)}</small>
               ${x ? `<button type="button" class="hv-when" onclick="openEditor('${x.k}', ${x.i})">${pjWhen(x)}</button>` : s.done ? "<span></span>" : `<button type="button" class="btn btn-sm" onclick="openSched('sub','${s.id}')">Xếp</button>`}
-              <button type="button" class="btn btn-sm btn-ghost hv-del" onclick="deleteSub('${s.id}')" aria-label="Xóa ${esc(s.t)}">✕</button>
+              ${xBtn(`deleteSub('${s.id}')`, "Xóa " + esc(s.t))}
             </div>`; }).join("")}
           <input id="pjdSubIn" class="pj-add" data-hv="pjsub" data-task="${t.id}" placeholder="+ Việc nhỏ, vd: Đặt vé 30p" onkeydown="hvKeydown(event)" aria-label="Thêm việc nhỏ">
         </div>
@@ -9026,7 +9092,7 @@ function hlCatHTML(cat) {
       <div class="card"><div class="card-header"><div><h3 class="card-title">Điều đi cùng triệu chứng</h3><div class="card-sub">90 ngày qua</div></div></div>${hlInsHTML(hlInsights().filter(x => x.kind === "sy"), 0, "Chưa thấy hoạt động, thuốc hay căng thẳng nào đi cùng triệu chứng rõ ràng.")}</div>
       <div class="card"><div class="card-header"><div><h3 class="card-title">Triệu chứng tự thêm</h3><div class="card-sub">Ngoài danh sách có sẵn</div></div></div>
         <div class="set-row"><input id="hlNewSy" maxlength="40" placeholder="vd: Đau răng" aria-label="Tên triệu chứng" onkeydown="enterKey(event, () => hlAddSy())"><button type="button" class="btn btn-sm" onclick="hlAddSy()">Thêm</button></div>
-        ${(S.health && S.health.syc || []).map(x => `<div class="set-row"><span class="set-lbl">${esc(x.n)}</span><button type="button" class="btn btn-sm btn-ghost" style="color:var(--bad)" onclick="hlDelSy('${x.id}')">Xóa</button></div>`).join("")}
+        ${(S.health && S.health.syc || []).map(x => `<div class="set-row"><span class="set-lbl">${esc(x.n)}</span>${xBtn(`hlDelSy('${x.id}')`, "Xóa triệu chứng " + esc(x.n))}</div>`).join("")}
       </div>`;
   } else if (cat === "mh") {
     const chk = Object.entries(S.health && S.health.chk || {}).sort((a, b) => b[0].localeCompare(a[0])).slice(0, 8);

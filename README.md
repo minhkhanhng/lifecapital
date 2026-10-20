@@ -146,7 +146,10 @@
    - Mỗi tab một nút **Thêm** ở đầu trang (Lịch: hoạt động, ở chế độ Ngày thì thêm vào ngày đang xem; Hộp việc: việc; Dự án: dự án hoặc việc của dự án đang mở; Sức khỏe: nhật ký hôm nay). Thêm hoạt động cho dự án nằm trong menu ⋯ của trang dự án; mỗi ngày trong tuần có nút + nhỏ.
    - Ô ghi nhanh chỉ hiện ở Lịch, Hộp việc, Dự án; phím `/` ở tab khác sẽ chuyển về Lịch. Tên tab giống nhau trên máy tính và điện thoại; điện thoại ẩn dòng mô tả dưới tiêu đề.
    - Tổng quan: Nhận định mặc định tính theo tuần đang xem (khớp bánh xe), chọn được trung bình 4/8 tuần hoặc mọi tuần; chưa đặt mục tiêu thì chỉ còn một nút Đặt mục tiêu. Thẻ **Giờ đã ghi** chia theo loại vốn (không tính trên 168h). Số vừa đổi được tô nền 4 giây rồi tự tắt.
-   - Ô Cân bằng và Yếu nhất ở Lịch chỉ hiện khi đã có mục tiêu. Popup hoạt động chỉ hiện ô Đến ngày khi chọn lặp lại.
+   - Popup hoạt động chỉ hiện ô Đến ngày khi chọn lặp lại.
+   - Tổng kết theo loại vốn ở tab Lịch và đầu popup Tổng kết: mỗi loại vốn một ô (giờ trong tuần / mục tiêu, thanh màu, đánh dấu vốn yếu nhất), dòng trên ghi tổng giờ, số hoạt động, điểm cân bằng.
+   - Thứ bậc chính phụ: tiêu đề và hàng chọn tuần nằm trên nền, thẻ nội dung nền đặc viền rõ, phần phụ nền nhạt. Lịch tuần mỗi ngày một cột có viền, đầu cột thứ/ngày/tổng giờ, hôm nay viền màu nhấn, ngày đã qua nhạt hơn; từ 960px là 7 cột.
+   - Nút cùng loại cùng kiểu: xóa trên một dòng luôn là ✕, đổi thứ tự luôn là ↑ ↓.
 
 ---
 

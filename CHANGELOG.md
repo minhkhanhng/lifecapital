@@ -106,6 +106,12 @@ Mọi hoạt động đều là đầu tư vào một loại vốn, nên app kh�
 - Lịch: chưa có mục tiêu thì chỉ 2 ô Hoạt động, Tổng giờ (không hiện "–"). Dữ liệu mẫu có sẵn mục tiêu giờ/tuần.
 - Tab Tôi: nút Xóa từng loại vốn ẩn sau "Xóa bớt"; giải thích Mục tiêu và Cố định; Từ khóa nhận diện thu gọn. Popup hoạt động chỉ hiện ô Đến ngày khi chọn lặp lại.
 
+**Rà soát UX/UI vòng 2 (20/10): chính phụ rõ ràng, nút đồng bộ**
+- Nút cùng loại cùng kiểu: mọi nút xóa trên một dòng (việc, việc nhỏ, cập nhật trạng thái, mốc, việc nhỏ trong bảng chi tiết dự án, loại vốn, triệu chứng tự thêm) là dấu ✕ giống nút xóa mốc; đổi thứ tự là ↑ ↓. Cùng cỡ, màu nhạt, rê chuột vào ✕ thì đỏ; tên đầy đủ ở chú thích. Nút Xóa ở cuối popup giữ chữ.
+- Thứ bậc giao diện: tiêu đề trang, hàng chọn tuần nằm thẳng trên nền (không hộp); thẻ nội dung chính nền đặc, viền rõ, bóng nhẹ; phần phụ bên trong (việc trong hộp, thẻ ghim, thói quen, ô tổng kết) nền nhạt, không bóng.
+- Lịch tuần theo kiểu lịch phổ biến: mỗi ngày một cột có viền, đầu cột tách riêng (thứ chữ nhỏ, ngày chữ lớn, tổng giờ bên phải); hôm nay viền màu nhấn và ngày tô nền; ngày đã qua nhạt hơn; cuối tuần đầu cột hơi đậm; hoạt động nền màu loại vốn nhạt với vạch màu bên trái. Đủ rộng (từ 960px) thì 7 cột một hàng.
+- Tổng kết theo 5 loại vốn: ở tab Lịch và đầu popup Tổng kết, mỗi loại vốn một ô ghi số giờ trong tuần / mục tiêu kèm thanh màu, đánh dấu vốn yếu nhất; dòng trên ghi tổng giờ, số hoạt động, điểm cân bằng. Thay 4 ô Hoạt động · Tổng giờ · Cân bằng · Yếu nhất. Popup Tổng kết bỏ 3 thẻ cũ và nhận định 168 giờ; thứ tự: giờ theo loại vốn, bánh xe, nhận định, rồi dự án, sức khỏe, thói quen.
+
 ## v0.5.1 · Dọn mã · 19/10/2026
 
 Không đổi giao diện hay tính năng.
