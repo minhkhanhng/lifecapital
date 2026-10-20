@@ -136,6 +136,11 @@ Mọi hoạt động đều là đầu tư vào một loại vốn, nên app kh�
 - Vạch màu bên trái (một dạng viền) ở hoạt động, việc trong Hộp việc, thẻ dự án, gợi ý sức khỏe, thông báo chuyển thành chấm màu và nền nhuộm nhẹ.
 - Chỉ ô nhập, ô tích và bảng giữ viền mảnh (ô nhập viền hồng để đạt chuẩn 3:1). Chữ vẫn đạt 4.5:1 ở Sáng, Tối, Bỏ kính mờ; chế độ tối: rãnh thanh chọn tối, chữ phụ và chữ đỏ sáng hơn.
 
+**Rà soát UX/UI vòng 7 (20/10)**
+- Mục đang chọn rõ hơn: thanh tab (thanh bên, thanh dưới điện thoại), tab trong trang dự án, ngày đang xem ở chế độ Ngày, danh sách dự án bên trái đều là viên hồng đặc, chữ đậm; Tuần/Ngày/Năm và lựa chọn trong Cài đặt chữ đậm hơn.
+- Danh sách dự án: các thanh khít lại (cách 8px), mỗi dự án một khối nổi nhuộm màu dự án với ô chữ cái đầu, rê chuột nổi lên.
+- Sửa: ô tích trong trang dự án bị kéo thành hình chữ nhật.
+
 ## v0.5.1 · Dọn mã · 19/10/2026
 
 Không đổi giao diện hay tính năng.

@@ -2229,6 +2229,23 @@ select[style*="--cap"] { border-left-width: 1px !important; border-left-color: v
 .modal-body .form-row[style*="card-subtle"] { border-color: transparent !important; background: color-mix(in srgb, var(--ac) 6%, var(--sf-2)) !important; box-shadow: var(--lit-sm), var(--raise-1); border-radius: 16px !important; }
 [style*="border:1px solid var(--bd)"], [style*="border: 1px solid var(--bd)"], [style*="border:1px dashed var(--bd)"] { border-color: transparent !important; box-shadow: var(--lit-sm), var(--raise-1); }
 .toast.toast-ok, .toast.toast-bad, .toast.toast { border: 0; }
+/* Đang chọn (thanh tab, thanh chọn, tab dự án, ngày đang xem): luôn là viên hồng đặc, chữ đậm, rõ hơn hẳn mục khác */
+nav.main-nav button.active { background: var(--ac); color: var(--on-ac); font-weight: 700; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 3px 10px rgba(224, 130, 170, 0.40); }
+nav.main-nav button.active .nav-count { background: #ffffff; color: var(--on-ac); }
+@media (max-width: 899px) { nav.main-nav button.active { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 3px 10px rgba(224, 130, 170, 0.40); } }
+.pj-tabs button.on, .tl-dchip.on, .pj-side button.on { background: var(--ac); color: var(--on-ac); font-weight: 700; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 3px 10px rgba(224, 130, 170, 0.35); }
+.tl-dchip.on span, .tl-dchip.on b { color: var(--on-ac) !important; }
+.tl-dchip.on.today { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 3px 10px rgba(224, 130, 170, 0.35), 0 0 0 3px color-mix(in srgb, var(--ac) 40%, transparent); }
+.segmented-control button.active, .set-seg button.on { font-weight: 700; }
+/* Danh sách dự án: thanh khít hơn, mỗi dự án một khối nổi nhuộm màu dự án, ô chữ cái đầu */
+.pj-list { gap: 8px; }
+.pj-list > .card { margin-bottom: 0; }
+.pj-row { padding: 12px 16px; background: color-mix(in srgb, var(--pj) 9%, var(--sf)); box-shadow: var(--lit), var(--raise-2); border-radius: 20px; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.pj-row:hover { background: color-mix(in srgb, var(--pj) 15%, var(--sf)); transform: translateY(-2px); box-shadow: var(--lit), var(--raise-3); }
+.pj-ava { width: 40px; height: 40px; border-radius: 14px; display: grid; place-items: center; flex: none; font: 700 17px/1 var(--font-ui); color: color-mix(in srgb, var(--pj) 45%, var(--tx)); background: color-mix(in srgb, var(--pj) 30%, #ffffff); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 3px 8px color-mix(in srgb, var(--pj) 35%, transparent); }
+.pj-row .pj-name { font-size: 15px; }
+.pj-side { gap: 4px; }
+input[type="checkbox"]:not(.set-switch) { padding: 0; min-width: 0; aspect-ratio: 1 / 1; }
 </style>
 <script>
   try {
@@ -7585,7 +7602,7 @@ function pjCardHTML(p) {
   const late = pjIsOpen(p) && p.ed && p.ed < tk;
   return `
     <button type="button" class="card pj-row" style="--pj:${p.col}" onclick="pjOpen('${p.id}')">
-      <span class="pj-dot" aria-hidden="true"></span>
+      <span class="pj-ava" aria-hidden="true">${esc((p.n.trim()[0] || "?").toUpperCase())}</span>
       <span class="pj-main">
         <b class="pj-name">${esc(p.n)}</b>
         <span class="pj-sub">Ưu tiên ${PJ_PR[p.pr].toLowerCase()} · ${p.ed ? "hạn " + dm(p.ed) : "không hạn"} · ${s.tasks ? `việc ${s.done}/${s.tasks}` : `${s.evs.length} hoạt động`}</span>
