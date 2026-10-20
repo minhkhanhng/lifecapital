@@ -98,7 +98,8 @@
    - Cung cấp nút đồng bộ hàng loạt `⟳ Đồng bộ tuần này` và công tắc bật/tắt tự động đồng bộ thời gian thực trong popup Cài đặt.
 11. 🌱 **Khởi Đầu Trống & Dữ Liệu Mẫu Tùy Chọn**:
    - Lần đầu mở app, lịch trống kèm gợi ý cách ghi nhanh và nút **"Thử với dữ liệu mẫu"**: thêm khoảng 10 hoạt động ẩn danh vào tuần đang xem.
-   - Banner "Đang dùng dữ liệu mẫu" có nút xóa toàn bộ dữ liệu mẫu bằng một chạm. Hoạt động mẫu nào bạn đã sửa sẽ được giữ lại như dữ liệu thật.
+   - Dòng "Dữ liệu mẫu" có nút xóa toàn bộ dữ liệu mẫu bằng một chạm. Hoạt động mẫu nào bạn đã sửa sẽ được giữ lại như dữ liệu thật.
+   - Dữ liệu mẫu đặt sẵn mục tiêu giờ/tuần cho các loại vốn chưa có mục tiêu, để bánh xe cân bằng có số ngay; Xóa mẫu thì bỏ các mục tiêu mẫu chưa sửa.
 12. 🏷️ **Tùy Biến Từ Khóa Nhận Diện & Trí Nhớ AI Tự Học (Keyword Auto-tagging & Self-learning)**:
    - Cho phép người dùng tự do thêm/bớt từ khóa nhận diện cho từng loại vốn trong tab Danh mục vốn.
    - Loại vốn được đoán theo từ khóa khớp dài nhất (*học tiếng Anh* → Kỹ năng, không bị nhầm sang Quan hệ vì chữ *anh*).
@@ -106,7 +107,8 @@
 
 13. 📥 **Hộp Việc Chờ (v0.2.0)**:
    - Ghi những việc còn mơ hồ chưa có ngày giờ: ở tab **Hộp việc**, hoặc gõ dấu `+` ở đầu thanh ⚡ (vd *+ Chuẩn bị chuyến đi Đà Lạt*).
-   - Chia mỗi việc thành các **việc nhỏ** có thứ tự và thời lượng (*Đặt vé xe 30p*, *Đặt homestay 1h30*; không ghi thì 1h). Đổi thứ tự bằng kéo hoặc nút ↑ ↓; bấm tên để sửa; tick khi xong.
+   - Chia mỗi việc thành các **việc nhỏ** có thứ tự và thời lượng (*Đặt vé xe 30p*, *Đặt homestay 1h30*; không ghi thì 1h). Đổi thứ tự bằng kéo hoặc nút Lên/Xuống trong khay **⋯**; bấm tên để sửa; tick khi xong.
+   - Thẻ việc gọn (v0.6.0): tên, nút **Xếp/Xếp hết** và **⋯**; dòng dưới ghi loại vốn, đã xếp bao nhiêu, hạn, dự án. Đổi loại vốn, hạn, dự án, thứ tự và xóa nằm trong khay ⋯. Số trên tab Hộp việc là số việc còn phần chưa xếp, khớp số thẻ.
    - **Máy tính:** ở Tuần chi tiết và Dòng thời gian 24h, hộp việc hiện thành cột bên phải. Kéo một việc nhỏ thả vào khung giờ (làm tròn 15 phút) hoặc vào một ngày (chọn giờ, gợi ý khung trống sớm nhất từ 08:00). Kéo dòng tên việc để **xếp cả việc** (xem mục 15 Xếp thông minh).
    - **iPhone:** bấm **Xếp lịch** trên việc nhỏ (hoặc **Xếp cả việc**), chọn ngày, giờ hoặc một khung trống gợi ý.
    - Việc nhỏ đã xếp là một hoạt động bình thường trên lịch (tính vào vốn, đồng bộ Google Calendar). Sửa giờ trên lịch thì nhãn "Đã xếp" trong hộp đổi theo; xóa hoạt động hoặc bấm **Đưa về hộp việc** trong popup thì việc nhỏ quay lại hộp.
@@ -133,11 +135,18 @@
    - Bảng chi tiết: chuỗi, kỷ lục, lưới 26 tuần, tích bù trong tuần, **Xếp 1 buổi**, lưu trữ, xóa có Hoàn tác. Popup hoạt động có ô **Theo dõi thành thói quen**; app gợi ý khi một hoạt động lặp lại 3 ngày trong 2 tuần; mốc 7/21/30/66 ngày hoặc 4/8/12/26/52 tuần báo bằng thông báo nhỏ.
 
 17. 🩺 **Sức Khỏe Và Hồ Sơ (v0.6.0)**:
-   - Tab **Sức khỏe** theo bố cục app Sức khỏe của iPhone: Tóm tắt (ghi nhanh hôm nay, Điểm nổi bật, thẻ ghim), Duyệt theo nhóm (Triệu chứng, Tâm lý, Giấc ngủ, Thuốc và TPCN, Cơ thể, Chu kỳ), Nhật ký từng ngày.
+   - Tab **Sức khỏe** theo bố cục app Sức khỏe của iPhone: Tóm tắt (thẻ Hôm nay đứng đầu để ghi nhanh, điểm Sẵn sàng khi tính được, Điểm nổi bật, thẻ ghim), Duyệt theo nhóm (Triệu chứng, Tâm lý, Giấc ngủ, Thuốc và TPCN, Cơ thể, Chu kỳ), Nhật ký từng ngày.
    - Ghi mỗi ngày: tâm trạng, căng thẳng, giờ ngủ, triệu chứng (có sẵn và tự thêm, 3 mức), thuốc và TPCN đã dùng, cân nặng, chiều cao, ghi chú. Chu kỳ kinh nguyệt khi hồ sơ là Nữ: dự đoán kỳ tới, rụng trứng (kỳ tới − 14 ngày), giai đoạn dễ thụ thai.
    - Gợi ý theo quy tắc cố định (không AI), có số cụ thể và dấu hiệu cần đi khám; dùng cả dữ liệu lịch (giờ làm việc, giờ cho Quan hệ, Sức khỏe). BMI theo ngưỡng châu Á; kiểm tra nhanh PHQ-2, GAD-2.
-   - Tab **Tôi**: hồ sơ (tên gọi, ngày sinh, giới tính, chiều cao, cân nặng), Danh mục vốn, Cài đặt. Công tắc đồng bộ dữ liệu sức khỏe; không bao giờ gửi sang Google Calendar.
-   - Phần 2: Điều ảnh hưởng tới bạn (so ngày có/không có hoạt động, thuốc, căng thẳng với tâm trạng và triệu chứng), Check-in tối kèm nhắc qua tệp lịch, chu kỳ theo 4 giai đoạn với tín hiệu rụng trứng (nhiệt độ, dịch, que LH) và chế độ kín đáo, Báo cáo cho bác sĩ (in, PDF, HTML) và Thẻ y tế khẩn cấp, vòng Vận động 150 phút/tuần từ lịch, điểm Sẵn sàng 0–100 nối với Xếp hết.
+   - Tab **Tôi**: hồ sơ (tên gọi, ngày sinh, giới tính, chiều cao, cân nặng), Danh mục vốn (nút Xóa từng loại vốn chỉ hiện sau khi bấm **Xóa bớt**; Từ khóa nhận diện thu gọn), Cài đặt (lối vào duy nhất, thanh bên không còn nút Cài đặt). Công tắc đồng bộ dữ liệu sức khỏe; không bao giờ gửi sang Google Calendar.
+   - Phần 2: Điều ảnh hưởng tới bạn (so ngày có/không có hoạt động, thuốc, căng thẳng với tâm trạng và triệu chứng), Check-in tối (nút hiện ở thẻ Hôm nay sau 19h khi chưa ghi tâm trạng; giờ nhắc và tệp lịch ở tab Tôi), chu kỳ theo 4 giai đoạn với tín hiệu rụng trứng (nhiệt độ, dịch, que LH) và chế độ kín đáo, Báo cáo cho bác sĩ (in, PDF, HTML) và Thẻ y tế khẩn cấp, vòng Vận động 150 phút/tuần từ lịch, điểm Sẵn sàng 0–100 nối với Xếp hết.
+
+18. 🧹 **Giao Diện Gọn (v0.6.0)**:
+   - Một hàng chọn tuần (◀ Tuần 43 · 19/10 – 25/10/2026 ▶) cạnh Tuần/Ngày/Năm; lùi qua tuần 1 hay tiến qua tuần cuối thì tự sang năm kề bên, không còn chọn năm trên tiêu đề. Đang xem tuần khác thì có nút **Tuần này**.
+   - Mỗi tab một nút **Thêm** ở đầu trang (Lịch: hoạt động, ở chế độ Ngày thì thêm vào ngày đang xem; Hộp việc: việc; Dự án: dự án hoặc việc của dự án đang mở; Sức khỏe: nhật ký hôm nay). Thêm hoạt động cho dự án nằm trong menu ⋯ của trang dự án; mỗi ngày trong tuần có nút + nhỏ.
+   - Ô ghi nhanh chỉ hiện ở Lịch, Hộp việc, Dự án; phím `/` ở tab khác sẽ chuyển về Lịch. Tên tab giống nhau trên máy tính và điện thoại; điện thoại ẩn dòng mô tả dưới tiêu đề.
+   - Tổng quan: Nhận định mặc định tính theo tuần đang xem (khớp bánh xe), chọn được trung bình 4/8 tuần hoặc mọi tuần; chưa đặt mục tiêu thì chỉ còn một nút Đặt mục tiêu. Thẻ **Giờ đã ghi** chia theo loại vốn (không tính trên 168h). Số vừa đổi được tô nền 4 giây rồi tự tắt.
+   - Ô Cân bằng và Yếu nhất ở Lịch chỉ hiện khi đã có mục tiêu. Popup hoạt động chỉ hiện ô Đến ngày khi chọn lặp lại.
 
 ---
 

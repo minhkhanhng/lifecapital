@@ -96,6 +96,16 @@ Mọi hoạt động đều là đầu tư vào một loại vốn, nên app kh�
 - Bấm Lưu ở popup dự án (và lưu hoạt động, xếp lịch, thói quen, cập nhật trạng thái, nhật ký sức khỏe) chặn giao diện khoảng 300ms vì vẽ lại cả trang cùng lúc đóng popup. Nay popup đóng ngay, trang vẽ lại ngay sau đó (khoảng 10ms cho lần bấm).
 - Cập nhật trạng thái dự án ghi nhầm thì xóa được: mỗi cập nhật có nút Xóa, có Hoàn tác.
 
+**Rà soát UX/UI (20/10): đơn giản, dễ hiểu hơn**
+- Lịch: một hàng chọn tuần cạnh Tuần/Ngày/Năm, qua đầu/cuối năm tự sang năm kề bên; bỏ chọn năm trên tiêu đề và nhãn "Tuần hiện tại" (có nút Tuần này khi xem tuần khác). Dữ liệu mẫu thu thành một dòng. Điện thoại: tiêu đề và nút cùng một hàng, ngày đầu tiên của tuần lên giữa màn hình thay vì gần đáy.
+- Hộp việc: thẻ chỉ còn tên, Xếp/Xếp hết và ⋯; loại vốn, hạn, dự án, Lên/Xuống, Xóa vào khay ⋯ (một khay mở một lúc). Dòng dưới ghi loại vốn · đã xếp · giờ · hạn · dự án. Số trên tab là số việc (khớp số thẻ), dòng đầu ghi thêm số phần chưa có lịch; bỏ dòng Mẹo.
+- Một nút Thêm cho mỗi tab: bỏ "+ Dự án", "+ Hoạt động" (vào menu ⋯ của dự án), nút Thêm riêng ở chế độ Ngày (nút Thêm đầu trang thêm vào ngày đang xem), "Ghi chi tiết" và "Ghi hôm nay" ở Sức khỏe. Nút thêm ở mỗi ngày thu thành dấu +.
+- Sức khỏe: thẻ Hôm nay lên đầu; thẻ Sẵn sàng chỉ hiện khi tính được và không lặp vòng Vận động (đã có ở thẻ ghim); nút Check-in tối hiện ở thẻ Hôm nay sau 19h khi chưa ghi tâm trạng; giờ nhắc và tệp nhắc chuyển sang tab Tôi; bỏ banner Thêm hồ sơ, gợi ý Hoàn thiện hồ sơ có nút Mở hồ sơ.
+- Ô ghi nhanh ẩn ở Sức khỏe, Tổng quan, Tôi (phím / chuyển về Lịch). Tên tab trên điện thoại giống máy tính (Hộp việc, Tổng quan). Thanh bên bỏ nút Cài đặt; Cài đặt mở từ tab Tôi.
+- Tổng quan: Nhận định mặc định theo tuần đang xem để khớp bánh xe (trước đây là trung bình 4 tuần nên có lúc vênh với bánh xe); bỏ thẻ Nhận định khi chưa đặt mục tiêu, chỉ còn một nút Đặt mục tiêu; "Giờ trong tuần" thành "Giờ đã ghi" chia theo loại vốn, bỏ "Còn trống" tính trên 168h; số vừa đổi tô nền 4 giây rồi tự tắt, bỏ dòng "Số tô nền vừa thay đổi · Bỏ đánh dấu". Ghi "Tuần 43" thay cho "W43".
+- Lịch: chưa có mục tiêu thì chỉ 2 ô Hoạt động, Tổng giờ (không hiện "–"). Dữ liệu mẫu có sẵn mục tiêu giờ/tuần.
+- Tab Tôi: nút Xóa từng loại vốn ẩn sau "Xóa bớt"; giải thích Mục tiêu và Cố định; Từ khóa nhận diện thu gọn. Popup hoạt động chỉ hiện ô Đến ngày khi chọn lặp lại.
+
 ## v0.5.1 · Dọn mã · 19/10/2026
 
 Không đổi giao diện hay tính năng.
