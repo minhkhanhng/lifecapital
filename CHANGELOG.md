@@ -2,7 +2,9 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
-## v0.6.0 · Dự án kiểu Asana · đang UAT trên staging
+## v0.6.0 · Dự án, Xếp thông minh, Thói quen, Sức khỏe, giao diện mới · 20/10/2026
+
+_Phát hành lên production trước khi UAT xong theo quyết định của PO ngày 20/10: PO duyệt UAT (G4) trên production. Lỗi phát hiện sẽ sửa ở bản vá v0.6.x._
 
 Làm lại phần Dự án theo cách Asana tổ chức dự án, vì bản v0.5.0 khó theo dõi và khó dùng. Dữ liệu cũ dùng tiếp, không cần làm gì.
 
