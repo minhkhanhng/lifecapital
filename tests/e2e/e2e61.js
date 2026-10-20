@@ -86,6 +86,7 @@ window.E2E61 = async function () {
   switchTab("hv"); await sleep(50);
   ok("5.3 Hộp việc không còn nút đổi tác động", ![...document.querySelectorAll(".hv-mini")].some(x => /Nạp|Tiêu/.test(x.textContent)));
   switchTab("ca");
+  const ask61 = window.ask; window.ask = async () => true; // trùng giờ với dữ liệu mẫu của ngày mai (tùy thứ trong tuần): đồng ý lưu
   openEditor(tomorrow); await sleep(40);
   $("inpTitle").value = "Họp khách hàng"; $("inpStart").value = "15:00"; $("inpHours").value = "1";
   saveEventFromForm(); await sleep(60);
@@ -96,6 +97,7 @@ window.E2E61 = async function () {
   openEditor(tomorrow, oi); await sleep(40); $("inpHours").value = "1.5"; saveEventFromForm(); await sleep(60);
   const ne2 = (S.ev[tomorrow] || []).find(e => e.t === "Họp khách hàng");
   ok("5.5 sửa hoạt động cũ kiểu Tiêu vẫn lưu được", ne2 && ne2.h === 1.5, ne2);
+  window.ask = ask61;
 
   // 6. Google Calendar: tiêu đề không còn ▲/▼
   const pl = buildGCalEventPayload(ne2, tomorrow);

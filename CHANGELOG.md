@@ -2,6 +2,14 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.6.2 · Dọn CSS, không đổi giao diện · 21/10/2026
+
+- CSS gọn 20%: từ 152 KB xuống 122 KB; 1.264 → 1.120 khối, 4.328 → 3.684 khai báo, 38 → 14 khối biến `:root`.
+- Đã xóa: 508 khai báo bị đè bởi khai báo sau cùng bộ chọn (tồn đọng từ 7 vòng chỉnh giao diện), 93 khai báo biến không còn dùng (26 biến: kính cũ, vệt sáng, bóng cũ…), bộ chọn của thành phần đã bỏ (ô số liệu cũ, nhãn năm, `.review-modal`). Biến màu, bóng, bo góc của mỗi chế độ (Sáng, Tối, Bỏ kính mờ) gom về một chỗ.
+- Kiểm chứng: chụp kiểu hiển thị (~100 thuộc tính và kích thước) của mọi phần tử trên 35 màn hình và popup ở 13 trạng thái (khổ 1400, 820, 375; Sáng, Tối, theo hệ thống, Bỏ kính mờ): trước và sau trùng 100%. Toàn bộ test đạt.
+- Thanh "Có bản mới" theo kiểu thông báo: khối nổi không viền.
+- Công cụ dọn và chụp so sánh lưu ở `tests/css/`.
+
 ## v0.6.1 · Bản vá: cuộn mượt, khung hiện ngay · 21/10/2026
 
 - Lỗi: trên production cuộn bị giật, độ trễ lớn; có lúc màn hình trống, 3–4 giây sau các khung mới hiện (rõ nhất trên iPhone).
