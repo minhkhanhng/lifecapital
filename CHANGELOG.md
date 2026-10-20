@@ -129,6 +129,13 @@ Mọi hoạt động đều là đầu tư vào một loại vốn, nên app kh�
 - Nút: nút thường là kính trong mép sáng; nút chính kính nhuộm hồng một màu; Tổng kết nhuộm oliu. Nút và ô nhập không làm mờ lần nữa (đã nằm trên kính) cho nhẹ máy.
 - Đã kiểm bằng script: không còn nét đen ở mọi tab và popup (Sáng, Tối, Bỏ kính mờ, điện thoại); chữ vẫn đạt 4.5:1, viền ô nhập 3:1. Chế độ tối: chữ phụ sáng hơn (#c6b9bf, #b5a7ae) cho đủ tương phản trên kính.
 
+**Rà soát UX/UI vòng 6 (20/10): khối nổi mềm, bỏ viền (theo mẫu liquid)**
+- Bỏ viền quanh khung, cột ngày, thanh bên, ô ghi nhanh, popup, thông báo, nút, chip lựa chọn, tab dự án, nhóm trong Cài đặt. Khối nổi lên bằng bóng đổ nhiều lớp mềm ngả hồng (sát, gần, xa) và ánh sáng trắng ở mép trên, đáy hơi tối vào trong: cảm giác hơi 3D, mềm. Bo góc lớn hơn (khung 24px, popup 28px).
+- Nút và chip là viên tròn nổi: rê chuột nổi cao hơn, bấm thì lún xuống. Thanh chọn (Tuần/Ngày/Năm…) là rãnh lún, lựa chọn đang bật nổi lên màu hồng. Thanh tab trên điện thoại là viên nổi.
+- Hôm nay phát sáng hồng quanh cột thay cho viền. Đường ngăn trong thẻ, đầu popup, chân popup thay bằng khoảng trống hoặc bóng nhẹ.
+- Vạch màu bên trái (một dạng viền) ở hoạt động, việc trong Hộp việc, thẻ dự án, gợi ý sức khỏe, thông báo chuyển thành chấm màu và nền nhuộm nhẹ.
+- Chỉ ô nhập, ô tích và bảng giữ viền mảnh (ô nhập viền hồng để đạt chuẩn 3:1). Chữ vẫn đạt 4.5:1 ở Sáng, Tối, Bỏ kính mờ; chế độ tối: rãnh thanh chọn tối, chữ phụ và chữ đỏ sáng hơn.
+
 ## v0.5.1 · Dọn mã · 19/10/2026
 
 Không đổi giao diện hay tính năng.
