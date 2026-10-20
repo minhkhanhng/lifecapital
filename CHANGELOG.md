@@ -123,6 +123,12 @@ Mọi hoạt động đều là đầu tư vào một loại vốn, nên app kh�
 - Kính mờ mềm: thẻ, thanh bên, ô ghi nhanh hơi trong suốt và làm mờ nền phía sau; popup trong hơn một chút trên lớp phủ tối nhẹ. Viền khung đậm hơn và có bóng đổ để vẫn tách khỏi nền. Chế độ "Bỏ kính mờ" giữ thẻ và popup gần như đặc.
 - Tương phản theo WCAG 2.1 AA, đo bằng script trên mọi tab, chế độ xem và popup, cả Sáng, Tối, Bỏ kính mờ và điện thoại: mọi chữ ≥ 4.5:1 (chữ lớn ≥ 3:1), viền ô nhập ≥ 3:1. Đổi: chữ phụ đậm hơn (sáng #67595f, tối #a3949b), chữ phụ thứ hai #54484e, chữ xanh oliu #596021, chữ đỏ riêng (#a83a4a, tối #f08591), viền ô nhập #85737c, viền khi đặt con trỏ màu hồng đậm; tên nhóm ở Sức khỏe thành chữ đậm kèm chấm màu thay cho chữ màu nhạt; tên loại vốn trong thẻ hoạt động ngả màu vốn nhưng đủ đậm; ngày, tuần đã qua làm nhạt nền thay vì làm mờ chữ; nhãn giờ hiện tại ở chế độ Ngày đủ tương phản.
 
+**Rà soát UX/UI vòng 5 (20/10): liquid glass toàn giao diện, không nét viền đen**
+- Mọi bề mặt là kính trong (liquid glass): thẻ, cột ngày, dòng thời gian, bảng năm, cột Hộp việc, thanh bên, ô ghi nhanh, popup, thông báo. Kính làm mờ và tăng bão hòa nền phía sau, có ánh sáng trắng ở mép trên như mặt kính; bóng đổ ngả hồng. Popup và thông báo là kính dày hơn để chữ rõ trên nội dung.
+- Không còn nét viền đen hay xám đậm: mép ngoài khung là kính nhuộm hồng (giữ tương phản khung khoảng 1.6:1), mép trong trắng; đường kẻ trong thẻ hồng nhạt; viền ô nhập hồng đậm (≥ 3:1); ô tích tự vẽ viền hồng thay cho ô xám của trình duyệt; các mũi tên mở/thu, ô ngày, vạch mốc, ô màu dự án, thanh kéo chuyển sang hồng hoặc trắng. Chế độ tối dùng mép sáng.
+- Nút: nút thường là kính trong mép sáng; nút chính kính nhuộm hồng một màu; Tổng kết nhuộm oliu. Nút và ô nhập không làm mờ lần nữa (đã nằm trên kính) cho nhẹ máy.
+- Đã kiểm bằng script: không còn nét đen ở mọi tab và popup (Sáng, Tối, Bỏ kính mờ, điện thoại); chữ vẫn đạt 4.5:1, viền ô nhập 3:1. Chế độ tối: chữ phụ sáng hơn (#c6b9bf, #b5a7ae) cho đủ tương phản trên kính.
+
 ## v0.5.1 · Dọn mã · 19/10/2026
 
 Không đổi giao diện hay tính năng.
