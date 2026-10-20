@@ -2246,6 +2246,46 @@ nav.main-nav button.active .nav-count { background: #ffffff; color: var(--on-ac)
 .pj-row .pj-name { font-size: 15px; }
 .pj-side { gap: 4px; }
 input[type="checkbox"]:not(.set-switch) { padding: 0; min-width: 0; aspect-ratio: 1 / 1; }
+
+/* ===== Hiệu năng v0.6.1: cuộn mượt, khung hiện ngay =====
+   Nguyên nhân giật: ~30 khối trong vùng cuộn có backdrop-filter (blur 26px + saturate), mỗi khung hình khi cuộn
+   trình duyệt phải làm mờ lại nền sau từng khối; cộng bóng đổ nhiều lớp bán kính 40–90px và lớp nền mờ toàn màn hình.
+   iPhone quá tải GPU nên khung trống vài giây mới hiện.
+   Cách sửa: chỉ những thứ nổi cố định trên màn (thanh tab điện thoại, ô ghi nhanh điện thoại, popup, thông báo) còn làm mờ.
+   Khối trong vùng cuộn dùng mặt trắng gần đặc (nền phía sau vốn đã mờ sẵn nên nhìn gần như không khác), bóng ít lớp, bán kính nhỏ. */
+:root {
+  --sf: rgba(255, 255, 255, 0.80);
+  --sf-2: rgba(255, 255, 255, 0.88);
+  --raise-1: 0 1px 2px rgba(140, 70, 105, 0.08), 0 2px 6px rgba(140, 70, 105, 0.06);
+  --raise-2: 0 1px 2px rgba(140, 70, 105, 0.07), 0 6px 16px rgba(140, 70, 105, 0.10);
+  --raise-3: 0 4px 10px rgba(140, 70, 105, 0.12), 0 18px 36px rgba(140, 70, 105, 0.16);
+  --lit: inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --sf: rgba(46, 36, 42, 0.88); --sf-2: rgba(62, 50, 57, 0.92); --raise-1: 0 1px 2px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.25); --raise-2: 0 1px 2px rgba(0, 0, 0, 0.35), 0 6px 16px rgba(0, 0, 0, 0.30); --raise-3: 0 4px 10px rgba(0, 0, 0, 0.40), 0 18px 36px rgba(0, 0, 0, 0.40); --lit: inset 0 1px 0 rgba(255, 255, 255, 0.10); }
+}
+:root[data-theme="dark"] { --sf: rgba(46, 36, 42, 0.88); --sf-2: rgba(62, 50, 57, 0.92); --raise-1: 0 1px 2px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.25); --raise-2: 0 1px 2px rgba(0, 0, 0, 0.35), 0 6px 16px rgba(0, 0, 0, 0.30); --raise-3: 0 4px 10px rgba(0, 0, 0, 0.40), 0 18px 36px rgba(0, 0, 0, 0.40); --lit: inset 0 1px 0 rgba(255, 255, 255, 0.10); }
+:root.lite { --sf: rgba(255, 255, 255, 0.97); --sf-2: #ffffff; }
+.card, .day-card, .timeline-container, .inbox-aside, .table-wrapper, .inbox-rail, .hv-task, .hl-pin, .hb-chip, .set-sec, .cap-s, .pj-row, .pjc,
+.review-prompt-banner, .btn, .segmented-control, .set-seg, input, select, textarea, .sidebar, .quick-capture-box, .stat-tile, .event-item, .timeline-event-block {
+  -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+}
+.modal-overlay { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(90, 40, 65, 0.24); }
+/* Lớp nền: các mảng màu vốn đã mềm, chỉ làm mờ khi có ảnh nền riêng */
+body:not(.has-bg)::before { filter: none !important; will-change: auto; }
+/* Thứ nổi cố định trên điện thoại: vẫn là kính mờ (chỉ 2 khối, nhẹ) */
+@media (max-width: 899px) {
+  .sidebar, .quick-capture-box { -webkit-backdrop-filter: blur(18px) saturate(160%) !important; backdrop-filter: blur(18px) saturate(160%) !important; }
+}
+.modal-sheet { -webkit-backdrop-filter: blur(20px) saturate(160%); backdrop-filter: blur(20px) saturate(160%); }
+.toast { -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+/* Lịch năm dài: phần ngoài màn hình không vẽ trước */
+table.calendar-table tbody tr { content-visibility: auto; contain-intrinsic-size: auto 72px; }
+.hl-lrow { content-visibility: auto; contain-intrinsic-size: auto 60px; }
+/* Popup đang đóng: ẩn hẳn (không chỉ trong suốt) để trình duyệt không vẽ 9 lớp phủ làm mờ toàn màn hình nằm sẵn */
+.modal-overlay:not(.open) { visibility: hidden; transition: opacity 0.2s ease, visibility 0s linear 0.2s; }
+.modal-overlay.open { visibility: visible; transition: opacity 0.2s ease, visibility 0s; }
+.modal-overlay:not(.open) .modal-sheet { -webkit-backdrop-filter: none; backdrop-filter: none; }
 </style>
 <script>
   try {
@@ -2654,7 +2694,7 @@ const save = () => {
    hay cửa sổ khác đã ghi mà tab này không nhận được (tab bị trình duyệt tạm dừng, trang khôi phục từ
    bộ nhớ đệm, bản cũ của app không biết lắng nghe…): gộp hai bên thay vì ghi đè.
    Dữ liệu do bản này ghi có sv = 2. Bên ghi không có sv (bản cũ) thì chỉ cộng thêm, không xóa gì. */
-const APPV = 60; // v0.6.0
+const APPV = 61; // v0.6.1
 const SV = 3; // 3 (v0.4.0): hoạt động có mã riêng và thời điểm sửa; bản ghi sv khác được gộp kiểu cộng thêm
 let lastRaw = rawSaved, oldWriterSeen = 0;
 // Đồng bộ giữa các thiết bị (v0.4.0, xem phần ĐỒNG BỘ ở cuối tệp)

@@ -2,6 +2,13 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.6.1 · Bản vá: cuộn mượt, khung hiện ngay · 21/10/2026
+
+- Lỗi: trên production cuộn bị giật, độ trễ lớn; có lúc màn hình trống, 3–4 giây sau các khung mới hiện (rõ nhất trên iPhone).
+- Nguyên nhân: hiệu ứng kính (v0.6.0 vòng 5–6) đặt làm mờ nền (backdrop-filter blur 26px + bão hòa) lên khoảng 30 khối trong vùng cuộn; mỗi khung hình khi cuộn trình duyệt phải làm mờ lại phía sau từng khối. Cộng thêm 9 popup đang đóng vẫn giữ lớp phủ làm mờ toàn màn hình (chỉ trong suốt chứ không ẩn), lớp nền trang luôn bị lọc mờ, và bóng đổ nhiều lớp bán kính tới 80–90px. GPU quá tải nên khung vẽ chậm.
+- Sửa: chỉ thứ nổi cố định trên điện thoại (thanh tab, ô ghi nhanh) và popup đang mở còn làm mờ; khối trong vùng cuộn dùng mặt trắng gần đặc (nhìn gần như không khác vì nền vốn đã mềm). Popup đóng thì ẩn hẳn. Nền trang không lọc mờ trừ khi có ảnh nền riêng. Bóng đổ 2 lớp, bán kính nhỏ. Lịch năm và nhật ký sức khỏe chỉ vẽ phần đang thấy. Số lớp làm mờ đang hiện trên mỗi tab: từ khoảng 30 (cộng 18 lớp ẩn) còn tối đa 2.
+- Bản cài trên điện thoại sẽ hiện "Có bản mới", bấm Tải lại để nhận bản vá.
+
 ## v0.6.0 · Dự án, Xếp thông minh, Thói quen, Sức khỏe, giao diện mới · 20/10/2026
 
 _Phát hành lên production trước khi UAT xong theo quyết định của PO ngày 20/10: PO duyệt UAT (G4) trên production. Lỗi phát hiện sẽ sửa ở bản vá v0.6.x._
