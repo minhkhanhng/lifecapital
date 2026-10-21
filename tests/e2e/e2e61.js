@@ -19,8 +19,8 @@ window.E2E61 = async function () {
   switchTab("ca"); openSettingsModal(); await sleep(50); scan("1.6 Cài đặt", $("settingsSheetBody"));
   ok("1.6b không còn ngưỡng kiệt sức", !$("setBurn"));
   closeSettingsModal && closeSettingsModal();
-  openWeeklyReviewModal(wi); await sleep(50); scan("1.7 Tổng kết tuần", $("reviewSheetBody"));
-  closeReviewModal();
+  openWeeklyReviewModal(wi); await sleep(50); scan("1.7 Tổng kết tuần", $("v"));
+  switchTab("ca");
   openEditor(ky(W[wi])); await sleep(50); scan("1.8 Popup thêm hoạt động", $("sheetBody") || document.querySelector(".modal-sheet"));
   ok("1.8b không còn ô Tác động", !$("inpMode"));
   closeEditor && closeEditor();
@@ -64,14 +64,14 @@ window.E2E61 = async function () {
   const empty = W.findIndex((_, i) => !evs(i).length && i !== wi);
   ok("4.5 tuần trống: chưa đủ dữ liệu", empty < 0 || balanceOf(empty).score === null);
   openWeeklyReviewModal(wi); await sleep(30);
-  const rv = $("reviewSheetBody").innerText;
-  ok("4.6 Tổng kết: giờ từng loại vốn, cân bằng, yếu nhất, bánh xe", $("reviewSheetBody").querySelectorAll(".cap-s").length === S.caps.length && /cân bằng/i.test(rv) && rv.includes(exp + "%") && /yếu nhất/i.test(rv) && /Bánh xe/i.test(rv), rv.slice(0, 300));
+  const rv = $("v").innerText;
+  ok("4.6 Tổng kết: giờ từng loại vốn, cân bằng, yếu nhất, bánh xe", $("v").querySelectorAll(".cap-s").length === S.caps.length && /cân bằng/i.test(rv) && rv.includes(exp + "%") && /yếu nhất/i.test(rv) && /Bánh xe/i.test(rv), rv.slice(0, 300));
   let copied = null; const wc = navigator.clipboard && navigator.clipboard.writeText;
   try { navigator.clipboard.writeText = t => { copied = t; return Promise.resolve(); }; } catch (e) {}
   copyReviewToClipboard(wi); await sleep(20);
   if (wc) try { navigator.clipboard.writeText = wc; } catch (e) {}
   ok("4.7 sao chép tổng kết: giờ + cân bằng, không Nạp/Tiêu", copied && copied.includes("Cân bằng " + exp + "%") && !BAN.test(copied), copied);
-  closeReviewModal();
+  switchTab("ca");
   S.caps.forEach((c, i) => c.tg = tg0[i]);
 
   // 5. Tạo mới: ghi nhanh, + việc, popup → m luôn "u"

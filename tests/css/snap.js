@@ -55,7 +55,6 @@
     ["me", () => { switchTab("me"); }],
     ["me-edit", () => { capEdit = true; kwOpen = true; draw(); }],
     ["pop-set", () => { capEdit = false; kwOpen = false; switchTab("ca"); setOpen = new Set(["ui", "def", "sync", "data", "gc", "del"]); openSettingsModal(); }, () => { closeSettingsModal(); setOpen = null; }, "#settingsModalOverlay"],
-    ["pop-rv", () => openWeeklyReviewModal(CW), closeReviewModal, "#reviewModalOverlay"],
     ["pop-ed-new", () => openEditor(tk), closeEditor, "#modalOverlay"],
     ["pop-ed-edit", () => openEditor(Object.keys(S.ev).sort().pop(), 0), closeEditor, "#modalOverlay"],
     ["pop-sch", () => openSched("task", S.tasks.find(t => t.subs.length && !taskDone(t)).id, tk), closeSched, ".modal-overlay.open"],

@@ -145,15 +145,22 @@
    - Một hàng chọn tuần (◀ Tuần 43 · 19/10 – 25/10/2026 ▶) cạnh Tuần/Ngày/Năm; lùi qua tuần 1 hay tiến qua tuần cuối thì tự sang năm kề bên, không còn chọn năm trên tiêu đề. Đang xem tuần khác thì có nút **Tuần này**.
    - Mỗi tab một nút **Thêm** ở đầu trang (Lịch: hoạt động, ở chế độ Ngày thì thêm vào ngày đang xem; Hộp việc: việc; Dự án: dự án hoặc việc của dự án đang mở; Sức khỏe: nhật ký hôm nay). Thêm hoạt động cho dự án nằm trong menu ⋯ của trang dự án; mỗi ngày trong tuần có nút + nhỏ.
    - Ô ghi nhanh chỉ hiện ở Lịch, Hộp việc, Dự án; phím `/` ở tab khác sẽ chuyển về Lịch. Tên tab giống nhau trên máy tính và điện thoại; điện thoại ẩn dòng mô tả dưới tiêu đề.
-   - Tổng quan: Nhận định mặc định tính theo tuần đang xem (khớp bánh xe), chọn được trung bình 4/8 tuần hoặc mọi tuần; chưa đặt mục tiêu thì chỉ còn một nút Đặt mục tiêu. Thẻ **Giờ đã ghi** chia theo loại vốn (không tính trên 168h). Số vừa đổi được tô nền 4 giây rồi tự tắt.
+   - Tổng quan: Nhận định mặc định tính theo tuần đang xem (khớp bánh xe), chọn được trung bình 4/8 tuần hoặc mọi tuần; chưa đặt mục tiêu thì chỉ còn một nút Đặt mục tiêu. Số vừa đổi được tô nền 4 giây rồi tự tắt.
    - Popup hoạt động chỉ hiện ô Đến ngày khi chọn lặp lại.
-   - Tổng kết theo loại vốn ở tab Lịch và đầu popup Tổng kết: mỗi loại vốn một ô (giờ trong tuần / mục tiêu, thanh màu, đánh dấu vốn yếu nhất), dòng trên ghi tổng giờ, số hoạt động, điểm cân bằng.
+   - Tổng kết theo loại vốn ở tab Lịch và đầu tab Tổng quan: mỗi loại vốn một ô (giờ trong tuần / mục tiêu, thanh màu, đánh dấu vốn yếu nhất), dòng trên ghi tổng giờ, số hoạt động, điểm cân bằng.
    - Thứ bậc chính phụ: tiêu đề và hàng chọn tuần nằm trên nền, thẻ nội dung nền đặc viền rõ, phần phụ nền nhạt. Lịch tuần mỗi ngày một cột có viền, đầu cột thứ/ngày/tổng giờ, hôm nay viền màu nhấn, ngày đã qua nhạt hơn; từ 960px là 7 cột.
    - Nút cùng loại cùng kiểu: xóa trên một dòng luôn là ✕, đổi thứ tự luôn là ↑ ↓.
    - Chế độ Ngày và Năm dùng cùng quy ước với Tuần (đầu cột thứ/ngày, hôm nay viền màu nhấn và ngày tô nền, ngày đã qua nhạt, hoạt động nền màu vốn nhạt có vạch trái). Mọi nút và thanh một màu, không chuyển màu.
    - Popup và thông báo cùng thứ bậc: đầu popup dải nền nhạt, chân popup luôn ở đáy (Xóa trái, Hủy và nút chính phải); banner và toast có vạch màu bên trái theo loại. Thẻ kính hơi trong, làm mờ nền; chữ đạt WCAG AA 4.5:1, viền ô nhập 3:1 ở cả Sáng, Tối, Bỏ kính mờ.
    - Liquid glass toàn giao diện: kính trong làm mờ và bão hòa nền, mép trên sáng, mép ngoài nhuộm hồng; không có nét viền đen hay xám đậm (viền ô nhập, ô tích hồng đậm).
    - Khối nổi mềm không viền: nổi bằng bóng nhiều lớp và ánh sáng mép trên; nút, chip là viên nổi, thanh chọn là rãnh lún; màu loại vốn là chấm tròn và nền nhuộm. Chỉ ô nhập, ô tích, bảng giữ viền mảnh.
+
+19. 📥 **Nhập Từ Google Calendar, Bật/Tắt Phần, Tổng Quan Gộp (v0.6.3)**:
+   - Nút **Nhập GCal** ở hàng chọn tuần (khi đã kết nối Google Calendar): đọc các sự kiện có giờ của tuần đang xem, tự gợi ý loại vốn theo từ khóa và lựa chọn trước đây, bạn chỉ cần bỏ chọn mục không muốn ghi và bấm Thêm. Bỏ qua sự kiện cả ngày, sự kiện đã hủy hoặc đã từ chối, sự kiện do Life Capital gửi lên, sự kiện đã nhập. Mục trùng tên và giờ với hoạt động đã có được bỏ chọn sẵn; mục chưa khớp từ khóa ghi **Kiểm tra**. Hoạt động nhập về chỉ nằm trong app, không bao giờ gửi ngược lên Google; có Hoàn tác.
+   - Cài đặt > **Tính năng**: bật/tắt Dự án, Thói quen, Sức khỏe. Tắt thì ẩn tab và mọi chỗ liên quan; dữ liệu giữ nguyên, bật lại là có. Phím 1–6 theo các tab đang hiện.
+   - Mỗi tab có biểu tượng hai lớp màu hồng (không nét đen).
+   - Popup Tổng kết gộp vào tab **Tổng quan**: giờ theo loại vốn, Tổng kết tuần (điểm sáng, cần bù, chưa có giờ, gợi ý tuần tới, Sao chép), bánh xe, rồi Thói quen, Dự án, Sức khỏe. Nút Tổng kết ở tab Lịch mở thẳng tab này.
+   - Hiệu năng: vẽ lại mỗi tab nhanh hơn 40–80% (bỏ việc dựng ngầm trang Tổng quan ở mọi lần vẽ).
 
 ---
 
@@ -180,6 +187,7 @@ Nên cài theo cách này thay vì dùng tab Safari thường: Safari có thể 
 3. Ở mục **Test users**, thêm email Google của **từng người** sẽ dùng tính năng này (tối đa 100 người). Người không có trong danh sách sẽ gặp lỗi `access_denied`.
 4. **Credentials** → *Create OAuth client ID* → *Web application*. Ở **Authorized JavaScript origins**, thêm địa chỉ bạn deploy (vd `https://lifecapital.vercel.app`) và `http://localhost:8765` nếu chạy trên máy.
 5. Trong app: `⚙️ Cài đặt` → dán **Client ID** → **Kết nối Google Calendar**. Trên màn hình của Google, nhớ **tick ô cho phép truy cập Google Calendar**; nếu bỏ tick, app sẽ báo và yêu cầu kết nối lại.
+6. Nhập sự kiện từ Google về app (v0.6.3) dùng cùng quyền `calendar.events`, không cần cấp thêm quyền.
 
 ---
 

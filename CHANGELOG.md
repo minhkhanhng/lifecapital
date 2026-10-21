@@ -2,6 +2,30 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.6.3 · Nhập từ Google Calendar, bật/tắt phần, Tổng quan gộp Tổng kết · 21/10/2026
+
+**Mới**
+- **Nhập từ Google Calendar** (nút Nhập GCal ở hàng chọn tuần, hoặc Cài đặt > Google Calendar > Nhập tuần n): đọc sự kiện có giờ của tuần đang xem, gợi ý loại vốn theo từ khóa và theo lựa chọn trước đây; bạn bỏ chọn mục không muốn rồi bấm Thêm. Đỡ phải gõ lại những gì đã có trên lịch Google.
+  - Bỏ qua: sự kiện cả ngày, đã hủy, bạn đã từ chối, sự kiện do Life Capital gửi lên, loại đặc biệt (địa điểm làm việc, vắng mặt, sinh nhật), sự kiện đã nhập.
+  - Trùng tên và giờ với hoạt động đã có: báo "Có vẻ đã có trong lịch" và bỏ chọn sẵn. Chưa khớp từ khóa nào: ghi "Kiểm tra".
+  - Thời lượng làm tròn nửa giờ; sự kiện qua nửa đêm cắt tới 24:00.
+  - Hoạt động nhập về chỉ nằm trong app: sửa, xóa không đổi gì trên Google, Đồng bộ tuần cũng không gửi lại. Có Hoàn tác. Dùng quyền `calendar.events` sẵn có, không cần cấp thêm.
+- **Cài đặt > Tính năng**: công tắc Dự án, Thói quen, Sức khỏe. Tắt thì ẩn tab và mọi chỗ liên quan (ô chọn dự án, dải thói quen, dấu sức khỏe trên lịch, nhắc check-in, các thẻ ở Tổng quan); dữ liệu giữ nguyên và đồng bộ giữa các máy.
+- Biểu tượng cho từng tab (hai lớp màu hồng, không nét đen).
+
+**Thay đổi**
+- Popup Tổng kết gộp vào tab **Tổng quan**: giờ theo loại vốn → Tổng kết tuần (điểm sáng, cần bù, chưa có giờ, gợi ý tuần tới, Sao chép) → bánh xe → Thói quen, Dự án, Sức khỏe → bảng chi tiết. Nút Tổng kết ở Lịch và banner cuối tuần mở thẳng tab này. Bỏ thẻ "Giờ đã ghi" trùng ý; cảnh báo vượt 168h chuyển lên ô giờ theo loại vốn.
+
+**Hiệu năng (đo trên Chrome máy tính)**
+- Mỗi lần vẽ lại bất kỳ tab nào, app từng dựng ngầm cả trang Tổng quan để dò số vừa đổi (~5 ms). Nay chỉ dò khi đang ở Tổng quan và đọc thẳng từ trang vừa vẽ. Thời gian vẽ lại: Lịch tuần 12 → 7 ms, Ngày 9 → 3,4 ms, Năm 10,8 → 4,8 ms, Hộp việc 6,6 → 1,3 ms, Sức khỏe 7,4 → 1,8 ms, Tôi 8,6 → 2,9 ms, Tổng quan 13,3 → 7,9 ms.
+- Cuộn ở khổ điện thoại: 60 khung hình/giây ổn định, không tác vụ dài; hiển thị lần đầu khoảng 140 ms. Mỗi màn tối đa 1 lớp làm mờ đang hiện.
+
+**Sửa**
+- Số vừa đổi (tô nền) ở chế độ Tối thiếu tương phản (3,5:1): nay dùng màu chữ chính.
+- Ô "Chọn tất cả" ở trạng thái lưng chừng có dấu gạch.
+
+**Kiểm thử**: thêm `tests/e2e/e2e-v063.js` (77 bước: nhập Google giả lập API, bật/tắt phần, Tổng quan, biểu tượng). 10 bộ e2e đạt 671/671, test gộp dữ liệu 30/30 (thêm 2 ca: giữ `gx`, lan công tắc tính năng). Tương phản và nét viền đạt ở Sáng, Tối, Bỏ kính mờ; bố cục không tràn ở 375, 820, 1440 px.
+
 ## v0.6.2 · Dọn CSS, không đổi giao diện · 21/10/2026
 
 - CSS gọn 20%: từ 152 KB xuống 122 KB; 1.264 → 1.120 khối, 4.328 → 3.684 khai báo, 38 → 14 khối biến `:root`.

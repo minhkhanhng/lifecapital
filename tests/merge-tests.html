@@ -55,6 +55,10 @@ function run() {
   t("Cả hai bên cùng thêm: giữ cả hai", () => { const m = C(B0), th = C(B0); m.ev[day].push({ id: "a1", t: "A", c: "sk", m: "u", h: 1, s: "12:00" }); th.ev[day].push({ id: "b1", t: "B", c: "sk", m: "u", h: 1, s: "13:00" }); const r = evOf(mergeStates(C(B0), C(m), C(th), true)); return r.some(e => e.id === "a1") && r.some(e => e.id === "b1"); });
   t("Liên kết Google (gid) được giữ khi bản kia thắng", () => { const m = C(B0), th = C(B0); m.ev[day][0].gid = "abcde12345"; th.ev[day][0].t = "Mới"; th.ev[day][0].mt = 30; return evOf(mergeStates(C(B0), m, th, true)).find(e => e.id === "e1").gid === "abcde12345"; });
 
+  // --- v0.6.3: hoạt động nhập từ Google (gx), phần đã tắt (cfg.mods) ---
+  t("Hoạt động nhập từ Google giữ gx khi gộp, không thành chờ gửi", () => { const m = C(B0); m.ev[day].push({ id: "g1", t: "Họp GCal", c: "tc", m: "u", h: 1, s: "15:00", gx: "imp00001", ds: 1, mt: 5 }); const r = evOf(mergeStates(C(B0), C(B0), C(m), true)).find(e => e.id === "g1"); return r && r.gx === "imp00001" && !r.ds; });
+  t("Phần đã tắt ở máy kia được nhận khi gộp; bật lại cũng lan", () => { const th = C(B0); th.cfg.mods = { pj: false }; const r = mergeStates(C(B0), C(B0), C(th), true); const on = C(r); delete on.cfg.mods; const r2 = mergeStates(C(r), C(r), on, true); return r.cfg.mods && r.cfg.mods.pj === false && !r2.cfg.mods; });
+
   // --- Việc trong Hộp việc ---
   const TB = base({}, { tasks: [{ id: "t1", t: "Việc", c: "sk", m: "u", subs: [], mt: 1 }] });
   t("Việc: hai bên cùng sửa, mt sau cùng thắng", () => { const m = C(TB), th = C(TB); m.tasks[0].t = "M"; m.tasks[0].mt = 5; th.tasks[0].t = "T"; th.tasks[0].mt = 9; return mergeStates(C(TB), m, th, true).tasks[0].t === "T"; });

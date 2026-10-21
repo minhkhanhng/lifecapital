@@ -1014,7 +1014,7 @@ nav.main-nav button.active { border: 0; }
 .page-title { margin: 0; font: 600 22px/1.2 var(--font-ui); color: var(--tx); }
 .page-sub { margin: 0; color: var(--tx-sec); font-size: 13px; }
 /* Header theo tab: chỉ hiện nút có tác dụng ở tab đang mở */
-body[data-tab="pj"] #reviewBtn, body[data-tab="hv"] #reviewBtn, body[data-tab="me"] #reviewBtn, body[data-tab="hl"] #reviewBtn,
+body[data-tab="pj"] #reviewBtn, body[data-tab="hv"] #reviewBtn, body[data-tab="me"] #reviewBtn, body[data-tab="hl"] #reviewBtn, body[data-tab="su"] #reviewBtn,
 body[data-tab="su"] #addBtn, body[data-tab="me"] #addBtn { display: none; }
 /* Ô ghi nhanh chỉ thêm hoạt động và việc: ẩn ở Sức khỏe, Tổng quan, Tôi */
 body[data-tab="hl"] .quick-capture-box, body[data-tab="su"] .quick-capture-box, body[data-tab="me"] .quick-capture-box { display: none; }
@@ -1141,7 +1141,7 @@ body.bg-peek .bg-blur-row { visibility: visible; background: var(--sheen), var(-
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
 [data-k] { transition: background-color .6s ease, box-shadow .6s ease; }
 .demo-line { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 10px; font-size: 12.5px; color: var(--tx-sec); padding: 2px 4px 8px; }
-.chg { font-weight: 600; background: color-mix(in srgb, var(--ac) 22%, transparent); border-radius: 4px; padding: 0 3px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ac) 45%, transparent); }
+.chg { font-weight: 600; color: var(--tx); background: color-mix(in srgb, var(--ac) 22%, transparent); border-radius: 4px; padding: 0 3px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ac) 45%, transparent); }
 #settingsModalOverlay .modal-body { display: flex; flex-direction: column; gap: 12px; }
 .set-sec { padding: 0 14px; }
 .set-h { margin: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tx-sec); }
@@ -1575,7 +1575,6 @@ button.tl-lab:hover { background: linear-gradient(color-mix(in srgb, var(--ac) 1
 .cap-s-bar { display: block; border-radius: 99px; background: var(--line-2); overflow: hidden; }
 .cap-s-bar > i { display: block; height: 100%; border-radius: 99px; background: var(--cap); }
 .cap-s.weak .cap-s-n::after { content: " · yếu nhất"; font-weight: 600; }
-#reviewSheetBody .cap-sum { margin-bottom: 0; }
 @media (max-width: 640px) {
   /* điện thoại: 5 loại vốn trên một hàng, chỉ số giờ; mục tiêu xem ở thanh màu và khi bấm giữ */
   .cap-sum-row { gap: 5px; }
@@ -1591,9 +1590,6 @@ button.tl-lab:hover { background: linear-gradient(color-mix(in srgb, var(--ac) 1
 }
 
 /* Popup Tổng kết: phần phụ có tiêu đề nhỏ, không khung */
-.rv-nav { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
-.rv-sec { padding-top: 12px; }
-.rv-sec-h { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tx-sec); margin-bottom: 8px; }
 
 /* Nút biểu tượng trên dòng: ✕ xóa, ↑ ↓ đổi thứ tự. Cùng cỡ, cùng màu ở mọi nơi */
 .btn.ic-btn { width: 28px; height: 28px; min-width: 28px; padding: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; line-height: 1; color: var(--tx-sec); flex: none; }
@@ -1664,7 +1660,6 @@ input[type="checkbox"], input[type="radio"], input[type="color"] { background: t
 .modal-body { gap: 14px; }
 /* Nhóm bên trong popup: nền nhạt, viền mảnh, không bóng */
 .modal-body .form-row[style*="card-subtle"] { border: 1px solid var(--line-2) !important; }
-.modal-body .rv-sec, .modal-body .cap-sum { margin: 0; }
 /* Chân popup: luôn thấy ở đáy, xóa bên trái, Hủy rồi nút chính bên phải */
 .sheet-foot, .pj-form-acts, .hl-acts, .pjd-acts { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; position: sticky; bottom: -18px; z-index: 3; margin: 6px -18px -18px; padding: 12px 18px 18px; }
 .sheet-foot.end { justify-content: flex-end; }
@@ -1709,6 +1704,8 @@ input[type="checkbox"]:not(.set-switch) { -webkit-appearance: none; appearance: 
 input[type="checkbox"]:not(.set-switch)::after { content: ""; width: 5px; height: 9px; border: solid var(--on-ac); border-width: 0 2px 2px 0; transform: rotate(45deg) translate(-1px, -1px); opacity: 0; }
 input[type="checkbox"]:not(.set-switch):checked { background: var(--ac); border-color: var(--ac-text); }
 input[type="checkbox"]:not(.set-switch):checked::after { opacity: 1; }
+input[type="checkbox"]:not(.set-switch):indeterminate { background: var(--ac); border-color: var(--ac-text); }
+input[type="checkbox"]:not(.set-switch):indeterminate::after { width: 8px; height: 0; border-width: 0 0 2px 0; transform: none; opacity: 1; }
 input[type="checkbox"]:not(.set-switch):disabled { opacity: 0.5; cursor: default; }
 .set-switch { border: 1px solid var(--lg-rim); box-shadow: inset 0 1px 3px rgba(150, 70, 110, 0.18); }
 :focus-visible { outline: 2px solid var(--ac-text); outline-offset: 2px; }
@@ -1751,7 +1748,6 @@ input[type="checkbox"]:not(.set-switch):disabled { opacity: 0.5; cursor: default
 .modal-header { background: transparent; border-bottom: 0; padding-bottom: 4px; }
 /* Đường kẻ trong khối: chỉ còn ở bảng, rất mờ; chỗ khác dùng khoảng trống */
 .hl-q, .set-row, .hb-row, .pjo-ms, .hl-lrow, .hl-row { border-top-color: transparent !important; border-bottom-color: transparent !important; }
-.rv-sec { border-top: 0; }
 .ask-acts { border-top: 0; }
 /* Popup: khối nổi cao nhất, không viền */
 .modal-sheet, .ask-overlay .ask-sheet, #settingsModalOverlay .modal-sheet {
@@ -1804,7 +1800,7 @@ input, select, textarea { box-shadow: var(--sunk); border-radius: 14px; }
 .hl-a.warn > b::before { background: var(--wa); } .hl-a.good > b::before { background: var(--ok); } .hl-a.info > b::before { background: #6fa8b0; } .hl-a.bad > b::before { background: var(--bad); }
 .hv-mini[data-pj] { border-left-width: 1px !important; }
 select[style*="--cap"] { border-left-width: 1px !important; border-left-color: var(--field-bd) !important; }
-#v [style*="border-left:4px solid"], #v [style*="border-left:3.5px solid"], #reviewSheetBody [style*="border-left:4px solid"] { border-left: 0 !important; border-radius: 16px !important; box-shadow: var(--lit-sm), var(--raise-1); }
+#v [style*="border-left:4px solid"], #v [style*="border-left:3.5px solid"] { border-left: 0 !important; border-radius: 16px !important; box-shadow: var(--lit-sm), var(--raise-1); }
 .event-item-top:has(.ev-pj)::before { display: none; }
 /* Nốt các nét viền còn lại: chip lựa chọn, nút thêm, đường ngăn, tab dự án → khối nổi hoặc khoảng trống */
 .hl-m, .hl-chip { border-color: transparent; background: var(--sf-2); box-shadow: var(--lit-sm), var(--raise-1); }
@@ -1864,6 +1860,43 @@ table.calendar-table tbody tr { content-visibility: auto; contain-intrinsic-size
 .modal-overlay:not(.open) .modal-sheet { -webkit-backdrop-filter: none; backdrop-filter: none; }
 /* Thanh "Có bản mới": cùng kiểu thông báo, khối nổi không viền */
 .update-bar { border-color: transparent; background: var(--sf-pop); box-shadow: var(--lit), var(--raise-3); border-radius: 999px; }
+/* v0.6.3: biểu tượng tab (hai lớp, màu theo chữ, không nét đen), tổng kết trong Tổng quan, nhập Google Calendar */
+.ico { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.ico .f { fill: currentColor; fill-opacity: 0.16; }
+nav.main-nav button .ico { color: var(--ac-text); }
+nav.main-nav button.active .ico { color: var(--on-ac); }
+nav.main-nav button.active .ico .f { fill-opacity: 0.24; }
+@media (max-width: 899px) { nav.main-nav button { gap: 1px; padding-top: 5px; padding-bottom: 4px; } }
+.su-ins-p { margin: 2px 0 10px; font-size: 13.5px; color: var(--tx-sec); }
+.su-ins-list { display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.su-ins-i { padding: 8px 12px; border-radius: 14px; background: var(--sf-2); box-shadow: var(--lit-sm), var(--raise-1); line-height: 1.45; }
+.su-ins-i::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--mu); margin-right: 7px; vertical-align: 1px; }
+.su-ins-i.ok { background: color-mix(in srgb, var(--ok) 16%, var(--sf-2)); }
+.su-ins-i.ok::before { background: var(--ok); }
+.su-ins-i.bad { background: color-mix(in srgb, var(--bad) 12%, var(--sf-2)); }
+.su-ins-i.bad::before { background: var(--bad); }
+.su-next { margin-top: 12px; padding: 10px 14px; border-radius: 14px; background: color-mix(in srgb, var(--ac) 16%, var(--sf-2)); box-shadow: var(--lit-sm), var(--raise-1); font-size: 13px; }
+.su-next ol { margin: 6px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 3px; line-height: 1.5; }
+.su-chips { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 12px; font-size: 12.5px; }
+.su-empty { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--tx-sec); line-height: 1.5; }
+.cap-sum-warn { margin: 2px 0 8px; font-size: 12.5px; font-weight: 600; color: var(--bad-text); }
+.gx-btn { display: inline-flex; align-items: center; gap: 6px; }
+.wk-bar:has(.gx-btn) .segmented-control { margin-left: auto; } /* nút Nhập đứng cạnh bộ chọn chế độ, không bị đẩy ra giữa */
+.gx-btn .ico { width: 17px; height: 17px; color: var(--ac-text); }
+.gx-all { display: flex; align-items: center; gap: 8px; margin: 12px 0 8px; padding: 0 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.gx-n { margin-left: auto; font-weight: 500; color: var(--tx-sec); }
+.gx-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.gx-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 14px; background: var(--sf-2); box-shadow: var(--lit-sm), var(--raise-1); }
+.gx-row.off { background: transparent; box-shadow: none; }
+.gx-row.off .gx-main b { font-weight: 500; color: var(--tx-sec); }
+.gx-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; cursor: pointer; }
+.gx-main b { font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gx-main small { font-size: 12px; color: var(--tx-sec); }
+.gx-cap { max-width: 140px; font-size: 13px; padding: 5px 8px; }
+.gx-dup { color: var(--tx); font-weight: 600; }
+.gx-q { color: var(--ac-text); font-weight: 700; }
+.gx-note { margin: 0; }
+@media (max-width: 480px) { .gx-row { grid-template-columns: auto minmax(0, 1fr); } .gx-cap { grid-column: 2; max-width: none; width: 100%; } }
 </style>
 <script>
   try {
@@ -1900,7 +1933,7 @@ table.calendar-table tbody tr { content-visibility: auto; contain-intrinsic-size
     <div class="header-actions">
       <button type="button" class="btn btn-sm cloud-badge" id="cloudBadge" hidden onclick="cloudBadgeClick()"></button>
       <button type="button" class="btn btn-sm" id="syncBadge" hidden></button>
-      <button class="btn btn-sm btn-accent-olive" id="reviewBtn" onclick="openWeeklyReviewModal(sel)" title="Tổng kết tuần">Tổng kết</button>
+      <button class="btn btn-sm btn-accent-olive" id="reviewBtn" onclick="openWeeklyReviewModal(sel)" title="Tổng kết tuần đang xem (ở tab Tổng quan)">Tổng kết</button>
       <button class="btn btn-sm btn-primary" id="addBtn" onclick="headerAdd()">Thêm</button>
     </div>
   </header>
@@ -1935,17 +1968,15 @@ table.calendar-table tbody tr { content-visibility: auto; contain-intrinsic-size
   </div>
 </div>
 
-<!-- Modal Tổng kết tuần -->
-<div class="modal-overlay" id="reviewModalOverlay" onclick="handleReviewBackdropClick(event)">
-  <div class="modal-sheet" id="reviewModalSheet" style="max-width:720px;" role="dialog" aria-modal="true" aria-labelledby="reviewSheetTitle">
+<div class="modal-overlay" id="gxOverlay" onclick="if (event.target.id === 'gxOverlay') closeGx()">
+  <div class="modal-sheet" style="max-width:600px;" role="dialog" aria-modal="true" aria-labelledby="gxTitle">
     <div class="modal-header">
-      <h3 class="modal-title" id="reviewSheetTitle">Tổng kết tuần</h3>
-      <button type="button" class="btn btn-sm btn-ghost ic-btn sheet-x" onclick="closeReviewModal()" title="Đóng (Esc)" aria-label="Đóng">✕</button>
+      <h3 class="modal-title" id="gxTitle">Nhập từ Google Calendar</h3>
+      <button type="button" class="btn btn-sm btn-ghost ic-btn sheet-x" onclick="closeGx()" title="Đóng (Esc)" aria-label="Đóng">✕</button>
     </div>
-    <div class="modal-body" id="reviewSheetBody"></div>
+    <div class="modal-body" id="gxBody"></div>
   </div>
 </div>
-
 <!-- Modal Cài đặt hệ thống & Dữ liệu -->
 <div class="modal-overlay" id="pjOverlay" onclick="if (event.target.id === 'pjOverlay') closeProject()">
   <div class="modal-sheet" style="max-width:560px;" role="dialog" aria-modal="true" aria-labelledby="pjTitle">
@@ -2272,7 +2303,7 @@ const save = () => {
    hay cửa sổ khác đã ghi mà tab này không nhận được (tab bị trình duyệt tạm dừng, trang khôi phục từ
    bộ nhớ đệm, bản cũ của app không biết lắng nghe…): gộp hai bên thay vì ghi đè.
    Dữ liệu do bản này ghi có sv = 2. Bên ghi không có sv (bản cũ) thì chỉ cộng thêm, không xóa gì. */
-const APPV = 62; // v0.6.2
+const APPV = 63; // v0.6.3
 const SV = 3; // 3 (v0.4.0): hoạt động có mã riêng và thời điểm sửa; bản ghi sv khác được gộp kiểu cộng thêm
 let lastRaw = rawSaved, oldWriterSeen = 0;
 // Đồng bộ giữa các thiết bị (v0.4.0, xem phần ĐỒNG BỘ ở cuối tệp)
@@ -2601,8 +2632,8 @@ function balanceOf(i) {
 const balanceLabel = sc => sc >= 80 ? "Bánh xe rất tròn và cân đối" : sc >= 50 ? "Khá cân đối, cần thêm giờ cho vốn còn thiếu" : "Bánh xe bị méo, cần tái cân bằng";
 
 // Phân loại vốn theo từ khóa: cụm khớp nhiều từ / dài nhất thắng ("tiếng anh" thắng "anh"),
-// không phụ thuộc thứ tự các loại vốn.
-function guess(t) {
+// không phụ thuộc thứ tự các loại vốn. guessK: null khi không khớp gì (để biết gợi ý chưa chắc).
+function guessK(t) {
   const normTitle = (t || "").normalize("NFC").trim().toLowerCase();
   const m = S.mem && Object.prototype.hasOwnProperty.call(S.mem, normTitle) ? S.mem[normTitle] : null;
   if (m && S.caps.some(c => c.k === m.c)) return m.c;
@@ -2619,7 +2650,10 @@ function guess(t) {
       if (score > bestScore) { best = c.k; bestScore = score; }
     }
   }
-  return best || (S.caps[0] ? S.caps[0].k : "sk");
+  return best;
+}
+function guess(t) {
+  return guessK(t) || (S.caps[0] ? S.caps[0].k : "sk");
 }
 
 /* ==========================================================================
@@ -3185,132 +3219,12 @@ function renderRadarChartSVG(weekIdx) {
 /* ==========================================================================
    6. TÍNH NĂNG 8: SUNDAY WEEKLY REVIEW MODAL (TỔNG KẾT TUẦN)
    ========================================================================== */
-function closeReviewModal() {
-  const ov = $("reviewModalOverlay"), wasOpen = ov.classList.contains("open");
-  ov.classList.remove("open");
-  if (wasOpen && LF && LF.focus) {
-    try { LF.focus(); } catch (e) {}
-  }
-}
-
-function handleReviewBackdropClick(e) {
-  if (e.target.id === "reviewModalOverlay") closeReviewModal();
-}
-
+// Tổng kết tuần nay nằm ở tab Tổng quan (v0.6.3): mở tuần cần xem ở đó
 function openWeeklyReviewModal(wIdx = sel) {
-  wIdx = Math.max(0, Math.min(W.length - 1, wIdx));
-  const wStart = W[wIdx];
-
-  $("reviewSheetTitle").innerHTML = `<span>Tổng kết tuần ${wIdx + 1}</span>`;
-
-  const noData = evs(wIdx).length === 0;
-  const bal = balanceOf(wIdx);
-
-  // Thống kê chi tiết từng vốn
-  const capStats = bal.stats.map(x => ({ c: x.c, u: x.h, target: x.c.tg || 0, ratio: x.has ? x.h / x.c.tg : (x.h > 0 ? 1 : 0), diff: x.h - (x.c.tg || 0) }));
-  const starCap = [...capStats].filter(x => x.u > 0).sort((a, b) => (b.ratio || 0) - (a.ratio || 0))[0];
-  const laggingCap = [...capStats].filter(x => x.target > 0).sort((a, b) => a.diff - b.diff)[0];
-  const neglectedCaps = capStats.filter(x => x.u === 0);
-
-  const html = `
-    <div style="display:flex; flex-direction:column; gap:14px;">
-      <!-- BỘ CHỌN TUẦN TỔNG KẾT LINH HOẠT -->
-      <div class="rv-nav">
-        <div style="display:flex; align-items:center; gap:6px; flex:1 1 220px; min-width:0;">
-          <button type="button" class="btn btn-sm" onclick="openWeeklyReviewModal(Math.max(0, ${wIdx} - 1))" title="Xem tuần trước">◀</button>
-          <select onchange="openWeeklyReviewModal(+this.value)" aria-label="Chọn tuần" style="flex:1; min-width:0; text-overflow:ellipsis; font-weight:600; padding:5px 10px; font-size:13px; cursor:pointer;">
-            ${W.map((m, i) => {
-              const mEnd = ad(m, 6);
-              const rStr = `${m.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" })} – ${mEnd.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" })}`;
-              return `<option value="${i}" ${i === wIdx ? 'selected' : ''}>Tuần ${i + 1} (${rStr})${i === CW ? ' · Tuần này' : ''}</option>`;
-            }).join("")}
-          </select>
-          <button type="button" class="btn btn-sm" onclick="openWeeklyReviewModal(Math.min(W.length - 1, ${wIdx} + 1))" title="Xem tuần sau">▶</button>
-        </div>
-        <div style="display:flex; align-items:center; gap:8px;">
-          ${CW >= 0 && wIdx !== CW ? `
-            <button type="button" class="btn btn-sm btn-ghost" onclick="openWeeklyReviewModal(CW)" style="color:var(--ac-text); font-weight:600; font-size:12px;">Tuần này</button>
-          ` : ""}
-        </div>
-      </div>
-
-      <!-- CHÍNH: giờ từng loại vốn trong tuần, rồi bánh xe -->
-      ${capSumHTML(wIdx)}
-      <!-- BÁNH XE CUỘC ĐỜI CỦA TUẦN ĐÓ -->
-      <div class="rv-sec">
-        <div class="rv-sec-h">Bánh xe cuộc đời</div>
-        ${renderRadarChartSVG(wIdx)}
-      </div>
-
-      ${noData ? `
-      <!-- Tuần chưa có hoạt động: không đưa nhận định hay khuyến nghị dựa trên dữ liệu rỗng -->
-      <div style="padding:16px; background:var(--card-subtle); border-radius:var(--radius-md); border:1px dashed var(--bd); display:flex; flex-direction:column; gap:8px; align-items:flex-start;">
-        <b style="font-size:14px;">Tuần ${wIdx + 1} chưa có hoạt động</b>
-        <span style="font-size:13px; color:var(--tx-sec); line-height:1.5;">Ghi hoạt động để xem bánh xe cân bằng và gợi ý cho tuần tới.</span>
-        <button type="button" class="btn btn-sm btn-primary" onclick="goToQuickCapture()">Ghi hoạt động</button>
-      </div>
-      ` : `
-      <!-- PHÂN TÍCH CHUYÊN SÂU & INSIGHTS ĐA CHIỀU -->
-      <div style="display:flex; flex-direction:column; gap:10px; font-size:13px;">
-        <!-- Insight 3: Đánh giá từng nguồn vốn -->
-        <div style="display:flex; flex-direction:column; gap:6px;">
-          ${starCap ? `
-            <div style="padding:10px 14px; background:var(--ok-soft); border-radius:var(--radius-md); border-left:4px solid var(--ok);">
-              <b>Điểm sáng:</b> <b>${esc(starCap.c.n)}</b> đạt ${r1(starCap.u)}h${starCap.target ? ' (' + Math.round(starCap.ratio*100) + '% mục tiêu)' : ''}.
-            </div>
-          ` : ''}
-          ${laggingCap && laggingCap.diff < 0 ? `
-            <div style="padding:10px 14px; background:var(--bad-soft); border-radius:var(--radius-md); border-left:4px solid var(--bad);">
-              <b>Cần bù:</b> <b>${esc(laggingCap.c.n)}</b> đạt ${r1(laggingCap.u)}h / ${r1(laggingCap.target)}h, thiếu ${r1(Math.abs(laggingCap.diff))}h.
-            </div>
-          ` : ''}
-          ${neglectedCaps.length ? `
-            <div style="padding:8px 12px; background:var(--card-subtle); border-radius:var(--radius-md); border:1px solid var(--bd); font-size:12.5px; color:var(--mu);">
-              <b>Chưa có giờ:</b> ${neglectedCaps.map(x => esc(x.c.n)).join(', ')}.
-            </div>
-          ` : ''}
-        </div>
-      </div>
-
-      <!-- Insight 4: Kế hoạch hành động cụ thể cho tuần tới -->
-      <div style="padding:14px; background:var(--surface-2); border-left:4px solid var(--ac) !important; border-radius:var(--radius-md); font-size:13px; color:var(--tx); border:1px solid color-mix(in srgb, var(--ac) 40%, transparent);">
-        <div style="font-weight:600; font-size:13.5px; margin-bottom:6px; display:flex; align-items:center; gap:6px;">
-          <span>Gợi ý tuần tới</span>
-        </div>
-        <div style="display:flex; flex-direction:column; gap:4px; line-height:1.5;">
-          <div>1. ${laggingCap && laggingCap.diff < 0 ? `Xếp 1–2 buổi <b>${esc(laggingCap.c.n)}</b> vào Thứ 3 hoặc Thứ 5.` : neglectedCaps.length ? `Thêm ít nhất một buổi <b>${esc(neglectedCaps[0].c.n)}</b>.` : 'Giữ nhịp các vốn như tuần này.'}</div>
-          <div>2. Giữ đà ở <b>${starCap ? esc(starCap.c.n) : 'vốn mạnh nhất'}</b>.</div>
-        </div>
-      </div>
-      `}
-
-      ${(S.projects || []).length ? `
-      <div class="rv-sec">
-        <div class="rv-sec-h">Giờ theo dự án</div>
-        ${pjWeekRowsHTML(W[wIdx])}
-      </div>` : ""}
-
-      ${hlWeekHTML(W[wIdx]) ? `
-      <div class="rv-sec">
-        <div class="rv-sec-h">Sức khỏe</div>
-        ${hlWeekHTML(W[wIdx])}
-      </div>` : ""}
-
-      ${hbList().length ? `
-      <div class="rv-sec">
-        <div class="rv-sec-h">Thói quen</div>
-        ${hbWeekRowsHTML(W[wIdx])}
-      </div>` : ""}
-
-      <div class="sheet-foot end">
-        <button type="button" class="btn" onclick="copyReviewToClipboard(${wIdx})">Sao chép</button>
-        <button type="button" class="btn btn-primary" onclick="closeReviewModal()">Đóng</button>
-      </div>
-    </div>
-  `;
-
-  $("reviewSheetBody").innerHTML = html;
-  $("reviewModalOverlay").classList.add("open");
+  wIdx = Math.max(0, Math.min(W.length - 1, +wIdx || 0));
+  sel = wIdx;
+  switchTab("su");
+  window.scrollTo(0, 0);
 }
 
 function copyReviewToClipboard(wIdx) {
@@ -3333,6 +3247,37 @@ const TABS = [
   { id: "me", label: "Tôi", short: "Tôi", sub: "Hồ sơ, loại vốn và cài đặt" }
 ];
 
+// Biểu tượng hai lớp (nền nhạt + nét), màu theo chữ của nút: không có nét đen
+const ico = d => `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${d}</svg>`;
+const ICO = {
+  ca: ico(`<rect class="f" x="3.5" y="5" width="17" height="15.5" rx="3.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>`),
+  hv: ico(`<path class="f" d="M3.5 13.5 6.3 6a2 2 0 0 1 1.9-1.3h7.6A2 2 0 0 1 17.7 6l2.8 7.5V18a2.5 2.5 0 0 1-2.5 2.5H6A2.5 2.5 0 0 1 3.5 18z"/><path d="M3.5 13.5h4.6l1.4 2.5h5l1.4-2.5h4.6"/>`),
+  pj: ico(`<path class="f" d="M3.5 7.5A2.5 2.5 0 0 1 6 5h3.3l2.2 2.2H18a2.5 2.5 0 0 1 2.5 2.5V17a2.5 2.5 0 0 1-2.5 2.5H6A2.5 2.5 0 0 1 3.5 17z"/><path d="M3.5 10.5h17"/>`),
+  hl: ico(`<path class="f" d="M12 20s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.3a4.2 4.2 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z"/><path d="M7.5 12.5h2.3l1.4-2.4 2 4.4 1.3-2h2"/>`),
+  su: ico(`<circle class="f" cx="12" cy="12" r="8.5"/><path d="M12 3.5V12l6 6M12 12H3.5"/>`),
+  me: ico(`<circle class="f" cx="12" cy="8.5" r="4"/><path class="f" d="M4.5 20.5a7.5 7.5 0 0 1 15 0z"/>`),
+  gin: ico(`<path d="M12 4v10M8 10.5l4 4 4-4"/><path class="f" d="M4.5 15v2.5A2.5 2.5 0 0 0 7 20h10a2.5 2.5 0 0 0 2.5-2.5V15"/>`)
+};
+// Bật/tắt từng phần (v0.6.3): tắt thì ẩn giao diện, dữ liệu vẫn giữ nguyên để bật lại là có
+const MODS = [
+  ["pj", "Dự án", "Tab Dự án, chọn dự án khi thêm hoạt động, giờ theo dự án ở Tổng quan"],
+  ["hb", "Thói quen", "Dải thói quen ở Lịch, thẻ Thói quen ở Tổng quan và tab Tôi"],
+  ["hl", "Sức khỏe", "Tab Sức khỏe, dấu sức khỏe trên lịch, nhắc check-in, thẻ Sức khỏe ở Tổng quan"]
+];
+const modOn = k => !(S && S.cfg && S.cfg.mods && S.cfg.mods[k] === false);
+const tabsOn = () => TABS.filter(t => (t.id !== "pj" || modOn("pj")) && (t.id !== "hl" || modOn("hl")));
+function setMod(k, on) {
+  if (!MODS.some(m => m[0] === k)) return;
+  S.cfg = S.cfg || {};
+  const m = { ...(S.cfg.mods || {}) };
+  if (on) delete m[k]; else m[k] = false;
+  if (Object.keys(m).length) S.cfg.mods = m; else delete S.cfg.mods;
+  save();
+  renderSettingsModal();
+  draw();
+  showToast(`${on ? "Đã bật" : "Đã tắt"} ${MODS.find(x => x[0] === k)[1]}${on ? "" : ". Dữ liệu vẫn giữ, bật lại là có"}`, "ok");
+}
+
 // Mở chế độ Ngày: đang xem tuần hiện tại thì nhảy thẳng tới hôm nay
 function openDayView() {
   if (sel === CW) timelineDayIdx = dow(new Date());
@@ -3354,6 +3299,7 @@ function capSumHTML(wi) {
   const meta = [`${r1(al(wi))}h`, `${evs(wi).length} hoạt động`, bal.score != null ? `cân bằng ${bal.score}%` : ""].filter(Boolean).join(" · ");
   return `<section class="cap-sum" aria-label="Giờ theo loại vốn, tuần ${wi + 1}">
     <div class="cap-sum-h"><b>Giờ theo loại vốn</b><span${bal.score != null ? ` title="${esc(balanceLabel(bal.score))}"` : ""}>${meta}</span></div>
+    ${al(wi) > 168 ? `<p class="cap-sum-warn" role="note">Tổng giờ vượt 168h của một tuần, kiểm tra hoạt động trùng.</p>` : ""}
     <div class="cap-sum-row" style="--n:${Math.min(6, S.caps.length)}">${cells}</div>
   </section>`;
 }
@@ -3364,10 +3310,12 @@ function weekStatsHTML(ws) {
 }
 
 function renderNav() {
-  const n = inboxCount();
-  $("nav").innerHTML = TABS.map(t =>
+  const n = inboxCount(), tabs = tabsOn();
+  if (!tabs.some(t => t.id === cur)) cur = "ca"; // phần đang mở vừa bị tắt
+  ["pj", "hb", "hl"].forEach(k => document.body.classList.toggle("no-" + k, !modOn(k)));
+  $("nav").innerHTML = tabs.map(t =>
     `<button class="${t.id === cur ? "active" : ""}" aria-current="${t.id === cur ? "page" : "false"}" onclick="switchTab('${t.id}')" aria-label="${t.label}${t.id === "hv" && n ? `, ${n} việc chưa xếp` : ""}">
-      <span class="lb-full">${t.short}</span><span class="lb-short">${t.mshort || t.short}</span>${t.id === "hv" && n ? `<span class="nav-count">${n}</span>` : ""}
+      ${ICO[t.id]}<span class="lb-full">${t.short}</span><span class="lb-short">${t.mshort || t.short}</span>${t.id === "hv" && n ? `<span class="nav-count">${n}</span>` : ""}
     </button>`
   ).join("");
   const t = TABS.find(x => x.id === cur) || TABS[0];
@@ -3398,13 +3346,13 @@ function switchTab(tabId) {
   // Rời tab Dự án: bỏ #pj/<mã> khỏi địa chỉ để tải lại trang không nhảy về dự án
   if (tabId !== "pj") try { if (history.state && history.state.pj) history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
   cur = tabId === "set" ? "me" : tabId; // "set" (Danh mục vốn) nay nằm trong tab Tôi
+  if (!tabsOn().some(t => t.id === cur)) cur = "ca"; // phần đã tắt trong Cài đặt
   if (cur !== "hl") hlAll = false;
   draw(true);
 }
 
 // Từ bánh xe / bản tổng kết: mở tab Danh mục vốn và đặt con trỏ vào ô mục tiêu đầu tiên
 function goToTargets() {
-  closeReviewModal();
   switchTab("set");
   window.scrollTo(0, 0);
   const inp = document.querySelector('#v input[data-target-input]');
@@ -3413,7 +3361,7 @@ function goToTargets() {
 
 // Từ bản tổng kết tuần trống: đóng popup và đưa con trỏ về thanh ghi nhanh
 function goToQuickCapture() {
-  closeReviewModal();
+  if (cur !== "ca") switchTab("ca"); // ô ghi nhanh ẩn ở Tổng quan
   const inp = $("nlpInput");
   window.scrollTo(0, 0);
   if (inp) inp.focus();
@@ -3658,7 +3606,7 @@ let gcalFlushing = false, gcalRerun = false, gcalRetryT = null, gcalLockRetryT =
 // chưa kết nối Google, để máy đã kết nối gửi giúp. Mã định sẵn gi giúp hai máy không tạo hai bản trên Google.
 const gcalShared = () => !!(sbUser && S.cfg && S.cfg.gcalClientId && S.cfg.gcalAutoSync !== false);
 function markPending(e) {
-  if (e && !e.demo && (gcalActive() || gcalShared())) e.ds = (e.ds || 0) + 1;
+  if (e && !e.demo && !e.gx && (gcalActive() || gcalShared())) e.ds = (e.ds || 0) + 1; // gx: nhập từ Google, không gửi ngược
 }
 // Lệnh xóa luôn được ghi lại khi đã liên kết, kể cả khi tự động đồng bộ đang tắt:
 // nếu không, sự kiện trên Google Calendar sẽ nằm lại vĩnh viễn (lỗi UAT xóa chuỗi)
@@ -3851,13 +3799,142 @@ async function gcalSyncWeek(wIdx) {
   let n = 0;
   for (let di = 0; di < 7; di++) {
     (S.ev[ky(ad(wStart, di))] || []).forEach(e => {
-      if (!e.demo) { e.ds = (e.ds || 0) + 1; n++; }
+      if (!e.demo && !e.gx) { e.ds = (e.ds || 0) + 1; n++; }
     });
   }
   if (!n) { showToast(`Tuần ${wIdx + 1} chưa có hoạt động`, "ok"); return; }
   save();
   showToast(`Đang gửi ${n} hoạt động…`, "ok");
   await gcalFlush({ force: true, report: true });
+}
+
+/* --- Nhập từ Google Calendar (v0.6.3): đọc sự kiện có giờ của tuần đang xem, gợi ý loại vốn, người dùng chỉ cần xác nhận.
+   Hoạt động nhập về mang e.gx (mã sự kiện trên Google) và không bao giờ được gửi ngược lên Google. */
+let gxRows = null, gxWk = 0, gxBusy = false;
+const GX_SEEN = "lc_gx_seen"; // mã đã nhập trên máy này: xóa hoạt động nhập về rồi thì lần sau không hiện lại
+function gxSeen() { try { const a = JSON.parse(localStorage.getItem(GX_SEEN) || "[]"); return Array.isArray(a) ? a.filter(x => typeof x === "string") : []; } catch (e) { return []; } }
+function gxRemember(ids, forget) {
+  try {
+    const cur = gxSeen().filter(x => !forget || !ids.includes(x));
+    localStorage.setItem(GX_SEEN, JSON.stringify(forget ? cur : [...new Set([...cur, ...ids])].slice(-2000)));
+  } catch (e) {}
+}
+// Sự kiện Google → một hàng để xác nhận. null: bỏ qua (cả ngày, đã hủy, đã từ chối, do Life Capital tạo, loại đặc biệt, đã nhập)
+function gxRow(g, own) {
+  if (!g || typeof g.id !== "string" || !GID.test(g.id) || g.status === "cancelled" || own.has(g.id)) return null;
+  if (!g.start || !g.start.dateTime || !g.end || !g.end.dateTime) return null;
+  if (g.eventType && !["default", "fromGmail", "focusTime"].includes(g.eventType)) return null;
+  if (/^Life Capital/.test(g.description || "")) return null;
+  const me = (g.attendees || []).find(a => a && a.self);
+  if (me && me.responseStatus === "declined") return null;
+  const a = new Date(g.start.dateTime), b = new Date(g.end.dateTime);
+  if (isNaN(a) || isNaN(b) || b <= a) return null;
+  const k = ky(a), s = pad(a.getHours()) + ":" + pad(a.getMinutes());
+  // Hoạt động trong app không vượt nửa đêm: sự kiện qua đêm được cắt tới 24:00
+  const room = (1440 - toMin(s)) / 60;
+  const h = Math.min(room, Math.max(0.5, Math.round((b - a) / 1800000) / 2)); // làm tròn nửa giờ như ô Thời lượng
+  if (!(h > 0)) return null;
+  const t = String(g.summary || "").replace(/\s+/g, " ").trim().slice(0, 120) || "Sự kiện không tên";
+  const nt = t.normalize("NFC").toLowerCase();
+  const dup = (S.ev[k] || []).some(e => e.t.normalize("NFC").toLowerCase() === nt && (!e.s || e.s === s));
+  const c = guessK(t);
+  return { id: g.id, k, s, h, t, c: c || guess(t), sure: !!c, dup, on: !dup };
+}
+async function gcalImportWeek(wIdx) {
+  if (gxBusy) return;
+  wIdx = Math.max(0, Math.min(W.length - 1, typeof wIdx === "number" ? wIdx : sel));
+  const token = getGCalToken();
+  if (!token) {
+    if (!gcalLinked()) { showToast("Kết nối Google Calendar trong Cài đặt trước", "bad"); return; }
+    // Phiên hết hạn: xin lại quyền ngay trong lần bấm này (trình duyệt chỉ cho mở cửa sổ Google khi người dùng bấm)
+    if (initGCalTokenClient(() => gcalImportWeek(wIdx))) gcalTokenClient.requestAccessToken({ prompt: "" });
+    return;
+  }
+  gxBusy = true;
+  const a = W[wIdx], b = ad(a, 7);
+  const q = "?" + new URLSearchParams({ timeMin: a.toISOString(), timeMax: b.toISOString(), singleEvents: "true", orderBy: "startTime", maxResults: "250" });
+  let r;
+  try { r = await gcalFetch("GET", q, token); } finally { gxBusy = false; }
+  const o = gcalOutcome(r);
+  if (o === "auth") { clearGCalToken(); updateSyncBadge(); showToast("Phiên Google hết hạn. Bấm Nhập lần nữa để kết nối lại.", "bad"); return; }
+  if (o !== "ok") { showToast(o === "config" ? gcalConfigErr : "Chưa đọc được lịch Google, thử lại sau", "bad"); return; }
+  const own = new Set(gxSeen());
+  Object.values(S.ev).forEach(l => l.forEach(e => [e.gid, e.gi, e.gx].forEach(x => x && own.add(x))));
+  gxRows = ((r.data && r.data.items) || []).map(g => gxRow(g, own)).filter(Boolean);
+  gxWk = wIdx;
+  LF = document.activeElement;
+  $("gxTitle").textContent = `Nhập từ Google Calendar · Tuần ${wIdx + 1}`;
+  $("gxBody").innerHTML = gxHTML();
+  gxSync();
+  $("gxOverlay").classList.add("open");
+  setTimeout(() => { const f = $("gxBody").querySelector("input,button"); if (f) f.focus(); }, 50);
+}
+function gxDay(k) {
+  const d = new Date(k + "T00:00");
+  return DN_VI[(d.getDay() + 6) % 7] + " " + d.getDate() + "/" + (d.getMonth() + 1);
+}
+function gxHTML() {
+  if (!gxRows.length) return `
+    <p class="set-note">Tuần ${gxWk + 1} không có sự kiện mới để nhập. Sự kiện cả ngày, sự kiện bạn đã từ chối và sự kiện do Life Capital gửi lên được bỏ qua.</p>
+    <div class="sheet-foot end"><button type="button" class="btn btn-primary" onclick="closeGx()">Đóng</button></div>`;
+  const unsure = gxRows.some(x => !x.sure);
+  return `
+    <p class="set-note">Bỏ chọn sự kiện không muốn ghi và kiểm tra loại vốn. Hoạt động nhập về chỉ nằm trong app, không gửi ngược lên Google.${unsure ? ` Mục ghi <b class="gx-q">Kiểm tra</b> chưa khớp từ khóa nào.` : ""}</p>
+    <label class="gx-all"><input type="checkbox" id="gxAll" onchange="gxAll(this.checked)"><span>Chọn tất cả</span><span class="gx-n" id="gxN"></span></label>
+    <ul class="gx-list">${gxRows.map((x, i) => `
+      <li class="gx-row" id="gxr${i}">
+        <input type="checkbox" id="gx${i}" ${x.on ? "checked" : ""} onchange="gxRows[${i}].on = this.checked; gxSync()">
+        <label for="gx${i}" class="gx-main"><b>${esc(x.t)}</b><small>${gxDay(x.k)} · ${x.s} · ${r1(x.h)}h${x.dup ? ` · <span class="gx-dup">Có vẻ đã có trong lịch</span>` : ""}${x.sure ? "" : ` · <span class="gx-q">Kiểm tra</span>`}</small></label>
+        <select class="gx-cap" aria-label="Loại vốn cho ${esc(x.t)}" onchange="gxRows[${i}].c = this.value; gxRows[${i}].sure = true">${S.caps.map(c => `<option value="${c.k}" ${c.k === x.c ? "selected" : ""}>${esc(c.n)}</option>`).join("")}</select>
+      </li>`).join("")}
+    </ul>
+    <div class="sheet-foot end">
+      <button type="button" class="btn btn-ghost" onclick="closeGx()">Hủy</button>
+      <button type="button" class="btn btn-primary" id="gxOk" onclick="gxConfirm()"></button>
+    </div>`;
+}
+// Cập nhật số đã chọn, ô chọn tất cả, hàng mờ khi bỏ chọn (không vẽ lại cả danh sách để giữ vị trí con trỏ)
+function gxSync() {
+  if (!gxRows || !gxRows.length) return;
+  const n = gxRows.filter(x => x.on).length, all = $("gxAll"), ok = $("gxOk");
+  if (all) { all.checked = n === gxRows.length; all.indeterminate = n > 0 && n < gxRows.length; }
+  if ($("gxN")) $("gxN").textContent = `${n}/${gxRows.length}`;
+  if (ok) { ok.textContent = n ? `Thêm ${n} hoạt động` : "Chưa chọn sự kiện nào"; ok.disabled = !n; }
+  gxRows.forEach((x, i) => { const r = $("gxr" + i), c = $("gx" + i); if (r) r.classList.toggle("off", !x.on); if (c) c.checked = x.on; });
+}
+function gxAll(on) { (gxRows || []).forEach(x => { x.on = on; }); gxSync(); }
+function closeGx() {
+  const ov = $("gxOverlay"), wasOpen = ov && ov.classList.contains("open");
+  if (!ov) return;
+  ov.classList.remove("open");
+  gxRows = null;
+  if (wasOpen && LF && LF.focus) { try { LF.focus(); } catch (e) {} }
+}
+function gxConfirm() {
+  const pick = (gxRows || []).filter(x => x.on && S.caps.some(c => c.k === x.c));
+  if (!pick.length) return;
+  const added = [];
+  pick.forEach(x => {
+    const L = S.ev[x.k] = S.ev[x.k] || [];
+    const e = { t: x.t, c: x.c, m: "u", h: x.h, s: x.s, gx: x.id };
+    L.push(e);
+    sortL(L);
+    added.push([x.k, e]);
+    if (x.t !== "Sự kiện không tên") S.mem[x.t.normalize("NFC").toLowerCase()] = { c: x.c }; // lần sau gợi ý đúng vốn đã chọn
+  });
+  const ids = pick.map(x => x.id);
+  gxRemember(ids);
+  save();
+  closeGx();
+  draw();
+  offerUndo(`Đã thêm ${pick.length} hoạt động từ Google Calendar`, () => {
+    added.forEach(([k, e]) => {
+      const L = S.ev[k] || [], i = L.indexOf(e) >= 0 ? L.indexOf(e) : L.findIndex(y => y.gx === e.gx);
+      if (i >= 0) L.splice(i, 1);
+      if (!L.length) delete S.ev[k];
+    });
+    gxRemember(ids, true);
+  });
 }
 
 // Badge trạng thái trên thanh tiêu đề (chỉ hiện khi đã liên kết và đang bật tự động đồng bộ)
@@ -3957,6 +4034,15 @@ function renderSettingsModal() {
       </div>
     </details>
 
+    <details class="set-sec" ${setSecOpen("mod")} ontoggle="setSecToggle('mod', this.open)">
+      <summary class="set-h">Tính năng<span class="set-sum">${MODS.filter(m => modOn(m[0])).map(m => m[1]).join(", ") || "Chỉ lịch và vốn"}</span></summary>
+      <p class="set-note">Tắt phần bạn chưa dùng cho gọn. Dữ liệu vẫn giữ nguyên, bật lại là có.</p>
+      ${MODS.map(([k, n, d]) => `<div class="set-row">
+        <label class="set-lbl" for="mod-${k}">${n}<small>${d}</small></label>
+        <input type="checkbox" role="switch" class="set-switch" id="mod-${k}" ${modOn(k) ? "checked" : ""} onchange="setMod('${k}', this.checked)">
+      </div>`).join("")}
+    </details>
+
     <details class="set-sec" ${setSecOpen("def")} ontoggle="setSecToggle('def', this.open)">
       <summary class="set-h">Mặc định<span class="set-sum">${String(defDur).replace(".", ",")} giờ · xếp ${hmOf(sc.from)}–${hmOf(sc.to)}</span></summary>
       <div class="set-row">
@@ -4026,7 +4112,7 @@ function renderSettingsModal() {
     <details class="set-sec" ${setSecOpen("gc") || (gcalConfigErr ? "open" : "")} ontoggle="setSecToggle('gc', this.open)">
       <summary class="set-h">Google Calendar<span class="set-sum"><span class="pill ${isGCalConnected() ? 'pill-ok' : 'pill-neutral'}" style="font-size:11px;">${isGCalConnected() ? 'Đã kết nối' : 'Chưa kết nối'}</span></span></summary>
       ${gcalConfigErr ? `<p class="set-note" style="color: var(--bad-text);" role="alert">${esc(gcalConfigErr)}</p>` : ""}
-      <p class="set-note">Gửi một chiều khi thêm, sửa, xóa. Sửa trên Google không cập nhật về app.</p>
+      <p class="set-note">Gửi lên Google khi thêm, sửa, xóa; sửa trên Google không cập nhật về app. Nút Nhập lấy sự kiện của tuần đang xem về app để bạn xác nhận loại vốn.</p>
 
       <div class="set-row set-stack">
         <label class="set-lbl" for="inpGCalClientId">Google Client ID<small>Từ Google Cloud Console</small></label>
@@ -4050,6 +4136,7 @@ function renderSettingsModal() {
           <button type="button" class="btn btn-sm btn-ghost btn-del" onclick="disconnectGoogleCalendar()">Ngắt</button>
           <button type="button" class="btn btn-sm" onclick="gcalSyncWeek(sel)" title="Gửi lại mọi hoạt động của tuần đang xem">Đồng bộ tuần</button>
         `}
+        ${gcalLinked() ? `<button type="button" class="btn btn-sm" onclick="closeSettingsModal(); gcalImportWeek(sel)" title="Lấy sự kiện có giờ của tuần đang xem về app, bạn xác nhận loại vốn">Nhập tuần ${sel + 1}</button>` : ""}
       </div>
     </details>
 
@@ -4072,7 +4159,7 @@ const KEYS = [
   ["/", "Ghi nhanh"],
   ["← →", "Tuần trước, tuần sau (chế độ Ngày: ngày trước, ngày sau)"],
   ["T", "Về hôm nay"],
-  ["1 – 6", "Lịch, Hộp việc, Dự án, Sức khỏe, Tổng quan, Tôi"],
+  ["1 – 6", "Chuyển tab theo thứ tự trên thanh tab"],
   ["Esc", "Đóng popup"],
   ["⌘Z", "Hoàn tác khi vừa xóa"],
   ["?", "Xem phím tắt"]
@@ -4097,7 +4184,7 @@ function shortcut(e) {
   if (k === "n" || k === "N") { headerAdd(); return true; }
   if (k === "t" || k === "T") { goToday(); return true; }
   if (k === "?") { showShortcuts(); return true; }
-  if (/^[1-6]$/.test(k)) { switchTab(TABS[+k - 1].id); return true; }
+  if (/^[1-6]$/.test(k)) { const t = tabsOn()[+k - 1]; if (t) switchTab(t.id); return true; }
   if ((k === "ArrowLeft" || k === "ArrowRight") && (cur === "ca" || cur === "su") && !(tg && tg.closest && tg.closest(".table-wrapper, .yr-quarters, .timeline-days-nav"))) {
     const d = k === "ArrowLeft" ? -1 : 1;
     if (cur === "ca" && calSubView === "timeline") shiftDay(d);
@@ -4166,7 +4253,7 @@ function openDayFromYear(i, j) {
 const ONB = [
   { el: ".quick-capture-box", t: "Ghi nhanh", d: "Gõ như nói, vd “Mai 18h cầu lông 2 tiếng”. App tự nhận ngày, giờ, thời lượng và loại vốn." },
   { el: "#nav button:nth-child(2)", t: "Hộp việc", d: "Việc chưa rõ lúc làm: gõ “+ tên việc” để cất vào hộp, chia nhỏ rồi xếp vào lịch sau." },
-  { el: "#reviewBtn", t: "Tổng kết", d: "Cuối tuần, xem bánh xe 5 loại vốn có cân bằng không và gợi ý cho tuần tới." }
+  { el: "#reviewBtn", t: "Tổng kết", d: "Cuối tuần, bấm để mở tab Tổng quan: giờ 5 loại vốn, bánh xe cân bằng và gợi ý cho tuần tới." }
 ];
 let onbIdx = -1;
 function onbStart() {
@@ -4317,6 +4404,7 @@ const V = {
           <button class="${calSubView === 'timeline' ? 'active' : ''}" onclick="openDayView()">Ngày</button>
           <button class="${calSubView === 'year' ? 'active' : ''}" onclick="calSubView='year'; draw(true)">Năm</button>
         </div>
+        ${gcalLinked() && calSubView !== "year" ? `<button type="button" class="btn btn-sm gx-btn" onclick="gcalImportWeek(sel)" title="Lấy sự kiện có giờ của tuần ${sel + 1} từ Google Calendar, bạn xác nhận loại vốn">${ICO.gin}<span>Nhập GCal</span></button>` : ""}
       </div>
     `;
 
@@ -4346,7 +4434,7 @@ const V = {
                 return `
                   <div class="event-item" style="--cap: ${cap.c}" onclick="openEditor('${k}', ${idx})">
                     <div class="event-item-top">
-                      <span class="event-title" title="${esc(e.t)}">${e.pj && findPj(e.pj) ? `<span class="ev-pj" style="--pj:${findPj(e.pj).col}" title="Dự án: ${esc(findPj(e.pj).n)}"></span>` : ""}${e.tk ? '<span class="ev-linked" title="Từ Hộp việc"></span>' : ""}${hbOfTitle(e.t) ? `<span class="ev-hb" title="Thói quen: ${esc(hbOfTitle(e.t).n)}">✓</span>` : ""}${esc(e.t)}</span>
+                      <span class="event-title" title="${esc(e.t)}">${modOn("pj") && e.pj && findPj(e.pj) ? `<span class="ev-pj" style="--pj:${findPj(e.pj).col}" title="Dự án: ${esc(findPj(e.pj).n)}"></span>` : ""}${e.tk ? '<span class="ev-linked" title="Từ Hộp việc"></span>' : ""}${hbOfTitle(e.t) ? `<span class="ev-hb" title="Thói quen: ${esc(hbOfTitle(e.t).n)}">✓</span>` : ""}${esc(e.t)}</span>
                     </div>
                     <div class="event-meta">
                       <span>${e.s ? e.s + ' · ' : ''}${r1(e.h)}h</span>
@@ -4403,7 +4491,7 @@ const V = {
           <div class="timeline-event-block"
                style="top:${topPx}px; height:${heightPx}px; --cap:${cap.c}"
                onclick="openEditor('${activeDate}', ${idx})">
-            <b>${e.s} – ${tt(e.s, e.h)}</b> · ${hbOfTitle(e.t) ? `<span class="ev-hb" title="Thói quen">✓</span>` : ""}${esc(e.t)} (${r1(e.h)}h)${e.pj && findPj(e.pj) ? ` <span class="tl-pj" style="--pj:${findPj(e.pj).col}">${esc(findPj(e.pj).n)}</span>` : ""}
+            <b>${e.s} – ${tt(e.s, e.h)}</b> · ${modOn("hb") && hbOfTitle(e.t) ? `<span class="ev-hb" title="Thói quen">✓</span>` : ""}${esc(e.t)} (${r1(e.h)}h)${modOn("pj") && e.pj && findPj(e.pj) ? ` <span class="tl-pj" style="--pj:${findPj(e.pj).col}">${esc(findPj(e.pj).n)}</span>` : ""}
           </div>
         `;
       }).join("");
@@ -4524,8 +4612,6 @@ const V = {
       };
     });
 
-    const A = al(sel);
-    const sg = S.caps.map(c => ({ c, h: wk(sel, c.k) })).filter(x => x.h > 0);
 
     const selectorBar = `
       <div class="card wk-bar">
@@ -4546,31 +4632,44 @@ const V = {
       </div>
     `;
 
-    // Nhận định thông minh (Native Insight Card)
+    // Nhận định + tổng kết tuần (v0.6.3: popup Tổng kết đã gộp vào đây)
     const T = D.filter(x => x.p != null);
     const okCount = T.filter(x => x.p >= 1).length;
     const worst = T.filter(x => x.p < 1).sort((a, b) => (b.c.tg - b.au) - (a.c.tg - a.au))[0];
+    const star = D.filter(x => x.au > 0).sort((a, b) => ((b.p == null ? 1 : b.p) - (a.p == null ? 1 : a.p)) || b.au - a.au)[0];
+    const idle = D.filter(x => x.au === 0);
+    const anyH = [...Array(nn)].some((_, j) => evs(from + j).length); // chỉ có giờ cố định thì chưa nhận định
+    const avgTxt = nn > 1 ? "trung bình " : "";
     const chip = x => x.p == null ? '<span class="pill pill-neutral">Chưa đặt</span>' : x.p >= 1 ? '<span class="pill pill-ok">Đạt</span>' : x.p >= .6 ? '<span class="pill pill-cyan">Gần đạt</span>' : '<span class="pill pill-bad">Thiếu</span>';
 
     const insightCard = `
-      <div class="card">
+      <div class="card su-ins">
         <div class="card-header">
-          <h2 class="card-title">Nhận định</h2>
+          <div>
+            <h2 class="card-title">Tổng kết tuần ${sel + 1}</h2>
+            <div class="card-sub">${nn > 1 ? `Nhận định theo trung bình ${nn} tuần gần nhất` : "Điểm sáng, phần cần bù và gợi ý tuần tới"}${CW >= 0 && sel > CW ? " · tuần tương lai" : ""}</div>
+          </div>
+          ${anyH ? `<button type="button" class="btn btn-sm btn-ghost" onclick="copyReviewToClipboard(sel)" title="Sao chép tóm tắt tuần">Sao chép</button>` : ""}
         </div>
-        <p style="margin:4px 0 10px; font-size:13.5px; color:var(--tx-sec);">
-          ${T.length ? `Đã có <b>${okCount}/${T.length}</b> nguồn vốn đạt mục tiêu ${nn > 1 ? `(trung bình ${nn} tuần gần nhất đến tuần ${sel + 1})` : `trong tuần ${sel + 1}`}.` : `Chưa đặt mục tiêu tuần nên chưa đánh giá được. <button type="button" class="btn btn-sm btn-primary" onclick="goToTargets()">Đặt mục tiêu</button>`}
-          ${CW >= 0 && sel > CW ? " <i>(Tuần tương lai.)</i>" : ""}
-        </p>
-        <div style="display:flex; flex-direction:column; gap:6px; font-size:13px;">
-          ${worst ? `
-            <div style="padding:8px 12px; background:var(--bad-soft); border-radius:var(--radius-sm); border-left:3.5px solid var(--bad);">
-              <b>Thiếu nhiều nhất:</b> <b>${esc(worst.c.n)}</b> ${nn > 1 ? "trung bình " : ""}${r1(worst.au)}h / ${r1(worst.c.tg)}h (thiếu ${r1(worst.c.tg - worst.au)}h/tuần).
-            </div>
-          ` : ''}
+        ${!anyH ? `
+        <div class="su-empty">
+          <span>Tuần ${sel + 1} chưa có hoạt động. Ghi hoạt động để xem bánh xe cân bằng và gợi ý cho tuần tới.</span>
+          <button type="button" class="btn btn-sm btn-primary" onclick="goToQuickCapture()">Ghi hoạt động</button>
+        </div>` : `
+        <p class="su-ins-p">${T.length ? `Đã có <b>${okCount}/${T.length}</b> loại vốn đạt mục tiêu.` : "Chưa đặt mục tiêu tuần nên chưa đánh giá được mức đạt."}</p>
+        <div class="su-ins-list">
+          ${star ? `<div class="su-ins-i ok"><b>Điểm sáng:</b> <b>${esc(star.c.n)}</b> ${avgTxt}${r1(star.au)}h${star.p != null ? ` (${Math.round(star.p * 100)}% mục tiêu)` : ""}.</div>` : ""}
+          ${worst ? `<div class="su-ins-i bad"><b>Cần bù:</b> <b>${esc(worst.c.n)}</b> ${avgTxt}${r1(worst.au)}h / ${r1(worst.c.tg)}h, thiếu ${r1(worst.c.tg - worst.au)}h/tuần.</div>` : ""}
+          ${idle.length ? `<div class="su-ins-i"><b>Chưa có giờ:</b> ${idle.map(x => esc(x.c.n)).join(", ")}.</div>` : ""}
         </div>
-        <div style="display:flex; flex-wrap:wrap; gap:8px 16px; margin-top:12px; padding-top:10px; border-top:1px dashed var(--bd); font-size:12.5px;">
-          ${D.map(x => `<span class="row" style="gap:4px;"><span class="dot" style="background:${x.c.c}"></span> <b>${esc(x.c.n)}</b>: ${chip(x)}</span>`).join("")}
+        <div class="su-next">
+          <b>Gợi ý tuần tới</b>
+          <ol>
+            <li>${worst ? `Xếp 1–2 buổi <b>${esc(worst.c.n)}</b> vào Thứ 3 hoặc Thứ 5.` : idle.length ? `Thêm ít nhất một buổi <b>${esc(idle[0].c.n)}</b>.` : "Giữ nhịp các loại vốn như tuần này."}</li>
+            <li>Giữ đà ở <b>${star ? esc(star.c.n) : "loại vốn mạnh nhất"}</b>.</li>
+          </ol>
         </div>
+        ${T.length ? `<div class="su-chips">${D.map(x => `<span class="row" style="gap:4px;"><span class="dot" style="background:${x.c.c}"></span> <b>${esc(x.c.n)}</b>: ${chip(x)}</span>`).join("")}</div>` : ""}`}
       </div>
     `;
 
@@ -4583,25 +4682,6 @@ const V = {
           </div>
         </div>
         ${renderRadarChartSVG(sel)}
-      </div>
-    `;
-
-    // Giờ đã ghi chia theo loại vốn (tỉ lệ trên tổng giờ đã ghi, không tính trên 168h vì còn giờ ngủ)
-    const pc = h => A ? Math.round(h / A * 100) : 0;
-    const f168 = `
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <h2 class="card-title">Giờ đã ghi · Tuần ${sel + 1}</h2>
-            <div class="card-sub">${A ? `${r1(A)}h, chia theo loại vốn` : "Chưa có hoạt động trong tuần này"}${A > 168 ? ` · <b style="color: var(--bad-text)">vượt 168h của một tuần, kiểm tra hoạt động trùng</b>` : ""}</div>
-          </div>
-        </div>
-        ${A ? `<div class="progress-168-bar">
-          ${sg.map(x => `<div class="progress-168-seg" style="width:${x.h / A * 100}%; background:${x.c.c};" title="${esc(x.c.n)}: ${r1(x.h)}h (${pc(x.h)}%)"></div>`).join("")}
-        </div>
-        <div style="display:flex; flex-wrap:wrap; gap:10px 14px; font-size:12.5px;">
-          ${sg.map(x => `<span class="row" style="gap:4px;"><span class="dot" style="background:${x.c.c}"></span><b>${esc(x.c.n)}</b>: ${r1(x.h)}h · ${pc(x.h)}%</span>`).join("")}
-        </div>` : ""}
       </div>
     `;
 
@@ -4663,20 +4743,27 @@ const V = {
       </details>
     `;
 
-    const pjCard = (S.projects || []).length ? `
+    const pjCard = modOn("pj") && (S.projects || []).length ? `
       <div class="card">
         <div class="card-header"><div><h2 class="card-title">Giờ theo dự án</h2><div class="card-sub">Tuần ${sel + 1}</div></div>
         <button type="button" class="btn btn-sm btn-ghost" onclick="switchTab('pj')">Xem dự án</button></div>
         ${pjWeekRowsHTML(W[sel])}
       </div>` : "";
-    const hbCard = hbList().length ? `
+    const hbCard = modOn("hb") && hbList().length ? `
       <div class="card">
         <div class="card-header"><div><h2 class="card-title">Thói quen</h2><div class="card-sub">Tuần ${sel + 1}</div></div>
         <button type="button" class="btn btn-sm btn-ghost" onclick="switchTab('set')">Quản lý</button></div>
         ${hbWeekRowsHTML(W[sel])}
       </div>` : "";
-    // Chưa đặt mục tiêu: bỏ thẻ Nhận định (chỉ nói "chưa đánh giá được"), nút Đặt mục tiêu nằm ở bánh xe
-    return selectorBar + (T.length ? insightCard : "") + wheelCard + hbCard + pjCard + f168 + reportTable;
+    const hlW = modOn("hl") ? hlWeekHTML(W[sel]) : "";
+    const hlCard = hlW ? `
+      <div class="card">
+        <div class="card-header"><div><h2 class="card-title">Sức khỏe</h2><div class="card-sub">Tuần ${sel + 1}</div></div>
+        <button type="button" class="btn btn-sm btn-ghost" onclick="switchTab('hl')">Xem sức khỏe</button></div>
+        ${hlW}
+      </div>` : "";
+    // Giờ từng loại vốn (chính) → tổng kết → bánh xe → các phần phụ → bảng chi tiết
+    return selectorBar + capSumHTML(sel) + insightCard + wheelCard + hbCard + pjCard + hlCard + reportTable;
   },
   // --- TAB 3: CÀI ĐẶT LOẠI VỐN (SETTINGS) ---
   set() {
@@ -4971,6 +5058,7 @@ function renderEditorSheet() {
         </div>
       ` : ''}
 
+      ${X && X.gx ? `<p class="set-note gx-note">Nhập từ Google Calendar. Sửa ở đây chỉ đổi trong app, không đổi sự kiện trên Google.</p>` : ""}
       ${X && X.tk ? (() => {
         const f = findSub(X.tk), owner = f ? f.task : findTask(X.tk);
         return owner ? `<div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; padding:6px 10px; background:var(--card-subtle); border-radius:var(--radius-sm); border:1px solid var(--bd); font-size:12.5px;">
@@ -4993,7 +5081,7 @@ function renderEditorSheet() {
         </select>
       </div>
 
-      ${(() => { const hm = X ? hbOfTitle(X.t) : null; return hm
+      ${!modOn("hb") ? "" : (() => { const hm = X ? hbOfTitle(X.t) : null; return hm
         ? `<div class="hb-ed">Thuộc thói quen <b>${esc(hm.n)}</b> · chuỗi ${hbStats(hm).cur} ${hbUnit(hm)}</div>`
         : `<label class="hb-ed"><input type="checkbox" id="inpHabit"> Theo dõi thành thói quen <small>tự đếm các buổi cùng tên, 3 lần/tuần</small></label>`; })()}
 
@@ -5073,7 +5161,8 @@ async function saveEventFromForm(keepOpen) {
   if (!title) { showToast("Nhập tên hoạt động", "bad"); $("inpTitle").focus(); return; }
   const c = chkEvent(ed, start, hours, ei);
   if (c.err) { showToast(c.err, "bad"); return; }
-  const pjv = $("inpPj") ? $("inpPj").value : "";
+  // Đã tắt phần Dự án (không có ô chọn): giữ nguyên dự án đang gắn khi sửa
+  const pjv = $("inpPj") ? $("inpPj").value : (ei != null && (S.ev[ed] || [])[ei] && S.ev[ed][ei].pj) || "";
   const o = { t: title, c: $("inpCap").value, m: "u", h: hours, s: start, pj: pjv || undefined }; // undefined: bỏ nhãn khi lưu
   if (ei == null && edSecPreset && pjv && pjv === edPjPreset) o.sec = edSecPreset; // thêm từ một phần của trang dự án
   const cur0 = ei != null ? (S.ev[ed] || [])[ei] : null;
@@ -5273,7 +5362,7 @@ function cleanCap(c) {
 function cleanEv(e) {
   if (!e || typeof e.t !== "string" || !(+e.h > 0 && +e.h <= 24) || !SAFE_K.test(e.c || "")) return null;
   return {
-    ...extras(e, ["id", "mt", "t", "c", "m", "h", "s", "r", "tk", "pj", "sec", "gid", "gi", "ds", "demo"]),
+    ...extras(e, ["id", "mt", "t", "c", "m", "h", "s", "r", "tk", "pj", "sec", "gid", "gi", "gx", "ds", "demo"]),
     ...(SAFE_K.test(e.id || "") ? { id: e.id } : {}),
     ...(SAFE_K.test(e.pj || "") ? { pj: e.pj } : {}), // dự án (v0.5.0)
     ...(SAFE_K.test(e.sec || "") ? { sec: e.sec } : {}), // phần trong dự án (v0.6.0)            // mã riêng (v0.4.0), thiếu thì cleanState cấp
@@ -5284,7 +5373,8 @@ function cleanEv(e) {
     ...(SAFE_K.test(e.tk || "") ? { tk: e.tk } : {}), // liên kết tới việc nhỏ trong Hộp việc
     ...(typeof e.gid === "string" && GID.test(e.gid) ? { gid: e.gid } : {}),
     ...(typeof e.gi === "string" && /^[0-9a-v]{20,64}$/.test(e.gi) ? { gi: e.gi } : {}), // mã định sẵn cho Google Calendar
-    ...(e.ds ? { ds: 1 } : {}),     // đang chờ đẩy lên Google Calendar
+    ...(typeof e.gx === "string" && GID.test(e.gx) && !e.gid ? { gx: e.gx } : {}), // nhập từ Google Calendar (v0.6.3), không gửi ngược
+    ...(e.ds && !(e.gx && !e.gid) ? { ds: 1 } : {}),     // đang chờ đẩy lên Google Calendar
     ...(e.demo ? { demo: 1 } : {})  // dữ liệu mẫu, không đẩy lên Google Calendar
   };
 }
@@ -5301,7 +5391,8 @@ function cleanState(d) {
   const cl = (v, lo, hi, def) => { v = +v; return Number.isFinite(v) ? Math.min(hi, Math.max(lo, v)) : def; };
   const dc = d.cfg || {};
   const cfg = {
-    ...extras(dc, ["defDuration", "gcalAutoSync", "gcalClientId", "schedFrom", "schedTo", "schedCap"]),
+    ...extras(dc, ["defDuration", "gcalAutoSync", "gcalClientId", "schedFrom", "schedTo", "schedCap", "mods"]),
+    ...(dc.mods && typeof dc.mods === "object" && ["pj", "hb", "hl"].some(k => dc.mods[k] === false) ? { mods: Object.fromEntries(["pj", "hb", "hl"].filter(k => dc.mods[k] === false).map(k => [k, false])) } : {}), // phần đã tắt (v0.6.3)
     ...(dc.schedFrom != null ? { schedFrom: Math.round(cl(dc.schedFrom, 0, 1380, 480)) } : {}),
     ...(dc.schedTo != null ? { schedTo: Math.round(cl(dc.schedTo, 60, 1440, 1320)) } : {}),
     ...(dc.schedCap != null ? { schedCap: cl(dc.schedCap, 0, 24, 2) } : {}),
@@ -5421,7 +5512,6 @@ V.su = function () {
   return h.split(/(<svg[\s\S]*?<\/svg>)/).map(part => part.startsWith("<svg") ? part :
     part.replace(/(<[^>]*>)|(\d+(?:[.,]\d+)?[h%])/g, (m, t, v) => t ? t : `<span data-k="n${n++}">${v}</span>`)).join("");
 };
-const vals = () => { const o = {}, t = document.createElement("div"); t.innerHTML = V.su(); t.querySelectorAll("[data-k]").forEach(e => { o[e.dataset.k] = e.textContent; }); return o; };
 const mark = () => document.querySelectorAll("[data-k]").forEach(e => e.classList.toggle("chg", CH.has(e.dataset.k)));
 
 let drawnView = ""; // trang vừa vẽ: chỉ giữ con trỏ khi vẽ lại cùng trang
@@ -5474,15 +5564,19 @@ function draw(jump) {
     if (hid) $("v").insertAdjacentHTML("beforeend", `<p style="font-size:12.5px; color:var(--mu); margin-top:8px;">${hid} hoạt động chưa có giờ hoặc trước 06:00, xem ở chế độ Tuần.</p>`);
     layoutTimeline();
   }
-  // Đánh dấu các số vừa thay đổi sau chỉnh sửa gần nhất
-  const nv = vals();
-  if (dirty) {
-    const c = new Set(Object.keys(nv).filter(k => k in PV && PV[k] !== nv[k]));
-    if (c.size) CH = c;
+  // Đánh dấu các số vừa thay đổi sau chỉnh sửa gần nhất. Số chỉ có ở Tổng quan: chỉ dò khi đang mở tab đó
+  // (v0.6.3: trước đây mỗi lần vẽ bất kỳ tab nào cũng dựng ngầm cả trang Tổng quan, tốn ~5 ms trên máy tính)
+  if (cur === "su") {
+    const nv = {}; // đọc ngay từ trang vừa vẽ, không dựng lại lần nữa
+    $("v").querySelectorAll("[data-k]").forEach(e => { nv[e.dataset.k] = e.textContent; });
+    if (dirty && sameView) { // vừa mở tab thì không so với lần trước
+      const c = new Set(Object.keys(nv).filter(k => k in PV && PV[k] !== nv[k]));
+      if (c.size) CH = c;
+    }
     dirty = false;
+    PV = nv;
+    mark();
   }
-  PV = nv;
-  mark();
   // Số vừa đổi được tô nền vài giây rồi tự tắt (không cần dòng giải thích và nút Bỏ đánh dấu)
   if (CH.size) { clearTimeout(chgT); chgT = setTimeout(() => { CH = new Set(); mark(); }, 4000); }
   pjAfterDraw();
@@ -5558,8 +5652,8 @@ document.addEventListener("keydown", e => {
     closeSched();
     closeHb();
     closeHl();
-    closeReviewModal();
     closeSettingsModal();
+    closeGx();
   }
   if ((e.ctrlKey || e.metaKey) && e.key === "Enter" && ed) {
     e.preventDefault();
@@ -6432,14 +6526,14 @@ function inboxHTML(where) {
         <div class="hv-meta">
           <span>${esc(cap.n)} · ${t.subs.length ? `đã xếp ${nS}/${us.length} · ${hrs(tot)}` : selfP ? `đã xếp ${whenLabel(selfP)}` : "chưa chia nhỏ"}${nMiss ? ` · <b class="hv-miss">${nMiss} lỡ</b>` : ""}</span>
           ${t.due ? `<span class="hv-dueT ${late ? "late" : ""}">${late ? "Quá hạn " : "Hạn "}${dm(t.due)}</span>` : ""}
-          ${tPj ? `<span class="hv-pjT"><i style="background:${tPj.col}"></i>${esc(tPj.n)}</span>` : ""}
+          ${tPj && modOn("pj") ? `<span class="hv-pjT"><i style="background:${tPj.col}"></i>${esc(tPj.n)}</span>` : ""}
         </div>
         ${hvMore === "task:" + t.id ? `<div class="hv-tray">
           <select class="hv-mini" onchange="setTaskField('${t.id}','c',this.value)" aria-label="Loại vốn" style="${capInk(cap.c)}">
             ${S.caps.map(c => `<option value="${c.k}" ${c.k === t.c ? "selected" : ""}>${esc(c.n)}</option>`).join("")}
           </select>
           <label class="hv-mini hv-due ${t.due ? "on" : ""} ${late ? "late" : ""}">${t.due ? (late ? "Quá hạn " : "Hạn ") + dm(t.due) : "+ Hạn"}<input type="date" value="${t.due || ""}" onclick="try { this.showPicker(); } catch (e) {}" onkeydown="dateKey(event)" onchange="dateSet(this, v => pjSetDue('${t.id}', v))" onblur="dateSet(this, v => pjSetDue('${t.id}', v), 1)" aria-label="Hạn của ${esc(t.t)}"></label>
-          ${(S.projects || []).length ? `<select class="hv-mini" onchange="setTaskPj('${t.id}', this.value)" aria-label="Dự án" ${tPj ? `style="--pj:${tPj.col}" data-pj="1"` : ""}>
+          ${modOn("pj") && (S.projects || []).length ? `<select class="hv-mini" onchange="setTaskPj('${t.id}', this.value)" aria-label="Dự án" ${tPj ? `style="--pj:${tPj.col}" data-pj="1"` : ""}>
             <option value="">Không dự án</option>
             ${(S.projects || []).filter(p => pjIsOpen(p) || p.id === t.pj).sort(pjCmp).map(p => `<option value="${p.id}" ${p.id === t.pj ? "selected" : ""}>${esc(p.n)}</option>`).join("")}
           </select>` : ""}
@@ -8113,6 +8207,7 @@ async function deleteProject(id) {
 
 /* ---- Popup hoạt động: ô Dự án ---- */
 function pjSelectHTML(cur0) {
+  if (!modOn("pj")) return "";
   const ps = (S.projects || []).filter(p => pjIsOpen(p) || p.id === cur0).sort(pjCmp);
   return `
     <div class="form-group">
@@ -8302,6 +8397,7 @@ function hbSuggest() {
 }
 const hbLast = new Map();
 function hbStripHTML() {
+  if (!modOn("hb")) return "";
   const L = hbList(), sug = hbSuggest(), wk0 = monKey(tk), msg = [];
   const chips = L.map(h => {
     const st = hbStats(h), cap = CM(h.c), tick = h.kind === "tick";
@@ -8533,6 +8629,7 @@ function hbPlanOne(id) {
 // Tổng kết tuần, Tổng quan: mỗi thói quen một dòng
 let hbShowArch = false;
 function hbManageHTML() {
+  if (!modOn("hb")) return "";
   const L = hbList(), A = hbList(true);
   const row = h => { const st = hbStats(h); return `
     <div class="hb-row" style="--cap:${CM(h.c).c}">
@@ -9005,6 +9102,7 @@ function hlSummary(k) {
 }
 // Chip trên thẻ ngày ở tab Lịch
 function hlChips(k, c) {
+  if (!modOn("hl")) return "";
   const d = hlDay(k), pr = hlPredict(k, c), out = [], disc = S.health && S.health.disc;
   const r = k === tk ? hlReady() : null;
   if (r) out.push(`<span class="hl-mini rd ${r.lv[1]}" title="Điểm Sẵn sàng: ${esc(r.why.join(", "))}">Sẵn sàng ${r.v}</span>`);
@@ -9440,6 +9538,7 @@ function hlCiRender() {
 }
 // Lời nhắc ở tab Lịch sau 19h nếu hôm nay chưa check-in (người đã dùng Sức khỏe)
 function checkinNotice() {
+  if (!modOn("hl")) return "";
   const days = S.health && S.health.days || {};
   if (new Date().getHours() < 19 || (hlDay(tk) || {}).mood || !hlRange(14).some(k => days[k])) return "";
   let skip = "";

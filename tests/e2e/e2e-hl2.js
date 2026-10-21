@@ -157,8 +157,8 @@ window.E2EHL2 = async function () {
   switchTab("ca"); calSubView = "focus"; sel = CW; draw(); await sleep(10);
   ok("5.10 thẻ hôm nay có chip Sẵn sàng", /Sẵn sàng \d+/.test((document.querySelector(".day-card.today .hl-day") || {}).textContent || ""));
   openWeeklyReviewModal(CW); await sleep(10);
-  ok("5.11 Tổng kết tuần có vận động", /Vận động \d+\/150 phút/.test($("reviewSheetBody").textContent));
-  closeReviewModal();
+  ok("5.11 Tổng kết tuần có vận động", /Vận động \d+\/150 phút/.test($("v").textContent));
+  switchTab("ca");
   switchTab("hl"); hlGo("browse", "ac"); await sleep(10);
   ok("5.12 Duyệt › Vận động: vòng tuần, 8 tuần, danh sách buổi", /Tuần này: \d+\/150 phút/.test($("v").textContent) && /8 tuần gần nhất/.test($("v").textContent) && /Gym/.test($("v").textContent));
   hlGo("sum"); await sleep(10);

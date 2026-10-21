@@ -23,7 +23,7 @@ window.E2EUAT3 = async function () {
   closeSettingsModal(); await removeBg(); openSettingsModal(); await sleep(20);
   ok("K1.5 chưa có ảnh: không có thanh kéo, dòng Ảnh nền nhắc chọn ảnh", !$("bgBlurRange") && /Chọn ảnh để chỉnh được độ mờ nền/.test($("settingsSheetBody").textContent));
   const secs = [...document.querySelectorAll("#settingsSheetBody > .set-sec")];
-  ok("K2.1 mỗi mục một thẻ: Giao diện, Mặc định, Đồng bộ, Dữ liệu, Google Calendar, Xóa dữ liệu", secs.length === 6 && secs.every(s => parseFloat(getComputedStyle(s).borderTopLeftRadius) >= 16), secs.map(s => s.querySelector("summary").textContent.slice(0, 12)));
+  ok("K2.1 mỗi mục một thẻ: Giao diện, Tính năng, Mặc định, Đồng bộ, Dữ liệu, Google Calendar, Xóa dữ liệu", secs.length === 7 && secs.every(s => parseFloat(getComputedStyle(s).borderTopLeftRadius) >= 16), secs.map(s => s.querySelector("summary").textContent.slice(0, 12)));
   const sw = $("chkGCalAutoSync");
   ok("K2.2 Tự động đồng bộ là công tắc", sw && sw.classList.contains("set-switch") && sw.getAttribute("role") === "switch");
   sw.click(); await sleep(10); const off = S.cfg.gcalAutoSync === false; $("chkGCalAutoSync").click(); await sleep(10);

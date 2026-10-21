@@ -210,8 +210,8 @@ window.E2EHL = async function () {
   ok("9.3 chế độ Ngày có chip", !!document.querySelector(".timeline-container .hl-day"));
   calSubView = "focus"; draw();
   openWeeklyReviewModal(CW); await sleep(10);
-  ok("9.4 Tổng kết tuần có mục Sức khỏe", /Sức khỏe/.test($("reviewSheetBody").textContent) && /Tâm trạng 5\/5/.test($("reviewSheetBody").textContent));
-  closeReviewModal();
+  ok("9.4 Tổng kết tuần có mục Sức khỏe", /Sức khỏe/.test($("v").textContent) && /Tâm trạng 5\/5/.test($("v").textContent));
+  switchTab("ca");
 
   // 10. Tab, phím tắt, nút Thêm
   ok("10.1 6 tab: Lịch, Hộp việc, Dự án, Sức khỏe, Tổng quan, Tôi", TABS.map(t => t.id).join() === "ca,hv,pj,hl,su,me");

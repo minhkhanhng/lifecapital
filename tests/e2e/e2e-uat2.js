@@ -209,12 +209,12 @@ window.E2EUAT2 = async function () {
 
   // ===== I6
   openWeeklyReviewModal(CW); await sleep(20);
-  ok("I6.1 Tổng kết: thẻ Thói quen, mỗi dòng tên, số lần, chuỗi, kỷ lục", [...$("reviewSheetBody").querySelectorAll(".hb-row")].some(r => /Đi bộ/.test(r.textContent) && /\d+\/4 lần/.test(r.textContent) && /chuỗi \d+ tuần · kỷ lục \d+/.test(r.textContent)));
-  closeReviewModal();
+  ok("I6.1 Tổng kết: thẻ Thói quen, mỗi dòng tên, số lần, chuỗi, kỷ lục", [...$("v").querySelectorAll(".hb-row")].some(r => /Đi bộ/.test(r.textContent) && /\d+\/4 lần/.test(r.textContent) && /chuỗi \d+ tuần · kỷ lục \d+/.test(r.textContent)));
+  switchTab("ca");
   openWeeklyReviewModal(CW - 2); await sleep(20);
-  const miss = [...$("reviewSheetBody").querySelectorAll(".hb-row")].find(r => /Đi bộ/.test(r.textContent));
+  const miss = [...$("v").querySelectorAll(".hb-row")].find(r => /Đi bộ/.test(r.textContent));
   ok("I6.2 tuần đã qua chưa đạt: số lần màu cam", miss && miss.querySelector(".hb-miss"));
-  closeReviewModal();
+  switchTab("ca");
   switchTab("su"); await sleep(20);
   ok("I6.3 Tổng quan có thẻ Thói quen", [...document.querySelectorAll("#v .card-title")].some(x => x.textContent === "Thói quen"));
   switchTab("ca");
@@ -245,7 +245,7 @@ window.E2EUAT2 = async function () {
   hbAdd({ n: bad, c: "sk", kind: "tick", per: "week", tgt: 2 });
   const tb = addTask(bad); addSub(tb.id, bad + " 1h");
   draw(); openSched("task", tb.id); await sleep(20); closeSched();
-  openWeeklyReviewModal(CW); await sleep(10); closeReviewModal();
+  openWeeklyReviewModal(CW); await sleep(10); switchTab("ca");
   switchTab("set"); await sleep(10); switchTab("ca"); await sleep(10);
   ok("B1 tên có mã HTML được hiển thị như chữ ở mọi nơi", !window.__xss && !document.querySelector('img[src="x"]'));
   S.habits = S.habits.filter(h => h.n !== bad); S.tasks = S.tasks.filter(t => t.t !== bad);

@@ -148,10 +148,9 @@ window.E2EUX = async function () {
 
   // ===== A4–A6, A9 Tổng quan
   switchTab("su"); await sleep(10);
-  ok("A5.1 mặc định nhận định theo tuần đang xem", N === 1 && /trong tuần \d+/.test(vt()));
+  ok("A5.1 mặc định nhận định theo tuần đang xem", N === 1 && new RegExp("Tổng kết tuần " + (sel + 1)).test(vt()));
   ok("A5.2 không còn Còn trống / 168h", !/Còn trống/.test(vt()));
-  const segs = [...document.querySelectorAll("#v .progress-168-seg")].reduce((a, x) => a + parseFloat(x.style.width), 0);
-  ok("A5.3 thanh giờ chia theo vốn đầy 100%", Math.abs(segs - 100) < 0.5, segs);
+  ok("A5.3 Tổng quan có ô giờ từng loại vốn (thay thanh 168h)", document.querySelectorAll("#v .cap-s").length === S.caps.length && !document.querySelector("#v .progress-168-bar"));
   const th1 = [...document.querySelectorAll("#v .sum-table th")].map(x => x.textContent.trim());
   ok("A5.4 tính theo tuần này: bảng không có cột Trung bình", !th1.some(x => /Trung bình/.test(x)), th1);
   N = 4; draw(); await sleep(10);
@@ -167,7 +166,7 @@ window.E2EUX = async function () {
   ok("A9.2 có mục tiêu: mỗi ô có giờ / mục tiêu và thanh", [...document.querySelectorAll("#v .cap-s")].every(c => c.querySelector(".cap-s-bar") && /\/ \d/.test(c.textContent)));
   // số vừa đổi tự tắt tô nền
   switchTab("su"); await sleep(10);
-  dirty = true; PV = Object.fromEntries(Object.keys(vals()).map(k => [k, -1])); draw(); await sleep(10);
+  dirty = true; PV = Object.fromEntries([...document.querySelectorAll("#v [data-k]")].map(e => [e.dataset.k, -1])); draw(); await sleep(10);
   ok("A4.1 số vừa đổi có tô nền, không có dòng giải thích", document.querySelectorAll("#v .chg").length > 0 && !/tô nền|Bỏ đánh dấu/.test(vt()));
   await sleep(4300);
   ok("A4.2 sau 4 giây tự tắt", document.querySelectorAll("#v .chg").length === 0 && CH.size === 0);
@@ -253,14 +252,15 @@ window.E2EUX = async function () {
   const bw = balanceOf(CW).weakest;
   ok("V2.18 vốn yếu nhất được đánh dấu", !bw || (document.querySelectorAll("#v .cap-s.weak").length === 1 && document.querySelector("#v .cap-s.weak .cap-s-n").textContent === bw.c.n));
   openWeeklyReviewModal(CW); await sleep(20);
-  const rb = $("reviewSheetBody"), rvKids = [...rb.firstElementChild.children].filter(x => x.offsetParent);
-  ok("V2.19 Tổng kết: ngay sau chọn tuần là giờ theo loại vốn, rồi bánh xe", rvKids[1] && rvKids[1].classList.contains("cap-sum") && /Bánh xe/.test(rvKids[2].textContent), rvKids.slice(0, 3).map(x => x.className));
+  const rb = $("v"), rvKids = [...rb.children].filter(x => x.offsetParent);
+  ok("V2.19 Tổng kết (tab Tổng quan): sau chọn tuần là giờ theo loại vốn, rồi tổng kết, rồi bánh xe", cur === "su" && rvKids[1] && rvKids[1].classList.contains("cap-sum") && /Tổng kết tuần/.test(rvKids[2].textContent) && /Bánh xe/.test(rvKids[3].textContent), rvKids.slice(0, 4).map(x => x.className));
   ok("V2.20 Tổng kết: không còn 168h / Còn trống / Giờ trong tuần", !/168|Còn .*trống|Giờ trong tuần/.test(rb.textContent));
-  ok("V2.21 Tổng kết: dự án, sức khỏe, thói quen nằm sau phần chính", [...rb.querySelectorAll(".rv-sec-h")].map(x => x.textContent.trim())[0] === "Bánh xe cuộc đời");
-  closeReviewModal();
+  const tt0 = [...rb.querySelectorAll(".card-title")].map(x => x.textContent.trim()), iw = tt0.indexOf("Bánh xe cuộc đời");
+  ok("V2.21 Tổng kết: dự án, sức khỏe, thói quen nằm sau phần chính", iw > 0 && ["Thói quen", "Giờ theo dự án", "Sức khỏe"].every(t => tt0.indexOf(t) < 0 || tt0.indexOf(t) > iw), tt0);
+  switchTab("ca");
   openWeeklyReviewModal(W.findIndex((_, i) => !evs(i).length)); await sleep(10);
-  ok("V2.22 Tổng kết tuần trống: vẫn có ô từng vốn (0h hoặc giờ cố định), không lỗi", $("reviewSheetBody").querySelectorAll(".cap-s").length === S.caps.length);
-  closeReviewModal();
+  ok("V2.22 Tổng kết tuần trống: vẫn có ô từng vốn (0h hoặc giờ cố định), không lỗi", $("v").querySelectorAll(".cap-s").length === S.caps.length);
+  switchTab("ca");
 
   // ===== Vòng 3: Ngày, Năm cùng kiểu Tuần; nút và thanh một màu
   const noGrad = el => el && !/gradient/.test(getComputedStyle(el).backgroundImage);
@@ -295,14 +295,14 @@ window.E2EUX = async function () {
   hvMore = ""; openSettingsModal(); await sleep(20);
   ok("V3.14 Cài đặt: nút chọn đang bật một màu", [...document.querySelectorAll("#settingsSheetBody .set-seg button.on")].every(noGrad));
   closeSettingsModal(); openWeeklyReviewModal(CW); await sleep(20);
-  ok("V3.15 Tổng kết: không khối nào chuyển màu", [...$("reviewSheetBody").querySelectorAll("*")].every(noGrad));
-  closeReviewModal();
+  ok("V3.15 Tổng kết: không khối nào chuyển màu", [...$("v").querySelectorAll("*")].every(noGrad));
+  switchTab("ca");
 
   // ===== Vòng 4: popup, thông báo cùng thứ bậc; kính mờ mềm; tương phản chuẩn
   const crCode = await (await fetch("/tests/e2e/contrast.js?" + Date.now())).text();
   const noAnim = document.createElement("style"); noAnim.textContent = "*{transition:none!important;animation:none!important}"; document.head.appendChild(noAnim); // đo lúc đã hiện hẳn, không đo giữa hiệu ứng mờ dần
   document.querySelectorAll(".toast").forEach(t => t.remove());
-  const pops = [[() => openEditor(tk), closeEditor, "Thêm hoạt động"], [() => openEditor(Object.keys(S.ev).sort().pop(), 0), closeEditor, "Sửa hoạt động"], [() => openWeeklyReviewModal(CW), closeReviewModal, "Tổng kết"], [() => openSched("task", S.tasks.find(t => t.subs.length && !taskDone(t)).id, tk), closeSched, "Xếp lịch"], [() => hbOpen(S.habits[0].id), closeHb, "Thói quen"], [() => hlOpen(tk), closeHl, "Sức khỏe"], [() => hlMedOpen(), closeHl, "Thuốc"], [() => openProject(S.projects[0].id), closeProject, "Dự án"]];
+  const pops = [[() => openEditor(tk), closeEditor, "Thêm hoạt động"], [() => openEditor(Object.keys(S.ev).sort().pop(), 0), closeEditor, "Sửa hoạt động"], [() => openSched("task", S.tasks.find(t => t.subs.length && !taskDone(t)).id, tk), closeSched, "Xếp lịch"], [() => hbOpen(S.habits[0].id), closeHb, "Thói quen"], [() => hlOpen(tk), closeHl, "Sức khỏe"], [() => hlMedOpen(), closeHl, "Thuốc"], [() => openProject(S.projects[0].id), closeProject, "Dự án"]];
   const bad = [];
   for (const [o, c, l] of pops) {
     o(); await sleep(60);
