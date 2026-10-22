@@ -2,6 +2,27 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.6.4 · Nhờ AI xếp · 23/10/2026
+
+**Mới**
+- Nút **Nhờ AI xếp** ở Hộp việc (và cột Hộp việc cạnh lịch): AI (Claude) đề xuất ngày giờ cho các việc nhỏ chưa xếp trong 7 ngày tới. AI cân nhắc hạn, thứ tự việc nhỏ, khung giờ xếp việc, giới hạn giờ mỗi ngày, loại vốn còn thiếu so với mục tiêu tuần và điểm Sẵn sàng hôm nay.
+- Bạn duyệt trước khi thêm: mỗi đề xuất có lý do; bỏ chọn mục không muốn rồi bấm Thêm. Có Hoàn tác. Việc lỡ được xếp lại thì buổi cũ được gỡ.
+- App kiểm lại từng đề xuất trên lịch thật: trùng giờ, ngoài khung giờ, giờ đã qua thì bỏ và ghi vào "việc chưa xếp được"; sai thứ tự hoặc sau hạn thì báo và bỏ chọn sẵn. Lịch đổi trong lúc chờ thì không thêm vào chỗ vừa bị chiếm.
+
+**Quyền riêng tư**
+- Chỉ gửi: tên việc chưa xếp, tên việc lớn, thời lượng, hạn, giờ bận (không kèm tên hoạt động), mục tiêu và số giờ từng loại vốn, khung giờ xếp việc, điểm Sẵn sàng hôm nay (một con số, khi bật Sức khỏe). Không gửi triệu chứng, thuốc, chu kỳ, ghi chú.
+- Cần đăng nhập đồng bộ; máy chủ kiểm tra phiên đăng nhập và danh sách email được phép (`AI_ALLOWED_EMAILS`) trước khi gọi AI.
+
+**Kỹ thuật**
+- Hàm máy chủ `api/ai_plan.py` trên Vercel (Python, thư viện `anthropic`, mô hình `claude-opus-5-5`, mức suy nghĩ medium, đầu ra theo JSON schema, tự chuyển mô hình dự phòng khi bị từ chối). Cần đặt `ANTHROPIC_API_KEY` trong Vercel; chưa đặt thì app báo "AI chưa được cài đặt".
+- Chi phí ước tính khoảng 0,05–0,15 USD mỗi lần bấm (tùy số việc).
+
+**Sửa**
+- Lưới Năm trên điện thoại, chế độ Tối: ô ngày nhiều giờ có chữ sáng trên nền hồng đậm (3:1). Nay giảm độ đậm nền ở chế độ Tối, chữ đạt 4.5:1.
+- Test phụ thuộc ngày chạy (e2e6 xếp 20:00 trùng hoạt động mẫu, chip thói quen cuối tuần ghi "thiếu N").
+
+**Kiểm thử**: `tests/e2e/e2e-ai.js` (29 bước, giả lập đăng nhập và máy chủ), `tests/api/test_ai_plan.py` (10 ca, AI giả). 11 bộ e2e đạt 700/700, gộp dữ liệu 30/30.
+
 ## v0.6.3 · Nhập từ Google Calendar, bật/tắt phần, Tổng quan gộp Tổng kết · 21/10/2026
 
 **Mới**

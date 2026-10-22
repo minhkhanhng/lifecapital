@@ -201,7 +201,8 @@ window.E2E = async function (only) {
     ok("E1 thêm việc nhỏ 15p", sub && Math.abs(sub.h - 0.25) < 1e-9, findTask(t.id).subs);
     const xep = [...document.querySelectorAll("#pjItBody .pjd-li button")].find(b => b.textContent === "Xếp"); xep.focus(); xep.click(); await sleep(50);
     ok("E1 Xếp mở bảng xếp lịch", sch);
-    schedSet("start", "20:00"); await confirmSched(); await sleep(80);
+    // 20:00 có thể trùng hoạt động mẫu tùy ngày chạy (dữ liệu mẫu đặt theo tuần): đồng ý "Vẫn xếp" để test không phụ thuộc ngày
+    { const a0 = window.ask; window.ask = async () => true; schedSet("start", "20:00"); await confirmSched(); window.ask = a0; } await sleep(80);
     const it = pjModel(P()).find(i => i.id === t.id);
     ok("E1 buổi vừa xếp nằm trong 'Các buổi trên lịch'", it.evs.length === 1 && (txt("#pjItBody") || "").includes("1 buổi"), [it.evs.length, txt("#pjItBody")]);
     switchTab("hv"); await sleep(20); ok("E1 Hộp việc thấy tên mới", (txt("#v") || "").includes("Việc đã đổi tên"));

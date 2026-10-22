@@ -131,7 +131,7 @@ window.E2EUAT2 = async function () {
   const hd = (S.habits || []).find(h => h.n === "Đi bộ");
   draw(); await sleep(20);
   let ch = chipOf("Đi bộ");
-  ok("I1.1 chip 'Đi bộ': chấm hôm nay tô, '0 tuần', '1/3'", hd && ch && /0\s*tuần/.test(ch.textContent) && /1\/3/.test(ch.textContent) && ch.querySelectorAll(".hb-dot.on.today").length === 1, ch && ch.textContent);
+  ok("I1.1 chip 'Đi bộ': chấm hôm nay tô, '0 tuần', '1/3'", hd && ch && /0\s*tuần/.test(ch.textContent) && /1\/3|thiếu 2/.test(ch.textContent) && ch.querySelectorAll(".hb-dot.on.today").length === 1, ch && ch.textContent);
   ok("I1.2 thẻ hoạt động có dấu ✓", [...document.querySelectorAll(".event-item")].some(x => x.textContent.includes("Đi bộ") && x.querySelector(".ev-hb")));
   openEditor(tk, S.ev[tk].findIndex(e => e.t === "Đi bộ")); await sleep(20);
   ok("I1.3 popup ghi 'Thuộc thói quen Đi bộ'", /Thuộc thói quen Đi bộ/.test($("sheetBody").textContent));
@@ -140,7 +140,7 @@ window.E2EUAT2 = async function () {
   // ===== I2
   [0, 2, 4].forEach(j => evAt(W0(-7 + j), "07:00", 0.5, "đi bo", "sk"));
   draw(); await sleep(20); ch = chipOf("Đi bộ");
-  ok("I2.1 buổi không dấu được đếm; chip '1 tuần' dù tuần này 1/3", ch && /1\s*tuần/.test(ch.textContent) && /1\/3/.test(ch.textContent), ch && ch.textContent);
+  ok("I2.1 buổi không dấu được đếm; chip '1 tuần' dù tuần này 1/3", ch && /1\s*tuần/.test(ch.textContent) && /1\/3|thiếu 2/.test(ch.textContent), ch && ch.textContent);
   hbOpen(hd.id); await sleep(20);
   const hbT = $("hbBody").textContent;
   ok("I2.2 bảng: Chuỗi 1 tuần, Kỷ lục 1 tuần, Tuần này 1/3 lần", /Chuỗi\s*1 tuần/.test(hbT) && /Kỷ lục\s*1 tuần/.test(hbT) && /Tuần này\s*1\/3 lần/.test(hbT), hbT.slice(0, 120));
@@ -190,7 +190,7 @@ window.E2EUAT2 = async function () {
 
   // ===== I5
   hbOpen(hd.id); hbSet("tgt", 4); hbSave(); await sleep(20);
-  ok("I5.1 chip ghi '/4'", /\/4/.test(chipOf("Đi bộ").textContent));
+  ok("I5.1 chip ghi '/4' (cuối tuần còn thiếu thì ghi thiếu N)", /\/4|thiếu \d/.test(chipOf("Đi bộ").textContent) && S.habits.find(h => h.n === "Đi bộ").tgt === 4);
   hbOpen(hd.id); await sleep(20);
   const planBtn = [...$("hbBody").querySelectorAll("button")].find(b => b.textContent === "Xếp 1 buổi");
   ok("I5.2 có nút 'Xếp 1 buổi'", !!planBtn);

@@ -162,6 +162,10 @@
    - Popup Tổng kết gộp vào tab **Tổng quan**: giờ theo loại vốn, Tổng kết tuần (điểm sáng, cần bù, chưa có giờ, gợi ý tuần tới, Sao chép), bánh xe, rồi Thói quen, Dự án, Sức khỏe. Nút Tổng kết ở tab Lịch mở thẳng tab này.
    - Hiệu năng: vẽ lại mỗi tab nhanh hơn 40–80% (bỏ việc dựng ngầm trang Tổng quan ở mọi lần vẽ).
 
+20. ✨ **Nhờ AI Xếp (v0.6.4)**:
+   - Nút **Nhờ AI xếp** ở Hộp việc: Claude đề xuất ngày giờ cho việc chưa xếp trong 7 ngày tới (theo hạn, thứ tự, khung giờ, loại vốn còn thiếu, điểm Sẵn sàng). Bạn duyệt, bỏ chọn, rồi thêm; có Hoàn tác. App kiểm lại trùng giờ, khung giờ, thứ tự, hạn trước khi cho thêm.
+   - Cần đăng nhập đồng bộ. Không gửi dữ liệu sức khỏe ngoài điểm Sẵn sàng; giờ bận gửi không kèm tên.
+
 ---
 
 ## 4. Hướng dẫn Triển khai & Sử dụng
@@ -188,6 +192,11 @@ Nên cài theo cách này thay vì dùng tab Safari thường: Safari có thể 
 4. **Credentials** → *Create OAuth client ID* → *Web application*. Ở **Authorized JavaScript origins**, thêm địa chỉ bạn deploy (vd `https://lifecapital.vercel.app`) và `http://localhost:8765` nếu chạy trên máy.
 5. Trong app: `⚙️ Cài đặt` → dán **Client ID** → **Kết nối Google Calendar**. Trên màn hình của Google, nhớ **tick ô cho phép truy cập Google Calendar**; nếu bỏ tick, app sẽ báo và yêu cầu kết nối lại.
 6. Nhập sự kiện từ Google về app (v0.6.3) dùng cùng quyền `calendar.events`, không cần cấp thêm quyền.
+
+### Cấu hình Nhờ AI xếp (tùy chọn)
+1. Tạo API key ở [platform.claude.com](https://platform.claude.com) (Settings → API Keys). Nên đặt giới hạn chi tiêu tháng cho workspace.
+2. Vercel → Project → Settings → Environment Variables: thêm `ANTHROPIC_API_KEY` (Production và Preview). Nên thêm `AI_ALLOWED_EMAILS` = các email được dùng, cách nhau dấu phẩy; để trống thì mọi tài khoản đã đăng nhập đồng bộ đều dùng được.
+3. Redeploy. Kiểm tra: đăng nhập đồng bộ trong app → Hộp việc → **Nhờ AI xếp**.
 
 ---
 

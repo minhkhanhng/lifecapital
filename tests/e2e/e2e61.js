@@ -113,7 +113,7 @@ window.E2E61 = async function () {
   // 8. Lịch năm điện thoại tô theo tổng giờ
   calSubView = "year"; draw(); await sleep(40);
   const dd = [...document.querySelectorAll(".yr-day")].filter(x => x.getAttribute("style"));
-  ok("8.1 ô có giờ tô màu nhấn, không xanh/đỏ", dd.length && dd.every(x => x.getAttribute("style").includes("var(--ac)")), dd.length);
+  ok("8.1 ô có giờ tô màu nhấn, không xanh/đỏ", dd.length && dd.every(x => /--h:\d+/.test(x.getAttribute("style")) && /color\(srgb 0\.878\d* 0\.639\d* 0\.733\d*|rgba?\(224, 163, 187/.test(getComputedStyle(x).backgroundColor)), dd.length && getComputedStyle(dd[0]).backgroundColor);
   ok("8.2 cột cuối là tổng giờ", [...document.querySelectorAll(".yr-net")].some(x => /^\d+(,\d)?h$/.test(x.textContent.trim())));
   calSubView = "focus"; draw();
 

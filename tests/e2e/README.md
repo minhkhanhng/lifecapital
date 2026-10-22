@@ -30,6 +30,7 @@ await __run("tests/e2e/e2e6.js", "E2E");   // trả về { r: [đạt, tổng], 
 | e2e-hl2.js | E2EHL2 | Sức khỏe phần 2 |
 | e2e-uat3.js | E2EUAT3 | UAT phần K, L, M (Cài đặt, Sức khỏe, tab Tôi) |
 | e2e-ux.js | E2EUX | Rà soát giao diện các vòng 1–7 và hiệu năng v0.6.1 |
+| e2e-ai.js | E2EAI | v0.6.4: Nhờ AI xếp (giả lập đăng nhập và máy chủ, không gọi AI thật) |
 | e2e-v063.js | E2E63 | v0.6.3: nhập Google Calendar (giả lập API), bật/tắt phần, Tổng quan gộp Tổng kết, biểu tượng tab |
 
 Test gộp dữ liệu: mở http://localhost:8765/tests/merge-tests.html (tiêu đề trang ghi `PASS n/n`).

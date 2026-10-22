@@ -1643,6 +1643,11 @@ td.yr-tot { text-align: right; padding-right: 12px; }
 /* Năm trên điện thoại: ô ngày cùng quy ước */
 .yr-day { border-color: var(--line-2); background: var(--surface-2); }
 .yr-day.today { outline: 2px solid var(--ac); outline-offset: 1px; font-weight: 700; color: var(--ac-text); }
+/* Lưới năm (điện thoại): nền hồng đậm dần theo giờ. Chế độ Tối giảm độ đậm để chữ sáng luôn đủ 4.5:1 */
+.yr-day[style*="--h"] { background: color-mix(in srgb, var(--ac) calc(var(--h) * 1%), transparent); }
+.yr-day.today[style*="--h"] { color: var(--tx); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .yr-day[style*="--h"] { background: color-mix(in srgb, var(--ac) calc(var(--h) * 0.68%), transparent); } }
+:root[data-theme="dark"] .yr-day[style*="--h"] { background: color-mix(in srgb, var(--ac) calc(var(--h) * 0.68%), transparent); }
 .yr-row.cur { background: color-mix(in srgb, var(--ac) 8%, transparent); border-radius: 8px; box-shadow: inset 3px 0 0 var(--ac); }
 .yr-row.cur .yr-wk { padding-left: 6px; }
 input:hover, select:hover, textarea:hover { border-color: var(--ac-text); }
@@ -1897,6 +1902,22 @@ nav.main-nav button.active .ico .f { fill-opacity: 0.24; }
 .gx-q { color: var(--ac-text); font-weight: 700; }
 .gx-note { margin: 0; }
 @media (max-width: 480px) { .gx-row { grid-template-columns: auto minmax(0, 1fr); } .gx-cap { grid-column: 2; max-width: none; width: 100%; } }
+.ai-btn { display: inline-flex; align-items: center; gap: 6px; }
+.ai-btn .ico { width: 17px; height: 17px; color: var(--ac-text); }
+.hv-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.hv-top .hv-count { margin: 0; }
+.hv-panel-head .ai-btn { margin-left: auto; }
+.ai-sum { margin: 2px 0 10px; font-size: 13.5px; line-height: 1.5; color: var(--tx); }
+.ai-why { display: block; margin-top: 2px; font-size: 12px; line-height: 1.4; color: var(--tx-sec); white-space: normal; }
+.ai-row { grid-template-columns: auto minmax(0, 1fr); }
+.ai-left { margin-top: 12px; font-size: 13px; }
+.ai-left summary { cursor: pointer; font-weight: 600; color: var(--tx-sec); }
+.ai-left ul { margin: 8px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+.ai-left small { display: block; color: var(--tx-sec); font-size: 12px; }
+.ai-wait { display: flex; align-items: center; gap: 10px; padding: 14px 4px; font-size: 14px; }
+.ai-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--ac); flex: none; animation: aiPulse 1.2s ease-in-out infinite; }
+@keyframes aiPulse { 50% { transform: scale(0.6); opacity: 0.5; } }
+@media (prefers-reduced-motion: reduce) { .ai-dot { animation: none; } }
 </style>
 <script>
   try {
@@ -1968,6 +1989,15 @@ nav.main-nav button.active .ico .f { fill-opacity: 0.24; }
   </div>
 </div>
 
+<div class="modal-overlay" id="aiOverlay" onclick="if (event.target.id === 'aiOverlay') closeAi()">
+  <div class="modal-sheet" style="max-width:600px;" role="dialog" aria-modal="true" aria-labelledby="aiTitle">
+    <div class="modal-header">
+      <h3 class="modal-title" id="aiTitle">Nhờ AI xếp</h3>
+      <button type="button" class="btn btn-sm btn-ghost ic-btn sheet-x" onclick="closeAi()" title="Đóng (Esc)" aria-label="Đóng">✕</button>
+    </div>
+    <div class="modal-body" id="aiBody"></div>
+  </div>
+</div>
 <div class="modal-overlay" id="gxOverlay" onclick="if (event.target.id === 'gxOverlay') closeGx()">
   <div class="modal-sheet" style="max-width:600px;" role="dialog" aria-modal="true" aria-labelledby="gxTitle">
     <div class="modal-header">
@@ -2303,7 +2333,7 @@ const save = () => {
    hay cửa sổ khác đã ghi mà tab này không nhận được (tab bị trình duyệt tạm dừng, trang khôi phục từ
    bộ nhớ đệm, bản cũ của app không biết lắng nghe…): gộp hai bên thay vì ghi đè.
    Dữ liệu do bản này ghi có sv = 2. Bên ghi không có sv (bản cũ) thì chỉ cộng thêm, không xóa gì. */
-const APPV = 63; // v0.6.3
+const APPV = 64; // v0.6.4
 const SV = 3; // 3 (v0.4.0): hoạt động có mã riêng và thời điểm sửa; bản ghi sv khác được gộp kiểu cộng thêm
 let lastRaw = rawSaved, oldWriterSeen = 0;
 // Đồng bộ giữa các thiết bị (v0.4.0, xem phần ĐỒNG BỘ ở cuối tệp)
@@ -3256,6 +3286,7 @@ const ICO = {
   hl: ico(`<path class="f" d="M12 20s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.3a4.2 4.2 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20z"/><path d="M7.5 12.5h2.3l1.4-2.4 2 4.4 1.3-2h2"/>`),
   su: ico(`<circle class="f" cx="12" cy="12" r="8.5"/><path d="M12 3.5V12l6 6M12 12H3.5"/>`),
   me: ico(`<circle class="f" cx="12" cy="8.5" r="4"/><path class="f" d="M4.5 20.5a7.5 7.5 0 0 1 15 0z"/>`),
+  ai: ico(`<path class="f" d="M10 3.5 11.8 8.2 16.5 10l-4.7 1.8L10 16.5l-1.8-4.7L3.5 10l4.7-1.8z"/><path d="M17.5 14v6M14.5 17h6"/>`),
   gin: ico(`<path d="M12 4v10M8 10.5l4 4 4-4"/><path class="f" d="M4.5 15v2.5A2.5 2.5 0 0 0 7 20h10a2.5 2.5 0 0 0 2.5-2.5V15"/>`)
 };
 // Bật/tắt từng phần (v0.6.3): tắt thì ẩn giao diện, dữ liệu vẫn giữ nguyên để bật lại là có
@@ -4205,7 +4236,7 @@ function yearMobileHTML() {
   const day = (i, j) => {
     const dt = ad(W[i], j), k = ky(dt);
     const tot = dayH(k);
-    const bg = tot ? `background: color-mix(in srgb, var(--ac) ${Math.round(18 + 50 * Math.min(1, tot / 8))}%, transparent);` : "";
+    const bg = tot ? `--h:${Math.round(18 + 50 * Math.min(1, tot / 8))}` : ""; // độ đậm nền theo tổng giờ (CSS .yr-day[style*="--h"])
     return `<button type="button" class="yr-day ${k === tk ? "today" : ""} ${dt.getFullYear() !== activeYear ? "out" : ""}" style="${bg}" onclick="openDayFromYear(${i}, ${j})" aria-label="${DN_VI[j]} ${dt.getDate()}/${dt.getMonth() + 1}${tot ? `, ${r1(tot)} giờ` : ""}">${dt.getDate()}</button>`;
   };
   const row = i => {
@@ -5654,6 +5685,7 @@ document.addEventListener("keydown", e => {
     closeHl();
     closeSettingsModal();
     closeGx();
+    closeAi();
   }
   if ((e.ctrlKey || e.metaKey) && e.key === "Enter" && ed) {
     e.preventDefault();
@@ -6379,6 +6411,167 @@ async function confirmSched() {
   }, gone);
 }
 
+/* ---------- Nhờ AI xếp (v0.6.4): gửi việc chưa xếp, giờ bận, mục tiêu vốn cho Claude qua /api/ai_plan; app kiểm lại
+   từng đề xuất (trùng giờ, khung giờ, giờ đã qua, thứ tự, hạn) rồi hiện cho người dùng duyệt. Không gửi tên hoạt động
+   đang có trên lịch, không gửi dữ liệu sức khỏe ngoài điểm Sẵn sàng hôm nay. ---------- */
+const AI_DAYS = 7, AI_MAX = 60;
+const aiBtn = () => `<button type="button" class="btn btn-sm ai-btn" onclick="aiPlan()" title="AI đề xuất ngày giờ cho các việc chưa xếp trong ${AI_DAYS} ngày tới, bạn duyệt trước khi thêm">${ICO.ai}<span>Nhờ AI xếp</span></button>`;
+let ai = null; // { st: "load"|"ok"|"err", p, rows, left, sum, msg, ctl }
+function aiPayload() {
+  const m = schedMap(), c = schCfg(), d0 = new Date(tk + "T00:00");
+  const days = [...Array(AI_DAYS)].map((_, j) => ky(ad(d0, j)));
+  const todo = [];
+  S.tasks.filter(t => !taskDone(t)).sort((a, b) => (a.due || "9999").localeCompare(b.due || "9999")).forEach(t => {
+    const miss = new Set(missedOf(t, m).map(u => u.tk));
+    units(t).forEach((u, i) => {
+      if (u.done || (m.has(u.tk) && !miss.has(u.tk)) || todo.length >= AI_MAX) return;
+      todo.push({ id: u.tk, t: u.t, h: u.h, task: t.t, tid: t.id, i, c: CM(t.c).n, ...(t.due ? { due: t.due } : {}), ...(miss.has(u.tk) ? { missed: 1 } : {}) });
+    });
+  });
+  const moving = new Set(todo.filter(x => x.missed).map(x => x.id)), busy = {};
+  days.forEach(d => {
+    const b = (S.ev[d] || []).filter(e => e.s && !(e.tk && moving.has(e.tk))).map(e => [e.s, toMin(e.s) + Math.round(e.h * 60) >= 1440 ? "24:00" : hmOf(toMin(e.s) + Math.round(e.h * 60))]);
+    if (b.length) busy[d] = b;
+  });
+  const wi = weekOfDate(tk), rd = modOn("hl") && typeof hlReady === "function" ? hlReady() : null;
+  return {
+    today: tk, now: hmOf(Math.min(1425, nowMin())), days, busy, todo,
+    window: { from: hmOf(c.from), to: c.to >= 1440 ? "24:00" : hmOf(c.to), cap: c.cap },
+    capitals: S.caps.map(x => ({ k: x.k, n: x.n, tg: x.tg || 0, h: wi >= 0 ? r1(wk(wi, x.k)) : 0 })),
+    ...(rd ? { ready: rd.v } : {})
+  };
+}
+// Kiểm lại đề xuất của AI trên dữ liệu thật: chỉ giữ chỗ còn trống, trong khung giờ, đúng thứ tự, không quá hạn
+function aiCheck(res, p) {
+  const by = new Map(p.todo.map(x => [x.id, x])), from = toMin(p.window.from), to = p.window.to === "24:00" ? 1440 : toMin(p.window.to);
+  const now = toMin(p.now), taken = {}, rows = [], left = [], last = new Map();
+  const iv = d => taken[d] || (taken[d] = (p.busy[d] || []).map(([a, b]) => [toMin(a), b === "24:00" ? 1440 : toMin(b)]));
+  const items = (res.items || []).filter(x => by.has(x.id) && p.days.includes(x.date) && /^([01]\d|2[0-3]):[0-5]\d$/.test(x.start || ""))
+    .sort((a, b) => (a.date + a.start).localeCompare(b.date + b.start));
+  const seen = new Set();
+  items.forEach(x => {
+    if (seen.has(x.id)) return;
+    seen.add(x.id);
+    const u = by.get(x.id), a = toMin(x.start), b = a + Math.round(u.h * 60);
+    const bad = b > 1440 ? "Vượt quá nửa đêm" : a < from || b > to ? "Ngoài khung giờ xếp việc" : x.date === p.today && a < now ? "Giờ đã qua"
+      : iv(x.date).some(([s, e]) => s < b && a < e) ? "Trùng giờ với hoạt động khác" : null;
+    if (bad) { left.push({ t: u.t, task: u.task, why: bad }); return; }
+    iv(x.date).push([a, b]);
+    const prev = last.get(u.tid);
+    const warn = prev != null && prev > u.i ? "Sai thứ tự so với việc nhỏ khác" : u.due && x.date > u.due ? "Sau hạn " + dm(u.due) : "";
+    last.set(u.tid, Math.max(prev == null ? -1 : prev, u.i));
+    rows.push({ id: u.id, tid: u.tid, t: u.t, task: u.task, h: u.h, date: x.date, s: x.start, why: String(x.reason || "").slice(0, 200), warn, missed: !!u.missed, on: !warn });
+  });
+  (res.unplaced || []).forEach(x => { const u = by.get(x.id); if (u && !seen.has(x.id)) { seen.add(x.id); left.push({ t: u.t, task: u.task, why: String(x.reason || "").slice(0, 200) }); } });
+  p.todo.forEach(u => { if (!seen.has(u.id)) left.push({ t: u.t, task: u.task, why: "AI chưa xếp" }); });
+  return { rows, left, sum: String(res.summary || "").slice(0, 600) };
+}
+async function aiToken() {
+  if (!sbUser || !sb || !sb.auth) return null;
+  try { const { data } = await sb.auth.getSession(); return data && data.session ? data.session.access_token : null; } catch (e) { return null; }
+}
+async function aiPlan() {
+  if (ai && ai.st === "load") return;
+  const p = aiPayload();
+  if (!p.todo.length) { showToast("Không còn việc nào cần xếp", "ok"); return; }
+  const token = await aiToken();
+  if (!token) {
+    await ask({ title: "Nhờ AI xếp", msg: "Cần đăng nhập đồng bộ để dùng AI (tab Tôi > Cài đặt > Đồng bộ). AI chỉ đọc tên việc chưa xếp, giờ bận và mục tiêu vốn; bạn duyệt trước khi thêm vào lịch.", ok: "Đã hiểu" });
+    return;
+  }
+  const ctl = typeof AbortController === "function" ? new AbortController() : null;
+  if (!$("aiOverlay").classList.contains("open")) LF = document.activeElement; // Thử lại trong popup: giữ chỗ trả con trỏ cũ
+  ai = { st: "load", p, ctl };
+  aiDraw();
+  $("aiOverlay").classList.add("open");
+  try {
+    const r = await fetch("/api/ai_plan", { method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token }, body: JSON.stringify(p), ...(ctl ? { signal: ctl.signal } : {}) });
+    const j = await r.json().catch(() => ({}));
+    if (!ai || ai.ctl !== ctl) return; // đã đóng hoặc đã gọi lần khác
+    if (!r.ok) throw new Error(j.error || `AI chưa trả lời được (lỗi ${r.status})`);
+    ai = { st: "ok", p, ...aiCheck(j, p) };
+  } catch (e) {
+    if (!ai || ai.ctl !== ctl || (e && e.name === "AbortError")) return;
+    ai = { st: "err", p, msg: e && e.message && !/fetch|network|Load failed/i.test(e.message) ? e.message : "Không kết nối được AI, kiểm tra mạng rồi thử lại" };
+  }
+  aiDraw();
+  setTimeout(() => { const f = $("aiBody") && $("aiBody").querySelector("input,button.btn-primary"); if (f) f.focus(); }, 50);
+}
+function aiDraw() {
+  if (!ai) return;
+  const n = ai.p.todo.length;
+  $("aiTitle").textContent = "Nhờ AI xếp";
+  let h;
+  if (ai.st === "load") h = `
+    <div class="ai-wait" role="status"><span class="ai-dot" aria-hidden="true"></span><span>AI đang xếp ${n} việc vào ${AI_DAYS} ngày tới… thường mất 20–60 giây.</span></div>
+    <p class="set-note">AI chỉ đọc tên việc chưa xếp, giờ bận (không kèm tên), mục tiêu vốn${ai.p.ready != null ? " và điểm Sẵn sàng hôm nay" : ""}. Bạn duyệt trước khi thêm vào lịch.</p>
+    <div class="sheet-foot end"><button type="button" class="btn btn-ghost" onclick="closeAi()">Hủy</button><button type="button" class="btn btn-primary" disabled>Đang xếp…</button></div>`;
+  else if (ai.st === "err") h = `
+    <p class="set-note" role="alert" style="color: var(--bad-text);">${esc(ai.msg)}</p>
+    <div class="sheet-foot end"><button type="button" class="btn btn-ghost" onclick="closeAi()">Đóng</button><button type="button" class="btn btn-primary" onclick="aiPlan()">Thử lại</button></div>`;
+  else h = `
+    ${ai.sum ? `<p class="ai-sum">${esc(ai.sum)}</p>` : ""}
+    ${ai.rows.length ? `
+    <label class="gx-all"><input type="checkbox" id="aiAll" onchange="aiAll(this.checked)"><span>Chọn tất cả</span><span class="gx-n" id="aiN"></span></label>
+    <ul class="gx-list">${ai.rows.map((x, i) => `
+      <li class="gx-row ai-row" id="air${i}">
+        <input type="checkbox" id="ai${i}" ${x.on ? "checked" : ""} onchange="ai.rows[${i}].on = this.checked; aiSync()">
+        <label for="ai${i}" class="gx-main"><b>${esc(x.t)}</b><small>${gxDay(x.date)} · ${x.s} · ${r1(x.h)}h${x.task !== x.t ? ` · ${esc(x.task)}` : ""}${x.missed ? " · xếp lại" : ""}${x.warn ? ` · <span class="gx-dup">${esc(x.warn)}</span>` : ""}</small>${x.why ? `<small class="ai-why">${esc(x.why)}</small>` : ""}</label>
+      </li>`).join("")}
+    </ul>` : `<p class="set-note">AI chưa tìm được chỗ phù hợp trong ${AI_DAYS} ngày tới.</p>`}
+    ${ai.left.length ? `<details class="ai-left"><summary>${ai.left.length} việc chưa xếp được</summary><ul>${ai.left.map(x => `<li><b>${esc(x.t)}</b>${x.task !== x.t ? ` · ${esc(x.task)}` : ""}<small>${esc(x.why)}</small></li>`).join("")}</ul></details>` : ""}
+    <div class="sheet-foot end">
+      <button type="button" class="btn btn-ghost" onclick="closeAi()">Hủy</button>
+      ${ai.rows.length ? `<button type="button" class="btn btn-primary" id="aiOk" onclick="aiConfirm()"></button>` : `<button type="button" class="btn btn-primary" onclick="closeAi()">Đóng</button>`}
+    </div>`;
+  $("aiBody").innerHTML = h;
+  aiSync();
+}
+function aiSync() {
+  if (!ai || ai.st !== "ok" || !ai.rows.length) return;
+  const n = ai.rows.filter(x => x.on).length, all = $("aiAll"), ok = $("aiOk");
+  if (all) { all.checked = n === ai.rows.length; all.indeterminate = n > 0 && n < ai.rows.length; }
+  if ($("aiN")) $("aiN").textContent = `${n}/${ai.rows.length}`;
+  if (ok) { ok.textContent = n ? `Thêm ${n} việc vào lịch` : "Chưa chọn việc nào"; ok.disabled = !n; }
+  ai.rows.forEach((x, i) => { const r = $("air" + i), c = $("ai" + i); if (r) r.classList.toggle("off", !x.on); if (c) c.checked = x.on; });
+}
+function aiAll(on) { if (ai && ai.rows) ai.rows.forEach(x => { x.on = on; }); aiSync(); }
+function closeAi() {
+  const ov = $("aiOverlay"), wasOpen = ov && ov.classList.contains("open");
+  if (ai && ai.ctl) try { ai.ctl.abort(); } catch (e) {}
+  ai = null;
+  if (!ov) return;
+  ov.classList.remove("open");
+  if (wasOpen && LF && LF.focus) { try { LF.focus(); } catch (e) {} }
+}
+function aiConfirm() {
+  if (!ai || ai.st !== "ok") return;
+  // Dữ liệu có thể đã đổi trong lúc chờ AI: kiểm lại chỗ trống, việc còn chưa xếp
+  const m = schedMap(), pick = ai.rows.filter(x => x.on).filter(x => {
+    const f = findSub(x.id), t = f ? f.task : findTask(x.id);
+    if (!t || (f ? f.sub.done : t.done)) return false;
+    if (m.has(x.id) && !x.missed) return false;
+    const L = (S.ev[x.date] || []).filter(e => !(e.tk === x.id)), a = toMin(x.s), b = a + Math.round(x.h * 60);
+    return !L.some(e => e.s && toMin(e.s) < b && a < toMin(e.s) + Math.round(e.h * 60));
+  });
+  const skipped = ai.rows.filter(x => x.on).length - pick.length;
+  if (!pick.length) { showToast("Lịch đã thay đổi, không còn chỗ như AI đề xuất. Bấm Nhờ AI xếp lần nữa.", "bad"); return; }
+  const moved = new Set(pick.filter(x => x.missed).map(x => x.id));
+  const gone = moved.size ? pullEvents(e => e.tk && moved.has(e.tk)) : [];
+  const made = [];
+  [...new Set(pick.map(x => x.tid))].forEach(tid => {
+    const task = findTask(tid);
+    if (task) made.push(...createPlan(task, pick.filter(x => x.tid === tid).map(x => ({ tk: x.id, t: x.t, h: x.h, date: x.date, s: x.s }))));
+  });
+  closeAi();
+  drawSoon();
+  offerUndo(`Đã xếp ${made.length} việc theo đề xuất của AI${skipped ? ` · bỏ ${skipped} chỗ vừa bị chiếm` : ""}`, () => {
+    const mine = new Set(made);
+    pullEvents(e => mine.has(e));
+    putEvents(gone);
+  }, gone);
+}
+
 /* ---------- Kéo thả (chỉ trên máy tính có chuột) ---------- */
 function dndStart(e, kind, id) {
   dragItem = { kind, id };
@@ -6550,7 +6743,7 @@ function inboxHTML(where) {
   };
   return `
     <div class="hv-box ${where}">
-      ${where === "panel" ? `<div class="hv-panel-head"><b>Hộp việc</b><button type="button" class="btn btn-sm btn-ghost" onclick="toggleInboxPanel()" title="Ẩn cột hộp việc">Ẩn</button></div>
+      ${where === "panel" ? `<div class="hv-panel-head"><b>Hộp việc</b>${inboxCount() ? aiBtn() : ""}<button type="button" class="btn btn-sm btn-ghost" onclick="toggleInboxPanel()" title="Ẩn cột hộp việc">Ẩn</button></div>
         <div class="hv-hint">Kéo việc nhỏ vào ${calSubView === "timeline" ? "khung giờ" : "một ngày"}; kéo tên việc để xếp hết.</div>` : ""}
       ${(S.projects || []).length ? `<select class="hv-filter" onchange="hvPjF=this.value; draw()" aria-label="Lọc theo dự án">
         <option value="">Mọi dự án</option><option value="-" ${hvPjF === "-" ? "selected" : ""}>Không thuộc dự án</option>
@@ -6566,7 +6759,7 @@ function inboxHTML(where) {
 V.hv = function () {
   return `
     <div class="card" style="padding:14px 16px; max-width:760px; margin:0 auto;">
-      ${inboxCount() ? `<p class="hv-count">${inboxCount()} việc chưa xếp xong${inboxCount(1) > inboxCount() ? ` · ${inboxCount(1)} phần chưa có lịch` : ""}</p>` : ""}
+      ${inboxCount() ? `<div class="hv-top"><p class="hv-count">${inboxCount()} việc chưa xếp xong${inboxCount(1) > inboxCount() ? ` · ${inboxCount(1)} phần chưa có lịch` : ""}</p>${aiBtn()}</div>` : ""}
       ${inboxHTML("tab")}
     </div>`;
 };
