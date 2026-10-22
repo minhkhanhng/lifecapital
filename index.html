@@ -5636,8 +5636,8 @@ document.addEventListener("visibilitychange", () => {
 });
 window.addEventListener("focus", tick);
 window.addEventListener("pageshow", e => { if (e.persisted) pullDisk(); });
-window.addEventListener("online", () => { gcalFlush(); cloudSoon(0); });
-window.addEventListener("offline", () => { if (sbUser) cloudSet("offline"); });
+window.addEventListener("online", () => { gcalFlush(); cloudSoon(0); if (sbUser && !aiReady) aiProbe(); else if (aiReady) drawSoon(); });
+window.addEventListener("offline", () => { if (sbUser) cloudSet("offline"); if (aiReady) drawSoon(); });
 
 // Tab khác vừa lưu: nạp lại để không ghi đè dữ liệu của tab đó bằng bản cũ trong bộ nhớ
 window.addEventListener("storage", e => {
@@ -6415,7 +6415,32 @@ async function confirmSched() {
    từng đề xuất (trùng giờ, khung giờ, giờ đã qua, thứ tự, hạn) rồi hiện cho người dùng duyệt. Không gửi tên hoạt động
    đang có trên lịch, không gửi dữ liệu sức khỏe ngoài điểm Sẵn sàng hôm nay. ---------- */
 const AI_DAYS = 7, AI_MAX = 60;
-const aiBtn = () => `<button type="button" class="btn btn-sm ai-btn" onclick="aiPlan()" title="AI đề xuất ngày giờ cho các việc chưa xếp trong ${AI_DAYS} ngày tới, bạn duyệt trước khi thêm">${ICO.ai}<span>Nhờ AI xếp</span></button>`;
+/* AI là phần thêm: nút chỉ hiện khi đủ mọi điều kiện (đã đăng nhập đồng bộ, đang có mạng, máy chủ có khóa AI và
+   tài khoản được phép). Thiếu bất kỳ điều kiện nào thì ẩn hẳn, không báo lỗi; Xếp, Xếp hết, kéo thả vẫn như cũ. */
+let aiReady = false, aiProbing = null;
+function aiProbe() {
+  if (aiProbing) return aiProbing;
+  const was = aiReady;
+  const run = async () => {
+    let ok = false;
+    try {
+      const token = sbUser && navigator.onLine !== false ? await aiToken() : null;
+      if (token) {
+        const r = await fetch("/api/ai_plan", { headers: { Authorization: "Bearer " + token }, cache: "no-store" });
+        const j = r.ok && /json/.test(r.headers.get("content-type") || "") ? await r.json() : null;
+        ok = !!(j && j.ready === true);
+      }
+    } catch (e) { ok = false; } // không có máy chủ (mở từ tệp, hosting tĩnh), mất mạng…: im lặng, chỉ ẩn nút
+    aiReady = ok;
+    if (aiReady !== was) drawSoon();
+    return ok;
+  };
+  // Xóa cờ "đang dò" sau khi đã gán: lần dò chạy xong ngay (chưa đăng nhập) cũng không kẹt lại
+  const pr = run().finally(() => { if (aiProbing === pr) aiProbing = null; });
+  aiProbing = pr;
+  return pr;
+}
+const aiBtn = () => !aiReady || navigator.onLine === false ? "" : `<button type="button" class="btn btn-sm ai-btn" onclick="aiPlan()" title="AI đề xuất ngày giờ cho các việc chưa xếp trong ${AI_DAYS} ngày tới, bạn duyệt trước khi thêm">${ICO.ai}<span>Nhờ AI xếp</span></button>`;
 let ai = null; // { st: "load"|"ok"|"err", p, rows, left, sum, msg, ctl }
 function aiPayload() {
   const m = schedMap(), c = schCfg(), d0 = new Date(tk + "T00:00");
@@ -6488,6 +6513,7 @@ async function aiPlan() {
     const r = await fetch("/api/ai_plan", { method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token }, body: JSON.stringify(p), ...(ctl ? { signal: ctl.signal } : {}) });
     const j = await r.json().catch(() => ({}));
     if (!ai || ai.ctl !== ctl) return; // đã đóng hoặc đã gọi lần khác
+    if ([401, 403, 404, 405, 503].includes(r.status)) { aiReady = false; drawSoon(); } // AI không còn dùng được: ẩn nút
     if (!r.ok) throw new Error(j.error || `AI chưa trả lời được (lỗi ${r.status})`);
     ai = { st: "ok", p, ...aiCheck(j, p) };
   } catch (e) {
@@ -6508,7 +6534,8 @@ function aiDraw() {
     <div class="sheet-foot end"><button type="button" class="btn btn-ghost" onclick="closeAi()">Hủy</button><button type="button" class="btn btn-primary" disabled>Đang xếp…</button></div>`;
   else if (ai.st === "err") h = `
     <p class="set-note" role="alert" style="color: var(--bad-text);">${esc(ai.msg)}</p>
-    <div class="sheet-foot end"><button type="button" class="btn btn-ghost" onclick="closeAi()">Đóng</button><button type="button" class="btn btn-primary" onclick="aiPlan()">Thử lại</button></div>`;
+    <p class="set-note">Bạn vẫn xếp tay bằng nút Xếp, Xếp hết hoặc kéo việc vào lịch như bình thường.</p>
+    <div class="sheet-foot end">${aiReady ? `<button type="button" class="btn btn-ghost" onclick="closeAi()">Đóng</button><button type="button" class="btn btn-primary" onclick="aiPlan()">Thử lại</button>` : `<button type="button" class="btn btn-primary" onclick="closeAi()">Đóng</button>`}</div>`;
   else h = `
     ${ai.sum ? `<p class="ai-sum">${esc(ai.sum)}</p>` : ""}
     ${ai.rows.length ? `
@@ -7106,6 +7133,7 @@ function cloudAuth(ev, session) {
       cloudSync();
     }
     renderCloud();
+    if (first) aiProbe();
     return;
   }
   if (ev === "SIGNED_OUT") {
@@ -7119,6 +7147,7 @@ function cloudAuth(ev, session) {
 
 function cloudStop() {
   sbUser = null;
+  if (aiReady) { aiReady = false; drawSoon(); }
   clearTimeout(cloudT);
   if (cloudChan) { try { sb.removeChannel(cloudChan); } catch (e) {} cloudChan = null; }
 }

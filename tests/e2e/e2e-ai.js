@@ -7,32 +7,69 @@ window.E2EAI = async function () {
   const stCode = await (await fetch0("/tests/e2e/strokes.js?" + Date.now())).text();
   const noAnim = document.createElement("style"); noAnim.textContent = "*{transition:none!important;animation:none!important}"; document.head.appendChild(noAnim);
   let asked = null; window.ask = async o => { asked = o; return true; };
-  let calls = [], reply = null, hold = null;
+  let calls = [], reply = null, hold = null, probe = { status: 200, body: { ready: true } }, probes = 0;
+  const resp = r => ({ ok: r.status === 200, status: r.status, headers: { get: k => /content-type/i.test(k) ? (r.ct || "application/json") : null }, json: async () => r.body });
   window.fetch = async (url, opt) => {
     if (!String(url).includes("/api/ai_plan")) return fetch0(url, opt);
+    if (!opt || !opt.method || opt.method === "GET") { probes++; if (probe instanceof Error) throw probe; return resp(probe); } // hỏi AI có dùng được không
     const body = JSON.parse(opt.body); calls.push({ url, opt, body });
     if (hold) await hold;
     if (opt.signal && opt.signal.aborted) throw Object.assign(new Error("aborted"), { name: "AbortError" });
     const r = typeof reply === "function" ? reply(body) : reply;
     if (r instanceof Error) throw r;
-    return { ok: r.status === 200, status: r.status, json: async () => r.body };
+    return resp(r);
   };
   const tday = tk, m0 = schedMap();
   const sel0 = S.tasks.filter(t => !taskDone(t)).flatMap(t => { const ms = new Set(missedOf(t, m0).map(u => u.tk)); return units(t).filter(u => !u.done && (!m0.has(u.tk) || ms.has(u.tk))); });
+  const errs0 = []; const onErr = e => errs0.push(String(e.message || e.reason)); addEventListener("error", onErr); addEventListener("unhandledrejection", onErr);
+  const btnAny = () => document.querySelectorAll(".ai-btn").length;
+  const toasts = () => [...document.querySelectorAll(".toast")].map(t => t.textContent).join(" | ");
+  const hvAll = async () => { switchTab("hv"); await sleep(10); const a = btnAny(); switchTab("ca"); calSubView = "focus"; inboxPanel = true; draw(); await sleep(10); return a + btnAny(); };
+  const session = { auth: { getSession: async () => ({ data: { session: { access_token: "tok_" + "x".repeat(30) } } }) } };
 
-  // ===== nút
+  // ===== N: không có AI thì app như trước, không rào cản nào
+  document.querySelectorAll(".toast").forEach(t => t.remove());
+  sbUser = null; aiReady = false; probes = 0;
+  ok("N1.1 chưa đăng nhập đồng bộ: không có nút AI ở đâu, không hỏi máy chủ", (await hvAll()) === 0 && (await aiProbe()) === false && probes === 0);
   switchTab("hv"); await sleep(10);
-  ok("A1.1 Hộp việc có nút Nhờ AI xếp (có biểu tượng)", !!document.querySelector("#v .hv-top .ai-btn .ico"));
+  ok("N1.2 Hộp việc vẫn như trước: đếm việc, ô thêm việc, nút Xếp / Xếp hết", /việc chưa xếp xong/.test($("v").textContent) && $("v").querySelector(".hv-add") && [...$("v").querySelectorAll(".hv-sched")].length > 0);
+  const t0 = S.tasks.find(t => !taskDone(t) && t.subs.some(s => !s.done && !schedMap().has(s.id)));
+  openSched("task", t0.id, tk); await sleep(20);
+  ok("N1.3 Xếp hết (tay) vẫn mở và chạy khi không có AI", !!sch && $("schedOverlay").classList.contains("open"));
+  closeSched();
+  sbUser = { id: "u1", email: "a@b.c" }; sb = session;
+  for (const [id, pv, label] of [["N2.1", { status: 200, body: { ready: false } }, "máy chủ chưa có khóa AI hoặc tài khoản chưa được phép"],
+    ["N2.2", { status: 404, body: null, ct: "text/html" }, "không có máy chủ (hosting tĩnh, bản cũ)"],
+    ["N2.3", new TypeError("Failed to fetch"), "mất mạng / mở từ tệp"],
+    ["N2.4", { status: 500, body: { error: "x" } }, "máy chủ lỗi"],
+    ["N2.5", { status: 200, body: "<html>", ct: "text/html" }, "trả về trang HTML thay vì JSON"]]) {
+    probe = pv; aiReady = true;
+    const r = await aiProbe(); await sleep(20);
+    ok(id + " " + label + ": ẩn nút, không báo lỗi", r === false && (await hvAll()) === 0 && !/AI|lỗi/i.test(toasts()) && !$("aiOverlay").classList.contains("open"));
+  }
+  ok("N2.6 không có lỗi trang nào trong lúc dò", !errs0.length, errs0);
+  // máy chủ sẵn sàng → có nút
+  probe = { status: 200, body: { ready: true } };
+  await aiProbe(); await sleep(20);
+  switchTab("hv"); await sleep(10);
+  ok("A1.1 đủ điều kiện: Hộp việc có nút Nhờ AI xếp (có biểu tượng)", !!document.querySelector("#v .hv-top .ai-btn .ico"));
   switchTab("ca"); calSubView = "focus"; inboxPanel = true; draw(); await sleep(10);
   ok("A1.2 cột Hộp việc cạnh lịch cũng có nút", innerWidth < 1024 || !!document.querySelector(".inbox-aside .ai-btn"));
+  const on0 = navigator.onLine; Object.defineProperty(navigator, "onLine", { value: false, configurable: true }); draw(); await sleep(10);
+  ok("N3.1 mất mạng: ẩn nút", btnAny() === 0);
+  Object.defineProperty(navigator, "onLine", { value: on0, configurable: true }); delete navigator.onLine; draw(); await sleep(10);
+  ok("N3.2 có mạng lại: nút trở lại", btnAny() > 0);
+  cloudStop(); await sleep(20); draw();
+  ok("N3.3 đăng xuất: ẩn nút ngay", !aiReady && btnAny() === 0);
 
-  // ===== chưa đăng nhập
+  // ===== gọi thẳng khi chưa đăng nhập (không có nút, phòng hờ): nhắc, không gọi máy chủ
   sbUser = null; calls = [];
   await aiPlan(); await sleep(10);
   ok("A2.1 chưa đăng nhập: nhắc đăng nhập đồng bộ, không gọi máy chủ", asked && /đăng nhập đồng bộ/.test(asked.msg) && !calls.length && !$("aiOverlay").classList.contains("open"));
+  aiReady = true;
 
   // ===== đăng nhập giả
-  sbUser = { id: "u1", email: "a@b.c" }; sb = { auth: { getSession: async () => ({ data: { session: { access_token: "tok_" + "x".repeat(30) } } }) } };
+  sbUser = { id: "u1", email: "a@b.c" }; sb = session;
   const free = d => { const L = (S.ev[d] || []).filter(e => e.s).map(e => [toMin(e.s), toMin(e.s) + e.h * 60]); for (let t = 600; t < 1260; t += 30) if (!L.some(([a, b]) => a < t + 120 && t < b)) return t; return null; };
   const d1 = ky(ad(new Date(tday + "T00:00"), 1)), d2 = ky(ad(new Date(tday + "T00:00"), 2));
   const busy1 = (S.ev[d1] || []).find(e => e.s);
@@ -96,10 +133,16 @@ window.E2EAI = async function () {
   // lỗi máy chủ, lỗi mạng, đóng khi đang chờ
   reply = { status: 403, body: { error: "Tài khoản này chưa được bật AI" } };
   await aiPlan(); await sleep(10);
-  ok("A8.1 máy chủ báo lỗi: hiện đúng lời báo, có Thử lại", /chưa được bật AI/.test($("aiBody").textContent) && [...$("aiBody").querySelectorAll("button")].some(x => x.textContent === "Thử lại"));
+  ok("A8.1 tài khoản không được phép: báo đúng lời, nhắc xếp tay, không mời Thử lại", /chưa được bật AI/.test($("aiBody").textContent) && /xếp tay/.test($("aiBody").textContent) && ![...$("aiBody").querySelectorAll("button")].some(x => x.textContent === "Thử lại"));
+  closeAi(); await sleep(20); draw();
+  ok("A8.1b sau đó ẩn nút AI, app dùng tay như cũ", !aiReady && btnAny() === 0);
+  aiReady = true;
+  reply = { status: 502, body: { error: "AI lỗi (529), thử lại sau" } };
+  await aiPlan(); await sleep(10);
+  ok("A8.2 lỗi tạm thời: có Thử lại, vẫn giữ nút", /AI lỗi/.test($("aiBody").textContent) && [...$("aiBody").querySelectorAll("button")].some(x => x.textContent === "Thử lại") && aiReady);
   reply = new TypeError("Failed to fetch");
   [...$("aiBody").querySelectorAll("button")].find(x => x.textContent === "Thử lại").click(); await sleep(30);
-  ok("A8.2 mất mạng: báo kiểm tra mạng", /kiểm tra mạng/.test($("aiBody").textContent));
+  ok("A8.2b mất mạng: báo kiểm tra mạng", /kiểm tra mạng/.test($("aiBody").textContent));
   closeAi();
   reply = { status: 200, body: { summary: "", items: [{ id: "taiA", date: d1, start: hmOf(f1), reason: "x" }], unplaced: [] } };
   hold = new Promise(r => { resolve = r; });
@@ -118,11 +161,14 @@ window.E2EAI = async function () {
   ok("A9.2 xác nhận: bỏ buổi lỡ cũ, tạo buổi mới", !(S.ev[past] || []).some(e => e.tk === "taiA") && (S.ev[d1] || []).some(e => e.tk === "taiA" && e.s === hmOf(f1)));
   undoRun(); await sleep(20);
   ok("A9.3 Hoàn tác: buổi cũ trở lại, buổi mới mất", (S.ev[past] || []).some(e => e.tk === "taiA") && !(S.ev[d1] || []).some(e => e.tk === "taiA"));
+  const swSrc = await (await fetch0("/sw.js?" + Date.now())).text();
+  ok("N4.1 bộ nhớ đệm (service worker) không lưu /api/: không giữ trạng thái AI cũ", /pathname\.startsWith\("\/api\/"\)\) return/.test(swSrc));
   // dọn
   Object.keys(S.ev).forEach(k => { S.ev[k] = S.ev[k].filter(e => !(e.tk || "").startsWith("tai")); if (!S.ev[k].length) delete S.ev[k]; });
   S.tasks = S.tasks.filter(t => t.id !== "taiT"); save();
   noAnim.remove();
-  window.fetch = fetch0; window.ask = ask0; sbUser = sbU0; sb = sb0;
+  window.fetch = fetch0; window.ask = ask0; sbUser = sbU0; sb = sb0; aiReady = false;
+  removeEventListener("error", onErr); removeEventListener("unhandledrejection", onErr);
   document.querySelectorAll(".toast").forEach(t => t.remove());
   switchTab("ca");
   const pass = out.filter(x => x.pass).length;

@@ -9,6 +9,12 @@
 - Bạn duyệt trước khi thêm: mỗi đề xuất có lý do; bỏ chọn mục không muốn rồi bấm Thêm. Có Hoàn tác. Việc lỡ được xếp lại thì buổi cũ được gỡ.
 - App kiểm lại từng đề xuất trên lịch thật: trùng giờ, ngoài khung giờ, giờ đã qua thì bỏ và ghi vào "việc chưa xếp được"; sai thứ tự hoặc sau hạn thì báo và bỏ chọn sẵn. Lịch đổi trong lúc chờ thì không thêm vào chỗ vừa bị chiếm.
 
+**AI là phần thêm, không bắt buộc**
+- Nút Nhờ AI xếp chỉ hiện khi đủ mọi điều kiện: đã đăng nhập đồng bộ, đang có mạng, máy chủ có khóa AI, tài khoản được phép. App hỏi máy chủ một lần khi đăng nhập (không gọi AI, không tốn tiền).
+- Thiếu bất kỳ điều kiện nào (chưa đăng nhập, mất mạng, mở từ tệp, hosting không có máy chủ, máy chủ chưa có khóa hoặc lỗi): nút ẩn hẳn, không thông báo lỗi; Hộp việc, Xếp, Xếp hết, kéo thả chạy như trước.
+- Đang dùng mà AI lỗi: popup báo lý do và nhắc xếp tay; lỗi do không còn quyền (chưa cài khóa, không được phép, hết phiên) thì ẩn nút luôn. Đăng xuất hoặc mất mạng cũng ẩn nút.
+- Bộ nhớ đệm ngoại tuyến (service worker) không lưu `/api/`, nên không giữ trạng thái AI cũ.
+
 **Quyền riêng tư**
 - Chỉ gửi: tên việc chưa xếp, tên việc lớn, thời lượng, hạn, giờ bận (không kèm tên hoạt động), mục tiêu và số giờ từng loại vốn, khung giờ xếp việc, điểm Sẵn sàng hôm nay (một con số, khi bật Sức khỏe). Không gửi triệu chứng, thuốc, chu kỳ, ghi chú.
 - Cần đăng nhập đồng bộ; máy chủ kiểm tra phiên đăng nhập và danh sách email được phép (`AI_ALLOWED_EMAILS`) trước khi gọi AI.
@@ -21,7 +27,7 @@
 - Lưới Năm trên điện thoại, chế độ Tối: ô ngày nhiều giờ có chữ sáng trên nền hồng đậm (3:1). Nay giảm độ đậm nền ở chế độ Tối, chữ đạt 4.5:1.
 - Test phụ thuộc ngày chạy (e2e6 xếp 20:00 trùng hoạt động mẫu, chip thói quen cuối tuần ghi "thiếu N").
 
-**Kiểm thử**: `tests/e2e/e2e-ai.js` (29 bước, giả lập đăng nhập và máy chủ), `tests/api/test_ai_plan.py` (10 ca, AI giả). 11 bộ e2e đạt 700/700, gộp dữ liệu 30/30.
+**Kiểm thử**: `tests/e2e/e2e-ai.js` (44 bước, giả lập đăng nhập và máy chủ, gồm 14 bước khi không có AI), `tests/api/test_ai_plan.py` (11 ca, AI giả). 11 bộ e2e đạt 715/715, gộp dữ liệu 30/30.
 
 ## v0.6.3 · Nhập từ Google Calendar, bật/tắt phần, Tổng quan gộp Tổng kết · 21/10/2026
 

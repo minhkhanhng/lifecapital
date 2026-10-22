@@ -165,6 +165,7 @@
 20. ✨ **Nhờ AI Xếp (v0.6.4)**:
    - Nút **Nhờ AI xếp** ở Hộp việc: Claude đề xuất ngày giờ cho việc chưa xếp trong 7 ngày tới (theo hạn, thứ tự, khung giờ, loại vốn còn thiếu, điểm Sẵn sàng). Bạn duyệt, bỏ chọn, rồi thêm; có Hoàn tác. App kiểm lại trùng giờ, khung giờ, thứ tự, hạn trước khi cho thêm.
    - Cần đăng nhập đồng bộ. Không gửi dữ liệu sức khỏe ngoài điểm Sẵn sàng; giờ bận gửi không kèm tên.
+   - Là phần thêm: chỉ hiện khi đã đăng nhập, có mạng, máy chủ có khóa AI và tài khoản được phép; thiếu điều kiện nào thì ẩn hẳn, app xếp tay như trước, không báo lỗi.
 
 ---
 

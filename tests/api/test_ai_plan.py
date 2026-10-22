@@ -115,6 +115,20 @@ class Flow(unittest.TestCase):
             A.plan(json.dumps(payload()).encode(), "Bearer x", who=ok_user)
         self.assertEqual(c.exception.status, 503)
 
+    def test_ready(self):
+        os.environ.pop("ANTHROPIC_API_KEY", None)
+        self.assertFalse(A.ready("Bearer x", who=ok_user))  # chưa có khóa: ẩn nút
+        os.environ["ANTHROPIC_API_KEY"] = "test"
+        try:
+            self.assertTrue(A.ready("Bearer x", who=ok_user))
+
+            def deny(auth):
+                raise A.Bad(403, "no")
+            self.assertFalse(A.ready("Bearer x", who=deny))  # không được phép / chưa đăng nhập: ẩn nút
+            self.assertFalse(A.ready(None))
+        finally:
+            del os.environ["ANTHROPIC_API_KEY"]
+
     def test_bad_model_output(self):
         def model(data):
             raise ValueError("not json")

@@ -1,4 +1,5 @@
 /* Life Capital: lưu sẵn app trên máy để mở được khi mất mạng.
+   Hàm máy chủ /api/*: không lưu, luôn hỏi mạng.
    Trang chính: lấy bản mới từ mạng trước, mất mạng (hoặc quá 4 giây) thì dùng bản đã lưu.
    Tệp tĩnh và thư viện Supabase (đã ghim phiên bản): dùng bản đã lưu, chưa có thì tải.
    Mỗi lần phát hành phải đổi VERSION để máy người dùng nhận bản mới và hiện thanh "Có bản mới". */
@@ -51,6 +52,7 @@ self.addEventListener("fetch", e => {
   const req = e.request;
   if (req.method !== "GET") return;
   const url = new URL(req.url);
+  if (url.origin === self.location.origin && url.pathname.startsWith("/api/")) return; // hàm máy chủ: luôn đi thẳng ra mạng, không lưu
   if (req.mode === "navigate" && url.origin === self.location.origin) { e.respondWith(networkFirst(req)); return; }
   if (url.origin === self.location.origin || url.href.startsWith(CDN)) {
     e.respondWith(cacheFirst(req));

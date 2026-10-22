@@ -192,6 +192,17 @@ def clean_result(r, data):
     return {"summary": str(r.get("summary", ""))[:600], "items": items, "unplaced": unplaced}
 
 
+def ready(auth, who=check_user):
+    """AI dùng được cho người này: máy chủ có khóa và tài khoản đã đăng nhập, được phép."""
+    if not os.environ.get("ANTHROPIC_API_KEY"):
+        return False
+    try:
+        who(auth)
+        return True
+    except Exception:
+        return False
+
+
 def plan(body, auth, model=call_claude, who=check_user):
     if len(body) > MAX_BODY:
         raise Bad(413, "Quá nhiều dữ liệu cho một lần xếp")
@@ -231,4 +242,5 @@ class handler(BaseHTTPRequestHandler):
             self._send(500, {"error": "Lỗi máy chủ, thử lại sau"})
 
     def do_GET(self):
-        self._send(405, {"error": "Chỉ nhận POST"})
+        # App hỏi "AI có dùng được không" để quyết định hiện nút; luôn trả 200, không gọi AI, không tốn tiền
+        self._send(200, {"ready": ready(self.headers.get("Authorization"))})
