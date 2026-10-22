@@ -22,15 +22,16 @@ window.E2EAI = async function () {
   const tday = tk, m0 = schedMap();
   const sel0 = S.tasks.filter(t => !taskDone(t)).flatMap(t => { const ms = new Set(missedOf(t, m0).map(u => u.tk)); return units(t).filter(u => !u.done && (!m0.has(u.tk) || ms.has(u.tk))); });
   const errs0 = []; const onErr = e => errs0.push(String(e.message || e.reason)); addEventListener("error", onErr); addEventListener("unhandledrejection", onErr);
-  const btnAny = () => document.querySelectorAll(".ai-btn").length;
+  // Có AI tự động (API) hay không: lựa chọn "Gửi tự động" trong popup Nhờ AI rà soát (nút rà soát miễn phí luôn có)
+  const btnAny = () => { const was = $("aiOverlay").classList.contains("open"); if (!was) aiOpen(); const n = $("aiBody") && $("aiBody").querySelector(".ai-auto") ? 1 : 0; if (!was) closeAi(); return n; };
   const toasts = () => [...document.querySelectorAll(".toast")].map(t => t.textContent).join(" | ");
-  const hvAll = async () => { switchTab("hv"); await sleep(10); const a = btnAny(); switchTab("ca"); calSubView = "focus"; inboxPanel = true; draw(); await sleep(10); return a + btnAny(); };
+  const hvAll = async () => { switchTab("hv"); await sleep(10); const a = btnAny(); const free = !!document.querySelector("#v .hv-top .ai-btn"); return free ? a : 99; }; // nút rà soát miễn phí phải luôn có
   const session = { auth: { getSession: async () => ({ data: { session: { access_token: "tok_" + "x".repeat(30) } } }) } };
 
   // ===== N: không có AI thì app như trước, không rào cản nào
   document.querySelectorAll(".toast").forEach(t => t.remove());
   sbUser = null; aiReady = false; probes = 0;
-  ok("N1.1 chưa đăng nhập đồng bộ: không có nút AI ở đâu, không hỏi máy chủ", (await hvAll()) === 0 && (await aiProbe()) === false && probes === 0);
+  ok("N1.1 chưa đăng nhập đồng bộ: không có Gửi tự động (vẫn có rà soát miễn phí), không hỏi máy chủ", (await hvAll()) === 0 && (await aiProbe()) === false && probes === 0);
   switchTab("hv"); await sleep(10);
   ok("N1.2 Hộp việc vẫn như trước: đếm việc, ô thêm việc, nút Xếp / Xếp hết", /việc chưa xếp xong/.test($("v").textContent) && $("v").querySelector(".hv-add") && [...$("v").querySelectorAll(".hv-sched")].length > 0);
   const t0 = S.tasks.find(t => !taskDone(t) && t.subs.some(s => !s.done && !schedMap().has(s.id)));
@@ -45,22 +46,22 @@ window.E2EAI = async function () {
     ["N2.5", { status: 200, body: "<html>", ct: "text/html" }, "trả về trang HTML thay vì JSON"]]) {
     probe = pv; aiReady = true;
     const r = await aiProbe(); await sleep(20);
-    ok(id + " " + label + ": ẩn nút, không báo lỗi", r === false && (await hvAll()) === 0 && !/AI|lỗi/i.test(toasts()) && !$("aiOverlay").classList.contains("open"));
+    ok(id + " " + label + ": ẩn Gửi tự động, không báo lỗi", r === false && (await hvAll()) === 0 && !/AI|lỗi/i.test(toasts()) && !$("aiOverlay").classList.contains("open"));
   }
   ok("N2.6 không có lỗi trang nào trong lúc dò", !errs0.length, errs0);
   // máy chủ sẵn sàng → có nút
   probe = { status: 200, body: { ready: true } };
   await aiProbe(); await sleep(20);
   switchTab("hv"); await sleep(10);
-  ok("A1.1 đủ điều kiện: Hộp việc có nút Nhờ AI xếp (có biểu tượng)", !!document.querySelector("#v .hv-top .ai-btn .ico"));
+  ok("A1.1 đủ điều kiện: popup rà soát có thêm Gửi tự động (tốn phí API)", btnAny() === 1 && !!document.querySelector("#v .hv-top .ai-btn .ico"));
   switchTab("ca"); calSubView = "focus"; inboxPanel = true; draw(); await sleep(10);
-  ok("A1.2 cột Hộp việc cạnh lịch cũng có nút", innerWidth < 1024 || !!document.querySelector(".inbox-aside .ai-btn"));
+  ok("A1.2 cột Hộp việc cạnh lịch có Xếp tất cả", innerWidth < 1024 || [...document.querySelectorAll(".inbox-aside .hv-panel-head button")].some(b => b.textContent.trim() === "Xếp tất cả"));
   const on0 = navigator.onLine; Object.defineProperty(navigator, "onLine", { value: false, configurable: true }); draw(); await sleep(10);
-  ok("N3.1 mất mạng: ẩn nút", btnAny() === 0);
+  ok("N3.1 mất mạng: ẩn Gửi tự động", btnAny() === 0);
   Object.defineProperty(navigator, "onLine", { value: on0, configurable: true }); delete navigator.onLine; draw(); await sleep(10);
-  ok("N3.2 có mạng lại: nút trở lại", btnAny() > 0);
+  ok("N3.2 có mạng lại: Gửi tự động trở lại", btnAny() > 0);
   cloudStop(); await sleep(20); draw();
-  ok("N3.3 đăng xuất: ẩn nút ngay", !aiReady && btnAny() === 0);
+  ok("N3.3 đăng xuất: ẩn Gửi tự động ngay", !aiReady && btnAny() === 0);
 
   // ===== gọi thẳng khi chưa đăng nhập (không có nút, phòng hờ): nhắc, không gọi máy chủ
   sbUser = null; calls = [];
@@ -81,19 +82,20 @@ window.E2EAI = async function () {
     { id: "taiA", date: d1, start: hmOf(f1), reason: "Buổi sáng tập trung" },
     { id: "taiC", date: d1, start: hmOf(f1 + 60), reason: "Làm liền sau dàn ý" },
     { id: "taiB", date: d2, start: hmOf(f2), reason: "Sau hạn nhưng còn chỗ" },
-    ...(busy1 ? [{ id: body.todo.find(x => !x.id.startsWith("tai")).id, date: d1, start: busy1.s, reason: "Trùng" }] : []),
+    ...(busy1 ? [{ id: body.todo.find(x => !x.id.startsWith("tai") && !x.at).id, date: d1, start: busy1.s, reason: "Trùng" }] : []),
     { id: "khongco", date: d1, start: "08:00", reason: "Mã lạ" },
-    { id: body.todo.filter(x => !x.id.startsWith("tai"))[1].id, date: tday, start: "00:00", reason: "Giờ đã qua" }
-  ], unplaced: [{ id: body.todo.filter(x => !x.id.startsWith("tai"))[2].id, reason: "Hết chỗ trong tuần" }] } });
+    { id: body.todo.filter(x => !x.id.startsWith("tai") && !x.at)[1].id, date: tday, start: "00:00", reason: "Giờ đã qua" }
+  ], unplaced: [{ id: body.todo.filter(x => !x.id.startsWith("tai") && !x.at)[2].id, reason: "Hết chỗ trong tuần" }] } });
   let resolve; hold = new Promise(r => { resolve = r; });
   const pr = aiPlan(); await sleep(30);
-  ok("A3.1 đang chờ: popup mở, báo AI đang xếp, nút chính tắt", $("aiOverlay").classList.contains("open") && /AI đang xếp/.test($("aiBody").textContent) && $("aiBody").querySelector(".btn-primary").disabled);
+  ok("A3.1 đang chờ: popup mở, báo AI đang xếp, nút chính tắt", $("aiOverlay").classList.contains("open") && /AI đang rà soát/.test($("aiBody").textContent) && $("aiBody").querySelector(".btn-primary").disabled);
   const c0 = calls[0], b = c0 && c0.body;
   ok("A3.2 gửi kèm mã đăng nhập, gọi đúng địa chỉ", c0 && c0.url === "/api/ai_plan" && /^Bearer tok_x+$/.test(c0.opt.headers.Authorization) && c0.opt.method === "POST");
   ok("A3.3 gửi 7 ngày từ hôm nay, khung giờ, mục tiêu vốn", b && b.days.length === 7 && b.days[0] === tday && b.today === tday && /^\d\d:\d\d$/.test(b.window.from) && b.capitals.length === S.caps.length);
-  ok("A3.4 chỉ gửi việc chưa xếp (đúng số), có thứ tự và hạn", b && b.todo.filter(x => !x.id.startsWith("tai")).length === Math.min(sel0.length, AI_MAX - 3) && b.todo.filter(x => x.tid === "taiT").map(x => x.i).join() === "0,1,2" && b.todo.find(x => x.id === "taiA").due === d1, [b && b.todo.length, sel0.length]);
+  const expN = (() => { const ex = aiPayload({ review: true }); return ex.todo.length; })();
+  ok("A3.4 gửi việc chưa xếp và việc đã xếp trong 7 ngày (đúng số), có thứ tự, hạn, ưu tiên", b && b.todo.length === expN && b.todo.filter(x => x.tid === "taiT").map(x => x.i).join() === "0,1,2" && b.todo.find(x => x.id === "taiA").due === d1 && b.todo.every(x => typeof x.q === "string"), [b && b.todo.length, expN]);
   ok("A3.5 giờ bận không kèm tên hoạt động", b && Object.values(b.busy).flat().every(x => Array.isArray(x) && x.length === 2 && x.every(v => /^\d\d:\d\d$/.test(v))));
-  ok("A3.6 không gửi dữ liệu sức khỏe (chỉ điểm Sẵn sàng nếu có)", b && Object.keys(b).every(k => ["today", "now", "days", "busy", "todo", "window", "capitals", "ready"].includes(k)) && b.todo.every(x => Object.keys(x).every(k => ["id", "t", "h", "task", "tid", "i", "c", "due", "missed"].includes(k))) && (!("ready" in b) || typeof b.ready === "number"), b && Object.keys(b));
+  ok("A3.6 không gửi dữ liệu sức khỏe (chỉ điểm Sẵn sàng nếu có)", b && Object.keys(b).every(k => ["today", "now", "days", "busy", "todo", "window", "capitals", "ready"].includes(k)) && b.todo.every(x => Object.keys(x).every(k => ["id", "t", "h", "task", "tid", "i", "c", "q", "due", "missed", "at"].includes(k))) && (!("ready" in b) || typeof b.ready === "number"), b && Object.keys(b));
   resolve(); hold = null; await pr; await sleep(20);
   const R = id => ai && ai.rows.find(x => x.id === id);
   ok("A4.1 có tóm tắt của AI", /Ưu tiên Kỹ năng/.test($("aiBody").textContent));
@@ -135,7 +137,7 @@ window.E2EAI = async function () {
   await aiPlan(); await sleep(10);
   ok("A8.1 tài khoản không được phép: báo đúng lời, nhắc xếp tay, không mời Thử lại", /chưa được bật AI/.test($("aiBody").textContent) && /xếp tay/.test($("aiBody").textContent) && ![...$("aiBody").querySelectorAll("button")].some(x => x.textContent === "Thử lại"));
   closeAi(); await sleep(20); draw();
-  ok("A8.1b sau đó ẩn nút AI, app dùng tay như cũ", !aiReady && btnAny() === 0);
+  ok("A8.1b sau đó ẩn Gửi tự động, app dùng tay / sao chép – dán như cũ", !aiReady && btnAny() === 0);
   aiReady = true;
   reply = { status: 502, body: { error: "AI lỗi (529), thử lại sau" } };
   await aiPlan(); await sleep(10);

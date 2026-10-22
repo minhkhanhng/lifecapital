@@ -30,6 +30,10 @@ Nhiệm vụ: xếp các việc nhỏ chưa có lịch vào những ngày đư�
 - Nếu có điểm Sẵn sàng hôm nay dưới 50, hôm nay chỉ xếp việc nhẹ, ít giờ.
 - Việc khó, cần tập trung nên vào buổi sáng hoặc đầu giờ chiều; việc nhẹ để cuối ngày.
 
+- Ưu tiên theo ma trận Eisenhower ("priority"): Gấp · Quan trọng làm sớm nhất; Quan trọng xếp buổi sáng; Gấp (ít quan trọng) làm gọn, buổi chiều; Để sau xếp cuối.
+- Cách mỗi khối ít nhất 15 phút; mỗi ngày chừa khoảng 20% giờ trống dự phòng.
+- Việc có "currentlyAt" đang có lịch: chỉ dời khi có lý do rõ ràng; việc giữ nguyên thì không cần liệt kê trong "items".
+
 Không xếp được thì đưa vào "unplaced" kèm lý do. Lý do và tóm tắt viết bằng tiếng Việt, ngắn gọn, xưng "bạn"."""
 
 SCHEMA = {
@@ -116,6 +120,9 @@ def clean_payload(p):
             "capital": s(t.get("c"), 40),
             **({"due": t["due"]} if isinstance(t.get("due"), str) and DATE.match(t["due"]) else {}),
             **({"missedBefore": True} if t.get("missed") else {}),
+            **({"priority": s(t.get("q"), 40)} if t.get("q") else {}),
+            **({"currentlyAt": {"date": t["at"]["date"], "start": t["at"]["start"]}}
+               if isinstance(t.get("at"), dict) and DATE.match(str(t["at"].get("date", ""))) and HM.match(str(t["at"].get("start", ""))) else {}),
         })
     cap = num(win.get("cap"), 0, 24)
     if cap:

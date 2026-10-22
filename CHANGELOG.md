@@ -2,32 +2,33 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
-## v0.6.4 · Nhờ AI xếp · 23/10/2026
+## v0.6.4 · Xếp tất cả, ưu tiên Eisenhower, Nhờ AI rà soát · 23/10/2026
 
 **Mới**
-- Nút **Nhờ AI xếp** ở Hộp việc (và cột Hộp việc cạnh lịch): AI (Claude) đề xuất ngày giờ cho các việc nhỏ chưa xếp trong 7 ngày tới. AI cân nhắc hạn, thứ tự việc nhỏ, khung giờ xếp việc, giới hạn giờ mỗi ngày, loại vốn còn thiếu so với mục tiêu tuần và điểm Sẵn sàng hôm nay.
-- Bạn duyệt trước khi thêm: mỗi đề xuất có lý do; bỏ chọn mục không muốn rồi bấm Thêm. Có Hoàn tác. Việc lỡ được xếp lại thì buổi cũ được gỡ.
-- App kiểm lại từng đề xuất trên lịch thật: trùng giờ, ngoài khung giờ, giờ đã qua thì bỏ và ghi vào "việc chưa xếp được"; sai thứ tự hoặc sau hạn thì báo và bỏ chọn sẵn. Lịch đổi trong lúc chờ thì không thêm vào chỗ vừa bị chiếm.
+- **Mức ưu tiên kiểu ma trận Eisenhower** cho mỗi việc trong Hộp việc (nút ⋯): Gấp · Quan trọng (làm ngay), Quan trọng (lên lịch làm), Gấp (làm nhanh, gọn), Để sau. Thẻ việc hiện nhãn ưu tiên. Chưa chọn thì coi như Quan trọng.
+- **Xếp tất cả** (Hộp việc và cột Hộp việc cạnh lịch): máy tự dàn mọi việc chưa xếp ra lịch 14 ngày tới theo quy tắc cố định, không dùng AI, miễn phí. Xem trước từng mục kèm lý do, chọn rồi mới thêm; có Hoàn tác.
+  - Thứ tự: việc sắp tới hạn (trong 3 ngày) hoặc quá hạn → ô Eisenhower → hạn sớm hơn → loại vốn đang thiếu giờ so với mục tiêu tuần → việc ngắn hơn → thứ tự trong hộp.
+  - Vị trí: việc quan trọng lấy chỗ sớm nhất trong ngày (buổi sáng tập trung); việc Gấp / Để sau ưu tiên từ 13:00.
+  - Không đụng lịch cố định; mỗi khối cách nhau 15 phút; chỉ trong khung giờ xếp việc; mỗi ngày chừa 20% giờ trống dự phòng (ngày Sẵn sàng thấp chỉ lấp một nửa); một việc không quá "Tối đa mỗi ngày" trong Cài đặt nên việc dài tự trải ra nhiều ngày.
+  - Có hạn: xong trước hạn ít nhất 1 ngày; không được thì sát hạn, vượt mức dự phòng nếu cần; không kịp thì ghi "Sau hạn" và bỏ chọn sẵn. Việc quá hạn: làm sớm nhất. Việc nhỏ giữ đúng thứ tự; việc lỡ được xếp lại.
+- **Nhờ AI rà soát** (miễn phí): app chép sẵn yêu cầu kèm dữ liệu 7 ngày tới (việc đã xếp và chưa xếp, ưu tiên, hạn, lịch cố định, khung giờ, mục tiêu vốn). Bạn dán vào Claude (gói đang dùng, không tốn phí API), chép câu trả lời dán lại vào app. App đọc phần đề xuất, kiểm lại trùng giờ, khung giờ, giờ đã qua, thứ tự, hạn rồi cho bạn duyệt từng thay đổi kèm lý do ("dời từ …"); áp dụng xong app tự gửi lên Google Calendar như bình thường.
+- Nếu máy chủ có khóa AI và tài khoản được phép: popup rà soát có thêm "Gửi tự động" (máy chủ gọi Claude, tốn phí API). Không có thì lựa chọn này ẩn; mọi thứ khác vẫn dùng được.
 
 **AI là phần thêm, không bắt buộc**
-- Nút Nhờ AI xếp chỉ hiện khi đủ mọi điều kiện: đã đăng nhập đồng bộ, đang có mạng, máy chủ có khóa AI, tài khoản được phép. App hỏi máy chủ một lần khi đăng nhập (không gọi AI, không tốn tiền).
-- Thiếu bất kỳ điều kiện nào (chưa đăng nhập, mất mạng, mở từ tệp, hosting không có máy chủ, máy chủ chưa có khóa hoặc lỗi): nút ẩn hẳn, không thông báo lỗi; Hộp việc, Xếp, Xếp hết, kéo thả chạy như trước.
-- Đang dùng mà AI lỗi: popup báo lý do và nhắc xếp tay; lỗi do không còn quyền (chưa cài khóa, không được phép, hết phiên) thì ẩn nút luôn. Đăng xuất hoặc mất mạng cũng ẩn nút.
-- Bộ nhớ đệm ngoại tuyến (service worker) không lưu `/api/`, nên không giữ trạng thái AI cũ.
+- Không đăng nhập, không mạng, không máy chủ, không khóa AI: Xếp tất cả, Xếp hết, kéo thả, sao chép – dán vẫn chạy; chỉ phần Gửi tự động ẩn đi, không báo lỗi. Bộ nhớ đệm ngoại tuyến không lưu `/api/`.
 
 **Quyền riêng tư**
-- Chỉ gửi: tên việc chưa xếp, tên việc lớn, thời lượng, hạn, giờ bận (không kèm tên hoạt động), mục tiêu và số giờ từng loại vốn, khung giờ xếp việc, điểm Sẵn sàng hôm nay (một con số, khi bật Sức khỏe). Không gửi triệu chứng, thuốc, chu kỳ, ghi chú.
-- Cần đăng nhập đồng bộ; máy chủ kiểm tra phiên đăng nhập và danh sách email được phép (`AI_ALLOWED_EMAILS`) trước khi gọi AI.
+- Sao chép – dán: bạn thấy và tự gửi toàn bộ yêu cầu (gồm tên hoạt động cố định để AI hiểu lịch). Gửi tự động: chỉ gửi giờ bận không kèm tên. Cả hai không gửi dữ liệu sức khỏe ngoài điểm Sẵn sàng hôm nay.
+- Gửi tự động cần đăng nhập đồng bộ; máy chủ kiểm tra phiên và danh sách email được phép (`AI_ALLOWED_EMAILS`).
 
 **Kỹ thuật**
-- Hàm máy chủ `api/ai_plan.py` trên Vercel (Python, thư viện `anthropic`, mô hình `claude-opus-5-5`, mức suy nghĩ medium, đầu ra theo JSON schema, tự chuyển mô hình dự phòng khi bị từ chối). Cần đặt `ANTHROPIC_API_KEY` trong Vercel; chưa đặt thì app báo "AI chưa được cài đặt".
-- Chi phí ước tính khoảng 0,05–0,15 USD mỗi lần bấm (tùy số việc).
+- `api/ai_plan.py` (Vercel, Python, `anthropic`, `claude-opus-5-5`, effort medium, JSON schema, fallbacks default). GET trả `{ready}` để app biết có hiện Gửi tự động. Cần `ANTHROPIC_API_KEY` trong Vercel; ước tính 0,05–0,15 USD mỗi lần gửi tự động.
 
 **Sửa**
-- Lưới Năm trên điện thoại, chế độ Tối: ô ngày nhiều giờ có chữ sáng trên nền hồng đậm (3:1). Nay giảm độ đậm nền ở chế độ Tối, chữ đạt 4.5:1.
-- Test phụ thuộc ngày chạy (e2e6 xếp 20:00 trùng hoạt động mẫu, chip thói quen cuối tuần ghi "thiếu N").
+- Lưới Năm trên điện thoại, chế độ Tối: chữ trên ô nhiều giờ thiếu tương phản.
+- Test phụ thuộc ngày chạy (e2e6, chip thói quen cuối tuần).
 
-**Kiểm thử**: `tests/e2e/e2e-ai.js` (44 bước, giả lập đăng nhập và máy chủ, gồm 14 bước khi không có AI), `tests/api/test_ai_plan.py` (11 ca, AI giả). 11 bộ e2e đạt 715/715, gộp dữ liệu 30/30.
+**Kiểm thử**: `e2e-plan.js` (46 bước: Eisenhower, Xếp tất cả, sao chép – dán), `e2e-ai.js` (44 bước: Gửi tự động và các trường hợp không có AI), `tests/api/test_ai_plan.py` (12 ca). 12 bộ e2e đạt 761/761, gộp dữ liệu 30/30.
 
 ## v0.6.3 · Nhập từ Google Calendar, bật/tắt phần, Tổng quan gộp Tổng kết · 21/10/2026
 

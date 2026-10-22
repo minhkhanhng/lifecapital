@@ -42,6 +42,13 @@ class Clean(unittest.TestCase):
         self.assertEqual(d["todo"][0]["due"], "2026-10-25")
         self.assertNotIn("due", d["todo"][1])
 
+    def test_review_fields(self):
+        d = A.clean_payload(payload(todo=[{"id": "s1", "h": 1, "q": "Gấp · Quan trọng", "at": {"date": DAYS[1], "start": "09:00"}},
+                                          {"id": "s2", "h": 1, "at": {"date": "bad", "start": "9h"}}]))
+        self.assertEqual(d["todo"][0]["currentlyAt"], {"date": DAYS[1], "start": "09:00"})
+        self.assertEqual(d["todo"][0]["priority"], "Gấp · Quan trọng")
+        self.assertNotIn("currentlyAt", d["todo"][1])
+
     def test_rejects_bad_input(self):
         with self.assertRaises(A.Bad):
             A.clean_payload({"days": [], "today": DAYS[0], "todo": []})
