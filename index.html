@@ -1932,6 +1932,40 @@ nav.main-nav button.active .ico .f { fill-opacity: 0.24; }
 .ai-hint { font-size: 12px; color: var(--tx-sec); }
 .ai-err { font-size: 12.5px; font-weight: 600; color: var(--bad-text); }
 .ai-auto { margin-top: 10px; }
+/* v0.6.5: thông báo đầu trang là lưới chấm | chữ | nút, xuống dòng không vỡ bố cục */
+.review-prompt-banner { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px 12px; }
+.review-prompt-banner > .row { flex-wrap: nowrap; justify-content: flex-end; }
+@media (max-width: 640px) {
+  .review-prompt-banner { grid-template-columns: auto minmax(0, 1fr); align-items: start; padding: 14px 16px; }
+  .review-prompt-banner::before { margin-top: 5px; }
+  .review-prompt-banner > :nth-child(2) { grid-column: 2; justify-self: end; }
+  /* Tổng kết đã có ở thông báo và tab Tổng quan */
+  #reviewBtn { display: none; }
+  /* Đồng bộ ổn: chỉ còn chấm màu, không thành một nút trắng */
+  .cloud-badge:is([data-st="ok"], [data-st="sync"]) { background: transparent; box-shadow: none; min-width: 32px; padding-inline: 8px; }
+  /* Giờ theo loại vốn: 3 ô hàng trên, 2 ô rộng hàng dưới, tên đủ một dòng */
+  .cap-sum-row { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; }
+  .cap-s { grid-column: span 2; padding: 8px 10px 9px; gap: 3px; }
+  .cap-s:nth-child(3n+1):nth-last-child(2), .cap-s:nth-child(3n+2):last-child { grid-column: span 3; }
+  .cap-s:nth-child(3n+1):last-child { grid-column: span 6; }
+  .cap-s-n { font-size: 12px; display: block; white-space: nowrap; text-overflow: ellipsis; }
+  .cap-s b { font-size: 17px; }
+}
+/* v0.6.5: thanh tab điện thoại chỉ có biểu tượng, cách đều, gắn sát đáy màn hình */
+@media (max-width: 899px) {
+  .sidebar { left: 0; right: 0; bottom: 0; border-radius: 22px 22px 0 0; padding: 6px max(8px, env(safe-area-inset-right, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-left, 0px)); }
+  nav.main-nav { justify-content: space-evenly; }
+  nav.main-nav button { flex: 0 1 56px; min-width: 44px; min-height: 44px; height: 44px; padding: 0; gap: 0; border-radius: 22px; }
+  nav.main-nav button .lb-full, nav.main-nav button .lb-short { display: none; }
+  nav.main-nav button .ico { width: 24px; height: 24px; }
+  .nav-count { top: 0; right: 2px; min-width: 18px; text-align: center; padding: 0 5px; }
+  .quick-capture-box { bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
+  .app-shell { padding-bottom: calc(132px + env(safe-area-inset-bottom, 0px)); }
+  .toast-container { bottom: calc(128px + env(safe-area-inset-bottom, 0px)) !important; }
+  .update-bar, .onb { bottom: calc(128px + env(safe-area-inset-bottom, 0px)); }
+  body[data-tab="hl"] .app-shell, body[data-tab="su"] .app-shell, body[data-tab="me"] .app-shell { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
+}
+@media (max-width: 359px) { .sidebar { left: 0; right: 0; } }
 </style>
 <script>
   try {
@@ -2347,7 +2381,7 @@ const save = () => {
    hay cửa sổ khác đã ghi mà tab này không nhận được (tab bị trình duyệt tạm dừng, trang khôi phục từ
    bộ nhớ đệm, bản cũ của app không biết lắng nghe…): gộp hai bên thay vì ghi đè.
    Dữ liệu do bản này ghi có sv = 2. Bên ghi không có sv (bản cũ) thì chỉ cộng thêm, không xóa gì. */
-const APPV = 64; // v0.6.4
+const APPV = 65; // v0.6.5
 const SV = 3; // 3 (v0.4.0): hoạt động có mã riêng và thời điểm sửa; bản ghi sv khác được gộp kiểu cộng thêm
 let lastRaw = rawSaved, oldWriterSeen = 0;
 // Đồng bộ giữa các thiết bị (v0.4.0, xem phần ĐỒNG BỘ ở cuối tệp)
@@ -4298,7 +4332,7 @@ function openDayFromYear(i, j) {
 const ONB = [
   { el: ".quick-capture-box", t: "Ghi nhanh", d: "Gõ như nói, vd “Mai 18h cầu lông 2 tiếng”. App tự nhận ngày, giờ, thời lượng và loại vốn." },
   { el: "#nav button:nth-child(2)", t: "Hộp việc", d: "Việc chưa rõ lúc làm: gõ “+ tên việc” để cất vào hộp, chia nhỏ rồi xếp vào lịch sau." },
-  { el: "#reviewBtn", t: "Tổng kết", d: "Cuối tuần, bấm để mở tab Tổng quan: giờ 5 loại vốn, bánh xe cân bằng và gợi ý cho tuần tới." }
+  { el: "#reviewBtn", alt: `#nav button[onclick*="'su'"]`, t: "Tổng kết", d: "Cuối tuần, bấm để mở tab Tổng quan: giờ 5 loại vốn, bánh xe cân bằng và gợi ý cho tuần tới." }
 ];
 let onbIdx = -1;
 function onbStart() {
@@ -4310,7 +4344,8 @@ function onbStart() {
 function onbShow() {
   document.querySelectorAll(".onb-target").forEach(x => x.classList.remove("onb-target"));
   const st = ONB[onbIdx], last = onbIdx === ONB.length - 1;
-  const el = document.querySelector(st.el);
+  // Điện thoại ẩn nút Tổng kết: chỉ vào tab Tổng quan
+  const el = [st.el, st.alt].map(s => s && document.querySelector(s)).find(x => x && x.offsetParent);
   if (el) { el.classList.add("onb-target"); if (el.scrollIntoView) el.scrollIntoView({ block: "nearest" }); }
   $("onbStep").textContent = `Bước ${onbIdx + 1}/${ONB.length}`;
   $("onbTitle").textContent = st.t;

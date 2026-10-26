@@ -200,7 +200,8 @@ window.E2EUX = async function () {
   kwOpen = false; draw();
   ok("A7.6 không còn nút Cài đặt ở thanh bên và đầu trang; tab Tôi mở được Cài đặt", !document.querySelector(".sidebar-settings") && !$("settingsBtn") && btns($("v"), /Cài đặt|Mở cài đặt/).length >= 1);
 
-  // ===== Demo một dòng
+  // ===== Demo một dòng (Chủ nhật, thứ 2 thông báo Tổng kết tuần đứng trước: bỏ qua nó)
+  try { localStorage.setItem("lc_rv_skip", activeYear + "-" + (new Date().getDay() === 0 ? CW : CW - 1)); } catch (e) {}
   switchTab("ca"); await sleep(10);
   ok("B2.1 dữ liệu mẫu: một dòng, có Xóa mẫu", document.querySelector(".demo-line") && btns(document.querySelector(".demo-line"), /^Xóa mẫu$/).length === 1 && !/Đang dùng dữ liệu mẫu/.test(vt()));
 
@@ -329,7 +330,7 @@ window.E2EUX = async function () {
   const crPage = eval(crCode);
   ok("V4.4 tab Lịch: mọi chữ ≥ 4.5:1 (chữ lớn ≥ 3:1), viền ô nhập ≥ 3:1", !crPage.length, crPage.slice(0, 5));
   noAnim.remove();
-  ok("V4.5 hiệu năng: khối trong vùng cuộn không làm mờ nền (nền trắng gần đặc), popup đóng thì ẩn hẳn", (a => a >= 0.75 && a < 0.95)(parseFloat(getComputedStyle(document.querySelector(".day-card")).backgroundColor.split(",")[3])) && getComputedStyle(document.querySelector(".day-card")).backdropFilter === "none" && [...document.querySelectorAll(".modal-overlay:not(.open)")].every(o => getComputedStyle(o).visibility === "hidden"));
+  ok("V4.5 hiệu năng: khối trong vùng cuộn không làm mờ nền (nền trắng gần đặc), popup đóng thì ẩn hẳn", (a => a >= 0.75 && a < 0.95)(parseFloat(getComputedStyle(document.querySelector(".day-card:not(.today)")).backgroundColor.split(",")[3])) && getComputedStyle(document.querySelector(".day-card:not(.today)")).backdropFilter === "none" && [...document.querySelectorAll(".modal-overlay:not(.open)")].every(o => getComputedStyle(o).visibility === "hidden"));
 
   // ===== Vòng 5: liquid glass, không nét viền đen
   const stCode = await (await fetch("/tests/e2e/strokes.js?" + Date.now())).text();

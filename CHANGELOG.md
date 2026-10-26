@@ -2,6 +2,14 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.6.5 · Hotfix giao diện điện thoại · 26/10/2026
+
+**Sửa**
+- Thanh tab dưới chỉ còn biểu tượng (tên tab vẫn đọc được bằng trình đọc màn hình), 6 biểu tượng cách đều, gắn sát đáy màn hình nên nội dung không còn lộ ra bên dưới.
+- Khung thông báo đầu tab Lịch (Tổng kết tuần, Sao lưu, Check-in, Đăng nhập, Bắt đầu) không còn vỡ bố cục khi xuống dòng: chấm màu, chữ, nút xếp thẳng hàng; trên điện thoại nút nằm dưới, canh phải.
+- Điện thoại: bỏ nút Tổng kết trên thanh tiêu đề (đã có ở thông báo và tab Tổng quan); huy hiệu đồng bộ chỉ còn chấm màu.
+- Giờ theo loại vốn trên điện thoại: 3 ô hàng trên, 2 ô hàng dưới, tên loại vốn đủ một dòng thay vì bị bẻ đôi.
+
 ## v0.6.4 · Xếp tất cả, ưu tiên Eisenhower, Nhờ AI rà soát · 23/10/2026
 
 **Mới**
