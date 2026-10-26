@@ -1278,10 +1278,23 @@ body.bg-peek #settingsModalOverlay .modal-sheet { background: transparent; }
 .pj-caps .pill { font-size: 12px; }
 .pj-hint { margin: 0; font-size: 13px; color: var(--tx-sec); }
 .pj-closed-toggle { align-self: flex-start; }
+/* v0.6.6: nhóm và lọc danh sách dự án */
+.pj-list-tools { display: flex; align-items: center; gap: 8px 10px; flex-wrap: wrap; }
+.pj-lt-l { font-size: 13px; color: var(--tx-sec); }
+.pj-lf { flex: 1 1 auto; min-width: 0; }
+.pj-lf .pj-capchip { background: color-mix(in srgb, var(--tx) 6%, transparent); }
+.pj-lf .pj-capchip.on:not([style*="--cap"]) { background: var(--ac-soft); border-color: color-mix(in srgb, var(--ac) 45%, transparent); }
+.pj-grp { display: flex; flex-direction: column; gap: 8px; }
+.pj-grp-h { display: flex; align-items: center; gap: 8px; margin: 10px 4px 0; font-size: 14px; font-weight: 700; color: var(--tx); }
+.pj-grp-n { min-width: 22px; padding: 1px 7px; border-radius: 99px; background: color-mix(in srgb, var(--tx) 8%, transparent); color: var(--tx-sec); font-size: 12px; font-weight: 600; text-align: center; font-variant-numeric: tabular-nums; }
+.pj-grp-h small { margin-left: auto; padding-right: 12px; font-size: 12px; font-weight: 500; color: var(--tx-sec); font-variant-numeric: tabular-nums; white-space: nowrap; }
 @media (max-width: 640px) {
   .pj-row { grid-template-columns: auto minmax(0, 1fr) auto; gap: 6px 10px; }
   .pj-tags { grid-column: 2 / -1; grid-row: 2; justify-content: flex-start; }
   .pj-prog { grid-column: 2 / -1; grid-row: 3; }
+  .pj-list-tools .pj-lf { flex-basis: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -2px; padding: 2px; }
+  .pj-lf::-webkit-scrollbar { display: none; }
+  .pj-lf .pj-capchip { flex: none; }
 }
 /* Trang dự án; máy tính rộng có cột danh sách dự án bên trái như thanh bên của Asana */
 .pj-shell { max-width: 1240px; margin: 0 auto; }
@@ -1832,7 +1845,7 @@ nav.main-nav button.active .nav-count { background: #ffffff; color: var(--on-ac)
 .segmented-control button.active, .set-seg button.on { font-weight: 700; }
 /* Danh sách dự án: thanh khít hơn, mỗi dự án một khối nổi nhuộm màu dự án, ô chữ cái đầu */
 .pj-list { gap: 8px; }
-.pj-list > .card { margin-bottom: 0; }
+.pj-list > .card, .pj-grp > .card { margin-bottom: 0; }
 .pj-row { padding: 12px 16px; background: color-mix(in srgb, var(--pj) 9%, var(--sf)); box-shadow: var(--lit), var(--raise-2); border-radius: 20px; transition: transform 0.15s ease, box-shadow 0.15s ease; }
 .pj-row:hover { background: color-mix(in srgb, var(--pj) 15%, var(--sf)); transform: translateY(-2px); box-shadow: var(--lit), var(--raise-3); }
 .pj-ava { width: 40px; height: 40px; border-radius: 14px; display: grid; place-items: center; flex: none; font: 700 17px/1 var(--font-ui); color: color-mix(in srgb, var(--pj) 45%, var(--tx)); background: color-mix(in srgb, var(--pj) 30%, #ffffff); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 3px 8px color-mix(in srgb, var(--pj) 35%, transparent); }
@@ -2381,7 +2394,7 @@ const save = () => {
    hay cửa sổ khác đã ghi mà tab này không nhận được (tab bị trình duyệt tạm dừng, trang khôi phục từ
    bộ nhớ đệm, bản cũ của app không biết lắng nghe…): gộp hai bên thay vì ghi đè.
    Dữ liệu do bản này ghi có sv = 2. Bên ghi không có sv (bản cũ) thì chỉ cộng thêm, không xóa gì. */
-const APPV = 65; // v0.6.5
+const APPV = 66; // v0.6.6
 const SV = 3; // 3 (v0.4.0): hoạt động có mã riêng và thời điểm sửa; bản ghi sv khác được gộp kiểu cộng thêm
 let lastRaw = rawSaved, oldWriterSeen = 0;
 // Đồng bộ giữa các thiết bị (v0.4.0, xem phần ĐỒNG BỘ ở cuối tệp)
@@ -7788,6 +7801,10 @@ V.pj = function () {
   if (pjOpenId && !p) pjOpenId = null;
   return p ? pjPageHTML(p) : pjListHTML();
 };
+// v0.6.6: nhóm danh sách theo ưu tiên (mặc định) hoặc loại vốn chính, lọc theo chiều còn lại. Lưu riêng máy này.
+const pjLg = () => pjPref.lg === "cap" ? "cap" : "pr";
+function pjListSet(lg, lf) { pjPref.lf = lf; pjPrefSet("lg", lg); draw(); }
+const pjCap0 = p => (p.caps || []).find(k => S.caps.some(c => c.k === k)) || "";
 function pjListHTML() {
   const ps = (S.projects || []).slice().sort(pjCmp);
   if (!ps.length) {
@@ -7798,25 +7815,56 @@ function pjListHTML() {
         <button type="button" class="btn btn-primary" onclick="openProject()">Thêm dự án</button>
       </div>`;
   }
-  const open = ps.filter(pjIsOpen), closed = ps.filter(p => !pjIsOpen(p));
+  const lg = pjLg(), all = ps.filter(pjIsOpen);
+  // Chip lọc: nhóm theo ưu tiên thì lọc theo loại vốn, và ngược lại; chỉ các lựa chọn có dự án đang mở nên lọc không bao giờ ra rỗng
+  const opts = lg === "pr"
+    ? S.caps.filter(c => all.some(p => (p.caps || []).includes(c.k))).map(c => ({ k: c.k, n: c.n, col: c.c }))
+    : Object.keys(PJ_PR).filter(k => all.some(p => p.pr === k)).map(k => ({ k, n: PJ_PR[k] }));
+  const lf = opts.some(o => o.k === pjPref.lf) ? pjPref.lf : "";
+  const hit = p => !lf || (lg === "pr" ? (p.caps || []).includes(lf) : p.pr === lf);
+  const open = all.filter(hit), closed = ps.filter(p => !pjIsOpen(p) && hit(p));
+  const groups = (lg === "pr"
+    ? Object.keys(PJ_PR).map(k => ({ n: "Ưu tiên " + PJ_PR[k].toLowerCase(), ps: open.filter(p => p.pr === k) }))
+    : S.caps.map(c => ({ n: c.n, col: c.c, ps: open.filter(p => pjCap0(p) === c.k) })).concat({ n: "Chưa gắn loại vốn", ps: open.filter(p => !pjCap0(p)) })
+  ).filter(g => g.ps.length);
+  const fName = lf ? opts.find(o => o.k === lf).n : "";
+  const chip = (k, n, col) => `<button type="button" class="pill pj-capchip ${lf === k ? "on" : ""}" style="${lf === k && col ? capInk(col) : ""}" aria-pressed="${lf === k}" onclick="pjListSet('${lg}','${k}')">${esc(n)}</button>`;
   return `
     <div class="pj-list">
-      <div class="pj-list-head"><span>${open.length} dự án đang mở</span></div>
-      ${open.length ? open.map(pjCardHTML).join("") : `<div class="card pj-empty"><p>Không có dự án nào đang mở.</p></div>`}
+      <div class="pj-list-tools">
+        <span class="pj-lt-l">Nhóm theo</span>
+        <div class="set-seg" role="group" aria-label="Nhóm dự án theo">
+          <button type="button" class="${lg === "pr" ? "on" : ""}" aria-pressed="${lg === "pr"}" onclick="pjListSet('pr','')">Ưu tiên</button>
+          <button type="button" class="${lg === "cap" ? "on" : ""}" aria-pressed="${lg === "cap"}" onclick="pjListSet('cap','')">Loại vốn</button>
+        </div>
+        ${opts.length > 1 ? `<div class="pj-capchips pj-lf" role="group" aria-label="Lọc theo ${lg === "pr" ? "loại vốn" : "mức ưu tiên"}">${chip("", "Tất cả")}${opts.map(o => chip(o.k, lg === "pr" ? o.n : "Ưu tiên " + o.n.toLowerCase(), o.col)).join("")}</div>` : ""}
+      </div>
+      <div class="pj-list-head"><span>${lf ? `${open.length}/${all.length}` : all.length} dự án đang mở${lf ? ` · ${lg === "pr" ? "vốn " : "ưu tiên "}${esc(lg === "pr" ? fName : fName.toLowerCase())}` : ""}</span></div>
+      ${groups.length ? groups.map(g => {
+        const wk = g.ps.reduce((a, p) => a + pjStats(p.id).wk, 0);
+        return `
+        <section class="pj-grp" aria-label="${esc(g.n)}">
+          <h3 class="pj-grp-h">${g.col ? `<span class="pj-dot" style="--pj:${g.col}" aria-hidden="true"></span>` : ""}<span>${esc(g.n)}</span><span class="pj-grp-n">${g.ps.length}</span><small>${r1(wk)}h tuần này</small></h3>
+          ${g.ps.map(p => pjCardHTML(p, lg)).join("")}
+        </section>`;
+      }).join("") : `<div class="card pj-empty"><p>Không có dự án nào đang mở.</p></div>`}
       ${closed.length ? `
         <button type="button" class="btn btn-sm btn-ghost pj-closed-toggle" onclick="pjShowClosed=!pjShowClosed; draw()" aria-expanded="${pjShowClosed}">${pjShowClosed ? "▾" : "▸"} Đã đóng (${closed.length})</button>
-        ${pjShowClosed ? closed.map(pjCardHTML).join("") : ""}` : ""}
+        ${pjShowClosed ? closed.map(p => pjCardHTML(p)).join("") : ""}` : ""}
     </div>`;
 }
-function pjCardHTML(p) {
+// lg: cách đang nhóm. Nhóm theo ưu tiên thì dòng phụ ghi loại vốn thay cho mức ưu tiên (đã có ở tiêu đề nhóm)
+function pjCardHTML(p, lg) {
   const s = pjStats(p.id), pct = s.tasks ? Math.round(s.done / s.tasks * 100) : null;
   const late = pjIsOpen(p) && p.ed && p.ed < tk;
+  const caps = (p.caps || []).filter(k => S.caps.some(c => c.k === k)).map(k => CM(k).n).join(", ");
+  const first = lg === "pr" ? (caps ? esc(caps) : "Chưa gắn loại vốn") : `Ưu tiên ${PJ_PR[p.pr].toLowerCase()}`;
   return `
     <button type="button" class="card pj-row" style="--pj:${p.col}" onclick="pjOpen('${p.id}')">
       <span class="pj-ava" aria-hidden="true">${esc((p.n.trim()[0] || "?").toUpperCase())}</span>
       <span class="pj-main">
         <b class="pj-name">${esc(p.n)}</b>
-        <span class="pj-sub">Ưu tiên ${PJ_PR[p.pr].toLowerCase()} · ${p.ed ? "hạn " + dm(p.ed) : "không hạn"} · ${s.tasks ? `việc ${s.done}/${s.tasks}` : `${s.evs.length} hoạt động`}</span>
+        <span class="pj-sub">${first} · ${p.ed ? "hạn " + dm(p.ed) : "không hạn"} · ${s.tasks ? `việc ${s.done}/${s.tasks}` : `${s.evs.length} hoạt động`}</span>
       </span>
       <span class="pj-tags">${late ? `<span class="pill pill-bad">Quá hạn</span>` : ""}${pjHealthPill(p)}</span>
       <span class="pj-prog" title="${pct === null ? "Chưa có việc" : `Việc xong ${pct}%`}">${pct === null ? "" : `<span class="pj-pbar"><i style="width:${pct}%"></i></span><small>${pct}%</small>`}</span>

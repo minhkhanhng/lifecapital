@@ -2,6 +2,15 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.6.6 · Nhóm và lọc danh sách dự án · 26/10/2026
+
+**Mới**
+- Tab Dự án mặc định **nhóm theo mức ưu tiên** (Cao → Trung bình → Thấp). Mỗi nhóm ghi số dự án và tổng giờ tuần này.
+- Nút **Nhóm theo: Ưu tiên | Loại vốn**. Nhóm theo loại vốn thì dự án nằm ở vốn chính (vốn đầu tiên, có ★ trong form dự án), không lặp lại ở vốn phụ; dự án chưa gắn vốn nằm cuối.
+- Hàng chip **lọc theo chiều còn lại**: đang nhóm theo ưu tiên thì lọc theo loại vốn (dự án có gắn vốn đó, kể cả vốn phụ), đang nhóm theo loại vốn thì lọc theo mức ưu tiên. Bộ lọc áp cả mục Đã đóng. Chỉ hiện lựa chọn có dự án đang mở.
+- Dòng phụ của thẻ dự án ghi chiều không dùng để nhóm (nhóm theo ưu tiên thì ghi loại vốn, và ngược lại).
+- Cách nhóm và bộ lọc được nhớ riêng trên từng máy. Trên điện thoại hàng chip là một dòng vuốt ngang.
+
 ## v0.6.5 · Hotfix giao diện điện thoại · 26/10/2026
 
 **Sửa**

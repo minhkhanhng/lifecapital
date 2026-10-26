@@ -32,6 +32,7 @@ await __run("tests/e2e/e2e6.js", "E2E");   // trả về { r: [đạt, tổng], 
 | e2e-ux.js | E2EUX | Rà soát giao diện các vòng 1–7 và hiệu năng v0.6.1 |
 | e2e-ai.js | E2EAI | v0.6.4: Nhờ AI xếp (giả lập đăng nhập và máy chủ, không gọi AI thật), gồm các trường hợp không có AI |
 | e2e-plan.js | E2EPLAN | v0.6.5: ưu tiên Eisenhower, Xếp tất cả, Nhờ AI rà soát bằng sao chép – dán |
+| e2e-pjlist.js | E2EPJL | v0.6.6: danh sách dự án nhóm theo ưu tiên / loại vốn, lọc theo chiều còn lại |
 | e2e-v063.js | E2E63 | v0.6.3: nhập Google Calendar (giả lập API), bật/tắt phần, Tổng quan gộp Tổng kết, biểu tượng tab |
 
 Test gộp dữ liệu: mở http://localhost:8765/tests/merge-tests.html (tiêu đề trang ghi `PASS n/n`).
