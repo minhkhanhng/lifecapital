@@ -9,6 +9,7 @@
 - Khung thông báo đầu tab Lịch (Tổng kết tuần, Sao lưu, Check-in, Đăng nhập, Bắt đầu) không còn vỡ bố cục khi xuống dòng: chấm màu, chữ, nút xếp thẳng hàng; trên điện thoại nút nằm dưới, canh phải.
 - Điện thoại: bỏ nút Tổng kết trên thanh tiêu đề (đã có ở thông báo và tab Tổng quan); huy hiệu đồng bộ chỉ còn chấm màu.
 - Giờ theo loại vốn trên điện thoại: 3 ô hàng trên, 2 ô hàng dưới, tên loại vốn đủ một dòng thay vì bị bẻ đôi.
+- 6 biểu tượng tab cùng cỡ (khoảng 17/24) và cùng tâm: trái tim, thư mục, hộp việc, hình người trước đây nhỏ hơn và lệch xuống.
 
 ## v0.6.4 · Xếp tất cả, ưu tiên Eisenhower, Nhờ AI rà soát · 23/10/2026
 
