@@ -5,8 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Life Capital</title>
 <link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon-180x180.png">
+<link rel="apple-touch-icon" sizes="167x167" href="apple-touch-icon-167x167.png">
+<link rel="apple-touch-icon" sizes="152x152" href="apple-touch-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="120x120" href="apple-touch-icon-120x120.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -1000,7 +1006,7 @@ body::before {
 .app-container { max-width: none; margin: 0; padding: 0; min-width: 0; }
 .sidebar { position: sticky; top: 16px; height: calc(100vh - 32px); display: flex; flex-direction: column; gap: 14px; padding: 16px 12px; }
 .sidebar .brand-area { display: flex; align-items: center; gap: 10px; padding: 2px 6px 14px; }
-.brand-logo { width: 38px; height: 38px; border-radius: 12px; background: var(--glass-hi); padding: 5px; box-shadow: var(--glass-shadow); }
+.brand-logo { width: 38px; height: 38px; border-radius: 12px; object-fit: cover; box-shadow: var(--glass-shadow); } /* v0.6.7: icon mới đã có nền riêng */
 .brand-title { font-size: 20px; }
 nav.main-nav { flex-direction: column; position: static; background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; padding: 0; gap: 4px; overflow: visible; }
 nav.main-nav button { justify-content: flex-start; width: 100%; border: 0; background: transparent; box-shadow: none; border-radius: 12px; padding: 10px 12px; font-size: 14px; color: var(--tx-sec); }
@@ -1995,7 +2001,7 @@ nav.main-nav button.active .ico .f { fill-opacity: 0.24; }
 <div class="app-shell">
 <aside class="sidebar" aria-label="Điều hướng">
   <div class="brand-area">
-    <img class="brand-logo" src="icon.svg" alt="">
+    <img class="brand-logo" src="icon-96.png" alt="">
     <h1 class="brand-title">Life Capital</h1>
   </div>
   <!-- Navigation Tabs -->
@@ -2394,7 +2400,7 @@ const save = () => {
    hay cửa sổ khác đã ghi mà tab này không nhận được (tab bị trình duyệt tạm dừng, trang khôi phục từ
    bộ nhớ đệm, bản cũ của app không biết lắng nghe…): gộp hai bên thay vì ghi đè.
    Dữ liệu do bản này ghi có sv = 2. Bên ghi không có sv (bản cũ) thì chỉ cộng thêm, không xóa gì. */
-const APPV = 66; // v0.6.6
+const APPV = 67; // v0.6.7
 const SV = 3; // 3 (v0.4.0): hoạt động có mã riêng và thời điểm sửa; bản ghi sv khác được gộp kiểu cộng thêm
 let lastRaw = rawSaved, oldWriterSeen = 0;
 // Đồng bộ giữa các thiết bị (v0.4.0, xem phần ĐỒNG BỘ ở cuối tệp)

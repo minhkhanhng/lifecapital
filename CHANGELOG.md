@@ -2,6 +2,13 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.6.7 · Bộ biểu tượng mới · 03/11/2026
+
+**Đổi**
+- Biểu tượng ứng dụng mới (hoa 5 cánh bóng, nền hồng nhạt) ở mọi vị trí: tab trình duyệt (favicon 16/32/48), màn hình chính iPhone/iPad (120, 152, 167, 180), Android và app cài trên máy (48 → 512, kèm bản maskable), logo trên thanh bên.
+- Bỏ biểu tượng vector cũ khỏi trang và manifest để trình duyệt không còn hiện icon cũ.
+- App đã cài trên màn hình chính có thể cần gỡ và thêm lại để hệ điều hành cập nhật biểu tượng.
+
 ## v0.6.6 · Nhóm và lọc danh sách dự án · 26/10/2026
 
 **Mới**
