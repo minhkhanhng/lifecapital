@@ -2,6 +2,12 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.6.9 · Phóng to bông hoa trong biểu tượng · 03/11/2026
+
+**Đổi**
+- Bông hoa trong mọi biểu tượng (favicon, iPhone/iPad, Android, logo thanh bên) to hơn: chiếm khoảng 78% chiều rộng thay vì 58%, canh giữa.
+- Bản maskable cho Android tách riêng lại, hoa chiếm khoảng 71% để vẫn nằm trong vùng an toàn khi hệ điều hành cắt icon thành hình tròn.
+
 ## v0.6.8 · Dọn thư mục dự án · 03/11/2026
 
 **Dọn**
