@@ -2,6 +2,15 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.6.8 · Dọn thư mục dự án · 03/11/2026
+
+**Dọn**
+- Bỏ các tệp trùng nội dung: `life-capital.md` (giống hệt README.md), `apple-touch-icon-180x180.png` (giống apple-touch-icon.png), `icon-maskable-512.png` (giống icon-512.png; manifest dùng icon-512.png cho cả bản maskable).
+- Bỏ `icon.svg` (biểu tượng cũ, không còn dùng từ v0.6.7).
+- Bỏ tài liệu lỗi thời: `LIFE-CAPITAL-REVIEW.md` (review ngày 08/10 cho bản đầu) và `CLAUDE_REVIEW_GUIDE.md` (còn mô tả Nạp/Tiêu đã bỏ ở v0.6.1).
+- Thêm `docs/quy-trinh-san-pham-template.md` (template quy trình sản phẩm dùng chung).
+- Người dùng không thấy khác biệt gì trong app.
+
 ## v0.6.7 · Bộ biểu tượng mới · 03/11/2026
 
 **Đổi**

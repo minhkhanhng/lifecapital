@@ -85,7 +85,7 @@
    - **Gộp khi lưu (v0.1.1):** trước mỗi lần lưu, app kiểm tra xem tab hay cửa sổ khác có vừa ghi mà tab này chưa biết không (tab bị trình duyệt tạm dừng, trang mở lại từ bộ nhớ đệm, bản cũ của app còn mở). Nếu có thì gộp hai bên thay vì ghi đè. Bản cũ (không có cơ chế gộp) lưu đè thì app gộp lại ngay, hoặc ở lần mở sau nhờ bản sao lần ghi gần nhất (`lc2_mine`). Hộp việc được gộp theo từng việc.
    - **Bản tự lưu hằng ngày:** đầu mỗi ngày app giữ một bản (7 ngày gần nhất, trên máy đó). Cài đặt → Dữ liệu → *Bản tự lưu hằng ngày* → *Gộp lại* để thêm lại những hoạt động bị thiếu, không xóa gì.
 9. 📱 **Chuẩn Progressive Web App (PWA)**:
-   - Tích hợp `manifest.json` và `icon.svg` 5 cánh hoa độc quyền.
+   - Có `manifest.json` và bộ biểu tượng hoa 5 cánh (favicon, iPhone/iPad, Android) dạng PNG/ICO.
    - Cài đặt lên màn hình chính iPhone/Android, chạy toàn màn hình như Native App.
 10. 📅 **Đẩy Một Chiều Sang Google Calendar (Google Calendar API v3)**:
    - Tích hợp chuẩn **Google Identity Services (GIS)** OAuth 2.0 cấp quyền trực tiếp phía Client (không cần máy chủ trung gian).
@@ -178,7 +178,7 @@ Chỉ cần nhấp đúp vào tệp `index.html` để mở trực tiếp trên 
 
 ### Cách 2: Đưa lên Hosting miễn phí (Vercel / Netlify / GitHub Pages)
 - **Qua Netlify Drop (30 giây)**: Kéo cả thư mục `life-capital` thả vào [app.netlify.com/drop](https://app.netlify.com/drop).
-- **Qua GitHub + Vercel**: Đẩy 3 tệp (`index.html`, `manifest.json`, `icon.svg`) lên kho GitHub rồi kết nối với Vercel để nhận đường link HTTPS miễn phí vĩnh viễn (vd: `https://lifecapital.vercel.app`).
+- **Qua GitHub + Vercel**: Đẩy thư mục dự án (`index.html`, `sw.js`, `manifest.json`, các tệp biểu tượng, `api/`) lên kho GitHub rồi kết nối với Vercel để nhận đường link HTTPS miễn phí vĩnh viễn (vd: `https://lifecapital.vercel.app`).
 
 ### Cài đặt thành App trên iPhone:
 1. Mở link trên **Safari**.
