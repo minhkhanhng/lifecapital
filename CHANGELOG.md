@@ -16,6 +16,11 @@
 - Bề rộng nội dung: Hộp việc, Dự án và tab Tôi cùng rộng tối đa 980px, canh giữa (trước: 760 / 980 / tràn hết).
 - Thói quen ở Tổng quan: dòng chuỗi và kỷ lục xuống dòng thay vì bị cắt.
 
+**Dọn code (nhẹ hơn, giao diện không đổi)**
+- Không tải thư viện đăng nhập Google (accounts.google.com) mỗi lần mở app nữa: chỉ tải khi đã nhập Client ID Google Calendar. Người không dùng Google Calendar bớt một tệp JavaScript bên ngoài và các yêu cầu mạng kèm theo.
+- Bỏ 2 hàm của Tổng quan cũ không còn dùng (bảng thói quen, sức khỏe dạng chữ), 18 bộ chọn CSS không còn phần tử nào (thanh 168h cũ, khối Nhận định cũ…) và 40 khai báo CSS luôn bị khai báo sau đè lên.
+- Đã kiểm chứng: so kiểu hiển thị đã tính của mọi phần tử trên 35 màn hình và popup trước/sau ở khổ 1400px và 375px, sáng / tối / Bỏ kính mờ: không khác (trừ vạch giờ hiện tại chạy theo đồng hồ).
+
 ## v0.7.0 · Tổng quan dạng dashboard, thanh tiêu đề cùng màu nền · 05/11/2026
 
 **Mới**

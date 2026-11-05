@@ -510,22 +510,6 @@ tr.past-week td {
   overflow: visible;
 }
 
-/* 168h Bar */
-.progress-168-bar {
-  display: flex;
-  height: 24px;
-  border-radius: var(--radius-full);
-  overflow: hidden;
-  background: var(--bar);
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-  margin: 14px 0 10px;
-}
-.progress-168-seg {
-  height: 100%;
-  transition: width 0.3s ease;
-}
-.progress-168-seg:hover { filter: brightness(1.1); }
-
 /* Bảng tóm tắt */
 table.sum-table {
   width: 100%;
@@ -879,8 +863,6 @@ body.hv-dragging .day-card { border-style: dashed; }
 .hl-2 .hl-ql { flex: 1 1 0; min-width: 0; }
 .hl-sheet textarea { width: 100%; resize: vertical; font: inherit; font-size: 14px; padding: 8px 10px; border-radius: 10px; }
 .hl-saved { font-size: 12px; }
-.hl-wk { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--tx-sec); }
-.hl-wk b { color: var(--tx); }
 .me-card .set-row input[type=text], .me-card .set-row input[type=date] { width: 180px; max-width: 100%; }
 @media (pointer: coarse) { .hl-m, .hl-chip, .hl-chip.med button { min-height: 40px; } }
 @media (max-width: 480px) { .hl-pins { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; } .hl-pin { padding: 12px; } .hl-pin b { font-size: 22px; } .hl-2 { flex-direction: column; } }
@@ -924,8 +906,6 @@ body.hv-dragging .day-card { border-style: dashed; }
 .hb-row:last-child { border-bottom: 0; }
 .hb-row-n { min-width: 0; flex: 1 1 120px; }
 .hb-row-st { color: var(--tx-sec); font-size: 13px; }
-.hb-ok { color: var(--ok-text); font-weight: 600; }
-.hb-miss { color: var(--wa-text); font-weight: 600; }
 .hb-arch { margin-top: 6px; opacity: 0.75; }
 .hb-ed { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--tx-sec); flex-wrap: wrap; }
 .hb-ed small { color: var(--mu); }
@@ -1054,26 +1034,23 @@ body[data-tab="hl"] .quick-capture-box, body[data-tab="su"] .quick-capture-box, 
 
 @media (max-width: 899px) {
   .app-shell { display: block; padding: 12px 12px calc(92px + env(safe-area-inset-bottom, 0px)); }
-  .sidebar { position: fixed; left: 10px; right: 10px; top: auto; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); height: auto; z-index: 60; padding: 6px; flex-direction: row; gap: 0; }
+  .sidebar { position: fixed; top: auto; height: auto; z-index: 60; flex-direction: row; gap: 0; }
   .sidebar .brand-area { display: none; }
-  nav.main-nav { flex-direction: row; flex: 1 1 0; min-width: 0; width: auto; justify-content: space-around; } /* 6 tab bằng nhau; Cài đặt nằm trong tab Tôi */
+  nav.main-nav { flex-direction: row; flex: 1 1 0; min-width: 0; width: auto; } /* 6 tab bằng nhau; Cài đặt nằm trong tab Tôi */
   /* Cài đặt là ô thứ năm của thanh tab dưới: trong tầm ngón cái, cùng kiểu với các tab */
-  nav.main-nav button { flex: 1; flex-direction: column; gap: 2px; font-size: 14px; font-weight: 500; white-space: nowrap; padding: 6px 2px; justify-content: center; min-height: 52px; position: relative; }
+  nav.main-nav button { flex-direction: column; font-size: 14px; font-weight: 500; white-space: nowrap; justify-content: center; position: relative; }
   .lb-full { display: none; }
   .lb-short { display: inline; }
-  .nav-count { position: absolute; top: 3px; right: 18%; margin: 0; }
+  .nav-count { position: absolute; margin: 0; }
   .app-header { padding: 10px 14px; align-items: center; }
   .page-sub { display: none; }
-  .toast-container { bottom: calc(146px + env(safe-area-inset-bottom, 0px)) !important; }
-  /* Ô ghi nhanh nổi ngay trên thanh tab; bàn phím mở thì nằm sát trên bàn phím và ẩn thanh tab */
-  .app-shell { padding-bottom: calc(150px + env(safe-area-inset-bottom, 0px)); }
-  .quick-capture-box { position: fixed; left: 10px; right: 10px; bottom: calc(82px + env(safe-area-inset-bottom, 0px)); z-index: 59; margin: 0; padding: 6px 6px 6px 14px; }
+  .quick-capture-box { position: fixed; left: 10px; right: 10px; z-index: 59; margin: 0; padding: 6px 6px 6px 14px; }
   .quick-capture-input { font-size: 16px; }
   .quick-capture-box:focus-within { bottom: calc(max(var(--kb, 0px), env(safe-area-inset-bottom, 0px)) + 8px); }
   body:has(.quick-capture-box:focus-within) .sidebar { display: none; }
 }
 @media (max-width: 400px) { nav.main-nav button { font-size: 13px; } }
-@media (max-width: 359px) { nav.main-nav button { font-size: 12px; } .sidebar { left: 6px; right: 6px; padding: 4px; } }
+@media (max-width: 359px) { nav.main-nav button { font-size: 12px; } .sidebar { padding: 4px; } }
 .header-actions .btn.btn-sm { font-size: 13px; padding: 6px 12px; }
 /* Chế độ Ngày: vuốt ngang để đổi ngày */
 .timeline-container { touch-action: pan-y; }
@@ -1098,12 +1075,6 @@ details.fold[open] > summary .set-sum { display: none; }
 /* Ảnh nền riêng: phủ một lớp mờ cho dịu, các tấm kính làm mờ thêm lần nữa */
 body::before { filter: blur(8px); will-change: filter; } /* độ mờ thật đặt trong <style id="bgBlurCss"> */
 body.has-bg::before { background: linear-gradient(var(--veil), var(--veil)), var(--bg-img) center / cover no-repeat, var(--bg); }
-
-.card, .quick-capture-box, .app-header, .sidebar, .day-card, .timeline-container, .inbox-aside, .table-wrapper, .review-prompt-banner, .modal-sheet, .toast, .hv-task {
-  border: 1px solid var(--glass-bd);
-  box-shadow: var(--glass-shadow);
-}
-.hv-task, .toast { background: var(--sheen), var(--glass-hi); }
 .day-card.today .day-card-header, .day-card.today .day-card-header .day-name, .day-card.today .day-card-header .day-date { color: var(--btn-ink); }
 .cal-with-inbox.collapsed { grid-template-columns: minmax(0, 1fr) 52px; }
 .inbox-rail { position: sticky; top: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 0; border-radius: 16px; color: var(--tx-sec); cursor: pointer; font: inherit; font-size: 12px; }
@@ -1228,7 +1199,6 @@ body.bg-peek #settingsModalOverlay .modal-sheet { background: transparent; }
 .onb-acts { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
 @keyframes onbPulse { 0%, 100% { box-shadow: 0 0 0 3px var(--ac), 0 0 0 7px color-mix(in srgb, var(--ac) 22%, transparent); } 50% { box-shadow: 0 0 0 3px var(--ac), 0 0 0 12px color-mix(in srgb, var(--ac) 8%, transparent); } }
 .onb-target { animation: onbPulse 1.6s ease-in-out infinite; }
-@media (max-width: 899px) { .onb { bottom: calc(144px + env(safe-area-inset-bottom, 0px)); } }
 
 /* Giảm hiệu ứng: bỏ kính mờ và chuyển động, kính đục hơn để chữ vẫn rõ */
 :root.lite *, :root.lite *::before, :root.lite *::after { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
@@ -1248,9 +1218,9 @@ body.bg-peek #settingsModalOverlay .modal-sheet { background: transparent; }
 }
 @media (max-width: 359px) { .cloud-badge { min-width: 26px; padding-inline: 6px; } .header-actions { gap: 6px; } }
 /* Thanh “Có bản mới” */
-.update-bar { position: fixed; left: 0; right: 0; margin: 0 auto; width: max-content; max-width: calc(100% - 24px); top: calc(10px + env(safe-area-inset-top, 0px)); z-index: 950; display: flex; align-items: center; gap: 12px; padding: 6px 6px 6px 16px; border-radius: 999px; background: var(--sheen), var(--glass-hi); border: 1px solid var(--glass-bd); box-shadow: var(--glass-shadow); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); font-size: 14px; font-weight: 600; }
+.update-bar { position: fixed; left: 0; right: 0; margin: 0 auto; width: max-content; max-width: calc(100% - 24px); top: calc(10px + env(safe-area-inset-top, 0px)); z-index: 950; display: flex; align-items: center; gap: 12px; padding: 6px 6px 6px 16px; border: 1px solid var(--glass-bd); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); font-size: 14px; font-weight: 600; }
 .set-row > .btn { flex: none; white-space: nowrap; }
-@media (max-width: 899px) { .update-bar { top: auto; bottom: calc(146px + env(safe-area-inset-bottom, 0px)); } }
+@media (max-width: 899px) { .update-bar { top: auto; } }
 .inst-steps { margin: 6px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
 /* ===== Dự án (v0.6.0, kiểu Asana): danh sách dự án → trang dự án, 4 chế độ xem ===== */
 .pj-list { display: flex; flex-direction: column; max-width: 980px; margin: 0 auto; }
@@ -1595,11 +1565,6 @@ button.tl-lab:hover { background: linear-gradient(color-mix(in srgb, var(--ac) 1
 .cap-s-bar > i { display: block; height: 100%; border-radius: 99px; background: var(--cap); }
 .cap-s.weak .cap-s-n::after { content: " · yếu nhất"; font-weight: 600; }
 @media (max-width: 640px) {
-  /* điện thoại: 5 loại vốn trên một hàng, chỉ số giờ; mục tiêu xem ở thanh màu và khi bấm giữ */
-  .cap-sum-row { gap: 5px; }
-  .cap-s { padding: 6px 6px 7px 9px; gap: 2px; }
-  .cap-s-n { font-size: 11px; }
-  .cap-s b { font-size: 16px; }
   .cap-s-tg { display: none; }
   .cap-s.weak .cap-s-n::after { content: ""; }
   .cap-s.weak .cap-s-n { color: var(--bad-text); font-weight: 600; }
@@ -1786,7 +1751,6 @@ input[type="checkbox"]:not(.set-switch):disabled { opacity: 0.5; cursor: default
 .toast::before, .review-prompt-banner::before { content: ""; flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--ac); box-shadow: 0 0 0 4px var(--ac-soft); }
 .toast.toast-ok::before { background: var(--c-olive); box-shadow: 0 0 0 4px var(--ok-soft); }
 .toast.toast-bad::before, .save-alert::before { background: var(--bad); box-shadow: 0 0 0 4px var(--bad-soft); }
-.review-prompt-banner { display: flex; align-items: center; gap: 12px; }
 /* Nút: viên tròn, nổi, nhấn thì lún */
 .btn { border-color: transparent; background: var(--sf-2); border-radius: 999px; box-shadow: var(--lit-sm), var(--raise-1); transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease; }
 .btn:hover { background: #ffffff; border-color: transparent; box-shadow: var(--lit-sm), 0 2px 4px rgba(140, 70, 105, 0.08), 0 8px 18px rgba(140, 70, 105, 0.12); transform: translateY(-1px); }
@@ -1802,7 +1766,7 @@ input[type="checkbox"]:not(.set-switch):disabled { opacity: 0.5; cursor: default
 .segmented-control, .set-seg { border-color: transparent; background: var(--track); box-shadow: var(--sunk); border-radius: 999px; padding: 3px; }
 .segmented-control button, .set-seg button { border-radius: 999px; }
 .segmented-control button.active, .set-seg button.on { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55), 0 2px 6px rgba(200, 100, 145, 0.30); }
-@media (max-width: 899px) { .sidebar { border-radius: 30px; box-shadow: var(--lit), var(--raise-3); } nav.main-nav button { border-radius: 24px; } }
+@media (max-width: 899px) { .sidebar { box-shadow: var(--lit), var(--raise-3); } }
 /* Ô nhập: rãnh lún nhẹ, viền hồng mảnh (bắt buộc ≥ 3:1) */
 input, select, textarea { box-shadow: var(--sunk); border-radius: 14px; }
 .quick-capture-input { box-shadow: none; }
@@ -1890,18 +1854,6 @@ table.calendar-table tbody tr { content-visibility: auto; contain-intrinsic-size
 nav.main-nav button .ico { color: var(--ac-text); }
 nav.main-nav button.active .ico { color: var(--on-ac); }
 nav.main-nav button.active .ico .f { fill-opacity: 0.24; }
-@media (max-width: 899px) { nav.main-nav button { gap: 1px; padding-top: 5px; padding-bottom: 4px; } }
-.su-ins-p { margin: 2px 0 10px; font-size: 14px; color: var(--tx-sec); }
-.su-ins-list { display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
-.su-ins-i { padding: 8px 12px; border-radius: 14px; background: var(--sf-2); box-shadow: var(--lit-sm), var(--raise-1); line-height: 1.45; }
-.su-ins-i::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--mu); margin-right: 7px; vertical-align: 1px; }
-.su-ins-i.ok { background: color-mix(in srgb, var(--ok) 16%, var(--sf-2)); }
-.su-ins-i.ok::before { background: var(--ok); }
-.su-ins-i.bad { background: color-mix(in srgb, var(--bad) 12%, var(--sf-2)); }
-.su-ins-i.bad::before { background: var(--bad); }
-.su-next { margin-top: 12px; padding: 10px 14px; border-radius: 14px; background: color-mix(in srgb, var(--ac) 16%, var(--sf-2)); box-shadow: var(--lit-sm), var(--raise-1); font-size: 13px; }
-.su-next ol { margin: 6px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 3px; line-height: 1.5; }
-.su-chips { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 12px; font-size: 13px; }
 .su-empty { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--tx-sec); line-height: 1.5; }
 .cap-sum-warn { margin: 2px 0 8px; font-size: 13px; font-weight: 600; color: var(--bad-text); }
 .gx-btn { display: inline-flex; align-items: center; gap: 6px; }
@@ -1960,7 +1912,7 @@ small { font-size: max(11px, 0.85em); } /* chữ phụ không nhỏ hơn 11px */
 .hl-day { min-height: 24px; }
 .demo-line { margin-bottom: 4px; }
 body[data-tab="me"] #v { max-width: 980px; margin-inline: auto; }
-.dhb-n small { white-space: normal; overflow: visible; }
+.dhb-n small { white-space: normal; }
 @media (pointer: coarse) {
   .btn.btn-sm, .segmented-control button, .set-seg button { min-height: 36px; }
 }
@@ -1982,7 +1934,6 @@ body[data-tab="me"] #v { max-width: 980px; margin-inline: auto; }
 @media (max-width: 640px) {
   .dash { gap: 10px; }
   .dash > .dk { flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 8px; padding: 12px 14px; }
-  .dk-v { font-size: 22px; } .dk.warn .dk-v, .dk.good .dk-v { font-size: 18px; }
   .dk-viz svg { max-height: 44px; width: auto; }
   .dash .dk-cap { width: 44px; height: 6px; border-radius: 3px; }
   .dash > .d6, .dash > .d4, .dash > .d4:nth-last-child(n+2) { grid-column: span 12; }
@@ -2117,7 +2068,6 @@ body[data-tab="me"] #v { max-width: 980px; margin-inline: auto; }
     if (l === "on" || (l === "auto" && (mq("(prefers-reduced-motion: reduce)") || mq("(prefers-reduced-transparency: reduce)")))) document.documentElement.classList.add("lite");
   } catch(e) {}
 </script>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -3830,13 +3780,25 @@ function clearGCalToken() {
   try { localStorage.removeItem("gcal_token"); localStorage.removeItem("gcal_token_exp"); } catch (e) {}
 }
 
+// v0.7.1: thư viện đăng nhập Google chỉ tải khi đã có Client ID; người không dùng Google Calendar không phải tải nó mỗi lần mở app
+const gcalCid = () => { try { return (S.cfg && S.cfg.gcalClientId) || localStorage.getItem("gcal_client_id") || ""; } catch (e) { return ""; } };
+let gsiAsked = false;
+function gsiLoad() {
+  if (gsiAsked || (window.google && google.accounts)) return;
+  gsiAsked = true;
+  const sc = document.createElement("script");
+  sc.src = "https://accounts.google.com/gsi/client"; sc.async = true;
+  sc.onerror = () => { gsiAsked = false; sc.remove(); }; // mất mạng: lần sau thử lại
+  document.head.appendChild(sc);
+}
 function initGCalTokenClient(onSuccess) {
-  const clientId = (S.cfg && S.cfg.gcalClientId) || localStorage.getItem("gcal_client_id") || "";
+  const clientId = gcalCid();
   if (!clientId) {
     showToast("Nhập Client ID trước", "bad");
     return false;
   }
   if (typeof google === "undefined" || !google.accounts || !google.accounts.oauth2) {
+    gsiLoad();
     showToast("Google chưa tải xong, thử lại sau vài giây", "bad");
     return false;
   }
@@ -4462,7 +4424,7 @@ function renderSettingsModal() {
         <input id="inpGCalClientId" type="text" class="set-mono"
                placeholder="xxxxxx.apps.googleusercontent.com"
                value="${esc((S.cfg && S.cfg.gcalClientId) || localStorage.getItem('gcal_client_id') || '')}"
-               onchange="if(!S.cfg) S.cfg={}; S.cfg.gcalClientId=this.value.trim(); localStorage.setItem('gcal_client_id', this.value.trim()); save();">
+               onchange="if(!S.cfg) S.cfg={}; S.cfg.gcalClientId=this.value.trim(); localStorage.setItem('gcal_client_id', this.value.trim()); save(); if (this.value.trim()) gsiLoad();">
       </div>
 
       <div class="set-row">
@@ -5902,6 +5864,7 @@ function draw(jump) {
 // Tự động chuyển tuần khi sang thứ Hai mới
 function tick() {
   pullDisk();
+  if (gcalCid()) gsiLoad(); // Client ID có thể vừa về từ máy khác qua đồng bộ
   if (sbUser && !cloudBusy && cloud.st !== "auth" && cloud.st !== "setup") cloudSoon(0); // phòng khi lỡ tín hiệu thời gian thực
   snapshotDaily();
   updateSyncBadge(); // token Google hết hạn sau 1 giờ
@@ -9414,23 +9377,6 @@ function hbManageHTML() {
       ${A.length ? `<button type="button" class="btn btn-sm btn-ghost" style="margin-top:8px;" onclick="hbShowArch = !hbShowArch; draw()">${hbShowArch ? "Ẩn" : "Xem"} đã lưu trữ (${A.length})</button>${hbShowArch ? `<div class="hb-rows hb-arch">${A.map(row).join("")}</div>` : ""}` : ""}
     </div>`;
 }
-function hbWeekRowsHTML(ws) {
-  const L = hbList();
-  if (!L.length) return "";
-  const w0 = ky(ws);
-  return `<div class="hb-rows">${L.map(h => {
-    const st = hbStats(h);
-    let n = 0;
-    for (let j = 0; j < 7; j++) { const k = ky(ad(ws, j)); if (k <= tk && st.days.has(k)) n++; }
-    const goal = h.per === "week" ? h.tgt : 6, ok = n >= goal;
-    return `<div class="hb-row" style="--cap:${CM(h.c).c}">
-      <span class="dot" style="background:${CM(h.c).c}"></span>
-      <b class="hb-row-n">${esc(h.n)}</b>
-      <span class="${ok ? "hb-ok" : w0 < monKey(tk) ? "hb-miss" : ""}">${n}/${h.per === "week" ? h.tgt + " lần" : "7 ngày"}</span>
-      <span class="hb-row-st">chuỗi ${st.cur} ${hbUnit(h)} · kỷ lục ${st.best}</span>
-    </div>`;
-  }).join("")}</div>`;
-}
 // Mẫu: 12 ngày qua có tâm trạng, giấc ngủ, vài lần nhức đầu vào ngày họp nhiều, một loại TPCN
 function hlDemo() {
   const h = hlH();
@@ -10142,16 +10088,6 @@ function hlChkSave() {
   closeHl();
   showToast(phq >= 3 || gad >= 3 ? `PHQ-2 ${phq}/6, GAD-2 ${gad}/6: nên nói chuyện với bác sĩ hoặc chuyên gia tâm lý` : `PHQ-2 ${phq}/6, GAD-2 ${gad}/6: chưa có dấu hiệu đáng lo`, phq >= 3 || gad >= 3 ? "bad" : "ok");
 }
-// Tổng kết tuần: sức khỏe của tuần
-function hlWeekHTML(ws) {
-  const ks = [0, 1, 2, 3, 4, 5, 6].map(j => ky(ad(ws, j))).filter(k => k <= tk), days = S.health && S.health.days || {};
-  if (!ks.some(k => days[k]) && !hlActWeek(ky(ws)).some(x => x.min)) return "";
-  const md = hlAvg(ks, "mood"), sl = hlAvg(ks, "sleep"), f = {};
-  ks.forEach(k => Object.keys((days[k] || {}).sy || {}).forEach(s => { f[s] = (f[s] || 0) + 1; }));
-  const top = Object.entries(f).sort((a, b) => b[1] - a[1]).slice(0, 3);
-  const am = hlActWeek(ky(ws)).reduce((a, x) => a + x.min, 0);
-  return `<div class="hl-wk"><span>Vận động <b>${am}/150</b> phút</span>${md ? `<span>Tâm trạng <b>${r1(md.v)}/5</b></span>` : ""}${sl ? `<span>Ngủ <b>${r1(sl.v)}h</b> mỗi đêm</span>` : ""}<span>${top.length ? "Triệu chứng: " + top.map(([s, n]) => `<b>${esc(hlSyName(s))}</b> ${n} ngày`).join(", ") : "Không có triệu chứng"}</span></div>`;
-}
 
 /* ---------- Tab Tôi: hồ sơ, loại vốn, cài đặt ---------- */
 function hpSet(f, v) {
@@ -10489,6 +10425,7 @@ function hlReady(k = tk) {
 draw(true);
 gcalFlush(); // đẩy các thay đổi còn chờ từ lần mở trước
 cloudInit(); // đã đăng nhập đồng bộ: tải thư viện, nhận phiên, đồng bộ lần đầu
+if (gcalCid()) gsiLoad(); // dùng Google Calendar: tải sẵn thư viện đăng nhập để bấm Kết nối / Nhập là chạy ngay
 try {
   if (!localStorage.getItem("lc_onb") && !Object.keys(S.ev).length && !S.tasks.length) setTimeout(onbStart, 500);
 } catch (e) {}

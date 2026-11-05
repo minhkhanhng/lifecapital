@@ -57,7 +57,7 @@ def present(name):
     if base != name and (base + "${" in rest or base + '" +' in rest or base + "' +" in rest): return True
     if name.endswith("-") is False and "-" in name:
         pre = name.rsplit("-", 1)[0] + "-"
-        if pre + "${" in rest: return True
+        if pre + "${" in rest or pre + '" +' in rest or pre + "' +" in rest: return True   # cả kiểu "hs-" + h
     return False
 dead_sel = []
 for r in rules:
