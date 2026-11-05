@@ -2,6 +2,12 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.7.1 · Favicon và logo chỉ có bông hoa · 05/11/2026
+
+**Đổi**
+- Favicon (tab trình duyệt, 16/32/48) và logo trên thanh bên chỉ còn bông hoa, nền trong suốt; hợp cả nền sáng lẫn tối.
+- Biểu tượng app trên màn hình chính iPhone/iPad và Android giữ nền hồng nhạt (iOS không hỗ trợ biểu tượng trong suốt).
+
 ## v0.7.0 · Tổng quan dạng dashboard, thanh tiêu đề cùng màu nền · 05/11/2026
 
 **Mới**
