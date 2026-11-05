@@ -65,7 +65,7 @@ window.E2E61 = async function () {
   ok("4.5 tuần trống: chưa đủ dữ liệu", empty < 0 || balanceOf(empty).score === null);
   openWeeklyReviewModal(wi); await sleep(30);
   const rv = $("v").innerText;
-  ok("4.6 Tổng kết: giờ từng loại vốn, cân bằng, yếu nhất, bánh xe", $("v").querySelectorAll(".cap-s").length === S.caps.length && /cân bằng/i.test(rv) && rv.includes(exp + "%") && /yếu nhất/i.test(rv) && /Bánh xe/i.test(rv), rv.slice(0, 300));
+  ok("4.6 Tổng kết: giờ từng loại vốn, cân bằng, yếu nhất (khi dưới 80%), bánh xe", $("v").querySelectorAll(".dbl-r").length === S.caps.length && /cân bằng/i.test(rv) && rv.includes(exp + "%") && (exp >= 80 || /yếu nhất/i.test(rv)) && /Bánh xe/i.test(rv), rv.slice(0, 300));
   let copied = null; const wc = navigator.clipboard && navigator.clipboard.writeText;
   try { navigator.clipboard.writeText = t => { copied = t; return Promise.resolve(); }; } catch (e) {}
   copyReviewToClipboard(wi); await sleep(20);

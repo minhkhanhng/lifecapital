@@ -148,14 +148,14 @@ window.E2EUX = async function () {
 
   // ===== A4–A6, A9 Tổng quan
   switchTab("su"); await sleep(10);
-  ok("A5.1 mặc định nhận định theo tuần đang xem", N === 1 && new RegExp("Tổng kết tuần " + (sel + 1)).test(vt()));
+  ok("A5.1 mặc định nhận định theo tuần đang xem", N === 1 && new RegExp("Giờ đã ghi · tuần " + (sel + 1)).test(vt()));
   ok("A5.2 không còn Còn trống / 168h", !/Còn trống/.test(vt()));
-  ok("A5.3 Tổng quan có ô giờ từng loại vốn (thay thanh 168h)", document.querySelectorAll("#v .cap-s").length === S.caps.length && !document.querySelector("#v .progress-168-bar"));
+  ok("A5.3 Tổng quan có thanh giờ so với mục tiêu cho từng loại vốn (thay thanh 168h)", document.querySelectorAll("#v .dbl-r").length === S.caps.length && !document.querySelector("#v .progress-168-bar"));
   const th1 = [...document.querySelectorAll("#v .sum-table th")].map(x => x.textContent.trim());
   ok("A5.4 tính theo tuần này: bảng không có cột Trung bình", !th1.some(x => /Trung bình/.test(x)), th1);
   N = 4; draw(); await sleep(10);
   const th4 = [...document.querySelectorAll("#v .sum-table th")].map(x => x.textContent.trim());
-  ok("A5.5 TB 4 tuần: có cột Trung bình và chữ trung bình", th4.some(x => /Trung bình \d+ tuần/.test(x)) && /trung bình \d+ tuần gần nhất/.test(vt()), th4);
+  ok("A5.5 TB 4 tuần: có cột Trung bình và chữ trung bình", th4.some(x => /Trung bình \d+ tuần/.test(x)) && /trung bình \d+ tuần gần nhất/i.test(vt()), th4);
   N = 1; draw();
   const caps0 = JSON.stringify(S.caps);
   S.caps.forEach(c => { c.tg = 0; }); draw(); await sleep(10);
@@ -254,13 +254,14 @@ window.E2EUX = async function () {
   ok("V2.18 vốn yếu nhất được đánh dấu", !bw || (document.querySelectorAll("#v .cap-s.weak").length === 1 && document.querySelector("#v .cap-s.weak .cap-s-n").textContent === bw.c.n));
   openWeeklyReviewModal(CW); await sleep(20);
   const rb = $("v"), rvKids = [...rb.children].filter(x => x.offsetParent);
-  ok("V2.19 Tổng kết (tab Tổng quan): sau chọn tuần là giờ theo loại vốn, rồi tổng kết, rồi bánh xe", cur === "su" && rvKids[1] && rvKids[1].classList.contains("cap-sum") && /Tổng kết tuần/.test(rvKids[2].textContent) && /Bánh xe/.test(rvKids[3].textContent), rvKids.slice(0, 4).map(x => x.className));
+  const dk = rvKids[1] ? [...rvKids[1].children] : [];
+  ok("V2.19 Tổng kết (tab Tổng quan): sau chọn tuần là dashboard: 4 ô số → giờ so với mục tiêu → bánh xe", cur === "su" && rvKids[1] && rvKids[1].classList.contains("dash") && dk.slice(0, 4).every(x => x.classList.contains("dk")) && /Giờ so với mục tiêu/.test(dk[4].textContent) && /Bánh xe/.test(dk[5].textContent), dk.slice(0, 6).map(x => x.className));
   ok("V2.20 Tổng kết: không còn 168h / Còn trống / Giờ trong tuần", !/168|Còn .*trống|Giờ trong tuần/.test(rb.textContent));
   const tt0 = [...rb.querySelectorAll(".card-title")].map(x => x.textContent.trim()), iw = tt0.indexOf("Bánh xe cuộc đời");
   ok("V2.21 Tổng kết: dự án, sức khỏe, thói quen nằm sau phần chính", iw > 0 && ["Thói quen", "Giờ theo dự án", "Sức khỏe"].every(t => tt0.indexOf(t) < 0 || tt0.indexOf(t) > iw), tt0);
   switchTab("ca");
   openWeeklyReviewModal(W.findIndex((_, i) => !evs(i).length)); await sleep(10);
-  ok("V2.22 Tổng kết tuần trống: vẫn có ô từng vốn (0h hoặc giờ cố định), không lỗi", $("v").querySelectorAll(".cap-s").length === S.caps.length);
+  ok("V2.22 Tổng kết tuần trống: vẫn có thanh từng vốn (0h hoặc giờ cố định), không lỗi", $("v").querySelectorAll(".dbl-r").length === S.caps.length);
   switchTab("ca");
 
   // ===== Vòng 3: Ngày, Năm cùng kiểu Tuần; nút và thanh một màu

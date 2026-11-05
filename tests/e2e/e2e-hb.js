@@ -118,7 +118,7 @@ window.E2EHB = async function () {
 
   // 9. Tổng kết tuần, Tổng quan
   openWeeklyReviewModal(CW); await sleep(20);
-  ok("9.1 Tổng kết tuần có Thói quen", /Thói quen/.test($("v").textContent) && $("v").querySelector(".hb-row"));
+  ok("9.1 Tổng kết tuần có Thói quen (7 ô mỗi thói quen)", /Thói quen/.test($("v").textContent) && $("v").querySelector(".dhb-r:not(.dhb-h)") && $("v").querySelectorAll(".dhb-r:not(.dhb-h)")[0].querySelectorAll("i").length === 7);
   switchTab("ca");
   switchTab("su"); await sleep(30);
   ok("9.2 Tổng quan có Thói quen", [...document.querySelectorAll("#v .card-title")].some(x => x.textContent === "Thói quen"));

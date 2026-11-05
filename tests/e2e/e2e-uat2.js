@@ -209,11 +209,11 @@ window.E2EUAT2 = async function () {
 
   // ===== I6
   openWeeklyReviewModal(CW); await sleep(20);
-  ok("I6.1 Tổng kết: thẻ Thói quen, mỗi dòng tên, số lần, chuỗi, kỷ lục", [...$("v").querySelectorAll(".hb-row")].some(r => /Đi bộ/.test(r.textContent) && /\d+\/4 lần/.test(r.textContent) && /chuỗi \d+ tuần · kỷ lục \d+/.test(r.textContent)));
+  ok("I6.1 Tổng kết: thẻ Thói quen, mỗi dòng tên, số lần, chuỗi, kỷ lục", [...$("v").querySelectorAll(".dhb-r")].some(r => /Đi bộ/.test(r.textContent) && /\d+\/4/.test(r.querySelector(".dhb-c").textContent) && /chuỗi \d+ tuần · kỷ lục \d+/.test(r.textContent)));
   switchTab("ca");
   openWeeklyReviewModal(CW - 2); await sleep(20);
-  const miss = [...$("v").querySelectorAll(".hb-row")].find(r => /Đi bộ/.test(r.textContent));
-  ok("I6.2 tuần đã qua chưa đạt: số lần màu cam", miss && miss.querySelector(".hb-miss"));
+  const miss = [...$("v").querySelectorAll(".dhb-r")].find(r => /Đi bộ/.test(r.textContent));
+  ok("I6.2 tuần đã qua chưa đạt: số lần màu cam", miss && miss.querySelector(".dhb-c.miss"));
   switchTab("ca");
   switchTab("su"); await sleep(20);
   ok("I6.3 Tổng quan có thẻ Thói quen", [...document.querySelectorAll("#v .card-title")].some(x => x.textContent === "Thói quen"));
@@ -233,7 +233,7 @@ window.E2EUAT2 = async function () {
   const b = balanceOf(CW), weakEl = document.querySelector("#v .cap-s.weak");
   ok("J3.1 tổng kết theo loại vốn: điểm cân bằng và vốn yếu nhất khớp bánh xe", document.querySelector("#v .cap-sum-h").textContent.includes("cân bằng " + b.score + "%") && weakEl && weakEl.querySelector(".cap-s-n").textContent === b.weakest.c.n, [document.querySelector("#v .cap-sum-h").textContent, weakEl && weakEl.textContent]);
   switchTab("su"); await sleep(20);
-  ok("J3.2 dưới bánh xe cùng điểm", new RegExp("Điểm cân bằng:\\s*" + b.score + "%").test($("v").textContent));
+  ok("J3.2 ô Điểm cân bằng cùng điểm", [...$("v").querySelectorAll(".dk")].some(x => /Điểm cân bằng/.test(x.textContent) && x.querySelector(".dk-v").textContent.replace(/\s/g, "") === b.score + "%"));
   switchTab("ca");
   S.caps.forEach(c => { c.tg = 0; }); draw();
   ok("J3.3 chưa đặt mục tiêu: vẫn đủ giờ từng vốn, không thanh mục tiêu, không ghi cân bằng", document.querySelectorAll("#v .cap-s").length === S.caps.length && !document.querySelector("#v .cap-s-bar") && !/cân bằng/.test(document.querySelector("#v .cap-sum-h").textContent));

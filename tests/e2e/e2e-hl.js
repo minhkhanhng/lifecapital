@@ -210,7 +210,7 @@ window.E2EHL = async function () {
   ok("9.3 chế độ Ngày có chip", !!document.querySelector(".timeline-container .hl-day"));
   calSubView = "focus"; draw();
   openWeeklyReviewModal(CW); await sleep(10);
-  ok("9.4 Tổng kết tuần có mục Sức khỏe", /Sức khỏe/.test($("v").textContent) && /Tâm trạng 5\/5/.test($("v").textContent));
+  ok("9.4 Tổng kết tuần có mục Sức khỏe", /Sức khỏe/.test($("v").textContent) && /Tâm trạng · TB 5\/5/.test($("v").textContent));
   switchTab("ca");
 
   // 10. Tab, phím tắt, nút Thêm

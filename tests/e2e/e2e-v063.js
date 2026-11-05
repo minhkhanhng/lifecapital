@@ -149,11 +149,12 @@ window.E2E63 = async function () {
   switchTab("ca"); sel = CW; draw(); await sleep(10);
   ok("S1.1 không còn popup Tổng kết trong trang", !$("reviewModalOverlay"));
   $("reviewBtn").click(); await sleep(20);
-  ok("S1.2 nút Tổng kết ở Lịch mở tab Tổng quan đúng tuần", cur === "su" && sel === CW && new RegExp("Tổng kết tuần " + (CW + 1)).test(vt()));
+  ok("S1.2 nút Tổng kết ở Lịch mở tab Tổng quan đúng tuần", cur === "su" && sel === CW && new RegExp("Giờ đã ghi · tuần " + (CW + 1)).test(vt()));
   ok("S1.3 ở Tổng quan ẩn nút Tổng kết", getComputedStyle($("reviewBtn")).display === "none");
   const kids = [...$("v").children].filter(x => x.offsetParent);
-  ok("S2.1 thứ tự: chọn tuần → giờ theo loại vốn → tổng kết → bánh xe", kids[0].classList.contains("wk-bar") && kids[1].classList.contains("cap-sum") && kids[2].classList.contains("su-ins") && /Bánh xe/.test(kids[3].textContent), kids.slice(0, 4).map(x => x.className));
-  ok("S2.2 có Điểm sáng, Gợi ý tuần tới, nút Sao chép", /Điểm sáng/.test(vt()) && /Gợi ý tuần tới/.test(vt()) && [...$("v").querySelectorAll(".su-ins button")].some(b => /Sao chép/.test(b.textContent)));
+  const dsh = kids[1] ? [...kids[1].children].map(x => x.querySelector(".dk-l, .card-title")?.textContent || x.className) : [];
+  ok("S2.1 thứ tự: chọn tuần → 4 ô số → giờ so với mục tiêu → bánh xe → xu hướng → từng ngày", kids[0].classList.contains("wk-bar") && kids[1].classList.contains("dash") && /^Giờ đã ghi/.test(dsh[0]) && dsh[1] === "Điểm cân bằng" && dsh[2] === "Đạt mục tiêu" && dsh[4] === "Giờ so với mục tiêu" && dsh[5] === "Bánh xe cuộc đời" && dsh[6] === "Xu hướng 8 tuần" && dsh[7] === "Giờ từng ngày", dsh);
+  ok("S2.2 có ô Cần bù / điểm cân bằng, gợi ý xếp buổi, nút Sao chép trên thanh chọn tuần", /Điểm cân bằng/.test(vt()) && /xếp 1–2 buổi|Mọi loại vốn đã đạt|Thêm ít nhất một buổi/.test(vt()) && [...$("v").querySelectorAll(".wk-bar button")].some(b => /Sao chép/.test(b.textContent)));
   ok("S2.3 không còn thanh 168h trùng ý", !document.querySelector("#v .progress-168-bar"));
   const emptyW = W.findIndex((_, i) => !evs(i).length);
   openWeeklyReviewModal(emptyW); await sleep(10);

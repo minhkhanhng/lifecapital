@@ -2,6 +2,22 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.7.0 · Tổng quan dạng dashboard, thanh tiêu đề cùng màu nền · 05/11/2026
+
+**Mới**
+- **Tab Tổng quan thành dashboard**: nhìn là nắm được tuần, không phải đọc từng khối chữ.
+  - 4 ô số đầu trang: *Giờ đã ghi* (kèm chênh lệch so với tuần trước và đường xu hướng 8 tuần), *Điểm cân bằng* (vòng %, kèm vốn yếu nhất), *Đạt mục tiêu* (x/y, mỗi vốn một chấm), *Cần bù nhất* (vốn thiếu nhiều giờ nhất, số giờ thiếu và gợi ý xếp buổi).
+  - **Giờ so với mục tiêu**: mỗi loại vốn một thanh theo % mục tiêu, vạch đứng = 100%, ghi rõ *Đạt* / *Thiếu Xh*.
+  - **Xu hướng 8 tuần**: cột chồng giờ mỗi tuần theo loại vốn, vạch ngang = tổng mục tiêu.
+  - **Giờ từng ngày**: cột chồng 7 ngày trong tuần, thấy ngày nào dồn việc, ngày nào trống.
+  - **Thói quen**: 7 ô mỗi thói quen (ô đặc = đã làm), số lần / mục tiêu, chuỗi và kỷ lục.
+  - **Sức khỏe**: vòng phút vận động / 150, cột ngủ và tâm trạng 7 ngày, triệu chứng nổi bật (chỉ hiển thị trên máy).
+  - Rê chuột hoặc Tab tới từng cột, thanh, ô để xem số chính xác; *Bảng số liệu* ở cuối vẫn đủ mọi con số.
+  - Nút *Sao chép* tóm tắt tuần chuyển lên thanh chọn tuần.
+
+**Đổi**
+- Thanh tiêu đề của app (và thanh Safari trên iPhone) cùng màu nền trang thay vì hồng đậm; chọn Sáng / Tối trong Cài đặt thì thanh theo lựa chọn đó.
+
 ## v0.6.9 · Phóng to bông hoa trong biểu tượng · 03/11/2026
 
 **Đổi**
