@@ -2,11 +2,19 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
-## v0.7.1 · Favicon và logo chỉ có bông hoa · 05/11/2026
+## v0.7.1 · Favicon và logo chỉ có bông hoa, chuẩn hóa giao diện · 05/11/2026
 
 **Đổi**
 - Favicon (tab trình duyệt, 16/32/48) và logo trên thanh bên chỉ còn bông hoa, nền trong suốt; hợp cả nền sáng lẫn tối.
 - Biểu tượng app trên màn hình chính iPhone/iPad và Android giữ nền hồng nhạt (iOS không hỗ trợ biểu tượng trong suốt).
+
+**Chuẩn hóa giao diện (rà soát toàn bộ các tab, 3 khổ màn hình)**
+- Thang cỡ chữ gọn còn 8 bậc: 11 / 12 / 13 / 14 / 16 / 18 / 22 / 28px (trước có 23 cỡ, gồm các cỡ lẻ 10,5 / 12,5 / 13,5…). Không còn chữ nhỏ hơn 11px.
+- Tiêu đề thống nhất: tiêu đề khung 16px đậm; tiêu đề trang dự án 18px.
+- Nút bấm: vùng bấm tối thiểu 24px trên máy tính (chuẩn WCAG 2.2 AA), 36px trên màn hình cảm ứng; nút nhỏ cao tối thiểu 28px, nút chọn chế độ Tuần/Ngày/Năm 30px.
+- Khoảng cách: thông báo Dữ liệu mẫu không còn dính sát thanh chọn tuần; nhịp 12px giữa các khối ở tab Lịch, 16px giữa các khung.
+- Bề rộng nội dung: Hộp việc, Dự án và tab Tôi cùng rộng tối đa 980px, canh giữa (trước: 760 / 980 / tràn hết).
+- Thói quen ở Tổng quan: dòng chuỗi và kỷ lục xuống dòng thay vì bị cắt.
 
 ## v0.7.0 · Tổng quan dạng dashboard, thanh tiêu đề cùng màu nền · 05/11/2026
 

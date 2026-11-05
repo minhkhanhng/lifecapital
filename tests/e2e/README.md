@@ -45,6 +45,7 @@ Tải script vào trang rồi gọi:
 - `audit2.js`: bố cục ở độ rộng hiện tại (tràn ngang, nút bị cắt, chồng nhau), kết quả ở `window.__audit`.
 - `crdrive.js` → `await __crAll()`: tương phản chữ WCAG AA (4.5:1, chữ lớn 3:1) và viền ô nhập 3:1 trên mọi tab và popup.
 - `stdrive.js` → `await __stAll()`: tìm nét viền đen/xám đậm.
+- `uiaudit.js` → `await __ui()`: thang chữ (cỡ/độ đậm), chữ dưới 11px, chiều cao nút và nút nhỏ hơn vùng bấm tối thiểu, padding khung, khoảng cách giữa các khối, chữ bị cắt (…), tràn ngang.
 
 Chạy ở cả chế độ Sáng, Tối, Bỏ kính mờ (`document.documentElement.classList.add("lite")`) và khổ điện thoại 375px.
 
