@@ -14,7 +14,7 @@ Thứ tự đề xuất (an toàn dữ liệu → bảo mật → hiệu năng �
 | 4 | gop-hai-may | A5 `gi` Google trong `markPending`, A6 gộp `bl`/`cfg` từng khóa | Opus | Xong (nhánh `claude/gop-hai-may`, E2EMRG 21/21), chưa push |
 | 5 | sw-mo-nhanh | C1 mở bản đã lưu ngay (đã đo: chờ 4,07 s), A8 trả bản cache khi 404/500, C4 giảm CORE tải trước + nén icon 512, MỚI: hiện dấu hiệu offline khi chưa đăng nhập | Opus | Xong (nhánh `claude/sw-mo-nhanh`, test_sw 23/23, E2ESW 10/10; đã đo SW thật), chưa push |
 | 6 | dong-bo-nhe | C2 đồng bộ mỗi phút + `stampBase` + `cloudPendingCount`, C3 Cài đặt | Opus | Xong (nhánh `claude/dong-bo-nhe`, E2ESYNC2 24/24, có số đo trước/sau; C2d bỏ), chưa push |
-| 7 | csp-staging | B2 CSP, B5 tự host supabase-js | Opus | DỞ: có plan + tệp `vendor/supabase-2.117.0.umd.js` (nhánh `claude/csp-staging`), chưa test/sửa; tạm dừng 2026-11-17 |
+| 7 | csp-staging | B2 CSP, B5 tự host supabase-js | Sonnet+Opus review | Xong ở local (nhánh `claude/csp-staging`: test_csp 19/19, E2ECSP 21/21, 0 vi phạm CSP ở E2E 95/95); CHƯA thử staging (đăng nhập Google/Supabase, wss, Calendar, cài PWA); chưa push |
 | 8 | truy-cap-va-cam-ung | E1 bàn phím mở hoạt động, E2 vùng bấm 36 px, E3 nhãn truy cập/focus/báo lỗi JSON/tour | Sonnet | Chưa (E2 nhìn thấy được; kiểm 390/820/1440) |
 | 9 | hieu-nang-sau | C5 ghi `lc2_mine` trễ, C6 tách tab/minify/kính mờ tự nhẹ | Opus | Chưa (rủi ro cao hơn; làm sau cùng và chỉ khi số đo gói 5–6 chưa đủ) |
 | 10 | don-nhe | D1–D6 (pick3, defCaps, bỏ `window.claude.use`, SB_URL trùng, `tick()` 2 lần, `console.warn` catch rỗng, README 30/30, `.gitignore`) + A9 nợ nhỏ nếu PO duyệt | Haiku/Sonnet | Chưa |
