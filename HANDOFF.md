@@ -1,5 +1,9 @@
 # HANDOFF · Bàn giao cho session sau (mục mới nhất ở trên)
 
+## 2026-11-17 · Gói UI ui-suc-khoe xong (commit cục bộ, chưa push)
+- Nhánh `claude/ui-suc-khoe` (worktree `.claude/worktrees/ui-suc-khoe`) từ `claude/sw-mo-nhanh`. Số liệu: CURRENT.md mục Gói UI.
+- Next step: gói 6 `dong-bo-nhe` như cũ (từ `claude/sw-mo-nhanh`); nhánh UI độc lập, gộp khi phát hành. Reviewer khác model.
+
 ## 2026-11-17 · Gói 5 xong (đã commit cục bộ, chưa push, chưa deploy)
 - Nhánh `claude/sw-mo-nhanh` (worktree `.claude/worktrees/sw-mo-nhanh`) chứa cả năm nhánh gói trước. Số liệu và số đo SW thật: CURRENT.md mục Gói 5.
 - Việc nên làm trước khi phát hành: đo lặp SW (mở bình thường a2/a3 chậm hơn bản cũ ở một lần đo), thử trên thiết bị thật (iPhone/Android: nhãn, mở nhanh, icon), chạy lại 6 bộ e2e chưa chạy sau chỉnh cuối, nâng đủ `APPV`, `VERSION`, CHANGELOG.

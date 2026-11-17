@@ -38,6 +38,7 @@ await __run("tests/e2e/e2e6.js", "E2E");   // trả về { r: [đạt, tổng], 
 | e2e-imp.js | E2EIMP | Gói 1b: nhập JSON chế độ Gộp không cắt phần/mốc/cập nhật của dự án đã có |
 | e2e-sync.js | E2ESYNC | Gói 2: cloudKeep không để lc_sync mồ côi, nhập Gộp theo id, wipeLocal xóa token Google, save() báo đúng lỗi |
 | e2e-xss.js | E2EXSS | Gói 3: tên triệu chứng tự thêm không chạy được HTML trong lời khuyên/tóm tắt; token Google chỉ ở sessionStorage (di trú token cũ) |
+| e2e-ui.js | E2EUI | Gói UI: popup Thêm thuốc/TPCN (khoảng cách, chiều cao ô, nhãn một dòng, chân đặc), tâm trạng xếp dọc, nhãn ô ngày Nhật ký, nút ✕ ≥ 36px; chạy ở 1440 và 390 |
 | e2e-mrg.js | E2EMRG | Gói 4: hai máy cùng liên kết Google không tạo hai sự kiện (markPending cấp sẵn gi); gộp bl, cfg theo từng khóa (giữ false/0, khóa lạ) |
 | e2e-sw.js | E2ESW | Gói 5: nhãn "Bản đã lưu" (#netChip) hiện/ẩn theo tin {lc:"net", ok} từ SW (gửi MessageEvent giả, không cần SW thật); bỏ qua tin lạ, không là vùng bấm, cùng hàng tiêu đề ở 1440 và 390 |
 | e2e-v063.js | E2E63 | v0.6.3: nhập Google Calendar (giả lập API), bật/tắt phần, Tổng quan gộp Tổng kết, biểu tượng tab |
