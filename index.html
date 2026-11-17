@@ -5763,7 +5763,7 @@ function importData(inputEl) {
           if (!x) S.habits.push(h); else x.ticks = { ...(h.ticks || {}), ...(x.ticks || {}) };
         });
         const sg = e => [e.t, e.s, e.c, e.m, e.h, e.r, e.pj || ""].join("|");
-        Object.keys(d.ev).forEach(k => { const L = S.ev[k] = S.ev[k] || []; d.ev[k].forEach(e => { if (!L.some(y => sg(y) === sg(e))) L.push(e); }); sortL(L); });
+        Object.keys(d.ev).forEach(k => { const L = S.ev[k] = S.ev[k] || []; d.ev[k].forEach(e => { if (!L.some(y => (e.id && y.id === e.id) || sg(y) === sg(e))) L.push(e); }); sortL(L); });
       }
       save(); draw(true);
       showToast("Đã khôi phục", "ok");
