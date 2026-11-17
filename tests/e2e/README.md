@@ -37,6 +37,7 @@ await __run("tests/e2e/e2e6.js", "E2E");   // trả về { r: [đạt, tổng], 
 | e2e-lim.js | E2ELIM | Gói 1: không cắt cứng dữ liệu |
 | e2e-imp.js | E2EIMP | Gói 1b: nhập JSON chế độ Gộp không cắt phần/mốc/cập nhật của dự án đã có |
 | e2e-sync.js | E2ESYNC | Gói 2: cloudKeep không để lc_sync mồ côi, nhập Gộp theo id, wipeLocal xóa token Google, save() báo đúng lỗi |
+| e2e-xss.js | E2EXSS | Gói 3: tên triệu chứng tự thêm không chạy được HTML trong lời khuyên/tóm tắt; token Google chỉ ở sessionStorage (di trú token cũ) |
 | e2e-v063.js | E2E63 | v0.6.3: nhập Google Calendar (giả lập API), bật/tắt phần, Tổng quan gộp Tổng kết, biểu tượng tab |
 
 Test gộp dữ liệu: mở http://localhost:8765/tests/merge-tests.html (tiêu đề trang ghi `PASS n/n`).

@@ -11,8 +11,10 @@ window.E2ESYNC = async function () {
   // Chụp TOÀN BỘ localStorage và S (bản sao sâu) để trả nguyên trạng khi xong
   const lsAll = () => { const o = {}; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); o[k] = localStorage.getItem(k); } return o; };
   const lsBefore = lsAll(), sBefore = JSON.stringify(S);
+  const ssBefore = { t: sessionStorage.getItem("gcal_token"), e: sessionStorage.getItem("gcal_token_exp") };
   const restoreAll = () => {
     Storage.prototype.setItem = origSet;
+    ["gcal_token", "gcal_token_exp"].forEach((k, i) => { const v = i ? ssBefore.e : ssBefore.t; if (v === null) sessionStorage.removeItem(k); else sessionStorage.setItem(k, v); });
     Object.keys(lsAll()).forEach(k => { if (!(k in lsBefore)) localStorage.removeItem(k); });
     Object.keys(lsBefore).forEach(k => { if (localStorage.getItem(k) !== lsBefore[k]) localStorage.setItem(k, lsBefore[k]); });
     S = JSON.parse(sBefore); lastRaw = lsGet("lc2"); saveFailed = false; draw(true);
@@ -66,10 +68,10 @@ window.E2ESYNC = async function () {
   // ---- A4: wipeLocal xóa cả token Google và cờ liên quan
   const gKeys = snapKeys(["gcal_token", "gcal_token_exp", "gcal_linked", "lc_gx_seen"]);
   try {
-    localStorage.setItem("gcal_token", "tok"); localStorage.setItem("gcal_token_exp", "9999999999999");
+    sessionStorage.setItem("gcal_token", "tok"); sessionStorage.setItem("gcal_token_exp", "9999999999999");
     localStorage.setItem("gcal_linked", "1"); localStorage.setItem("lc_gx_seen", "{}");
     wipeLocal();
-    ok("S4.1 wipeLocal xóa token, hạn, cờ liên kết, lc_gx_seen", ["gcal_token", "gcal_token_exp", "gcal_linked", "lc_gx_seen"].every(k => lsGet(k) === null), snapKeys(["gcal_token", "gcal_token_exp", "gcal_linked", "lc_gx_seen"]));
+    ok("S4.1 wipeLocal xóa token, hạn, cờ liên kết, lc_gx_seen", ["gcal_token", "gcal_token_exp", "gcal_linked", "lc_gx_seen"].every(k => lsGet(k) === null) && sessionStorage.getItem("gcal_token") === null && sessionStorage.getItem("gcal_token_exp") === null, snapKeys(["gcal_token", "gcal_token_exp", "gcal_linked", "lc_gx_seen"]));
     ok("S4.2 wipeLocal vẫn đặt lại dữ liệu", len(S.tasks) === 0 && Object.keys(S.ev).length === 0, [len(S.tasks), Object.keys(S.ev).length]);
   } catch (e) { ok("S4.err", false, String(e)); }
   finally { restoreAll(); }

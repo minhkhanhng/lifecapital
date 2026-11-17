@@ -12,10 +12,10 @@ window.E2E63 = async function () {
   const LS = k => localStorage.getItem(k);
 
   // ===== G: Nhập từ Google Calendar
-  ["gcal_token", "gcal_token_exp", "gcal_linked", "lc_gx_seen"].forEach(k => localStorage.removeItem(k));
+  ["gcal_token", "gcal_token_exp", "gcal_linked", "lc_gx_seen"].forEach(k => { localStorage.removeItem(k); sessionStorage.removeItem(k); });
   switchTab("ca"); calSubView = "focus"; sel = CW; draw(); await sleep(10);
   ok("G1.1 chưa liên kết Google: không có nút Nhập GCal", !document.querySelector(".gx-btn"));
-  localStorage.setItem("gcal_token", "TEST"); localStorage.setItem("gcal_token_exp", String(Date.now() + 3600e3)); localStorage.setItem("gcal_linked", "1");
+  sessionStorage.setItem("gcal_token", "TEST"); sessionStorage.setItem("gcal_token_exp", String(Date.now() + 3600e3)); localStorage.setItem("gcal_linked", "1");
   S.cfg.gcalAutoSync = true; draw(); await sleep(10);
   ok("G1.2 đã liên kết: có nút Nhập GCal ở hàng chọn tuần, có biểu tượng", !!document.querySelector(".wk-bar .gx-btn .ico"));
   calSubView = "year"; draw(); await sleep(10);
@@ -124,22 +124,22 @@ window.E2E63 = async function () {
   // phiên hết hạn
   let inited = 0;
   window.initGCalTokenClient = initGCalTokenClient = () => { inited++; return false; };
-  localStorage.setItem("gcal_token_exp", String(Date.now() - 1000));
+  sessionStorage.setItem("gcal_token_exp", String(Date.now() - 1000));
   await gcalImportWeek(CW); await sleep(10);
   ok("G13.1 token hết hạn: xin lại quyền ngay trong lần bấm, không gọi API", inited === 1 && !$("gxOverlay").classList.contains("open"));
-  localStorage.setItem("gcal_token_exp", String(Date.now() + 3600e3));
+  sessionStorage.setItem("gcal_token_exp", String(Date.now() + 3600e3));
   resp = () => ({ ok: false, status: 401, data: null });
   await gcalImportWeek(CW); await sleep(10);
-  ok("G13.2 Google báo 401: xóa token, báo kết nối lại, không mở popup", !LS("gcal_token") && !$("gxOverlay").classList.contains("open") && [...document.querySelectorAll(".toast")].some(t => /hết hạn/.test(t.textContent)));
-  localStorage.setItem("gcal_token", "TEST");
+  ok("G13.2 Google báo 401: xóa token, báo kết nối lại, không mở popup", !sessionStorage.getItem("gcal_token") && !$("gxOverlay").classList.contains("open") && [...document.querySelectorAll(".toast")].some(t => /hết hạn/.test(t.textContent)));
+  sessionStorage.setItem("gcal_token", "TEST");
   resp = () => ({ ok: false, status: 0, data: null });
   await gcalImportWeek(CW); await sleep(10);
   ok("G13.3 lỗi mạng: báo thử lại, không mở popup", !$("gxOverlay").classList.contains("open") && [...document.querySelectorAll(".toast")].some(t => /Chưa đọc được/.test(t.textContent)));
   resp = () => ({ ok: true, status: 200, data: { items } });
-  localStorage.removeItem("gcal_linked"); localStorage.removeItem("gcal_token");
+  localStorage.removeItem("gcal_linked"); sessionStorage.removeItem("gcal_token");
   await gcalImportWeek(CW); await sleep(10);
   ok("G13.4 chưa liên kết: nhắc kết nối trong Cài đặt", [...document.querySelectorAll(".toast")].some(t => /Kết nối Google Calendar trong Cài đặt/.test(t.textContent)));
-  localStorage.setItem("gcal_token", "TEST"); localStorage.setItem("gcal_linked", "1");
+  sessionStorage.setItem("gcal_token", "TEST"); localStorage.setItem("gcal_linked", "1");
   openSettingsModal(); setSecToggle("gc", true); renderSettingsModal(); await sleep(10);
   ok("G16.1 Cài đặt > Google Calendar: có nút Nhập tuần đang xem", [...$("settingsSheetBody").querySelectorAll("button")].some(b => b.textContent.trim() === "Nhập tuần " + (sel + 1)));
   closeSettingsModal();
@@ -234,7 +234,7 @@ window.E2E63 = async function () {
   // dọn
   noAnim.remove();
   window.gcalFetch = gcalFetch = fetch0; window.initGCalTokenClient = initGCalTokenClient = init0;
-  ["gcal_token", "gcal_token_exp", "gcal_linked", "lc_gx_seen"].forEach(k => localStorage.removeItem(k));
+  ["gcal_token", "gcal_token_exp", "gcal_linked", "lc_gx_seen"].forEach(k => { localStorage.removeItem(k); sessionStorage.removeItem(k); });
   window.ask = ask0;
   document.querySelectorAll(".toast").forEach(t => t.remove());
   switchTab("ca");

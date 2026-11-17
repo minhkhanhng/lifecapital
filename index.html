@@ -3755,8 +3755,8 @@ let gcalConfigErr = "", gcalLastFail = "";
 
 function getGCalToken() {
   try {
-    const token = localStorage.getItem("gcal_token");
-    const exp = parseInt(localStorage.getItem("gcal_token_exp") || "0", 10);
+    const token = sessionStorage.getItem("gcal_token");
+    const exp = parseInt(sessionStorage.getItem("gcal_token_exp") || "0", 10);
     if (!token) return null;
     if (exp && Date.now() > exp) {
       return null;
@@ -3773,6 +3773,18 @@ function isGCalConnected() {
 
 // Đã từng kết nối (token có thể đã hết hạn). Người dùng cũ chưa có cờ này thì suy ra từ token đã lưu.
 try { if (localStorage.getItem("gcal_token") && !localStorage.getItem("gcal_linked")) localStorage.setItem("gcal_linked", "1"); } catch (e) {}
+// Token Google chỉ nằm ở sessionStorage (hết khi đóng tab). Di trú token cũ ở localStorage nếu còn hạn, rồi xóa bản cũ; giữ cờ gcal_linked.
+function gcalMigrateToken() {
+  try {
+    const t = localStorage.getItem("gcal_token"), exp = localStorage.getItem("gcal_token_exp");
+    if (t && !sessionStorage.getItem("gcal_token")) {
+      const e = parseInt(exp || "0", 10);
+      if (!e || Date.now() <= e) { sessionStorage.setItem("gcal_token", t); if (exp) sessionStorage.setItem("gcal_token_exp", exp); }
+    }
+    localStorage.removeItem("gcal_token"); localStorage.removeItem("gcal_token_exp");
+  } catch (e) {}
+}
+gcalMigrateToken();
 function gcalLinked() {
   try { return localStorage.getItem("gcal_linked") === "1"; } catch (e) { return false; }
 }
@@ -3780,6 +3792,7 @@ function gcalActive() {
   return gcalLinked() && !(S.cfg && S.cfg.gcalAutoSync === false);
 }
 function clearGCalToken() {
+  try { sessionStorage.removeItem("gcal_token"); sessionStorage.removeItem("gcal_token_exp"); } catch (e) {}
   try { localStorage.removeItem("gcal_token"); localStorage.removeItem("gcal_token_exp"); } catch (e) {}
 }
 
@@ -3825,8 +3838,8 @@ function initGCalTokenClient(onSuccess) {
         if (resp.access_token) {
           gcalConfigErr = "";
           const expTime = Date.now() + (parseInt(resp.expires_in, 10) || 3600) * 1000;
-          localStorage.setItem("gcal_token", resp.access_token);
-          localStorage.setItem("gcal_token_exp", String(expTime));
+          sessionStorage.setItem("gcal_token", resp.access_token);
+          sessionStorage.setItem("gcal_token_exp", String(expTime));
           localStorage.setItem("gcal_linked", "1");
           showToast("Đã kết nối Google Calendar", "ok");
           renderSettingsModal();
@@ -3858,7 +3871,7 @@ function connectGoogleCalendar() {
 
 function disconnectGoogleCalendar() {
   let token = null;
-  try { token = localStorage.getItem("gcal_token"); } catch (e) {}
+  try { token = sessionStorage.getItem("gcal_token"); } catch (e) {}
   try { if (token && window.google && google.accounts && google.accounts.oauth2) google.accounts.oauth2.revoke(token, () => {}); } catch (e) {}
   clearGCalToken();
   try { localStorage.removeItem("gcal_linked"); } catch (e) {}
@@ -9593,11 +9606,11 @@ function hlAdvice() {
   last7.forEach(k => Object.keys((days[k] || {}).sy || {}).forEach(s => { freq[s] = (freq[s] || 0) + 1; }));
   Object.keys(freq).sort((a, b) => freq[b] - freq[a]).forEach(s => {
     const tip = HL_TIP[s];
-    if (freq[s] >= 3) add("warn", `${hlSyName(s)} ${freq[s]}/7 ngày qua`, (tip ? tip[0] + " " + tip[1] : "Theo dõi thêm; nếu kéo dài hoặc nặng hơn, nên đi khám."), "sy");
+    if (freq[s] >= 3) add("warn", `${esc(hlSyName(s))} ${freq[s]}/7 ngày qua`, (tip ? tip[0] + " " + tip[1] : "Theo dõi thêm; nếu kéo dài hoặc nặng hơn, nên đi khám."), "sy");
   });
   const sev = {};
   hlRange(3).forEach(k => Object.entries((days[k] || {}).sy || {}).forEach(([s, v]) => { if (v === 3) sev[s] = (sev[s] || 0) + 1; }));
-  Object.keys(sev).filter(s => sev[s] >= 2).forEach(s => add("urgent", `${hlSyName(s)} mức nặng ${sev[s]} ngày gần đây`, `Triệu chứng nặng kéo dài nên được bác sĩ khám. ${HL_TIP[s] ? HL_TIP[s][1] : "Nếu kèm khó thở, đau ngực, lơ mơ: gọi 115."}`, "sy"));
+  Object.keys(sev).filter(s => sev[s] >= 2).forEach(s => add("urgent", `${esc(hlSyName(s))} mức nặng ${sev[s]} ngày gần đây`, `Triệu chứng nặng kéo dài nên được bác sĩ khám. ${HL_TIP[s] ? HL_TIP[s][1] : "Nếu kèm khó thở, đau ngực, lơ mơ: gọi 115."}`, "sy"));
   const fever = hlRange(5).filter(k => ((days[k] || {}).sy || {}).sot).length;
   if (fever >= 3) add("urgent", `Sốt ${fever} trong 5 ngày qua`, "Sốt trên 3 ngày nên đi khám để tìm nguyên nhân. Sốt từ 39°C, khó thở, phát ban hoặc lơ mơ: đi khám ngay.", "sy");
   // Liên hệ với lịch: triệu chứng hay vào ngày làm việc nhiều, ngày ngủ ít
@@ -9609,10 +9622,10 @@ function hlAdvice() {
     const other = logged.filter(k => !ks.includes(k));
     if (other.length >= 3) {
       const a = hlMean(ks.map(k => hlCapH(k, "tc"))), b = hlMean(other.map(k => hlCapH(k, "tc")));
-      if (a - b >= 2) add("info", `${hlSyName(s)} hay vào ngày làm việc nhiều`, `30 ngày qua: ngày có ${hlSyName(s).toLowerCase()} trung bình ${r1(a)}h cho ${esc(CM("tc").n)}, ngày khác ${r1(b)}h. Thử chia việc dài thành khối 90 phút, nghỉ 10 phút giữa các khối.`, "sy");
+      if (a - b >= 2) add("info", `${esc(hlSyName(s))} hay vào ngày làm việc nhiều`, `30 ngày qua: ngày có ${esc(hlSyName(s).toLowerCase())} trung bình ${r1(a)}h cho ${esc(CM("tc").n)}, ngày khác ${r1(b)}h. Thử chia việc dài thành khối 90 phút, nghỉ 10 phút giữa các khối.`, "sy");
     }
     const sa = ks.map(k => days[k].sleep).filter(x => x != null), sb = other.map(k => days[k].sleep).filter(x => x != null);
-    if (sa.length >= 3 && sb.length >= 3 && hlMean(sb) - hlMean(sa) >= 1) add("info", `${hlSyName(s)} hay đi cùng đêm ngủ ít`, `Ngày có ${hlSyName(s).toLowerCase()} bạn ngủ trung bình ${r1(hlMean(sa))}h, ngày khác ${r1(hlMean(sb))}h. Ưu tiên ngủ đủ ít nhất 7 tiếng.`, "sl");
+    if (sa.length >= 3 && sb.length >= 3 && hlMean(sb) - hlMean(sa) >= 1) add("info", `${esc(hlSyName(s))} hay đi cùng đêm ngủ ít`, `Ngày có ${esc(hlSyName(s).toLowerCase())} bạn ngủ trung bình ${r1(hlMean(sa))}h, ngày khác ${r1(hlMean(sb))}h. Ưu tiên ngủ đủ ít nhất 7 tiếng.`, "sl");
   });
   // Giấc ngủ 7 ngày
   const sl = last7.map(k => (days[k] || {}).sleep).filter(x => x != null);
@@ -9675,7 +9688,7 @@ function hlAdvice() {
   else if (act >= 150) add("good", `Đủ ${act} phút vận động tuần này`, "Đạt khuyến nghị 150 phút mỗi tuần của WHO. Thêm 2 buổi tập sức mạnh mỗi tuần nếu có thể.", "ac");
   const rd = hlReady();
   if (rd && rd.v < 50) add("warn", `Điểm Sẵn sàng hôm nay ${rd.v}: nên nhẹ nhàng`, `Do ${rd.why.slice(1).join(", ") || rd.why[0]}. Xếp hết hôm nay chỉ đặt tối đa một nửa số giờ mỗi ngày; dời việc nặng sang mai nếu được, ngủ sớm hơn 30 phút.`, "ac");
-  hlPms().forEach(x => add("info", `${hlSyName(x.s)} thường đến trước kỳ kinh`, `Có trong 5 ngày trước kỳ kinh ở ${x.hit}/${x.of} kỳ gần đây. Chuẩn bị trước vài ngày: ngủ đủ, bớt muối và cà phê; ${HL_TIP[x.s] ? HL_TIP[x.s][0].charAt(0).toLowerCase() + HL_TIP[x.s][0].slice(1) : "theo dõi thêm."}`, "cy"));
+  hlPms().forEach(x => add("info", `${esc(hlSyName(x.s))} thường đến trước kỳ kinh`, `Có trong 5 ngày trước kỳ kinh ở ${x.hit}/${x.of} kỳ gần đây. Chuẩn bị trước vài ngày: ngủ đủ, bớt muối và cà phê; ${HL_TIP[x.s] ? HL_TIP[x.s][0].charAt(0).toLowerCase() + HL_TIP[x.s][0].slice(1) : "theo dõi thêm."}`, "cy"));
   // Nhắc ghi
   if (Object.keys(days).length && !hlRange(3).some(k => days[k])) add("info", "3 ngày chưa ghi nhật ký", "Ghi 30 giây mỗi tối: tâm trạng, giấc ngủ, triệu chứng. Càng đều, gợi ý càng đúng.", "lg");
   const order = { urgent: 0, warn: 1, info: 2, good: 3 };
@@ -9814,7 +9827,7 @@ function hlSummary(k) {
   if (d.mood) parts.push(`Tâm trạng ${HL_MOOD[d.mood].toLowerCase()}`);
   if (d.sleep != null) parts.push(`ngủ ${r1(d.sleep)}h`);
   const sy = Object.entries(d.sy || {});
-  if (sy.length) parts.push(sy.map(([s, v]) => `${hlSyName(s).toLowerCase()} (${HL_LV[v].toLowerCase()})`).join(", "));
+  if (sy.length) parts.push(sy.map(([s, v]) => `${esc(hlSyName(s).toLowerCase())} (${HL_LV[v].toLowerCase()})`).join(", "));
   if (d.flow) parts.push(`hành kinh ${HL_FLOW[d.flow].toLowerCase()}`);
   const mk = Object.keys(d.meds || {});
   if (mk.length) parts.push(mk.map(id => { const m = (S.health.meds || []).find(x => x.id === id); return m ? esc(m.n) : ""; }).filter(Boolean).join(", "));
