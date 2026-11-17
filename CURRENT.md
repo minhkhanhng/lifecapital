@@ -34,7 +34,8 @@ Còn lại:
 
 ## Gói 1 mat-du-lieu (nhánh `claude/mat-du-lieu`, chưa push)
 - Commit `f3bc0bc` test đỏ E2ELIM (9/12 đỏ), `3cd4c61` bỏ ngưỡng cắt, thay bằng `SANE_MAX = 100000` (`index.html:2389`). Kiểm lại bởi fable (trước khi PO dừng dùng fable): E2ELIM 12/12; 14 bộ cũ 832/832; tổng 844/844; merge-tests 30/30; test_ai_plan 12/12; node --check đạt. Chưa chạy mobile 390×844.
-- Ngoài phạm vi, đã tách thành gói 1b: `importData` chế độ Gộp còn cắt `secs/ms/ups` dự án đã có ở 20/50/30 (`index.html:~5743`).
+- Gói 1b xong trên nhánh `claude/importdata-khong-cat` (commit test đỏ 3529600, sửa ade600b, test an toàn hơn ở commit kế tiếp): E2EIMP 5/5, E2ELIM 12/12, E2E 95/95, E2EUAT2 71/71, E2E63 77/77, merge 30/30 (số do implementer báo; E2EIMP chạy lại bởi tôi sau khi sửa test). Reviewer Haiku báo test ghi lc2 vào localStorage → đã sửa để khôi phục lc2/lc2_mine; ý kiến "chế độ Gộp không có hộp xác nhận" của Haiku sai (có `ask` "Gộp dữ liệu?"), giữ bước bấm xác nhận.
+- Ngoài phạm vi gói 1, đã tách thành gói 1b: `importData` chế độ Gộp còn cắt `secs/ms/ups` dự án đã có ở 20/50/30 (`index.html:~5743`).
 - Fable đo thêm (docs/review/2026-11-17-fable-sw-offline.md): C1 xác nhận (SW chờ tới 4,07 s khi mạng chậm/treo), A8 xác nhận (404/500 → trang lỗi dù có cache), cache cài đầu 1.354.082 B, A6 xác nhận, A5 xác nhận cơ chế; mục mới: offline không có dấu hiệu nào khi chưa đăng nhập.
 
 ## Quyết định PO (2026-11-17)
