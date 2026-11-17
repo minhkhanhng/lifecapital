@@ -47,6 +47,7 @@ await __run("tests/e2e/e2e6.js", "E2E");   // trả về { r: [đạt, tổng], 
 | e2e-csp.js | E2ECSP | Gói 7: tự host supabase-js (sbLibLoad: nạp một lần, lỗi thì thử lại được, createClient giả, không gọi mạng) và CSP thật. CHẠY DƯỚI `python3 tests/csp/serve.py <cổng>` (gắn header CSP lấy từ vercel.json): 0 vi phạm khi chạy các luồng chính, và CSP chặn script/fetch/base/frame/object lạ. `E2ECSP("E5")` / `E2ECSP("E2")` chạy riêng từng nhóm. Bộ cũ (E2E...) cũng chạy được dưới serve.py; riêng E2EUX cần `--test-eval` vì tự `eval()` tiện ích đo |
 | perf-sync.js | PERFSYNC | Gói 6: bộ ĐO (không đạt/trượt) ở ~11k hoạt động: tick, cloudPendingCount, cloudSync, save, renderSettingsModal. Gọi thẳng `await PERFSYNC()` (có thể lâu hơn 40 s của `__run`) |
 | e2e-v063.js | E2E63 | v0.6.3: nhập Google Calendar (giả lập API), bật/tắt phần, Tổng quan gộp Tổng kết, biểu tượng tab |
+| e2e-uiall.js | E2EUIALL | Gói 12 UI toàn bộ (hướng A "Hôm nay trước"): không tràn ngang, thang chữ 8 bậc và độ đậm 400–700 mọi tab; khối Hôm nay (lời chào, 3 vòng, Tiếp theo), ô Tuần này ở thanh bên, lưới tuần 7 cột từ 760 px, một nút tô màu ở đầu trang, Thói quen dạng hàng + thanh tiến độ, canh trái nhất quán, vùng bấm 36 px cảm ứng, tối. Chạy ở 1440, 820, 375 (cảm ứng) |
 
 Test CSP tĩnh (Node, không trình duyệt): `node tests/csp/test_csp.js` (in `OK n/n`).
 

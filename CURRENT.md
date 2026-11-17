@@ -1,4 +1,4 @@
-# CURRENT · Hiện trạng (cập nhật 2026-11-17)
+# CURRENT · Hiện trạng (cập nhật 2026-11-18)
 
 ## Bản đang chạy (đã xác nhận)
 - **PRODUCTION = v0.8.0** (phát hành 2026-11-17 theo lệnh "deploy chính thức" của PO). https://lifecapital.vercel.app: `sw.js` = `lc-0.8.0`, `APPV = 72; // v0.8.0` (đối chiếu bằng GET chỉ đọc sau deploy, Vercel `success`); `/api/ai_plan` 200; `vendor/supabase-2.117.0.umd.js` tải được, SHA-256 `7b9e9c64…388645` khớp tệp trong repo; mã không còn nạp `supabase-js` từ jsDelivr; header có `content-security-policy` (CSP mới), HSTS, `X-Frame-Options: DENY`, `X-Content-Type-Options`; icon 512/apple-touch/favicon giống hệt tệp trong repo.
@@ -113,6 +113,12 @@ Còn lại:
 - Haiku chạy lại SAU sửa cuối (cổng 8826, 1440): E2E 95/95, UAT2 71, UAT3 63, HB 34, SYNC 14, SYNC2 24, MRG 21, SIG 34, LIM 12, IMP 5, UX 124, UI 16/16, E2ESUB 48/48 (cả 390); test_csp 19/19; merge-tests PASS 35/35. Haiku báo lỗi console chỉ qua mảng errs của runner (rỗng), chưa đọc console trình duyệt.
 - Lưu ý test: popup có hiệu ứng scale; khung trình duyệt ẩn thì nó kẹt ở 0.95, nên đo vùng bấm bằng `offsetHeight`. Ngày test lấy theo hôm nay để thẻ hiện trong tuần đang xem.
 - Chưa: chạy ở 820, E2E phần khác ở 390, thiết bị thật; nhập JSON thật bằng `importData` (chỉ kiểm qua `cleanState`).
+
+## Gói 12 ui-toan-bo (nhánh `claude/ui-toan-bo`, từ `claude/ui-suc-khoe-2` @ `f659602`, chưa push, chưa deploy)
+- PO chọn hướng A "Hôm nay trước" (3 mockup A/B/C). Báo cáo: `docs/review/2026-11-18-ui-toan-bo-ra-soat.md`; plan: `docs/superpowers/plans/2026-11-18-ui-toan-bo.md`. Chỉ CSS/HTML mẫu/microcopy; không đổi dữ liệu, nghiệp vụ, đồng bộ, SW, CSP; `APPV`/`VERSION`/CHANGELOG giữ nguyên.
+- Kiểm (chạy 2026-11-18 sau thay đổi code cuối, Chrome headless profile tạm, máy chủ `127.0.0.1:8840`, `localStorage.clear()` + `loadDemo()` mỗi bộ): 1440: E2E 95, E2E61 41, E2ESCHED 28, E2EHB 34, E2EUAT2 72, E2EHL 85, E2EHL2 53, E2EUAT3 63, E2EUX 124, E2EAI 44, E2EPLAN 46, E2EDASH 36, E2EPJL 36, E2ELIM 12, E2EIMP 5, E2ESYNC 14, E2EXSS 14, E2ESIG 34, E2EUI 18, E2EMRG 21, E2EA11Y 41, E2ESW 10, E2ESYNC2 24, E2E63 77, E2ETABHB 32, E2ESUB 48, E2EUIALL 32 (mới). 820 và 375 (cảm ứng): E2EUIALL 24/28, E2EUI 18, E2EA11Y 44, E2ETABHB 34, E2EHB 34, E2EUAT2 72. Tổng 1595/1595, 0 lỗi trang. merge-tests PASS 35/35; test_csp 19/19; test_sw 23/23; `node --check` khối script chính hợp lệ.
+- Test cũ đã sửa vì kiểm thiết kế cũ (giữ ý nghĩa): E2EUX V2.13 (7 cột từ 760 px thay 960), V3.12 (Tổng kết là nút phụ không tô màu thay ô-liu); E2EA11Y bảng BASE chiều rộng ở 1440/820 đo lại theo lưới 7 cột (chiều cao, quy tắc không đổi); E2ETABHB H2 bỏ qua khối Hôm nay khi tìm chữ "Thói quen" (E2EUIALL B7b kiểm khối này không có nút tích).
+- CHƯA KIỂM: thiết bị thật; chế độ "Bỏ kính mờ" (lite); `crdrive.js`/`stdrive.js` (tương phản đầy đủ) chưa chạy cho khối mới; tab Tổng quan, Tôi, popup, tour chỉ đổi rất ít (không có lát riêng); lời chào phụ thuộc giờ máy.
 
 ## Quyết định PO (2026-11-17)
 - Từ 2026-11-17: không dùng fable nữa; ưu tiên model ít tốn token nhất mà vẫn hiệu quả (Haiku việc cơ học, Sonnet code, reviewer khác model với implementer).

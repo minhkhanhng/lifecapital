@@ -22,6 +22,7 @@ Thứ tự đề xuất (an toàn dữ liệu → bảo mật → hiệu năng �
 | 9 | hieu-nang-sau | C5 ghi `lc2_mine` trễ, C6 tách tab/minify/kính mờ tự nhẹ | Opus | Chưa (rủi ro cao hơn; làm sau cùng và chỉ khi số đo gói 5–6 chưa đủ) |
 | 10 | don-nhe | D1–D6 (pick3, defCaps, bỏ `window.claude.use`, SB_URL trùng, `tick()` 2 lần, `console.warn` catch rỗng, README 30/30, `.gitignore`) + A9 nợ nhỏ nếu PO duyệt | Haiku/Sonnet | Chưa |
 | 11 | subtask | Việc con (`subs`) cho hoạt động trên lịch: popup thu gọn, chip n/m, gộp hai máy theo id | Sonnet (gộp dữ liệu: reviewer Opus) | Xong ở local (nhánh `claude/subtask`: E2ESUB 42/42 ở 1440 và 390, các bộ cũ xanh); chưa push/gộp |
+| 12 | ui-toan-bo | Rà và tối ưu toàn bộ UI, hướng A "Hôm nay trước" (PO chọn 2026-11-18): khối Hôm nay ở Lịch, ô Tuần này ở thanh bên, Thói quen dạng hàng + tiến độ, tuần 7 cột, một nút chính, canh trái, gọn mobile | Opus (reviewer Sonnet) | Xong ở local (nhánh `claude/ui-toan-bo` từ `claude/ui-suc-khoe-2`; E2EUIALL đỏ 8/31 → xanh 32/32 ở 1440, 24/24 ở 820, 28/28 ở 375; mọi bộ cũ xanh), chưa push |
 
 ## Nợ nhỏ chưa duyệt
 A9 (`tt()` 23:59, `clearDemo`, nhập Ghi đè mồ côi sự kiện Google, `lc_state_hist`, giờ máy sai, báo số bị bỏ khi nhập), E4 (cỡ chữ px, toast chồng, chữ "…", 820 px chuột), tách `index.html` (chưa có lợi đo được), `tests/e2e` chưa có lệnh một dòng/CI.

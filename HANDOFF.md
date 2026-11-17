@@ -1,5 +1,11 @@
 # HANDOFF · Bàn giao cho session sau (mục mới nhất ở trên)
 
+## 2026-11-18 · Gói 12 ui-toan-bo xong ở local (hướng A "Hôm nay trước", PO chọn; chưa push, chưa deploy)
+- Nhánh `claude/ui-toan-bo` (worktree `.claude/worktrees/ui-toan-bo`) từ `claude/ui-suc-khoe-2` (`f659602`, cũng chưa push). Số liệu: CURRENT.md mục Gói 12.
+- Thay đổi nhìn thấy được: khối Hôm nay đầu tab Lịch (tuần hiện tại, Tuần/Ngày): lời chào theo giờ + tên gọi, 3 vòng (giờ hôm nay / mục tiêu tuần chia 7, thói quen x/y gồm cả tự đếm, tâm trạng) bấm được, ô Tiếp theo; ô Tuần này (vòng điểm cân bằng, thói quen x/y) ở đáy thanh bên desktop, bấm mở Tổng quan; tab Thói quen thành danh sách hàng + thanh tiến độ "x/y xong" ("Xong hết…" khi đủ), ô tích chưa tích là vòng rỗng, bỏ nút Thêm trùng ở đầu trang; lưới tuần 7 cột khi khung ≥ 760 px (tên hoạt động 2 dòng); "Tổng kết" thành nút phụ, "+ Thêm" là nút chính duy nhất; dải Dữ liệu mẫu một dòng; Hộp việc/Dự án/Tôi canh trái cùng tiêu đề, ô Ghi nhanh cùng bề rộng; điện thoại: hàng tuần một dòng, Giờ theo loại vốn một hàng cuộn ngang, chip Dự án 36 px, ◀ ▶ 36 px; tâm trạng desktop ≤ 168 px; cỡ 11.05 px ở bảng mục tiêu về 11 px.
+- Công cụ: ảnh và test chạy bằng Chrome headless qua CDP (script ở scratchpad session, không trong repo); bộ E2E chạy được headless (lần mốc đầu báo lỗi "target navigated" một lần, chạy lại xanh).
+- Next step: PO xem ảnh trước/sau rồi quyết: gộp vào nhánh phát hành và nâng phiên bản (`APPV`, `VERSION`, CHANGELOG) hay chỉnh thêm; thử trên iPhone thật. Không dùng fable.
+
 ## 2026-11-18 · UI tab Sức khỏe › Tóm tắt gọn hơn (Hướng A, PO chọn) trên `claude/ui-suc-khoe-2` (từ `main` = v0.8.0; chưa push, chưa deploy)
 - Chỉ CSS/HTML, không đổi logic hay dữ liệu: 5 nút tâm trạng một hàng khi khung ≥ 600 px (dưới đó vẫn dọc, cao 40 px); thẻ "Điểm nổi bật" và "Điều ảnh hưởng tới bạn" trống thu thành một dòng mảnh (cả hai trống gộp một dòng), có nội dung giữ như cũ; "Đã ghim" 3 cột ≥ 900 px, 2 cột dưới đó (6 ô thành 3+3 hoặc 2×3, hết ô lẻ).
 - Test: `E2EUI` đỏ 15/18 (U9.1–U9.3) rồi xanh 18/18 ở 1440 và 375; E2EHL 85, E2EHL2 53, E2EUAT3 63, E2EUX 124, E2E 95, E2EDASH 36, E2EA11Y 41 (Haiku báo, 1440). Tôi tự đo bằng trình duyệt sau thay đổi cuối: 1440 ô ghim 3+3, tâm trạng một hàng 40 px; 820 ô ghim 2×3, tâm trạng một hàng, không tràn ngang; 375 không tràn ngang, tâm trạng dọc, ô ghim 2 cột.

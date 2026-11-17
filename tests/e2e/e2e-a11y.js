@@ -11,7 +11,8 @@ window.E2EA11Y = async function () {
   // Chốt an toàn (rule.md §12): chỉ chạy khi trang đang là dữ liệu thử của loadDemo()
   if (!Object.values(S.ev || {}).some(L => (L || []).some(e => e && e.demo))) return { pass: 0, total: 1, fail: [{ id: "A0", pass: false, info: "Trang không phải dữ liệu thử: chạy loadDemo() trước" }] };
   if (typeof snapshotDaily === "function") snapshotDaily();
-  const BASE = { 1440: { add: [177, 28], hl: [193, 24], hv: [24, 24] }, 820: { add: [172, 28], hl: [188, 24], hv: [24, 24] }, 375: { add: [333, 28], hl: [349, 24], hv: [24, 24] } };
+  // 2026-11-18 (hướng A): lưới tuần 7 cột khi khung ≥ 760px nên CHIỀU RỘNG ở 1440/820 đo lại theo cột mới (177→88, 193→104 ở 1440; 172→85, 188→101 ở 820); chiều cao và quy tắc không đổi.
+  const BASE = { 1440: { add: [88.3, 28], hl: [104.3, 24], hv: [24, 24] }, 820: { add: [85.4, 28], hl: [101.4, 24], hv: [24, 24] }, 375: { add: [333, 28], hl: [349, 24], hv: [24, 24] } };
   const lsAll = st => { const o = {}; for (let i = 0; i < st.length; i++) { const k = st.key(i); o[k] = st.getItem(k); } return o; };
   const putAll = (st, o) => { Object.keys(lsAll(st)).forEach(k => { if (!(k in o)) st.removeItem(k); }); Object.entries(o).forEach(([k, v]) => { if (st.getItem(k) !== v) st.setItem(k, v); }); };
   const lsBefore = lsAll(localStorage), ssBefore = lsAll(sessionStorage), sBefore = JSON.stringify(S);

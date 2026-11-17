@@ -33,7 +33,7 @@ window.E2ETABHB = async function () {
     // --- Tab Lịch gọn
     for (const sv of ["focus", "timeline"]) {
       calSubView = sv; switchTab("ca"); await sleep(30);
-      ok(`H2.${sv} tab Lịch (${sv}) không còn thanh thói quen`, !document.querySelector("#v .hb-strip, #v .hb-chip, #v .hb-tick") && !/THÓI QUEN/i.test(document.querySelector("#v").textContent.slice(0, 4000).replace(/Thói quen:/g, "")) , document.querySelector("#v .hb-strip") && "còn .hb-strip");
+      ok(`H2.${sv} tab Lịch (${sv}) không còn thanh thói quen (khối Hôm nay chỉ ghi số x/y, hướng A)`, !document.querySelector("#v .hb-strip, #v .hb-chip, #v .hb-tick") && !/THÓI QUEN/i.test((v => { v.querySelectorAll(".today-hero").forEach(x => x.remove()); return v.textContent; })(document.querySelector("#v").cloneNode(true)).slice(0, 4000).replace(/Thói quen:/g, "")) , document.querySelector("#v .hb-strip") && "còn .hb-strip");
     }
     calSubView = "focus";
     switchTab("ca"); await sleep(30);
