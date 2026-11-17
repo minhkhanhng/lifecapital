@@ -7388,11 +7388,12 @@ const DEV = (() => {
 function cloudMeta() { try { return JSON.parse(localStorage.getItem("lc_sync") || "null"); } catch (e) { return null; } }
 function cloudBaseRaw() { try { return localStorage.getItem("lc_sync_base"); } catch (e) { return null; } }
 function cloudKeep(meta, baseRaw) {
+  // Ghi meta lỗi: giữ nguyên meta cũ và base cũ (đang nhất quán), không đụng gì thêm
+  try { if (meta) localStorage.setItem("lc_sync", JSON.stringify(meta)); else localStorage.removeItem("lc_sync"); } catch (e) { return; }
   try {
-    if (meta) localStorage.setItem("lc_sync", JSON.stringify(meta)); else localStorage.removeItem("lc_sync");
     if (baseRaw) localStorage.setItem("lc_sync_base", baseRaw); else localStorage.removeItem("lc_sync_base");
   } catch (e) {
-    // Ghi base lỗi: bỏ luôn lc_sync để không còn meta mồ côi (rev mới mà base cũ làm gộp sai lần sau)
+    // Ghi base lỗi sau khi meta đã ghi: bỏ lc_sync để không còn meta mồ côi (rev mới mà base cũ làm gộp sai lần sau)
     try { localStorage.removeItem("lc_sync"); } catch (e2) {}
     console.warn("cloudKeep: không ghi được bản gốc đồng bộ", e);
   }
