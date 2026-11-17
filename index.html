@@ -2444,7 +2444,7 @@ const tt = (s, h) => {
   return pad(m / 60 | 0) + ":" + pad(m % 60);
 };
 
-let CH = new Set(), chgT = 0, PV = {}, dirty = false, TABDIR = 0, saveFailed = false;
+let CH = new Set(), chgT = 0, PV = {}, dirty = false, TABDIR = 0, saveFailed = false, saveErrQuota = false;
 const save = () => {
   dirty = true;
   try {
@@ -2461,7 +2461,9 @@ const save = () => {
     if (!cloudApplying) cloudSoon(); // đã đăng nhập: gửi lên tài khoản sau 2 giây
   } catch (e) {
     // Giữ cảnh báo cố định (không chỉ toast): đóng tab lúc này là mất các thay đổi chưa lưu
-    if (!saveFailed) { saveFailed = true; renderSaveAlert(); }
+    console.error("save:", e);
+    saveErrQuota = !!e && (e.name === "QuotaExceededError" || e.name === "NS_ERROR_DOM_QUOTA_REACHED");
+    saveFailed = true; renderSaveAlert();
   }
   if (oldWriterSeen === 1) {
     oldWriterSeen = 2;
@@ -2757,7 +2759,7 @@ function renderSaveAlert() {
   el.innerHTML = saveFailed ? `
     <div>
       <b>Không lưu được dữ liệu</b>
-      <div style="font-size:12px; margin-top:2px;">Bộ nhớ có thể đã đầy. Hãy sao lưu ngay để không mất thay đổi.</div>
+      <div style="font-size:12px; margin-top:2px;">${saveErrQuota ? "Bộ nhớ có thể đã đầy. Hãy sao lưu ngay để không mất thay đổi." : "Có lỗi khi lưu, hãy tải bản sao lưu ngay để không mất thay đổi."}</div>
     </div>
     <button type="button" class="btn btn-sm btn-danger" onclick="exportData('json')">Sao lưu</button>` : "";
 }
