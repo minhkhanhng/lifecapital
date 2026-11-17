@@ -38,6 +38,11 @@ Còn lại:
 - Ngoài phạm vi gói 1, đã tách thành gói 1b: `importData` chế độ Gộp còn cắt `secs/ms/ups` dự án đã có ở 20/50/30 (`index.html:~5743`).
 - Fable đo thêm (docs/review/2026-11-17-fable-sw-offline.md): C1 xác nhận (SW chờ tới 4,07 s khi mạng chậm/treo), A8 xác nhận (404/500 → trang lỗi dù có cache), cache cài đầu 1.354.082 B, A6 xác nhận, A5 xác nhận cơ chế; mục mới: offline không có dấu hiệu nào khi chưa đăng nhập.
 
+## Gói 2 dong-bo-an-toan (nhánh `claude/dong-bo-an-toan`, từ `claude/importdata-khong-cat`, chưa push)
+- A2 `cloudKeep` (chỉ xóa `lc_sync` khi ghi base lỗi), A3 nhập Gộp khử trùng theo `id`, A4 `wipeLocal` xóa token Google/`gcal_linked`/`lc_gx_seen`, A7 `save()` báo đúng nguyên nhân + `console.error`, A8 `sw.js networkFirst` trả cache khi 404/5xx. Mỗi mục có test đỏ trước.
+- Kết quả (implementer Sonnet báo; A2 sau fix-loop tôi đã đọc lại code): E2ESYNC 14/14, E2ELIM 12/12, E2EIMP 5/5, 14 bộ cũ 832/832 (lần chạy trước fix; sau fix chỉ chạy lại E2E, E2EUAT2, E2E63), merge 30/30, `node tests/sw/test_sw.js` 3/3, node --check đạt. Reviewer Haiku tìm 2 Important (A2 quá tay, test dọn chưa sạch) → đã sửa. A8 chỉ test bằng Node giả lập, cần thử SW thật khi phát hành. Chưa chạy mobile 390×844.
+- Minor ghi nhận: Gộp bỏ im lặng bản sửa trùng id (đúng plan); `sw.js` `.catch` của `caches.match` thiếu xử lý từ chối (có từ trước).
+
 ## Quyết định PO (2026-11-17)
 - Từ 2026-11-17: không dùng fable nữa; ưu tiên model ít tốn token nhất mà vẫn hiệu quả (Haiku việc cơ học, Sonnet code, reviewer khác model với implementer).
 - Đau nhất: chậm / nặng. Cấm đụng: không có phần nào (mọi đề xuất vẫn qua duyệt). Quy tắc dữ liệu: không mất dữ liệu người dùng. Đường quay lại: tải JSON + tag git. Mục tiêu từng tab: dùng README, chưa PO xác nhận.
