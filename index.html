@@ -959,6 +959,7 @@ body.hv-dragging .day-card { border-style: dashed; }
   --line-2: rgba(214, 140, 172, 0.24);
   --lg-field: rgba(255, 255, 255, 0.62);
   --sf-pop: rgba(255, 255, 255, 0.84);
+  --sheet-opaque: #fdf9fb;
   --lit-sm: inset 0 1px 0 rgba(255, 255, 255, 0.95);
   --sunk: inset 0 1px 3px rgba(140, 70, 105, 0.14), inset 0 0 0 100px rgba(255, 255, 255, 0);
   --track: color-mix(in srgb, var(--ac) 8%, rgba(255, 255, 255, 0.4));
@@ -1699,8 +1700,8 @@ input[type="checkbox"]:not(.set-switch):indeterminate::after { width: 8px; heigh
 input[type="checkbox"]:not(.set-switch):disabled { opacity: 0.5; cursor: default; }
 .set-switch { border: 1px solid var(--lg-rim); box-shadow: inset 0 1px 3px rgba(150, 70, 110, 0.18); }
 :focus-visible { outline: 2px solid var(--ac-text); outline-offset: 2px; }
-@media (prefers-color-scheme: dark) { :root.lite:not([data-theme="light"]) { --sf: rgba(46, 36, 42, 0.98); --sf-2: rgba(62, 50, 57, 0.98); --sf-pop: rgba(44, 34, 40, 0.99); --glass-hi: rgba(38, 30, 34, 0.96); --card: rgba(36, 29, 33, 0.94); --surface: rgba(40, 31, 36, 0.97); --sheet-solid: #282024; } }
-:root.lite[data-theme="dark"] { --sf: rgba(46, 36, 42, 0.98); --sf-2: rgba(62, 50, 57, 0.98); --sf-pop: rgba(44, 34, 40, 0.99); --glass-hi: rgba(38, 30, 34, 0.96); --card: rgba(36, 29, 33, 0.94); --surface: rgba(40, 31, 36, 0.97); --sheet-solid: #282024; }
+@media (prefers-color-scheme: dark) { :root.lite:not([data-theme="light"]) { --sf: rgba(46, 36, 42, 0.98); --sf-2: rgba(62, 50, 57, 0.98); --sf-pop: rgba(44, 34, 40, 0.99); --sheet-opaque: #2c2228; --glass-hi: rgba(38, 30, 34, 0.96); --card: rgba(36, 29, 33, 0.94); --surface: rgba(40, 31, 36, 0.97); --sheet-solid: #282024; } }
+:root.lite[data-theme="dark"] { --sf: rgba(46, 36, 42, 0.98); --sf-2: rgba(62, 50, 57, 0.98); --sf-pop: rgba(44, 34, 40, 0.99); --sheet-opaque: #2c2228; --glass-hi: rgba(38, 30, 34, 0.96); --card: rgba(36, 29, 33, 0.94); --surface: rgba(40, 31, 36, 0.97); --sheet-solid: #282024; }
 
 /* Khối chính: không viền, bo lớn, nổi */
 .card, .day-card, .timeline-container, .inbox-aside, .table-wrapper, .sidebar, .quick-capture-box, .inbox-rail {
@@ -1917,6 +1918,25 @@ body[data-tab="me"] #v { max-width: 980px; margin-inline: auto; }
 @media (pointer: coarse) {
   .btn.btn-sm, .segmented-control button, .set-seg button { min-height: 36px; }
 }
+/* UI Sức khỏe (gói ui-suc-khoe): popup thuốc gọn hai cột, ô cao đều 40px, chân đặc, tâm trạng xếp dọc, nút đóng 36px */
+.hl-form { gap: 14px; }
+.hl-form .form-row { gap: 12px; align-items: start; }
+.hl-form .form-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hl-form input, .hl-form select, .hl-form .set-seg { height: 40px; box-sizing: border-box; width: 100%; }
+.hl-form .set-seg { display: flex; }
+.hl-form .set-seg button { flex: 1 1 0; min-height: 32px; padding: 0 10px; display: flex; align-items: center; justify-content: center; }
+.hl-hint { margin: -6px 0 0; font-size: 12px; color: var(--mu); line-height: 1.4; }
+.hl-form .hl-disc { margin: 0 0 12px; }
+.hl-sheet .hl-acts { background: var(--sheet-opaque, var(--sf-pop)); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sheet-opaque: #2c2228; } }
+:root[data-theme="dark"] { --sheet-opaque: #2c2228; }
+@media (pointer: coarse) { .hl-form .set-seg button { min-height: 36px; } }
+.hl-vert { flex-direction: column; flex-wrap: nowrap; align-items: stretch; }
+.hl-vert .hl-m { width: 100%; text-align: center; min-height: 40px; }
+.hl-ci-big.hl-vert .hl-m { flex: none; min-height: 48px; }
+#hlOverlay .sheet-x { min-width: 36px; min-height: 36px; }
+.hl-pick { gap: 8px; }
+.hl-pick-l { font-size: 13px; color: var(--tx-sec); white-space: nowrap; }
 /* v0.7.0: Tổng quan dạng dashboard. Lưới 12 cột; máy tính bảng 2 cột; điện thoại 1 cột (ô số 2 cột) */
 .su-acts { display: flex; align-items: center; gap: 8px; }
 .dash { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 14px; align-items: stretch; }
@@ -9819,7 +9839,7 @@ function hlTodayCard() {
     <div class="card hl-today">
       <div class="card-header"><div><h2 class="card-title">Hôm nay</h2><div class="card-sub">${esc(dayDesc(tk).replace(/^Hôm nay · /, ""))}${ci > 1 ? ` · ghi liền ${ci} ngày` : ""}${c && hlPhase(tk, c) ? ` · Giai đoạn ${HL_PHASE[hlPhase(tk, c)][0].toLowerCase()}` : pr ? ` · ${{ per: "Dự kiến hành kinh", fert: "Giai đoạn dễ thụ thai", ovu: "Dự kiến rụng trứng" }[pr]}` : ""}</div></div>
         ${eve ? `<button type="button" class="btn btn-sm btn-primary" onclick="hlCheckin()" title="30 giây: tâm trạng, triệu chứng, giấc ngủ">Check-in tối</button>` : ""}</div>
-      <div class="hl-q"><span class="hl-ql">Tâm trạng</span><div class="hl-scale">${[1, 2, 3, 4, 5].map(v => `<button type="button" class="hl-m m${v} ${d.mood === v ? "on" : ""}" aria-pressed="${d.mood === v}" onclick="hlSet('${tk}','mood', ${d.mood === v ? "null" : v})">${HL_MOOD[v]}</button>`).join("")}</div></div>
+      <div class="hl-q"><span class="hl-ql">Tâm trạng</span><div class="hl-scale hl-vert">${[1, 2, 3, 4, 5].map(v => `<button type="button" class="hl-m m${v} ${d.mood === v ? "on" : ""}" aria-pressed="${d.mood === v}" onclick="hlSet('${tk}','mood', ${d.mood === v ? "null" : v})">${HL_MOOD[v]}</button>`).join("")}</div></div>
       <div class="hl-q"><span class="hl-ql">Triệu chứng</span><div class="hl-chips">${show.map(k => hlSyChip(tk, k, d)).join("")}<button type="button" class="hl-chip more" onclick="hlOpen('${tk}')">Khác…</button></div></div>
       ${meds.length ? `<div class="hl-q"><span class="hl-ql">Thuốc, TPCN</span><div class="hl-chips">${meds.map(m => hlMedChip(tk, m, d)).join("")}</div></div>` : ""}
       ${hlIsF() ? `<div class="hl-q"><span class="hl-ql">Hành kinh</span><div class="hl-scale">${[1, 2, 3].map(v => `<button type="button" class="hl-m fl ${d.flow === v ? "on" : ""}" aria-pressed="${d.flow === v}" onclick="hlSet('${tk}','flow', ${d.flow === v ? "null" : v})">${HL_FLOW[v]}</button>`).join("")}</div></div>` : ""}
@@ -9891,7 +9911,7 @@ function hlLogHTML() {
   return `
     <div class="card">
       <div class="card-header"><div><h2 class="card-title">Nhật ký từng ngày</h2><div class="card-sub">${ks.length ? `${Object.keys(days).length} ngày đã ghi` : "Chưa có ngày nào"}</div></div>
-        <div class="set-inline"><input type="date" id="hlPick" max="${tk}" aria-label="Chọn ngày để ghi" onkeydown="dateKey(event)" onchange="dateSet(this, v => v && hlOpen(v))" onblur="dateSet(this, v => v && hlOpen(v), 1)"></div></div>
+        <div class="set-inline hl-pick"><label class="hl-pick-l" for="hlPick">Xem ngày</label><input type="date" id="hlPick" max="${tk}" onkeydown="dateKey(event)" onchange="dateSet(this, v => v && hlOpen(v))" onblur="dateSet(this, v => v && hlOpen(v), 1)"></div></div>
       ${ks.length ? `<div class="hl-log">${ks.map(k => `<button type="button" class="hl-lrow" onclick="hlOpen('${k}')"><b>${esc(dayDesc(k))}</b><span>${hlSummary(k) || "—"}</span></button>`).join("")}</div>` : `<p class="set-note">Bấm Thêm để ghi hôm nay. Ghi đều mỗi ngày, gợi ý sẽ cụ thể hơn.</p>`}
     </div>`;
 }
@@ -10109,21 +10129,24 @@ function hlMedOpen(id) {
 }
 function hlMedRender() {
   const d = hlEd.d, m = hlEd.id ? (S.health.meds || []).find(x => x.id === hlEd.id) : null;
-  const seg = (f, v, lb) => `<button type="button" class="${d[f] === v ? "on" : ""}" aria-pressed="${d[f] === v}" onclick="hlEd.d['${f}']='${v}'; hlRender()">${lb}</button>`;
+  const seg = (f, v, lb, full) => `<button type="button" class="${d[f] === v ? "on" : ""}" aria-pressed="${d[f] === v}"${full ? ` title="${full}"` : ""} onclick="hlEd.d['${f}']='${v}'; hlRender()">${lb}</button>`;
   $("hlTitle").textContent = m ? m.n : "Thêm thuốc hoặc TPCN";
   $("hlBody").innerHTML = `
-    <div class="hl-sheet">
+    <div class="hl-sheet hl-form">
       <div class="form-group"><label class="form-label" for="hlMedN">Tên</label><input id="hlMedN" value="${esc(d.n)}" maxlength="60" placeholder="vd: Vitamin D3, Sắt, Omega-3" oninput="hlEd.d.n=this.value"></div>
-      <div class="form-group"><span class="form-label">Loại</span><div class="set-seg">${seg("kind", "sup", "Thực phẩm chức năng")}${seg("kind", "med", "Thuốc")}</div></div>
-      <div class="form-group"><label class="form-label" for="hlMedDose">Liều</label><input id="hlMedDose" value="${esc(d.dose)}" maxlength="40" placeholder="vd: 1 viên 1000 IU, sau ăn sáng" oninput="hlEd.d.dose=this.value"></div>
+      <div class="form-row">
+        <div class="form-group"><span class="form-label">Loại</span><div class="set-seg">${seg("kind", "sup", "TPCN", "Thực phẩm chức năng")}${seg("kind", "med", "Thuốc")}</div></div>
+        <div class="form-group"><label class="form-label" for="hlMedDose">Liều</label><input id="hlMedDose" value="${esc(d.dose)}" maxlength="40" placeholder="vd: 1 viên 1000 IU" oninput="hlEd.d.dose=this.value"></div>
+      </div>
       <div class="form-row">
         <div class="form-group"><span class="form-label">Lịch dùng</span><div class="set-seg">${seg("sched", "daily", "Hằng ngày")}${seg("sched", "prn", "Khi cần")}</div></div>
         ${d.sched === "daily" ? `<div class="form-group"><label class="form-label" for="hlMedT">Số lần mỗi ngày</label><select id="hlMedT" onchange="hlEd.d.times=+this.value">${[1, 2, 3, 4].map(n => `<option value="${n}" ${d.times === n ? "selected" : ""}>${n} lần</option>`).join("")}</select></div>` : ""}
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label" for="hlMedSd">Bắt đầu</label><input id="hlMedSd" type="date" value="${d.sd}" onkeydown="dateKey(event)" onchange="dateSet(this, v => { hlEd.d.sd = v; })" onblur="dateSet(this, v => { hlEd.d.sd = v; }, 1)"></div>
-        <div class="form-group"><label class="form-label" for="hlMedEd">Kết thúc <small>(để trống nếu dùng lâu dài)</small></label><input id="hlMedEd" type="date" value="${d.ed}" onkeydown="dateKey(event)" onchange="dateSet(this, v => { hlEd.d.ed = v; })" onblur="dateSet(this, v => { hlEd.d.ed = v; }, 1)"></div>
+        <div class="form-group"><label class="form-label" for="hlMedEd">Kết thúc</label><input id="hlMedEd" type="date" value="${d.ed}" onkeydown="dateKey(event)" onchange="dateSet(this, v => { hlEd.d.ed = v; })" onblur="dateSet(this, v => { hlEd.d.ed = v; }, 1)"></div>
       </div>
+      <p class="hl-hint">Ngày kết thúc: để trống nếu dùng lâu dài.</p>
       <p class="hl-disc">App chỉ giúp nhớ đã dùng hay chưa, không kiểm tra liều hay tương tác thuốc. Hỏi bác sĩ hoặc dược sĩ trước khi bắt đầu, đổi liều hay ngừng thuốc.</p>
       <div class="hl-acts">
         <div class="row" style="gap:6px;">${m ? `<button type="button" class="btn btn-ghost" onclick="hlMedStop('${m.id}')">${m.arch ? "Dùng lại" : "Ngừng dùng"}</button><button type="button" class="btn btn-ghost btn-del" onclick="hlMedDel('${m.id}')">Xóa</button>` : ""}</div>
@@ -10321,7 +10344,7 @@ function hlCiRender() {
   const k = tk, d = hlDay(k) || {}, st = hlCiSteps(), cur0 = HL_CI[hlEd.step], i = st.indexOf(cur0);
   const nav = (next = "Tiếp") => `<div class="hl-acts"><span class="hl-saved">Bước ${i + 1}/${st.length}</span><div class="row" style="gap:6px;">${i ? `<button type="button" class="btn btn-ghost" onclick="hlCiGo(-1)">Quay lại</button>` : ""}<button type="button" class="btn btn-primary" id="hlDone" onclick="${cur0 === "done" ? "closeHl()" : "hlCiGo(1)"}">${next}</button></div></div>`;
   let body = "";
-  if (cur0 === "mood") body = `<h4 class="hl-ci-q">Hôm nay của bạn thế nào?</h4><div class="hl-scale hl-ci-big">${[1, 2, 3, 4, 5].map(v => `<button type="button" class="hl-m m${v} ${d.mood === v ? "on" : ""}" aria-pressed="${d.mood === v}" onclick="hlGet(tk).mood=${v}; hlTouch(tk); hlCiGo(1)">${HL_MOOD[v]}</button>`).join("")}</div>${nav()}`;
+  if (cur0 === "mood") body = `<h4 class="hl-ci-q">Hôm nay của bạn thế nào?</h4><div class="hl-scale hl-vert hl-ci-big">${[1, 2, 3, 4, 5].map(v => `<button type="button" class="hl-m m${v} ${d.mood === v ? "on" : ""}" aria-pressed="${d.mood === v}" onclick="hlGet(tk).mood=${v}; hlTouch(tk); hlCiGo(1)">${HL_MOOD[v]}</button>`).join("")}</div>${nav()}`;
   else if (cur0 === "sy") body = `<h4 class="hl-ci-q">Có triệu chứng nào không?</h4><div class="hl-chips">${hlSyList().map(s => hlSyChip(k, s.k, d)).join("")}</div>
     <div class="hl-acts"><span class="hl-saved">Bước ${i + 1}/${st.length} · bấm nhiều lần để đổi mức</span><div class="row" style="gap:6px;"><button type="button" class="btn btn-ghost" onclick="hlCiGo(-1)">Quay lại</button>${Object.keys(d.sy || {}).length ? `<button type="button" class="btn btn-primary" id="hlDone" onclick="hlCiGo(1)">Tiếp</button>` : `<button type="button" class="btn btn-primary" id="hlDone" onclick="hlCiGo(1)">Không có</button>`}</div></div>`;
   else if (cur0 === "body") body = `<h4 class="hl-ci-q">Giấc ngủ và căng thẳng</h4>
