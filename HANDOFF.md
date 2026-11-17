@@ -1,5 +1,12 @@
 # HANDOFF · Bàn giao cho session sau (mục mới nhất ở trên)
 
+## 2026-11-18 · ĐÃ PHÁT HÀNH v0.9.0 LÊN PRODUCTION (PO: "xong thì gộp rồi deploy luôn")
+- `git merge --ff-only refs/heads/feature/v0.9.0` vào `main`, `git tag v0.9.0`, `git push origin main` (`28adc46..c1849e7`), `git push origin v0.9.0`; Vercel `success`; production khớp repo (sw `lc-0.9.0`, `APPV 73`, `index.html` khớp byte, vendor/icon/CSP đạt). Số liệu: CURRENT.md "Bản đang chạy".
+- Gồm: UI "Hôm nay trước" (khối Hôm nay, ô Tuần này ở thanh bên, Thói quen dạng hàng, tuần 7 cột, một nút chính) và tab Sức khỏe › Tóm tắt gọn. Không đổi dữ liệu/đồng bộ/SW/CSP. Chi tiết: `docs/review/2026-11-18-ui-toan-bo-ra-soat.md`, CURRENT.md mục Gói 12.
+- HOÀN TÁC nếu PO không ưng giao diện: tạo commit revert các commit `b22beb3` và `f659602` trên nhánh mới từ `main` (KHÔNG force-push `main`), nâng `APPV` 74/`VERSION` `lc-0.9.1`/CHANGELOG để máy đã cài nhận bản; hoặc về v0.8.0 bằng nhánh từ tag `v0.8.0` kèm số phiên bản cao hơn. Dữ liệu không đổi nên không mất.
+- Việc còn lại: PO xem giao diện thật trên production và điện thoại, thử đăng nhập/đồng bộ/Google Calendar/cài PWA (v0.8.0 vẫn chưa ai thử); lỗi mức thấp số 6 của việc con (đẩy Google khi chỉ tích việc con); gói 9 `hieu-nang-sau`, 10 `don-nhe`; mục E4; `crdrive.js`/`stdrive.js` cho khối mới.
+- Next step: PO dùng v0.9.0 vài ngày, báo lỗi/ý kiến giao diện; tôi sửa trên nhánh mới từ `main` (không dùng fable).
+
 ## 2026-11-18 · Gói 12 ui-toan-bo xong ở local (hướng A "Hôm nay trước", PO chọn; chưa push, chưa deploy)
 - Nhánh `claude/ui-toan-bo` (worktree `.claude/worktrees/ui-toan-bo`) từ `claude/ui-suc-khoe-2` (`f659602`, cũng chưa push). Số liệu: CURRENT.md mục Gói 12.
 - Thay đổi nhìn thấy được: khối Hôm nay đầu tab Lịch (tuần hiện tại, Tuần/Ngày): lời chào theo giờ + tên gọi, 3 vòng (giờ hôm nay / mục tiêu tuần chia 7, thói quen x/y gồm cả tự đếm, tâm trạng) bấm được, ô Tiếp theo; ô Tuần này (vòng điểm cân bằng, thói quen x/y) ở đáy thanh bên desktop, bấm mở Tổng quan; tab Thói quen thành danh sách hàng + thanh tiến độ "x/y xong" ("Xong hết…" khi đủ), ô tích chưa tích là vòng rỗng, bỏ nút Thêm trùng ở đầu trang; lưới tuần 7 cột khi khung ≥ 760 px (tên hoạt động 2 dòng); "Tổng kết" thành nút phụ, "+ Thêm" là nút chính duy nhất; dải Dữ liệu mẫu một dòng; Hộp việc/Dự án/Tôi canh trái cùng tiêu đề, ô Ghi nhanh cùng bề rộng; điện thoại: hàng tuần một dòng, Giờ theo loại vốn một hàng cuộn ngang, chip Dự án 36 px, ◀ ▶ 36 px; tâm trạng desktop ≤ 168 px; cỡ 11.05 px ở bảng mục tiêu về 11 px.
