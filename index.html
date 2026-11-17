@@ -2715,7 +2715,8 @@ function mergeEv(base, mine, theirs, trust, oldT) {
       if (!w[1].gid && o[1].gid) w[1].gid = o[1].gid; // giữ liên kết Google, tránh tạo bản trùng
       if (!w[1].gi && o[1].gi) w[1].gi = o[1].gi;
       if (w[1].subs || o[1].subs || (b && b[1].subs)) {
-        const ms = mergeSubs(b && b[1].subs, w[1].subs, o[1].subs, trust && !!b);
+        // máy rất cũ (oldT) bỏ trường lạ khi lưu: bản thắng không có subs không có nghĩa là đã xóa, giữ việc con của bên kia
+        const ms = oldT && w === t && !w[1].subs ? (o[1].subs || []) : mergeSubs(b && b[1].subs, w[1].subs, o[1].subs, trust && !!b);
         const we = { ...w[1] }; // không sửa lên bản gốc của hai bên
         subMerged.add(we);
         if (ms.length) we.subs = ms; else delete we.subs;
@@ -2909,7 +2910,7 @@ let suMore = false; // Tổng quan: bảng "Giờ theo loại vốn" đang mở
 let timelineDayIdx = dow(new Date()); // 0 = T2 .. 6 = CN; mặc định là hôm nay
 let N = 1; // Tổng quan: nhận định theo tuần đang xem (1), trung bình 4/8 tuần, hoặc mọi tuần (0)
 let ed = null, ei = null;
-let edSubs = [], edSubsOpen = false; // việc con đang sửa trong popup hoạt động (gói subtask)
+let edSubs = [], edSubsOpen = false, edSubsSnap = "[]"; // việc con đang sửa trong popup hoạt động (gói subtask)
 
 const evs = i => [0, 1, 2, 3, 4, 5, 6].flatMap(j => S.ev[ky(ad(W[i], j))] || []);
 // Giờ của một vốn trong tuần i (gồm giờ cố định). Từ v0.6.0 mọi hoạt động đều tính, không còn Nạp/Tiêu.
@@ -5301,6 +5302,7 @@ function openEditor(dateStr, editIndex = null) {
   const cur = editIndex != null ? (S.ev[dateStr] || [])[editIndex] : null;
   edSubs = cur && Array.isArray(cur.subs) ? cur.subs.map(x => ({ ...x })) : [];
   edSubsOpen = false;
+  edSubsSnap = JSON.stringify(sortKeysDeep(edSubs));
   renderEditorSheet();
   $("modalOverlay").classList.add("open");
   setTimeout(() => {
@@ -5343,8 +5345,14 @@ function subsToggle() {
 }
 function subKey(ev) {
   if (ev.key !== "Enter") return;
-  ev.preventDefault(); ev.stopPropagation();
-  const i = $("inpSub"), t = i.value.trim();
+  ev.stopPropagation();
+  if (enterWaitsIME(ev, ev.target, subAdd)) return; // bộ gõ tiếng Việt đang chốt chữ: thêm sau compositionend
+  ev.preventDefault();
+  subAdd();
+}
+function subAdd() {
+  const i = $("inpSub"); if (!i) return;
+  const t = i.value.trim();
   if (!t) return;
   edSubs.push({ id: nid("s"), t: t.slice(0, 120) });
   i.value = "";
@@ -5431,7 +5439,7 @@ function rep(date, o, rp, end, r = "r" + Date.now().toString(36), skipFirst = fa
   days.forEach(k => {
     S.ev[k] = S.ev[k] || [];
     const item = { ...o, r };
-    if (o.subs) item.subs = o.subs.map(x => ({ id: nid("s"), t: x.t })); // mỗi buổi có danh sách riêng, chưa tích
+    if (o.subs) item.subs = k === date && !skipFirst ? o.subs.map(x => ({ ...x })) : o.subs.map((x, j) => ({ id: nid("s") + j, t: x.t })); // buổi đầu giữ nguyên (cả dấu tích); các buổi sau có danh sách riêng, chưa tích
     S.ev[k].push(item);
     sortL(S.ev[k]);
     markPending(item); // gcalFlush() đẩy lần lượt từng sự kiện, không bắn hàng trăm request cùng lúc
@@ -5641,6 +5649,7 @@ async function saveEventFromForm(keepOpen) {
   if (ei == null && edSecPreset && pjv && pjv === edPjPreset) o.sec = edSecPreset; // thêm từ một phần của trang dự án
   const subsL = subsToSave(); // việc con: lưu cho buổi đang mở; "cả chuỗi" chép tên sang các buổi sau (id mới, không chép done)
   const setSubs = (e, l) => { if (l.length) e.subs = l; else delete e.subs; };
+  const subsChanged = JSON.stringify(sortKeysDeep(subsL)) !== edSubsSnap;
   if (subsL.length) o.subs = subsL;
   const cur0 = ei != null ? (S.ev[ed] || [])[ei] : null;
   const ser = $("inpSeries"), applySeries = !!(cur0 && cur0.r && ser && ser.checked);
@@ -5663,8 +5672,12 @@ async function saveEventFromForm(keepOpen) {
         if (k >= ed) {
           S.ev[k].forEach(e => {
             if (e.r === r0) {
+              const prevSubs = e.subs;
               Object.assign(e, o);
-              setSubs(e, e === L[ei] ? subsL : subsL.map(x => ({ id: nid("s"), t: x.t })));
+              // o.subs là của buổi đang mở. Buổi khác: chép khi người dùng vừa sửa danh sách hoặc buổi đó chưa có việc con; không thì giữ việc con riêng (cả dấu tích)
+              if (e === L[ei]) setSubs(e, subsL);
+              else if (subsChanged || !(prevSubs && prevSubs.length)) setSubs(e, subsL.map((x, j) => ({ id: nid("s") + j, t: x.t })));
+              else e.subs = prevSubs;
               delete e.demo; // đã sửa thì là dữ liệu thật
               markPending(e);
             }

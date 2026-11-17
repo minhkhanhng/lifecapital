@@ -82,6 +82,10 @@ window.E2ESUB = async function () {
     ok("M4 không gốc chung: không mất việc con", subsOf(noBase).some(x => x.id === "su_s2"), subsOf(noBase));
     const base0 = mk(null), mine0 = mk([sb("su_s2", "Mới ở A")], "Review", 2000), theirs0 = mk(null, "Review đổi tên", 3000);
     ok("M5 gốc chưa có việc con: A thêm, B đổi tên (không có subs): việc con của A không mất", subsOf(evOf(mergeStates(base0, mine0, theirs0, true))).some(x => x.id === "su_s2"));
+    const oldTh = { ...mk([sb("su_s1", "Đọc đề")], "Review", 1000) }; delete oldTh.ev[day][0].subs; oldTh.av = 40; // máy rất cũ: bỏ trường lạ khi lưu
+    const baseO = mk([sb("su_s1", "Đọc đề"), sb("su_s2", "Hai")]), mineO = mk([sb("su_s1", "Đọc đề"), sb("su_s2", "Hai")], "Review", 1500);
+    oldTh.ev[day][0].t = "Máy cũ đổi tên"; oldTh.ev[day][0].mt = 3000;
+    ok("M6 máy rất cũ (av<41) bỏ subs khi lưu: việc con của máy này không bị xóa theo", subsOf(evOf(mergeStates(baseO, mineO, oldTh, true))).length === 2, subsOf(evOf(mergeStates(baseO, mineO, oldTh, true))));
   } catch (e) { ok("M.err", false, String(e && e.stack || e)); }
 
   // ---- U: giao diện popup
@@ -156,6 +160,34 @@ window.E2ESUB = async function () {
     ok("U18 'Áp dụng cho cả chuỗi': các buổi sau có cùng danh sách (tên), không chép done", subsOf(r2).map(x => x.t).join() === subsOf(r1).map(x => x.t).join() && subsOf(r2).length === 1 && !subsOf(r2).some(x => x.done) && !subsOf(r3).some(x => x.done), [subsOf(r1), subsOf(r2), subsOf(r3)]);
     ok("U19 buổi sau có id việc con riêng (không trùng buổi gốc, không trùng nhau)", new Set([...subsOf(r1), ...subsOf(r2), ...subsOf(r3)].map(x => x.id)).size === 3, [subsOf(r1), subsOf(r2), subsOf(r3)].map(l => l.map(x => x.id)));
     ok("U20 buổi gốc giữ nguyên dấu tích của mình", subsOf(r1).some(x => x.done));
+    // IME: Enter khi bộ gõ đang chốt chữ không được thêm việc con
+    await openOn(day, S.ev[day].findIndex(x => x.id === "su_ui"));
+    if ($("subsToggle")) $("subsToggle").click();
+    if ($("inpSub")) {
+      const n0 = document.querySelectorAll("#subsPanel .ed-sub").length;
+      $("inpSub").value = "sữa"; $("inpSub").dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", isComposing: true, bubbles: true, cancelable: true })); await sleep(30);
+      ok("U21 Enter lúc bộ gõ đang chốt chữ (isComposing): chưa thêm", document.querySelectorAll("#subsPanel .ed-sub").length === n0 && $("inpSub").value === "sữa", [n0, document.querySelectorAll("#subsPanel .ed-sub").length]);
+    } else ok("U21 (cần #inpSub)", false, 0);
+    closeEditor();
+    // Chuỗi: bật "cả chuỗi" chỉ để đổi giờ, không đụng việc con: việc con riêng của buổi khác phải còn
+    S.ev[d1][0].subs = [{ id: "su_keep", t: "Mua giày", done: 1 }]; save();
+    await openOn(day, S.ev[day].findIndex(x => x.id === "su_r1"));
+    const sr = $("inpSeries"); if (sr) sr.checked = true;
+    await saveEventFromForm(); await sleep(120);
+    ok("U22 'cả chuỗi' không đổi việc con: việc con riêng của buổi khác giữ nguyên (cả dấu tích)", (S.ev[d1][0].subs || []).length === 1 && S.ev[d1][0].subs[0].id === "su_keep" && S.ev[d1][0].subs[0].done === 1, S.ev[d1][0].subs);
+    // Tạo mới có lặp: buổi đầu giữ dấu tích; id việc con của mỗi buổi khác nhau
+    const dN = ky(ad(new Date(), 5));
+    openEditor(dN, null); await sleep(480);
+    $("subsToggle").click();
+    for (const t of ["P", "Q", "R"]) { $("inpSub").value = t; kd($("inpSub"), "Enter"); }
+    document.querySelectorAll("#subsPanel .ed-sub input[type=checkbox]")[0].click();
+    $("inpTitle").value = "Lặp mới"; $("inpStart").value = "15:00"; $("inpRepeat").value = "d"; $("inpRepeatEnd").value = ky(ad(new Date(), 20));
+    await saveEventFromForm(); await sleep(150);
+    const first = S.ev[dN].find(x => x.t === "Lặp mới"), second = S.ev[ky(ad(new Date(), 6))].find(x => x.t === "Lặp mới");
+    ok("U23 tạo mới có lặp: buổi đầu giữ dấu tích đã đặt trong popup", first && subsOf(first).length === 3 && subsOf(first)[0].done === 1, subsOf(first));
+    ok("U24 tạo chuỗi: buổi sau không có dấu tích", second && subsOf(second).length === 3 && !subsOf(second).some(x => x.done));
+    const allIds = Object.values(S.ev).flat().filter(x => x.t === "Lặp mới").map(x => subsOf(x).map(y => y.id));
+    ok("U25 id việc con không trùng trong cùng một buổi (mọi buổi)", allIds.every(l => new Set(l).size === l.length) && allIds.length > 10, allIds.length);
   } catch (e) { ok("U.err", false, String(e && e.stack || e)); }
   finally { restoreAll(); }
 
