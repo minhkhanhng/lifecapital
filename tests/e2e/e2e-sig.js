@@ -51,27 +51,40 @@ window.E2ESIG = async function () {
       // A: tab đang mở, bản trong bộ nhớ có thứ tự khóa lệch; lưu hai lần như người dùng làm việc khác
       S = JSON.parse(JSON.stringify(A0)); S[k.arr] = [o];
       localStorage.setItem("lc2", JSON.stringify(A0)); lastRaw = localStorage.getItem("lc2"); stampBase(C(A0));
+      const bMt = Date.now(); // B sửa sau base (1000) nhưng TRƯỚC các lần lưu của A: mt giả của A sẽ lớn hơn
       wait(6); save(); wait(6); save();
       const aMt = S[k.arr][0].mt;
       ok(`G5.1 ${k.name}: máy A không sửa gì, mt vẫn 1000`, aMt === 1000, aMt);
       // B: đổi tên, mt sau base nhưng trước các lần lưu của A
-      const bObj = JSON.parse(JSON.stringify(o)); bObj[k.field] = "Máy B đổi"; bObj.mt = Date.now() - 1;
+      const bObj = JSON.parse(JSON.stringify(o)); bObj[k.field] = "Máy B đổi"; bObj.mt = bMt;
       const B = C(st({ [k.arr]: [bObj] }));
-      const mine = C(S);
+      const mine = C(S), raw = S; // raw: bản thô trong bộ nhớ (thứ tự khóa lệch), kiểm cả sameJ trong gộp
       const r1 = mergeStates(base, mine, B, true), r2 = mergeStates(base, B, mine, true);
       const rn = r => (r[k.arr][0] || {})[k.field];
       ok(`G5.2 ${k.name}: gộp hai chiều: bản đổi tên của B thắng`, rn(r1) === "Máy B đổi" && rn(r2) === "Máy B đổi", [rn(r1), rn(r2)]);
+      const r4 = mergeStates(base, raw, B, true);
+      ok(`G5.4 ${k.name}: gộp với bản thô (khóa lệch): bản B thắng`, rn(r4) === "Máy B đổi", rn(r4));
       const r3 = mergeStates(null, mine, B, false);
       ok(`G5.3 ${k.name}: gộp không gốc chung: bản B (mt sau) thắng`, rn(r3) === "Máy B đổi", rn(r3));
     } catch (e) { ok("G5.err", false, String(e && e.stack || e)); }
     finally { restoreAll(); }
   }
 
+  // ---- G5h: thói quen tự động có key rỗng (tên chỉ emoji): cleanHabit bỏ key, vẫn không được gán mt giả
+  try {
+    sbUser = null; S.habits = S.habits || [];
+    const h = { id: "sg_h2", n: "🏃", c: "sk", kind: "auto", key: "", per: "week", tgt: 3, sd: "2026-10-01", ticks: {} }; S.habits.push(h);
+    save(); wait(6); save(); const m1 = h.mt; wait(6); save();
+    ok("G5h.1 thói quen tự động key rỗng: lưu lại không đổi mt", m1 > 0 && h.mt === m1, [m1, h.mt]);
+  } catch (e) { ok("G5h.err", false, String(e && e.stack || e)); }
+  finally { restoreAll(); }
+
   // ---- G6: sameJ theo nội dung, không theo thứ tự khóa
   try {
     ok("G6.1 sameJ: cùng nội dung khác thứ tự khóa: bằng", sameJ({ a: 1, b: { c: 2, d: [1, { x: 1, y: 2 }] } }, { b: { d: [1, { y: 2, x: 1 }], c: 2 }, a: 1 }));
     ok("G6.2 sameJ: khác nội dung: khác", !sameJ({ a: 1, b: 2 }, { a: 1, b: 3 }) && !sameJ({ a: 1 }, { a: 1, b: 2 }));
     ok("G6.3 sameJ: thứ tự phần tử mảng vẫn có nghĩa", !sameJ({ a: [1, 2] }, { a: [2, 1] }));
+    ok("G6.5 sameJ: khóa __proto__ lạ không bị bỏ qua", !sameJ(JSON.parse('{"__proto__":{"x":1},"a":1}'), { a: 1 }));
     ok("G6.4 sameJ: undefined/null", sameJ(undefined, undefined) && !sameJ(undefined, {}) && sameJ(null, null));
   } catch (e) { ok("G6.err", false, String(e && e.stack || e)); }
 

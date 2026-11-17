@@ -2508,19 +2508,20 @@ let stampRaw, stampEv = new Map(), stampTk = new Map(), stampPj = new Map(), sta
 // Chữ ký so sánh không phụ thuộc thứ tự khóa (việc trong bộ nhớ và bản cleanTask có thể xếp khóa khác nhau)
 function sortKeysDeep(v) {
   return Array.isArray(v) ? v.map(sortKeysDeep)
-    : v && typeof v === "object" ? Object.keys(v).sort().reduce((o, k) => { o[k] = sortKeysDeep(v[k]); return o; }, {}) : v;
+    : v && typeof v === "object" ? Object.fromEntries(Object.keys(v).sort().map(k => [k, sortKeysDeep(v[k])])) : v; // fromEntries: khóa "__proto__" vẫn là khóa thường
 }
-const taskSig = t => JSON.stringify(sortKeysDeep({ ...t, mt: 0 }));
+// Làm sạch như lúc đọc trước khi so, để giá trị mà cleanX bỏ (vd key rỗng của thói quen tự động) không thành "sửa"
+const taskSig = (t, clean) => JSON.stringify(sortKeysDeep({ ...((clean && clean(t)) || t), mt: 0 }));
 // Mốc so sánh = dữ liệu tab này đang có ngay sau khi đọc, ghi hoặc nhận từ nơi khác (tab khác, máy khác).
 // Nhờ vậy thay đổi nhận về không bị tính là “máy này vừa sửa”.
 function stampBase(st) {
   stampRaw = lastRaw;
   stampEv = new Map(); stampTk = new Map(); stampPj = new Map(); stampHb = new Map();
   if (!st) return;
-  (st.projects || []).forEach(p => stampPj.set(p.id, taskSig(p)));
-  (st.habits || []).forEach(h => stampHb.set(h.id, taskSig(h)));
+  (st.projects || []).forEach(p => stampPj.set(p.id, taskSig(p, cleanProject)));
+  (st.habits || []).forEach(h => stampHb.set(h.id, taskSig(h, cleanHabit)));
   Object.keys(st.ev).forEach(k => st.ev[k].forEach(e => { if (e.id) stampEv.set(e.id, k + "|" + evCore(e)); }));
-  st.tasks.forEach(t => stampTk.set(t.id, taskSig(t)));
+  st.tasks.forEach(t => stampTk.set(t.id, taskSig(t, cleanTask)));
 }
 function stampEdits() {
   if (stampRaw !== lastRaw) {
@@ -2534,9 +2535,9 @@ function stampEdits() {
     else if (stampEv.get(e.id) !== k + "|" + evCore(e)) e.mt = now;
     ids.add(e.id);
   }));
-  S.tasks.forEach(t => { if (stampTk.get(t.id) !== taskSig(t)) t.mt = now; });
-  (S.projects || []).forEach(p => { if (stampPj.get(p.id) !== taskSig(p)) p.mt = now; });
-  (S.habits || []).forEach(h => { if (stampHb.get(h.id) !== taskSig(h)) h.mt = now; });
+  S.tasks.forEach(t => { if (stampTk.get(t.id) !== taskSig(t, cleanTask)) t.mt = now; });
+  (S.projects || []).forEach(p => { if (stampPj.get(p.id) !== taskSig(p, cleanProject)) p.mt = now; });
+  (S.habits || []).forEach(h => { if (stampHb.get(h.id) !== taskSig(h, cleanHabit)) h.mt = now; });
 }
 const sameJ = (a, b) => a === b || JSON.stringify(sortKeysDeep(a)) === JSON.stringify(sortKeysDeep(b)); // so theo nội dung, không theo thứ tự khóa
 // Gộp danh sách có mã (dự án): một bên sửa → bên đó; cả hai sửa → mt sau cùng; xóa thua sửa
