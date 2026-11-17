@@ -59,6 +59,25 @@ window.E2ESYNC = async function () {
   } catch (e) { ok("S4.err", false, String(e)); }
   finally { restoreKeys(gKeys); restoreKeys(mainKeys); S = origS; lastRaw = lsGet("lc2"); draw(true); }
 
+  // ---- A7: save() báo đúng nguyên nhân (lỗi lập trình khác lỗi hết dung lượng)
+  const alertTxt = () => { const el = document.getElementById("saveAlert"); return el && !el.hidden ? el.textContent : ""; };
+  const origStamp = stampEdits, origErr = console.error;
+  try {
+    let errCalls = 0; console.error = () => { errCalls++; };
+    stampEdits = () => { throw new TypeError("x"); };
+    try { save(); } finally { stampEdits = origStamp; console.error = origErr; }
+    const t1 = alertTxt();
+    ok("S7.1a lỗi lập trình: console.error được gọi", errCalls === 1, errCalls);
+    ok("S7.1b lỗi lập trình: cảnh báo bật, không nói 'bộ nhớ'", t1 !== "" && !/bộ nhớ/i.test(t1), t1);
+    saveFailed = false; renderSaveAlert();
+    console.error = () => {};
+    Storage.prototype.setItem = function () { throw new DOMException("q", "QuotaExceededError"); };
+    try { save(); } finally { Storage.prototype.setItem = origSet; console.error = origErr; }
+    const t2 = alertTxt();
+    ok("S7.2 hết dung lượng: cảnh báo bật và nói 'bộ nhớ'", t2 !== "" && /bộ nhớ/i.test(t2), t2);
+  } catch (e) { ok("S7.err", false, String(e)); }
+  finally { stampEdits = origStamp; console.error = origErr; Storage.prototype.setItem = origSet; saveFailed = false; renderSaveAlert(); }
+
   restoreKeys(mainKeys);
   const pass = out.filter(x => x.pass).length;
   return { pass, total: out.length, fail: out.filter(x => !x.pass) };
