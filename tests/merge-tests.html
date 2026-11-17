@@ -59,6 +59,13 @@ function run() {
   t("Hoạt động nhập từ Google giữ gx khi gộp, không thành chờ gửi", () => { const m = C(B0); m.ev[day].push({ id: "g1", t: "Họp GCal", c: "tc", m: "u", h: 1, s: "15:00", gx: "imp00001", ds: 1, mt: 5 }); const r = evOf(mergeStates(C(B0), C(B0), C(m), true)).find(e => e.id === "g1"); return r && r.gx === "imp00001" && !r.ds; });
   t("Phần đã tắt ở máy kia được nhận khi gộp; bật lại cũng lan", () => { const th = C(B0); th.cfg.mods = { pj: false }; const r = mergeStates(C(B0), C(B0), C(th), true); const on = C(r); delete on.cfg.mods; const r2 = mergeStates(C(r), C(r), on, true); return r.cfg.mods && r.cfg.mods.pj === false && !r2.cfg.mods; });
 
+  // --- Gói 4: bl, cfg gộp theo từng khóa ---
+  t("bl: hai máy sửa khác loại vốn, giữ cả hai", () => { const b = base({}, { bl: { sk: { u: 1, d: 0 } } }), m = C(b), th = C(b); m.bl.sk.u = 2; th.bl.tc = { u: 3, d: 0 }; const r = mergeStates(C(b), m, th, true); return r.bl.sk.u === 2 && r.bl.tc.u === 3; });
+  t("cfg: hai máy sửa khác khóa, giữ cả hai; khóa lạ còn", () => { const b = base({}), m = C(b), th = C(b); m.cfg.defDuration = 1; th.cfg.schedCap = 0; th.cfg.zzz = 1; const r = mergeStates(C(b), m, th, true); return r.cfg.defDuration === 1 && r.cfg.schedCap === 0 && r.cfg.zzz === 1 && r.cfg.burnoutHours === 6; });
+  t("cfg: tắt tự đồng bộ (false) ở máy kia không bị bật lại", () => { const b = base({}), m = C(b), th = C(b); th.cfg.gcalAutoSync = false; m.cfg.defDuration = 3; const r = mergeStates(C(b), m, th, true); return r.cfg.gcalAutoSync === false && r.cfg.defDuration === 3; });
+  t("bl: máy kia xóa khóa, máy này không đổi: xóa theo; không gốc chung thì giữ", () => { const b = base({}, { bl: { sk: { u: 1, d: 0 }, tc: { u: 2, d: 0 } } }), th = C(b); delete th.bl.tc; return !("tc" in mergeStates(C(b), C(b), th, true).bl) && mergeStates(null, C(b), th, false).bl.tc.u === 2; });
+  t("Hoạt động chờ gửi cùng gi ở hai máy: gộp còn một gi", () => { const b = base({ [day]: [{ id: "e1", t: "Chạy", c: "sk", m: "u", h: 1, s: "06:00", mt: 1, ds: 1, gi: "0123456789abcdefghijkl" }] }); const r = evOf(mergeStates(null, C(b), C(b), false)); return r.length === 1 && r[0].gi === "0123456789abcdefghijkl"; });
+
   // --- Việc trong Hộp việc ---
   const TB = base({}, { tasks: [{ id: "t1", t: "Việc", c: "sk", m: "u", subs: [], mt: 1 }] });
   t("Việc: hai bên cùng sửa, mt sau cùng thắng", () => { const m = C(TB), th = C(TB); m.tasks[0].t = "M"; m.tasks[0].mt = 5; th.tasks[0].t = "T"; th.tasks[0].mt = 9; return mergeStates(C(TB), m, th, true).tasks[0].t === "T"; });

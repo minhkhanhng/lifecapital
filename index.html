@@ -2572,6 +2572,22 @@ function mergeMap(B, M, T, trust) {
   });
   return out;
 }
+// Gộp đối tượng cài đặt nhỏ (bl, cfg) theo từng khóa. Khác mergeMap: giữ giá trị 0/false, phân biệt "vắng" bằng
+// hasOwnProperty, không dựa vào mt. Cả hai cùng sửa một khóa khác nhau: máy này thắng. Khóa lạ giữ nguyên.
+function mergeKeys(B, M, T, trust) {
+  const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+  const b0 = B || {}, m0 = M || {}, t0 = T || {}, out = {};
+  new Set([...Object.keys(m0), ...Object.keys(t0)]).forEach(k => {
+    if (k === "__proto__") return;
+    const inB = trust && has(b0, k), inM = has(m0, k), inT = has(t0, k), b = b0[k], m = m0[k], t = t0[k];
+    if (inM && inT) out[k] = sameJ(m, t) ? m : inB && sameJ(m, b) ? t : m;
+    else {
+      const x = inM ? m : t;
+      if (!(inB && sameJ(x, b))) out[k] = x; // bên kia đã xóa khóa, bên này không đổi: xóa theo
+    }
+  });
+  return out;
+}
 // Nhật ký sức khỏe: bên nào không gửi (tắt đồng bộ phần này, hoặc bản cũ) thì giữ của bên kia, không xóa
 function mergeHealth(B, M, T, trust) {
   if (!T) return M;
@@ -2649,6 +2665,8 @@ function mergeStates(base, mine, theirs, trust) {
     if (c) caps.push(c);
   });
   const pick = f => (trust && base && sameJ(mine[f], base[f])) ? theirs[f] : mine[f];
+  const isObj = v => !!v && typeof v === "object";
+  const keyed = f => isObj(mine[f]) || isObj(theirs[f]) ? mergeKeys(base && base[f], mine[f], theirs[f], trust && !!base) : pick(f);
   // Hộp việc: theo id; một bên sửa thì lấy bên đó, một bên xóa (trust) thì xóa, không trust thì giữ
   const tM = new Map((mine.tasks || []).map(t => [t.id, t])), tT = new Map((theirs.tasks || []).map(t => [t.id, t]));
   const tasks = mergeById(base && base.tasks, mine.tasks, theirs.tasks, trust).map(x => {
@@ -2668,7 +2686,7 @@ function mergeStates(base, mine, theirs, trust) {
   });
   return {
     ...theirs, ...mine, ...extra, ev, caps: caps.length ? caps : mine.caps,
-    bl: pick("bl"), mem: pick("mem"), cfg: pick("cfg"), pm: pick("pm"), memV: pick("memV"),
+    bl: keyed("bl"), mem: pick("mem"), cfg: keyed("cfg"), pm: pick("pm"), memV: pick("memV"),
     lb: Math.max(+mine.lb || 0, +theirs.lb || 0),
     gdel: [...new Set([...(mine.gdel || []), ...(theirs.gdel || [])])].slice(-SANE_MAX),
     tasks,
@@ -3927,7 +3945,10 @@ let gcalFlushing = false, gcalRerun = false, gcalRetryT = null, gcalLockRetryT =
 // chưa kết nối Google, để máy đã kết nối gửi giúp. Mã định sẵn gi giúp hai máy không tạo hai bản trên Google.
 const gcalShared = () => !!(sbUser && S.cfg && S.cfg.gcalClientId && S.cfg.gcalAutoSync !== false);
 function markPending(e) {
-  if (e && !e.demo && !e.gx && (gcalActive() || gcalShared())) e.ds = (e.ds || 0) + 1; // gx: nhập từ Google, không gửi ngược
+  if (e && !e.demo && !e.gx && (gcalActive() || gcalShared())) { // gx: nhập từ Google, không gửi ngược
+    e.ds = (e.ds || 0) + 1;
+    if (!e.gi && !e.gid) e.gi = gcalNewId(); // cấp mã ngay khi đánh dấu: hai máy cùng đẩy thì Google báo trùng (409), không tạo hai bản
+  }
 }
 // Lệnh xóa luôn được ghi lại khi đã liên kết, kể cả khi tự động đồng bộ đang tắt:
 // nếu không, sự kiện trên Google Calendar sẽ nằm lại vĩnh viễn (lỗi UAT xóa chuỗi)
