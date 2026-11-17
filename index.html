@@ -2094,6 +2094,13 @@ body[data-tab="me"] #v { max-width: 980px; margin-inline: auto; }
   body[data-tab="hl"] .app-shell, body[data-tab="hb"] .app-shell, body[data-tab="su"] .app-shell, body[data-tab="me"] .app-shell { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
 }
 @media (max-width: 359px) { .sidebar { left: 0; right: 0; } }
+/* Gói 8 (E2, hướng C): vùng bấm tối thiểu 36px trên cảm ứng và cửa sổ hẹp (bố cục điện thoại). Nút "+" cao 36 thật; nhãn tình trạng ngày (.hl-day) và nút thu gọn (.hv-toggle) giữ nguyên hình dạng, vùng bấm vô hình lên 36x36 (::after). Máy tính chuột (>= 900px) không đổi. */
+@media (pointer: coarse), (max-width: 899px) {
+  .day-card-add-btn { min-height: 36px; }
+  .hl-day, .hv-toggle { position: relative; }
+  .hl-day::after { content: ""; position: absolute; inset: -6px 0; }
+  .hv-toggle::after { content: ""; position: absolute; inset: -6px; }
+}
 </style>
 <script>
   // v0.7.0: thanh tiêu đề của app (và thanh Safari) cùng màu nền trang; chọn Sáng/Tối trong Cài đặt thì theo lựa chọn đó
@@ -2146,7 +2153,7 @@ body[data-tab="me"] #v { max-width: 980px; margin-inline: auto; }
   <!-- Tính năng 4: Natural Language Quick Command Bar -->
   <div class="quick-capture-box">
     <div class="quick-capture-row">
-      <input id="nlpInput" class="quick-capture-input"
+      <input id="nlpInput" class="quick-capture-input" aria-label="Ghi nhanh"
              placeholder="Ghi nhanh, vd: Mai 18h cầu lông 2 tiếng"
              oninput="handleNLPInput(this.value)"
              onkeydown="handleNLPKeydown(event)">
@@ -3722,6 +3729,7 @@ function headerAdd() {
 }
 
 function switchTab(tabId) {
+  if (onbIdx >= 0) onbHide(); // tour lần đầu không nằm đè lên tab khác (chỉ ẩn, chưa tính là đã xem)
   // Rời tab Dự án: bỏ #pj/<mã> khỏi địa chỉ để tải lại trang không nhảy về dự án
   if (tabId !== "pj") try { if (history.state && history.state.pj) history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
   cur = tabId === "set" ? "me" : tabId; // "set" (Danh mục vốn) nay nằm trong tab Tôi
@@ -4685,10 +4693,14 @@ function onbShow() {
   const b = $("onbActs").querySelector(".btn-primary");
   if (b) b.focus({ preventScroll: true });
 }
-function onbEnd(focusCapture) {
+// Chỉ ẩn tour (đổi tab): KHÔNG đánh dấu đã xem, để người mới vẫn thấy lại tour lần sau
+function onbHide() {
   onbIdx = -1;
   $("onb").hidden = true;
   document.querySelectorAll(".onb-target").forEach(x => x.classList.remove("onb-target"));
+}
+function onbEnd(focusCapture) {
+  onbHide();
   try { localStorage.setItem("lc_onb", "1"); } catch (e) {}
   if (focusCapture) $("nlpInput").focus();
 }
@@ -4840,7 +4852,7 @@ const V = {
               ${es.map((e, idx) => {
                 const cap = CM(e.c);
                 return `
-                  <div class="event-item" style="--cap: ${cap.c}" onclick="openEditor('${k}', ${idx})">
+                  <div class="event-item" style="--cap: ${cap.c}" tabindex="0" role="button" aria-label="${esc(e.t)}, ${e.s ? esc(e.s) + ', ' : ''}${r1(e.h)} giờ" onclick="openEditor('${k}', ${idx})" onkeydown="evOpenKey(event, '${k}', ${idx})">
                     <div class="event-item-top">
                       <span class="event-title" title="${esc(e.t)}">${modOn("pj") && e.pj && findPj(e.pj) ? `<span class="ev-pj" style="--pj:${findPj(e.pj).col}" title="Dự án: ${esc(findPj(e.pj).n)}"></span>` : ""}${e.tk ? '<span class="ev-linked" title="Từ Hộp việc"></span>' : ""}${hbOfTitle(e.t) ? `<span class="ev-hb" title="Thói quen: ${esc(hbOfTitle(e.t).n)}">✓</span>` : ""}${esc(e.t)}</span>
                     </div>
@@ -4898,7 +4910,8 @@ const V = {
         return `
           <div class="timeline-event-block"
                style="top:${topPx}px; height:${heightPx}px; --cap:${cap.c}"
-               onclick="openEditor('${activeDate}', ${idx})">
+               tabindex="0" role="button" aria-label="${esc(e.t)}, ${esc(e.s)}, ${r1(e.h)} giờ"
+               onclick="openEditor('${activeDate}', ${idx})" onkeydown="evOpenKey(event, '${activeDate}', ${idx})">
             <b>${e.s} – ${tt(e.s, e.h)}</b> · ${modOn("hb") && hbOfTitle(e.t) ? `<span class="ev-hb" title="Thói quen">✓</span>` : ""}${esc(e.t)} (${r1(e.h)}h)${modOn("pj") && e.pj && findPj(e.pj) ? ` <span class="tl-pj" style="--pj:${findPj(e.pj).col}">${esc(findPj(e.pj).n)}</span>` : ""}
           </div>
         `;
@@ -4979,7 +4992,7 @@ const V = {
         tbl += `<td class="cal-day-cell ${isToday ? 'is-today' : k < tk ? 'past' : ''} ${j > 4 ? 'wkend' : ''}" tabindex="0" onclick="openEditor('${k}')" aria-label="${DN_VI[j]} ${dt.getDate()}/${dt.getMonth() + 1}${isToday ? ", hôm nay" : ""}">
           <span class="cd-date">${dt.getDate()}/${dt.getMonth() + 1}</span>
           ${es.map((e, idx) => `
-            <div class="cd-ev" style="--cap:${CM(e.c).c}" onclick="event.stopPropagation(); openEditor('${k}', ${idx})" title="${esc(e.t)} (${e.s || ''} ${r1(e.h)}h)">${e.s ? e.s + ' ' : ''}${esc(e.t)} · ${r1(e.h)}h</div>
+            <div class="cd-ev" style="--cap:${CM(e.c).c}" tabindex="0" role="button" aria-label="${esc(e.t)}, ${e.s ? esc(e.s) + ', ' : ''}${r1(e.h)} giờ" onclick="event.stopPropagation(); openEditor('${k}', ${idx})" onkeydown="evOpenKey(event, '${k}', ${idx})" title="${esc(e.t)} (${e.s || ''} ${r1(e.h)}h)">${e.s ? e.s + ' ' : ''}${esc(e.t)} · ${r1(e.h)}h</div>
           `).join("")}
         </td>`;
       }
@@ -5147,8 +5160,8 @@ const V = {
         <tr>
           <td>
             <div style="display:flex; align-items:center; gap:8px;">
-              <input type="color" value="${c.c}" onchange="updateCap('${c.k}', 'c', this.value)" style="width:28px; height:28px; padding:0; border:none; cursor:pointer; border-radius:4px; background:none;">
-              <input type="text" value="${esc(c.n)}" onchange="updateCap('${c.k}', 'n', this.value)" style="width:160px; font-weight:500;">
+              <input type="color" value="${c.c}" aria-label="Màu ${esc(c.n)}" onchange="updateCap('${c.k}', 'c', this.value)" style="width:28px; height:28px; padding:0; border:none; cursor:pointer; border-radius:4px; background:none;">
+              <input type="text" value="${esc(c.n)}" aria-label="Tên ${esc(c.n)}" onchange="updateCap('${c.k}', 'n', this.value)" style="width:160px; font-weight:500;">
             </div>
           </td>
           <td>
@@ -5185,7 +5198,7 @@ const V = {
                 <button type="button" class="btn btn-sm btn-ghost" onclick="resetCapKeywords('${c.k}')" style="font-size:12px; color:var(--tx-sec);">Mặc định</button>
               </div>
               <input type="text"
-                     value="${esc((c.kw || []).join(', '))}"
+                     value="${esc((c.kw || []).join(', '))}" aria-label="Từ khóa ${esc(c.n)}"
                      onchange="updateCapKeywords('${c.k}', this.value)"
                      placeholder="vd: gym, bơi, chạy bộ"
                      style="width:100%; font-size:13px; background:var(--card);">
@@ -5262,6 +5275,12 @@ function openEditor(dateStr, editIndex = null) {
   }, 100);
 }
 
+// Enter/Space trên hoạt động (div role=button) mở đúng việc như bấm chuột; phím khác và tổ hợp Ctrl/Alt/Meta bỏ qua
+function evOpenKey(e, k, i) {
+  if (e.target !== e.currentTarget || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openEditor(k, i); }
+}
+
 function closeEditor() {
   $("modalOverlay").classList.remove("open");
   ed = null;
@@ -5289,6 +5308,7 @@ function deleteCurrentEvent() {
   save();
   gcalFlush();
   draw();
+  LF = $("addBtn"); LFi = -1; // phần tử đã mở bị vẽ lại mất: trả focus về nút Thêm thay vì rơi về body
   closeEditor();
   offerUndo(`Đã xóa "${delEv.t}"`, () => putEvents(gone), gone);
 }
@@ -5871,7 +5891,8 @@ function importData(inputEl) {
       save(); draw(true);
       showToast("Đã khôi phục", "ok");
     } catch (err) {
-      showToast("Tệp sao lưu không hợp lệ: " + err.message, "bad");
+      console.warn(err);
+      showToast(err && err.name === "SyntaxError" ? "Tệp không phải JSON hợp lệ" : "Tệp sao lưu không hợp lệ: " + err.message, "bad");
     } finally { inputEl.value = ""; }
   };
   reader.readAsText(file);
