@@ -19,8 +19,8 @@ PWA cá nhân chia 168 giờ/tuần cho 5 loại vốn (Sức khỏe, Quan hệ,
 | Máy chủ xem thử | `python3 -m http.server 8790 --bind 127.0.0.1` ở thư mục gốc (cổng 8765 thuộc dự án khác) |
 | Test API | `python3 tests/api/test_ai_plan.py` (12 test) |
 | Cú pháp JS | trích khối `<script>` không có `src` của index.html, `node --check`; và `node --check sw.js` |
-| Test service worker | `node tests/sw/test_sw.js` (3 test, in `OK n/n`, thoát mã khác 0 nếu đỏ) |
-| e2e trong trang | 14 bộ trong `tests/e2e/` theo `tests/e2e/README.md`; cửa sổ ≥ 1400px, mỗi bộ trên trang mới tải sau `localStorage.clear(); localStorage.setItem("lc_onb","1")`, rồi `loadDemo()` và `await __run(file, fn)` |
+| Test service worker | `node tests/sw/test_sw.js` (23 test, in `OK n/n`, thoát mã khác 0 nếu đỏ) |
+| e2e trong trang | 15 bộ trong `tests/e2e/` theo `tests/e2e/README.md`; cửa sổ ≥ 1400px, mỗi bộ trên trang mới tải sau `localStorage.clear(); localStorage.setItem("lc_onb","1")`, rồi `loadDemo()` và `await __run(file, fn)` |
 | Test gộp dữ liệu | mở `/tests/merge-tests.html`, tiêu đề trang phải `PASS n/n` (hiện 30/30; README ghi 20/20 là cũ) |
 | Giao diện | `tests/e2e/audit2.js`, `crdrive.js` (tương phản), `stdrive.js` (nét viền), `uiaudit.js` |
 

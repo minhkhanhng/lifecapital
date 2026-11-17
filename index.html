@@ -998,6 +998,7 @@ nav.main-nav button.active { border: 0; }
 .page-head { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .page-title-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .page-title { margin: 0; font: 600 22px/1.2 var(--font-ui); color: var(--tx); }
+.net-chip { flex: none; white-space: nowrap; } /* gói 5: nhãn "Bản đã lưu" khi SW không với tới máy chủ; không bấm được */
 .page-sub { margin: 0; color: var(--tx-sec); font-size: 13px; }
 /* Header theo tab: chỉ hiện nút có tác dụng ở tab đang mở */
 body[data-tab="pj"] #reviewBtn, body[data-tab="hv"] #reviewBtn, body[data-tab="me"] #reviewBtn, body[data-tab="hl"] #reviewBtn, body[data-tab="su"] #reviewBtn,
@@ -2088,6 +2089,7 @@ body[data-tab="me"] #v { max-width: 980px; margin-inline: auto; }
     <div class="page-head">
       <div class="page-title-row">
         <h2 class="page-title" id="pageTitle">Lịch biểu</h2>
+        <span class="pill pill-neutral net-chip" id="netChip" role="status" title="Chưa kết nối được máy chủ, đang xem bản đã lưu trên máy" aria-label="Chưa kết nối được máy chủ, đang xem bản đã lưu trên máy" hidden>Bản đã lưu</span>
       </div>
       <p class="page-sub" id="pageSub"></p>
     </div>
@@ -7899,6 +7901,21 @@ if ("serviceWorker" in navigator && (location.protocol === "https:" || location.
     setInterval(() => reg.update().catch(() => {}), 30 * 60000);
   }).catch(() => {});
   navigator.serviceWorker.addEventListener("controllerchange", () => { if (swReloading) location.reload(); });
+  // Gói 5: hỏi SW trạng thái máy chủ khi mở, khi có mạng lại, khi quay lại tab
+  const askNet = msg => { const c = navigator.serviceWorker.controller; if (c) try { c.postMessage(msg); } catch (e) {} };
+  navigator.serviceWorker.ready.then(() => askNet("net?"), () => {}); // lúc mở: dùng kết quả SW vừa có
+  const recheck = () => askNet("net!"); // mạng vừa đổi hoặc quay lại tab: luôn hỏi lại máy chủ
+  addEventListener("online", recheck);
+  addEventListener("offline", recheck);
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") recheck(); });
+}
+// Gói 5: SW báo {lc:"net", ok}; ok=false là đang mở bản đã lưu mà máy chủ không trả lời → hiện nhãn "Bản đã lưu"
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.addEventListener("message", e => {
+    const d = e.data;
+    if (!d || d.lc !== "net" || typeof d.ok !== "boolean") return;
+    const c = $("netChip"); if (c) c.hidden = d.ok;
+  });
 }
 
 /* ==========================================================================
