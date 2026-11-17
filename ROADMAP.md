@@ -13,7 +13,7 @@ Thứ tự đề xuất (an toàn dữ liệu → bảo mật → hiệu năng �
 | 3 | xss-va-token | B1 XSS tên triệu chứng, B6 token Google ở sessionStorage. B3 (hàm AI) BỎ: PO không dùng AI | Sonnet | Xong (nhánh `claude/xss-va-token`, E2EXSS 14/14), chưa commit, chưa push |
 | 4 | gop-hai-may | A5 `gi` Google trong `markPending`, A6 gộp `bl`/`cfg` từng khóa | Opus | Xong (nhánh `claude/gop-hai-may`, E2EMRG 21/21), chưa push |
 | 5 | sw-mo-nhanh | C1 mở bản đã lưu ngay (đã đo: chờ 4,07 s), A8 trả bản cache khi 404/500, C4 giảm CORE tải trước + nén icon 512, MỚI: hiện dấu hiệu offline khi chưa đăng nhập | Opus | Xong (nhánh `claude/sw-mo-nhanh`, test_sw 23/23, E2ESW 10/10; đã đo SW thật), chưa push |
-| 6 | dong-bo-nhe | C2 đồng bộ mỗi phút + `stampBase` + `cloudPendingCount`, C3 Cài đặt | Opus | Chưa (cần số đo trước/sau) |
+| 6 | dong-bo-nhe | C2 đồng bộ mỗi phút + `stampBase` + `cloudPendingCount`, C3 Cài đặt | Opus | Xong (nhánh `claude/dong-bo-nhe`, E2ESYNC2 24/24, có số đo trước/sau; C2d bỏ), chưa push |
 | 7 | csp-staging | B2 CSP, B5 tự host supabase-js | Opus | Chưa (thử ở `staging`; PO cho phép push staging riêng) |
 | 8 | truy-cap-va-cam-ung | E1 bàn phím mở hoạt động, E2 vùng bấm 36 px, E3 nhãn truy cập/focus/báo lỗi JSON/tour | Sonnet | Chưa (E2 nhìn thấy được; kiểm 390/820/1440) |
 | 9 | hieu-nang-sau | C5 ghi `lc2_mine` trễ, C6 tách tab/minify/kính mờ tự nhẹ | Opus | Chưa (rủi ro cao hơn; làm sau cùng và chỉ khi số đo gói 5–6 chưa đủ) |

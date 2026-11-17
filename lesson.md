@@ -1,5 +1,10 @@
 # Bài học (mới nhất ở trên)
 
+## 2026-11-17 · Kiểm khi đo: số đo của implementer có thể là nhiễu
+- Lỗi: Opus báo `save()` nhanh hơn (165 → 139 ms) nhưng tôi đo lại thì 165,5 ms, không đổi.
+- Nguyên nhân: một lần đo mỗi lần chạy trên trang có nhiễu; gói không đụng đường `save()`.
+- Cách tránh: tự đo lại số quan trọng trước khi ghi vào CURRENT; chỉ ghi mức giảm khi cơ chế giải thích được; ghi rõ "một lần đo, Chrome pane, không phải điện thoại".
+
 ## 2026-11-17 · Phép đo tìm ra lỗ hổng mà review và test không thấy
 - Lỗi: đo SW thật cho thấy `net?` trả kết quả cũ tới 30 s nên nhãn "Bản đã lưu" sai khi mạng đứt giữa phiên; review chỉ ra mọi điều hướng đều nhận `index.html` và phản hồi redirect có thể vào cache.
 - Nguyên nhân: test giả lập Node không chạy trình duyệt thật; plan giả định "30 s là đủ mới".
