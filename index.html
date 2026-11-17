@@ -7389,7 +7389,11 @@ function cloudKeep(meta, baseRaw) {
   try {
     if (meta) localStorage.setItem("lc_sync", JSON.stringify(meta)); else localStorage.removeItem("lc_sync");
     if (baseRaw) localStorage.setItem("lc_sync_base", baseRaw); else localStorage.removeItem("lc_sync_base");
-  } catch (e) {}
+  } catch (e) {
+    // Ghi base lỗi: bỏ luôn lc_sync để không còn meta mồ côi (rev mới mà base cũ làm gộp sai lần sau)
+    try { localStorage.removeItem("lc_sync"); } catch (e2) {}
+    console.warn("cloudKeep: không ghi được bản gốc đồng bộ", e);
+  }
 }
 
 // Dạng chuẩn để so sánh và gửi: đã làm sạch như khi đọc, khóa theo thứ tự chữ cái, hoạt động trong ngày
