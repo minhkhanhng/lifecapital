@@ -1,5 +1,10 @@
 # HANDOFF · Bàn giao cho session sau (mục mới nhất ở trên)
 
+## 2026-11-17 · Gói 6b xong (commit cục bộ, chưa push, chưa deploy)
+- Nhánh `claude/chu-ky-mt` (worktree `.claude/worktrees/chu-ky-mt`) từ `claude/dong-bo-nhe`: sửa lỗi mt giả do chữ ký nhạy thứ tự khóa. Số liệu: CURRENT.md mục Gói 6b. Phải có trong mọi bản phát hành chứa gói 6.
+- Các nhánh UI song song (`claude/ui-suc-khoe`, `claude/tab-thoi-quen`) tách từ `claude/sw-mo-nhanh`; thay đổi gói này gọn (khoảng 13 dòng ở vùng stamp/`sameJ`/`canonState`) nên dễ gộp.
+- Next step: gói 7 `csp-staging` hoặc gói 8; hoặc gộp các nhánh và chạy lại 14 bộ e2e + mobile trước khi phát hành. Opus/Sonnet, reviewer khác model, không fable.
+
 ## 2026-11-17 · Gói 6 xong (đã commit cục bộ, chưa push, chưa deploy)
 - Nhánh `claude/dong-bo-nhe` (worktree `.claude/worktrees/dong-bo-nhe`) chứa cả sáu nhánh gói. Số liệu và số đo trước/sau: CURRENT.md mục Gói 6.
 - Phát hiện lỗi cũ có thể làm mất bản sửa task khi hai máy cùng mở (`stampEdits`/`taskSig` nhạy thứ tự khóa): cần gói riêng trước khi phát hành (đã đề xuất; xem CURRENT).

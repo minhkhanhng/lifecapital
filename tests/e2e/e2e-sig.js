@@ -1,4 +1,4 @@
-// Gói 7 (chu-ky-mt): chữ ký so sánh của stampEdits/sameJ không phụ thuộc thứ tự khóa.
+// Gói 6b (chu-ky-mt): chữ ký so sánh của stampEdits/sameJ không phụ thuộc thứ tự khóa.
 // Chạy sau loadDemo() trên trang dữ liệu thử. Khôi phục S, localStorage, sessionStorage khi xong; chỉ dùng dữ liệu giả.
 window.E2ESIG = async function () {
   const out = [], ok = (id, pass, info) => out.push({ id, pass: !!pass, info: pass ? undefined : info });
