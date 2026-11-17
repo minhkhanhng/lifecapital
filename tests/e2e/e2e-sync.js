@@ -48,6 +48,17 @@ window.E2ESYNC = async function () {
   } catch (e) { ok("S3.err", false, String(e)); }
   finally { S.ev = JSON.parse(origEv); }
 
+  // ---- A4: wipeLocal xóa cả token Google và cờ liên quan
+  const gKeys = snapKeys(["gcal_token", "gcal_token_exp", "gcal_linked", "lc_gx_seen"]);
+  try {
+    localStorage.setItem("gcal_token", "tok"); localStorage.setItem("gcal_token_exp", "9999999999999");
+    localStorage.setItem("gcal_linked", "1"); localStorage.setItem("lc_gx_seen", "{}");
+    wipeLocal();
+    ok("S4.1 wipeLocal xóa token, hạn, cờ liên kết, lc_gx_seen", ["gcal_token", "gcal_token_exp", "gcal_linked", "lc_gx_seen"].every(k => lsGet(k) === null), snapKeys(["gcal_token", "gcal_token_exp", "gcal_linked", "lc_gx_seen"]));
+    ok("S4.2 wipeLocal vẫn đặt lại dữ liệu", len(S.tasks) === 0 && Object.keys(S.ev).length === 0, [len(S.tasks), Object.keys(S.ev).length]);
+  } catch (e) { ok("S4.err", false, String(e)); }
+  finally { restoreKeys(gKeys); restoreKeys(mainKeys); S = origS; lastRaw = lsGet("lc2"); draw(true); }
+
   restoreKeys(mainKeys);
   const pass = out.filter(x => x.pass).length;
   return { pass, total: out.length, fail: out.filter(x => !x.pass) };
