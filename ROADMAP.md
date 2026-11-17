@@ -11,7 +11,7 @@ Thứ tự đề xuất (an toàn dữ liệu → bảo mật → hiệu năng �
 | 1b | importData-khong-cat | `importData` chế độ Gộp còn cắt `secs/ms/ups` 20/50/30 (`index.html:~5743`), cùng cơ chế A1 | Sonnet | Xong (E2EIMP 5/5, nhánh `claude/importdata-khong-cat`), chưa push |
 | 2 | dong-bo-an-toan | A2 base đồng bộ, A3 nhập Gộp theo id, A4 token Google khi xóa máy, A7 lỗi save(), A8 SW trả trang lỗi | Sonnet | Xong (nhánh `claude/dong-bo-an-toan`, E2ESYNC 14/14, 832/832 cũ), chưa push |
 | 3 | xss-va-token | B1 XSS tên triệu chứng, B6 token Google ở sessionStorage. B3 (hàm AI) BỎ: PO không dùng AI | Sonnet | Xong (nhánh `claude/xss-va-token`, E2EXSS 14/14), chưa commit, chưa push |
-| 4 | gop-hai-may | A5 `gi` Google trong `markPending`, A6 gộp `bl`/`cfg` từng khóa | Opus | Chưa (chạm logic gộp, rủi ro trung bình) |
+| 4 | gop-hai-may | A5 `gi` Google trong `markPending`, A6 gộp `bl`/`cfg` từng khóa | Opus | Xong (nhánh `claude/gop-hai-may`, E2EMRG 21/21), chưa push |
 | 5 | sw-mo-nhanh | C1 mở bản đã lưu ngay (đã đo: chờ 4,07 s), A8 trả bản cache khi 404/500, C4 giảm CORE tải trước + nén icon 512, MỚI: hiện dấu hiệu offline khi chưa đăng nhập | Opus | Chưa (đổi hành vi nhận bản mới; không đo được SW ở 127.0.0.1, cần https/localhost) |
 | 6 | dong-bo-nhe | C2 đồng bộ mỗi phút + `stampBase` + `cloudPendingCount`, C3 Cài đặt | Opus | Chưa (cần số đo trước/sau) |
 | 7 | csp-staging | B2 CSP, B5 tự host supabase-js | Opus | Chưa (thử ở `staging`; PO cho phép push staging riêng) |

@@ -49,6 +49,12 @@ Còn lại:
 - Reviewer Haiku: 0 Critical, 1 Important (test gọi `wipeLocal` không có chốt dữ liệu thử) đã sửa. Minor: `onclick="hlSy('${k}'...)"` dùng id (id đã lọc `[\w-]{1,24}` trong `cleanState`, không đổi), token cũ không có hạn thì không hết trong phiên (như trước), `e2e-v063.js` xóa khóa gcal ở sessionStorage không khôi phục (chỉ token phiên).
 - Dòng `<b>${a.t}</b><span>${a.d}</span>` vẫn in thô: mọi chuỗi lời khuyên mới phải `esc` dữ liệu người dùng ở nguồn.
 
+## Gói 4 gop-hai-may (nhánh `claude/gop-hai-may`, từ `claude/xss-va-token`, chưa push)
+- A5: `markPending` cấp `gi` ngay khi đánh dấu (chỉ khi đủ điều kiện, chưa có `gi` và `gid`). A6: hàm mới `mergeKeys` gộp `bl` và `cfg` ba bên theo từng khóa (giữ `0`/`false`, khóa lạ, `__proto__` bị bỏ); `mem`, `pm`, `memV` vẫn `pick`.
+- Test đỏ trước: E2EMRG 12/20 (M5.1, M5.2, M5.6, M6.1, M6.2, M6.6, M6.7, M6.9 đỏ). Tôi chạy lại sau thay đổi cuối: E2EMRG 21/21 (thêm M5.7 sau review), `merge-tests.html` PASS 35/35 (30 cũ + 5 mới), `node --check` đạt. Opus báo (code không đổi sau đó): E2ESYNC 14/14, E2ELIM 12/12, E2EIMP 5/5, E2EXSS 14/14, E2E 95/95, E2EUAT2 71/71, E2E63 77/77, E2EUAT3 62/62. Chưa chạy mobile 390×844 và sáu bộ e2e còn lại.
+- Reviewer Sonnet (implementer là Opus): 0 Critical, không có đường mất dữ liệu mới. Ghi nhận hành vi: (1) gộp KHÔNG có gốc chung là hợp hai bên, khóa máy này đã xóa có thể quay lại từ máy kia (`cfg.mods`, `bl[k]`, `gcalClientId`); (2) xung đột cùng khóa: máy này thắng (không có `mt`); (3) `cfg.mods` và `bl[k]={u,d}` so nguyên khối: hai máy sửa khác thành phần thì mất một; (4) `mem` còn lỗi gộp cũ (chỉ mất gợi ý đoán loại vốn); (5) sự kiện chờ gửi tạo TRƯỚC gói này vẫn đua ở `gcalCreateEvent` như cũ.
+- Lệch plan: `bl[k]` có dạng `{u,d}` (không phải số); M6.3, M6.4 xanh sẵn vì `pick` cũ đã xử lý khi chỉ một khóa đổi.
+
 ## Quyết định PO (2026-11-17)
 - Từ 2026-11-17: không dùng fable nữa; ưu tiên model ít tốn token nhất mà vẫn hiệu quả (Haiku việc cơ học, Sonnet code, reviewer khác model với implementer).
 - Đau nhất: chậm / nặng. Cấm đụng: không có phần nào (mọi đề xuất vẫn qua duyệt). Quy tắc dữ liệu: không mất dữ liệu người dùng. Đường quay lại: tải JSON + tag git. Mục tiêu từng tab: dùng README, chưa PO xác nhận.

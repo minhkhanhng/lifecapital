@@ -1,5 +1,10 @@
 # Bài học (mới nhất ở trên)
 
+## 2026-11-17 · Plan viết sai hình dạng dữ liệu và ca test xanh giả
+- Lỗi: plan gói 4 giả định `bl` là số (`bl{sk:1}`) nhưng thật là `{u,d}`; ca M5.6 ban đầu dùng chung một đối tượng cho cả hai bên nên không kiểm được "hai máy cấp `gi` khác nhau".
+- Nguyên nhân: viết plan từ báo cáo review mà chưa đọc `cleanState`; test dựng dữ liệu từ cùng một biến.
+- Cách tránh: trước khi viết ca test gộp, đọc hình dạng thật sau `cleanState`; mỗi ca "hai máy" phải dựng hai bản độc lập có giá trị khác nhau; `mergeMap` bỏ `0`/`false` nên không dùng cho giá trị vô hướng.
+
 ## 2026-11-17 · `preview_start` đọc nhầm cấu hình của thư mục chính
 - Lỗi: trong worktree, `preview_start` báo lỗi đường dẫn `.../scratchpad/site` dù worktree có `.claude/launch.json` riêng.
 - Nguyên nhân: công cụ dùng cấu hình `launch.json` của thư mục chính, không phải của worktree.
