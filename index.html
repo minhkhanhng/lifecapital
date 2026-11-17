@@ -935,6 +935,18 @@ body.hv-dragging .day-card { border-style: dashed; }
   .hb-list { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -2px; padding: 0 2px 2px; -webkit-overflow-scrolling: touch; }
   .hb-list::-webkit-scrollbar { display: none; }
 }
+.ev-subs, .subs-chip { display: inline-block; font-size: 11px; line-height: 1.5; padding: 0 6px; border-radius: 8px; background: var(--ac-soft, var(--card-subtle)); color: var(--tx-sec); margin-left: 5px; font-weight: 500; }
+.subs-chip:empty { display: none; }
+.subs-tg { display: flex; align-items: center; gap: 4px; width: 100%; min-height: 36px; padding: 6px 12px; font: inherit; font-size: 14px; color: var(--tx); background: var(--card-subtle); border: 1px solid var(--bd); border-radius: var(--radius-sm); cursor: pointer; text-align: left; }
+.subs-tg .subs-caret { margin-left: auto; font-size: 12px; color: var(--tx-sec); }
+.subs-panel { display: flex; flex-direction: column; gap: 2px; padding: 6px 0 0; }
+.subs-panel[hidden] { display: none; }
+.ed-sub { display: flex; align-items: center; gap: 4px; }
+.ed-sub-ck { display: inline-flex; align-items: center; justify-content: center; min-width: 36px; min-height: 36px; cursor: pointer; }
+.ed-sub input.ed-sub-t { flex: 1; min-width: 0; min-height: 36px; font-size: 14px; }
+.ed-sub input.ed-sub-t.done { text-decoration: line-through; color: var(--tx-sec); }
+.ed-sub-x { min-width: 36px; min-height: 36px; border: 0; background: transparent; color: var(--tx-sec); font-size: 16px; cursor: pointer; border-radius: var(--radius-sm); }
+#inpSub { min-height: 36px; font-size: 14px; width: 100%; }
 .ev-linked { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--ac); margin-right: 5px; vertical-align: middle; }
 /* Cột bên lịch hẹp: bỏ nút lên/xuống (đổi thứ tự bằng kéo, hoặc ở tab Hộp việc), gom mỗi việc nhỏ về một dòng */
 .hv-box.panel .hv-sub { flex-wrap: nowrap; }
@@ -2529,7 +2541,8 @@ let cloudBusy = false, cloudAgain = false, cloudT = null, cloudApplying = false,
 let cloud = { st: "off", n: 0, at: 0, msg: "" }; // st: off · sync · ok · wait · offline · auth · setup · err
 function readDisk() { try { return localStorage.getItem("lc2"); } catch (e) { return null; } }
 const evKey = e => [e.t, e.s, e.h, e.c, e.m, e.r || "", e.demo ? 1 : 0, e.tk || ""].join("|");
-const evCore = e => [e.t, e.s, e.h, e.c, e.m, e.r || "", e.tk || "", e.demo ? 1 : 0, e.pj || "", e.sec || "", extraSig(e)].join("|");
+const subsSig = e => Array.isArray(e.subs) && e.subs.length ? JSON.stringify(sortKeysDeep(e.subs)) : ""; // việc con của hoạt động: chữ ký không phụ thuộc thứ tự khóa
+const evCore = e => [e.t, e.s, e.h, e.c, e.m, e.r || "", e.tk || "", e.demo ? 1 : 0, e.pj || "", e.sec || "", extraSig(e), subsSig(e)].join("|");
 // Mã cho hoạt động có từ trước v0.4.0: suy từ ngày + nội dung + thứ tự trong các bản giống hệt, nên mọi máy
 // cấp ra cùng một mã cho cùng một hoạt động. Hoạt động mới được cấp mã ngẫu nhiên khi lưu (stampEdits).
 function fnv(str) { let h = 0x811c9dc5; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); } return (h >>> 0).toString(36); }
@@ -2656,12 +2669,37 @@ function mergeProfile(B, M, T, trust) {
 // - Chỉ một bên sửa so với gốc chung: lấy bên đã sửa. Cả hai cùng sửa: bản có thời điểm sửa (mt) sau cùng thắng.
 // - Một bên xóa (trust, có trong gốc): xóa, trừ khi bên kia đã sửa nó sau gốc chung (giữ bản đã sửa).
 // - Không trust (lần đầu gộp với tài khoản, bản ghi kiểu cũ): cộng hai bên, hoạt động giống hệt trong cùng ngày chỉ giữ một.
+// Gộp việc con của một hoạt động theo id (bên thắng w giữ thứ tự; bên kia o bổ sung). Cần gốc chung (hasBase) mới biết bên nào xóa/sửa:
+// việc con có ở một bên, không có ở bên kia: nếu có trong gốc và bên giữ nó không sửa thì là bị xóa; không có trong gốc thì là thêm mới.
+function mergeSubs(bl, wl, ol, hasBase) {
+  const bm = new Map((bl || []).map(x => [x.id, x])), om = new Map((ol || []).map(x => [x.id, x])), wm = new Map((wl || []).map(x => [x.id, x]));
+  const out = [];
+  (wl || []).forEach(w => {
+    const o = om.get(w.id), b = bm.get(w.id);
+    if (!o) { if (!(hasBase && b && sameJ(w, b))) out.push(w); return; }  // bên kia xóa và bên này không sửa: xóa theo
+    if (sameJ(w, o)) { out.push(w); return; }
+    const r = { ...w };
+    if (b && sameJ({ t: w.t }, { t: b.t })) r.t = o.t;                      // bên thắng không đổi tên: lấy tên bên kia
+    const wd = w.done ? 1 : 0, od = o.done ? 1 : 0, bd = b ? (b.done ? 1 : 0) : null;
+    const d = wd === od ? wd : bd === null ? (wd || od) : (wd !== bd ? wd : od);
+    if (d) r.done = 1; else delete r.done;
+    out.push(r);
+  });
+  (ol || []).forEach(o => {
+    if (wm.has(o.id)) return;
+    const b = bm.get(o.id);
+    if (hasBase && b && sameJ(o, b)) return;                                  // bên thắng đã xóa, bên kia không sửa
+    out.push(o);
+  });
+  return out;
+}
 function mergeEv(base, mine, theirs, trust, oldT) {
   const idx = st => { const m = new Map(); if (st) Object.keys(st.ev).forEach(k => st.ev[k].forEach(e => { if (e.id) m.set(e.id, [k, e]); })); return m; };
   const B = idx(base), M = idx(mine), T = idx(theirs), out = {};
   // Bên kia là bản cũ (không có trường pj): so sánh như thể nó giữ nguyên nhãn dự án của gốc/máy này
   const same = (a, b) => !!a && !!b && a[0] === b[0] && (oldT ? evCore({ ...a[1], pj: "", sec: "" }) === evCore({ ...b[1], pj: "", sec: "" }) : evCore(a[1]) === evCore(b[1]));
   const put = ([k, e]) => (out[k] = out[k] || []).push(e);
+  const subMerged = new Set(); // hoạt động vừa gộp việc con: khác cả hai bên nên không bị lọc bản trùng
   // hoạt động chưa có mã (vừa tạo, chưa lưu) giữ nguyên
   [mine, theirs].forEach(st => Object.keys(st.ev).forEach(k => st.ev[k].forEach(e => { if (!e.id && st === mine) put([k, e]); })));
   new Set([...M.keys(), ...T.keys()]).forEach(id => {
@@ -2676,6 +2714,13 @@ function mergeEv(base, mine, theirs, trust, oldT) {
       if (oldT && w === t) ["pj", "sec"].forEach(f => { if (!w[1][f] && m[1][f]) w[1][f] = m[1][f]; }); // máy bản cũ không biết dự án: giữ nhãn, phần
       if (!w[1].gid && o[1].gid) w[1].gid = o[1].gid; // giữ liên kết Google, tránh tạo bản trùng
       if (!w[1].gi && o[1].gi) w[1].gi = o[1].gi;
+      if (w[1].subs || o[1].subs || (b && b[1].subs)) {
+        const ms = mergeSubs(b && b[1].subs, w[1].subs, o[1].subs, trust && !!b);
+        const we = { ...w[1] }; // không sửa lên bản gốc của hai bên
+        subMerged.add(we);
+        if (ms.length) we.subs = ms; else delete we.subs;
+        w = [w[0], we];
+      }
       put(w);
       return;
     }
@@ -2690,6 +2735,7 @@ function mergeEv(base, mine, theirs, trust, oldT) {
       const cnt = (st, key) => ((st.ev[k] || []).filter(e => evCore(e) === key).length);
       const kept = new Map();
       L = [...L].sort((a, b) => (b.gid ? 1 : 0) - (a.gid ? 1 : 0)).filter(e => {
+        if (subMerged.has(e)) return true;
         const key = evCore(e), n = kept.get(key) || 0;
         if (n >= Math.max(cnt(mine, key), cnt(theirs, key))) return false;
         kept.set(key, n + 1);
@@ -2863,6 +2909,7 @@ let suMore = false; // Tổng quan: bảng "Giờ theo loại vốn" đang mở
 let timelineDayIdx = dow(new Date()); // 0 = T2 .. 6 = CN; mặc định là hôm nay
 let N = 1; // Tổng quan: nhận định theo tuần đang xem (1), trung bình 4/8 tuần, hoặc mọi tuần (0)
 let ed = null, ei = null;
+let edSubs = [], edSubsOpen = false; // việc con đang sửa trong popup hoạt động (gói subtask)
 
 const evs = i => [0, 1, 2, 3, 4, 5, 6].flatMap(j => S.ev[ky(ad(W[i], j))] || []);
 // Giờ của một vốn trong tuần i (gồm giờ cố định). Từ v0.6.0 mọi hoạt động đều tính, không còn Nạp/Tiêu.
@@ -4842,7 +4889,7 @@ const V = {
                 return `
                   <div class="event-item" style="--cap: ${cap.c}" onclick="openEditor('${k}', ${idx})">
                     <div class="event-item-top">
-                      <span class="event-title" title="${esc(e.t)}">${modOn("pj") && e.pj && findPj(e.pj) ? `<span class="ev-pj" style="--pj:${findPj(e.pj).col}" title="Dự án: ${esc(findPj(e.pj).n)}"></span>` : ""}${e.tk ? '<span class="ev-linked" title="Từ Hộp việc"></span>' : ""}${hbOfTitle(e.t) ? `<span class="ev-hb" title="Thói quen: ${esc(hbOfTitle(e.t).n)}">✓</span>` : ""}${esc(e.t)}</span>
+                      <span class="event-title" title="${esc(e.t)}">${modOn("pj") && e.pj && findPj(e.pj) ? `<span class="ev-pj" style="--pj:${findPj(e.pj).col}" title="Dự án: ${esc(findPj(e.pj).n)}"></span>` : ""}${e.tk ? '<span class="ev-linked" title="Từ Hộp việc"></span>' : ""}${hbOfTitle(e.t) ? `<span class="ev-hb" title="Thói quen: ${esc(hbOfTitle(e.t).n)}">✓</span>` : ""}${esc(e.t)}${e.subs && e.subs.length ? `<span class="ev-subs" title="Việc con: ${e.subs.filter(x => x.done).length}/${e.subs.length} xong">${e.subs.filter(x => x.done).length}/${e.subs.length}</span>` : ""}</span>
                     </div>
                     <div class="event-meta">
                       <span>${e.s ? e.s + ' · ' : ''}${r1(e.h)}h</span>
@@ -5251,6 +5298,9 @@ function openEditor(dateStr, editIndex = null) {
   ed = dateStr;
   ei = editIndex;
   capTouched = editIndex != null; // sửa hoạt động có sẵn: giữ loại vốn đang có
+  const cur = editIndex != null ? (S.ev[dateStr] || [])[editIndex] : null;
+  edSubs = cur && Array.isArray(cur.subs) ? cur.subs.map(x => ({ ...x })) : [];
+  edSubsOpen = false;
   renderEditorSheet();
   $("modalOverlay").classList.add("open");
   setTimeout(() => {
@@ -5261,6 +5311,50 @@ function openEditor(dateStr, editIndex = null) {
     }
   }, 100);
 }
+
+// ---- Việc con trong popup hoạt động (Hướng B: mục thu gọn, chip n/m)
+const subsCnt = l => (l || []).length ? `${l.filter(x => x.done).length}/${l.length}` : "";
+function subsRows() {
+  return edSubs.map((x, i) => `<div class="ed-sub">
+    <label class="ed-sub-ck"><input type="checkbox" ${x.done ? "checked" : ""} onchange="subDone(${i}, this.checked)" aria-label="Xong: ${esc(x.t)}"></label>
+    <input class="ed-sub-t ${x.done ? "done" : ""}" value="${esc(x.t)}" maxlength="120" oninput="subName(${i}, this.value)" aria-label="Tên việc con ${i + 1}">
+    <button type="button" class="ed-sub-x" onclick="subDel(${i})" aria-label="Xóa việc con: ${esc(x.t)}">×</button>
+  </div>`).join("");
+}
+function subsHTML() {
+  return `<div class="form-group">
+    <button type="button" class="subs-tg" id="subsToggle" aria-expanded="${edSubsOpen}" aria-controls="subsPanel" onclick="subsToggle()">Việc con<span class="subs-chip" id="subsCount">${subsCnt(edSubs)}</span><span class="subs-caret" aria-hidden="true">${edSubsOpen ? "▾" : "▸"}</span></button>
+    <div class="subs-panel" id="subsPanel" ${edSubsOpen ? "" : "hidden"}>
+      <div id="subsList">${subsRows()}</div>
+      <input id="inpSub" placeholder="Thêm việc con, Enter để thêm" maxlength="120" aria-label="Thêm việc con" onkeydown="subKey(event)">
+    </div>
+  </div>`;
+}
+function subsRefresh(rows) {
+  const c = $("subsCount"); if (c) c.textContent = subsCnt(edSubs);
+  if (rows) { const l = $("subsList"); if (l) l.innerHTML = subsRows(); }
+}
+function subsToggle() {
+  edSubsOpen = !edSubsOpen;
+  const t = $("subsToggle"), p = $("subsPanel");
+  if (t) { t.setAttribute("aria-expanded", String(edSubsOpen)); const c = t.querySelector(".subs-caret"); if (c) c.textContent = edSubsOpen ? "▾" : "▸"; }
+  if (p) p.hidden = !edSubsOpen;
+  if (edSubsOpen && $("inpSub")) $("inpSub").focus();
+}
+function subKey(ev) {
+  if (ev.key !== "Enter") return;
+  ev.preventDefault(); ev.stopPropagation();
+  const i = $("inpSub"), t = i.value.trim();
+  if (!t) return;
+  edSubs.push({ id: nid("s"), t: t.slice(0, 120) });
+  i.value = "";
+  subsRefresh(true); i.focus();
+}
+function subDone(i, on) { if (!edSubs[i]) return; if (on) edSubs[i].done = 1; else delete edSubs[i].done; subsRefresh(true); }
+function subName(i, v) { if (edSubs[i]) edSubs[i].t = v.slice(0, 120); }
+function subDel(i) { edSubs.splice(i, 1); subsRefresh(true); const n = $("inpSub"); if (n) n.focus(); }
+// Danh sách để lưu: bỏ dòng tên rỗng
+const subsToSave = () => edSubs.filter(x => x.t.trim()).map(x => ({ ...x, t: x.t.trim() }));
 
 function closeEditor() {
   $("modalOverlay").classList.remove("open");
@@ -5337,6 +5431,7 @@ function rep(date, o, rp, end, r = "r" + Date.now().toString(36), skipFirst = fa
   days.forEach(k => {
     S.ev[k] = S.ev[k] || [];
     const item = { ...o, r };
+    if (o.subs) item.subs = o.subs.map(x => ({ id: nid("s"), t: x.t })); // mỗi buổi có danh sách riêng, chưa tích
     S.ev[k].push(item);
     sortL(S.ev[k]);
     markPending(item); // gcalFlush() đẩy lần lượt từng sự kiện, không bắn hàng trăm request cùng lúc
@@ -5458,6 +5553,8 @@ function renderEditorSheet() {
         </select>
       </div>
 
+      ${subsHTML()}
+
       ${!modOn("hb") ? "" : (() => { const hm = X ? hbOfTitle(X.t) : null; return hm
         ? `<div class="hb-ed">Thuộc thói quen <b>${esc(hm.n)}</b> · chuỗi ${hbStats(hm).cur} ${hbUnit(hm)}</div>`
         : `<label class="hb-ed"><input type="checkbox" id="inpHabit"> Theo dõi thành thói quen <small>tự đếm các buổi cùng tên, 3 lần/tuần</small></label>`; })()}
@@ -5542,6 +5639,9 @@ async function saveEventFromForm(keepOpen) {
   const pjv = $("inpPj") ? $("inpPj").value : (ei != null && (S.ev[ed] || [])[ei] && S.ev[ed][ei].pj) || "";
   const o = { t: title, c: $("inpCap").value, m: "u", h: hours, s: start, pj: pjv || undefined }; // undefined: bỏ nhãn khi lưu
   if (ei == null && edSecPreset && pjv && pjv === edPjPreset) o.sec = edSecPreset; // thêm từ một phần của trang dự án
+  const subsL = subsToSave(); // việc con: lưu cho buổi đang mở; "cả chuỗi" chép tên sang các buổi sau (id mới, không chép done)
+  const setSubs = (e, l) => { if (l.length) e.subs = l; else delete e.subs; };
+  if (subsL.length) o.subs = subsL;
   const cur0 = ei != null ? (S.ev[ed] || [])[ei] : null;
   const ser = $("inpSeries"), applySeries = !!(cur0 && cur0.r && ser && ser.checked);
   const rp0 = !applySeries && $("inpRepeat") ? $("inpRepeat").value : "";
@@ -5564,6 +5664,7 @@ async function saveEventFromForm(keepOpen) {
           S.ev[k].forEach(e => {
             if (e.r === r0) {
               Object.assign(e, o);
+              setSubs(e, e === L[ei] ? subsL : subsL.map(x => ({ id: nid("s"), t: x.t })));
               delete e.demo; // đã sửa thì là dữ liệu thật
               markPending(e);
             }
@@ -5579,11 +5680,13 @@ async function saveEventFromForm(keepOpen) {
         const n = rep(ed, o, rp, $("inpRepeatEnd").value, r, true);
         if (!n) return;
         Object.assign(L[ei], o, { r });
+        setSubs(L[ei], subsL);
         delete L[ei].demo;
         markPending(L[ei]);
         showToast(`Đã tạo chuỗi ${n + 1} buổi "${title}"`, "ok");
       } else {
         Object.assign(L[ei], o);
+        setSubs(L[ei], subsL);
         delete L[ei].demo;
         markPending(L[ei]);
         showToast(`Đã cập nhật "${title}"`, "ok");
@@ -5609,6 +5712,7 @@ async function saveEventFromForm(keepOpen) {
   }
   save();
   if (keepOpen === true && !wasEdit) {
+    edSubs = []; edSubsOpen = false;
     renderEditorSheet();
     setTimeout(() => { const i = $("inpTitle"); if (i) i.focus(); }, 50);
   } else closeEditor();
@@ -5716,7 +5820,7 @@ function extras(src, known) {
   return o;
 }
 function extraSig(e) {
-  const x = extras(e, ["id", "mt", "t", "c", "m", "h", "s", "r", "tk", "pj", "gid", "gi", "ds", "demo"]);
+  const x = extras(e, ["id", "mt", "t", "c", "m", "h", "s", "r", "tk", "pj", "gid", "gi", "ds", "demo", "subs"]);
   const ks = Object.keys(x).sort();
   return ks.length ? JSON.stringify(ks.map(k => [k, x[k]])) : "";
 }
@@ -5736,10 +5840,24 @@ function cleanCap(c) {
     kw
   };
 }
+// Việc con của hoạt động (gói subtask): {id, t, done?}. Mục hỏng bị bỏ, id thiếu/xấu được cấp ổn định (cùng đầu vào → cùng id), danh sách rỗng thì không ghi trường.
+function cleanEvSubs(l) {
+  if (!Array.isArray(l)) return {};
+  const seen = new Set(), out = [];
+  l.forEach((x, i) => {
+    if (!x || typeof x !== "object" || typeof x.t !== "string" || !x.t.trim() || out.length >= SANE_MAX) return;
+    let id = SAFE_K.test(x.id || "") && !seen.has(x.id) ? x.id : "u" + fnv(i + "|" + x.t);
+    while (seen.has(id)) id += "x";
+    seen.add(id);
+    out.push({ ...extras(x, ["id", "t", "done"]), id, t: x.t.slice(0, 120), ...(x.done ? { done: 1 } : {}) });
+  });
+  return out.length ? { subs: out } : {};
+}
 function cleanEv(e) {
   if (!e || typeof e.t !== "string" || !(+e.h > 0 && +e.h <= 24) || !SAFE_K.test(e.c || "")) return null;
   return {
-    ...extras(e, ["id", "mt", "t", "c", "m", "h", "s", "r", "tk", "pj", "sec", "gid", "gi", "gx", "ds", "demo"]),
+    ...extras(e, ["id", "mt", "t", "c", "m", "h", "s", "r", "tk", "pj", "sec", "gid", "gi", "gx", "ds", "demo", "subs"]),
+    ...cleanEvSubs(e.subs),
     ...(SAFE_K.test(e.id || "") ? { id: e.id } : {}),
     ...(SAFE_K.test(e.pj || "") ? { pj: e.pj } : {}), // dự án (v0.5.0)
     ...(SAFE_K.test(e.sec || "") ? { sec: e.sec } : {}), // phần trong dự án (v0.6.0)            // mã riêng (v0.4.0), thiếu thì cleanState cấp
