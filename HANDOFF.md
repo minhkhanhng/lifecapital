@@ -1,5 +1,11 @@
 # HANDOFF · Bàn giao cho session sau (mục mới nhất ở trên)
 
+## 2026-11-18 · UI tab Sức khỏe › Tóm tắt gọn hơn (Hướng A, PO chọn) trên `claude/ui-suc-khoe-2` (từ `main` = v0.8.0; chưa push, chưa deploy)
+- Chỉ CSS/HTML, không đổi logic hay dữ liệu: 5 nút tâm trạng một hàng khi khung ≥ 600 px (dưới đó vẫn dọc, cao 40 px); thẻ "Điểm nổi bật" và "Điều ảnh hưởng tới bạn" trống thu thành một dòng mảnh (cả hai trống gộp một dòng), có nội dung giữ như cũ; "Đã ghim" 3 cột ≥ 900 px, 2 cột dưới đó (6 ô thành 3+3 hoặc 2×3, hết ô lẻ).
+- Test: `E2EUI` đỏ 15/18 (U9.1–U9.3) rồi xanh 18/18 ở 1440 và 375; E2EHL 85, E2EHL2 53, E2EUAT3 63, E2EUX 124, E2E 95, E2EDASH 36, E2EA11Y 41 (Haiku báo, 1440). Tôi tự đo bằng trình duyệt sau thay đổi cuối: 1440 ô ghim 3+3, tâm trạng một hàng 40 px; 820 ô ghim 2×3, tâm trạng một hàng, không tràn ngang; 375 không tràn ngang, tâm trạng dọc, ô ghim 2 cột.
+- Chưa kiểm: trường hợp 5 ô ghim (hồ sơ nam: 3+2), nhánh "cả hai thẻ trống" chưa có ca tự động (kiểm tay: một dòng 45 px), chế độ sáng/tối bằng ảnh, thiết bị thật. Không có agent review riêng (PO muốn ít bước; Haiku implement, tôi kiểm chứng).
+- Muốn lên production: nâng `APPV`, `VERSION`, CHANGELOG; PO nói rõ mới push.
+
 ## 2026-11-17 · ĐÃ PHÁT HÀNH v0.8.0 LÊN PRODUCTION (theo lệnh "deploy chính thức" của PO)
 - Làm theo `docs/huong-dan-day-code-github.md` bước 6–8: `git merge --ff-only` `refs/heads/feature/v0.8.0` vào `main`, `git tag v0.8.0`, `git push origin main` (`7dabf5f..28adc46`), `git push origin v0.8.0`. Vercel `success`; kiểm production: `sw.js` `lc-0.8.0`, `APPV = 72`, `/api/ai_plan` 200, vendor SHA-256 khớp, header CSP có, icon khớp. Số liệu: CURRENT.md mục "Bản đang chạy".
 - HOÀN TÁC nếu đăng nhập/đồng bộ/Google hỏng: (1) sửa nhanh nguồn CSP nếu chỉ là `connect-src`/`frame-src` thiếu (thêm ĐÚNG nguồn bị báo "Refused to ...", ví dụ `https://oauth2.googleapis.com`), làm trên nhánh mới từ `main`, nâng `APPV`/`VERSION`/CHANGELOG, thử rồi PO cho phép đẩy; (2) hoặc đưa về v0.7.1: nhánh mới từ tag `v0.7.1`, KHÔNG force-push `main`; tạo commit revert (`git revert -m 1`/`git revert <khoảng>`) hoặc nhánh từ `v0.7.1` rồi gộp có chủ ý, kèm nâng `VERSION` lên số cao hơn (`lc-0.8.1`) để máy đã cài nhận bản và bỏ bản cache; dữ liệu người dùng không mất vì cấu trúc chỉ thêm trường (rule §11), Supabase giữ 30 bản lịch sử.

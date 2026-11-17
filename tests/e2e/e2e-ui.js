@@ -47,7 +47,24 @@ window.E2EUI = async function () {
     switchTab("hl"); await sl(400); [...q("#v .segmented-control button")].find(b => b.textContent.trim() === "Tóm tắt").click(); await sl(400);
     const vert = btns => { const r = btns.map(R); return r.length === 5 && r.every((b, i) => i === 0 || b.top > r[i - 1].top + 4) && r.every(b => Math.abs(b.width - r[0].width) <= 1); };
     const todayM = q(".hl-today .hl-m.m1, .hl-today .hl-m.m2, .hl-today .hl-m.m3, .hl-today .hl-m.m4, .hl-today .hl-m.m5");
-    ok("U9a Hôm nay: 5 nút tâm trạng dọc, cùng bề rộng", vert(todayM), todayM.map(b => [Math.round(R(b).top), Math.round(R(b).width)]));
+    // U9.1 / U9.4 (ui-suc-khoe-2): thẻ Hôm nay ≥600px: 5 nút một hàng; dưới 600px: vẫn xếp dọc, không tràn
+    if (innerWidth >= 600) {
+      const tops = todayM.map(b => R(b).top), hs = todayM.map(b => Math.round(R(b).height));
+      ok("U9.1 Hôm nay (≥600px): 5 nút tâm trạng cùng một hàng, cao 32–52px", todayM.length === 5 && tops.every(t => Math.abs(t - tops[0]) <= 2) && hs.every(h => h >= 32 && h <= 52), { tops: tops.map(Math.round), hs, w: innerWidth });
+    } else {
+      ok("U9.4 Hôm nay (<600px): 5 nút tâm trạng xếp dọc, cùng bề rộng, không tràn ngang", vert(todayM) && document.documentElement.scrollWidth <= innerWidth, { n: todayM.length, sw: document.documentElement.scrollWidth, w: innerWidth });
+    }
+    // U9.2 không có nhật ký: hai thẻ Điểm nổi bật / Điều ảnh hưởng gộp thành một thẻ cao ≤ 70px
+    const savedDays = S.health.days;
+    S.health.days = {}; draw(true); await sl(500);
+    const slim = q(".hl-slim");
+    ok("U9.2 không có nhật ký: hai thẻ trống gộp một thẻ cao ≤ 70px", slim.length === 1 && R(slim[0]).height <= 70, { n: slim.length, h: slim.map(e => Math.round(R(e).height)) });
+    S.health.days = savedDays; draw(true); await sl(500);
+    // U9.3 Đã ghim: 6 ô chia đều theo cột (3 cột ≥900px, 2 cột dưới 900px)
+    const pins = q(".hl-pin"), prow = [];
+    pins.forEach(b => { const t = R(b).top, g = prow.find(x => Math.abs(x.t - t) <= 2); if (g) g.n++; else prow.push({ t, n: 1 }); });
+    const want = innerWidth >= 900 ? 3 : 2;
+    ok("U9.3 Đã ghim: 6 ô chia đều, không ô lẻ hàng (3+3 ≥900px, 2+2+2 dưới 900px)", pins.length === 6 && prow.every(x => x.n === want), { n: pins.length, rows: prow.map(x => x.n) });
     hlCheckin(); await sl(800);
     const ciM = q(".hl-ci-big .hl-m");
     ok("U9b check-in: 5 nút dọc, cùng bề rộng", vert(ciM), ciM.map(b => [Math.round(R(b).top), Math.round(R(b).width)]));

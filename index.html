@@ -774,7 +774,8 @@ body.hv-dragging .day-card { border-style: dashed; }
 .hl-a.info { border-left-color: #6fa8b0; }
 .hl-a.good { border-left-color: var(--ok); }
 .hl-disc { margin: 8px 0 0; font-size: 12px; color: var(--mu); line-height: 1.45; }
-.hl-pins { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.hl-pins { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (min-width: 900px) { .hl-pins { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .hl-pin { font: inherit; text-align: left; display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; color: var(--tx); cursor: pointer; min-width: 0; }
 .hl-pin-t { font-size: 13px; font-weight: 600; color: var(--tx); display: inline-flex; align-items: center; gap: 6px; }
 .hl-pin-t::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--hc); flex: none; } /* màu nhóm ở chấm, chữ luôn đậm màu để đủ tương phản */
@@ -1967,6 +1968,9 @@ body[data-tab="me"] #v { max-width: 980px; margin-inline: auto; }
 .hl-vert { flex-direction: column; flex-wrap: nowrap; align-items: stretch; }
 .hl-vert .hl-m { width: 100%; text-align: center; min-height: 40px; }
 .hl-ci-big.hl-vert .hl-m { flex: none; min-height: 48px; }
+@media (min-width: 600px) { .hl-today .hl-vert { flex-direction: row; } .hl-today .hl-vert .hl-m { flex: 1 1 0; width: auto; min-width: 0; } }
+.card.hl-slim { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 20px; padding: 12px 16px; margin: 0; font-size: 13px; line-height: 1.45; color: var(--tx-sec); }
+.hl-slim b { color: var(--tx); font-weight: 600; margin-right: 6px; }
 #hlOverlay .sheet-x { min-width: 36px; min-height: 36px; }
 .hl-pick { gap: 8px; }
 .hl-pick-l { font-size: 13px; color: var(--tx-sec); white-space: nowrap; }
@@ -10076,11 +10080,13 @@ V.hl = function () {
   else if (hlView === "browse") body = `<div class="card hl-browse">${hlCats().map(([k, n, col]) => `<button type="button" class="hl-row" onclick="hlGo('browse','${k}')" style="--hc:${col}"><span class="hl-ic"></span><span>${n}</span><span class="hl-chev" aria-hidden="true"></span></button>`).join("")}</div>`;
   else if (hlView === "log") body = hlLogHTML();
   else {
-    const adv = hlAdvice();
+    const adv = hlAdvice(), ins = hlInsights(), noA = !adv.length, noI = !ins.length;
+    // Thẻ trống thu thành dòng mảnh (.hl-slim); cả hai trống thì gộp một dòng
+    const spA = `<span><b>Điểm nổi bật</b> Chưa có gợi ý. Ghi nhật ký vài ngày để app có dữ liệu.</span>`, spI = `<span><b>Điều ảnh hưởng tới bạn</b> Chưa thấy mối liên hệ rõ. Cần ít nhất 8 ngày nhật ký.</span>`;
     body = `${hlTodayCard()}
       ${hlReadyCard()}
-      <div class="card"><div class="card-header"><div><h2 class="card-title">Điểm nổi bật</h2><div class="card-sub">Gợi ý theo nhật ký và lịch của bạn</div></div></div>${hlAdviceHTML(adv, hlAll ? 0 : 4)}</div>
-      <div class="card"><div class="card-header"><div><h2 class="card-title">Điều ảnh hưởng tới bạn</h2><div class="card-sub">So các ngày có và không có một hoạt động, thuốc, căng thẳng: 90 ngày qua</div></div></div>${hlInsHTML(hlInsights(), 4)}</div>
+      ${noA && noI ? `<div class="card hl-slim">${spA}${spI}</div>` : noA ? `<div class="card hl-slim">${spA}</div>` : `<div class="card"><div class="card-header"><div><h2 class="card-title">Điểm nổi bật</h2><div class="card-sub">Gợi ý theo nhật ký và lịch của bạn</div></div></div>${hlAdviceHTML(adv, hlAll ? 0 : 4)}</div>`}
+      ${noA && noI ? "" : noI ? `<div class="card hl-slim">${spI}</div>` : `<div class="card"><div class="card-header"><div><h2 class="card-title">Điều ảnh hưởng tới bạn</h2><div class="card-sub">So các ngày có và không có một hoạt động, thuốc, căng thẳng: 90 ngày qua</div></div></div>${hlInsHTML(ins, 4)}</div>`}
       <h3 class="hl-h">Đã ghim</h3>${hlPinned()}
       <div class="card hl-repcard"><div class="card-header"><div><h2 class="card-title">Báo cáo cho bác sĩ</h2><div class="card-sub">Tóm tắt 30 hoặc 90 ngày: thuốc, triệu chứng, tâm lý, giấc ngủ, chu kỳ. In, lưu PDF hoặc lưu tệp.</div></div><button type="button" class="btn btn-sm" onclick="hlReport()">Xem báo cáo</button></div></div>`;
   }
