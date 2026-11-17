@@ -45,12 +45,14 @@ window.E2ETABHB = async function () {
     const cardOf = n => [...document.querySelectorAll("#v .hbt-card")].find(c => c.textContent.includes(n));
     const cA = cardOf("TH Nước"), cB = cardOf("TH Chạy");
     ok("H3.2 mỗi thói quen một thẻ", !!cA && !!cB, document.querySelectorAll("#v .hbt-card").length);
-    ok("H3.3 thẻ tích tay có nút tích; thẻ tự đếm thì không", !!cA && !!cA.querySelector(".hb-tick") && !!cB && !cB.querySelector(".hb-tick"));
+    ok("H3.3 thẻ tích tay có nút tích; thẻ tự đếm thì không", !!cA && !!cA.querySelector("button.hb-tick") && !!cB && !cB.querySelector("button.hb-tick"));
     ok("H3.4 thẻ có chuỗi và 7 chấm tuần", !!cA && /ngày/.test(cA.textContent) && cA.querySelectorAll(".hb-dot").length === 7);
-    const before = JSON.stringify(S.habits.filter(h => h.id !== hA.id));
+    // mt của mọi thói quen được đóng dấu lại mỗi lần save() (hành vi có từ trước, không thuộc gói này): so sánh bỏ qua mt
+    const noMt = L => JSON.stringify(L.map(h => { const o = { ...h }; delete o.mt; return o; }));
+    const before = noMt(S.habits.filter(h => h.id !== hA.id)), beforeObj = JSON.parse(before);
     cA.querySelector(".hb-tick").click(); await sleep(30);
     ok("H3.5 bấm tích: ticks[hôm nay]=1, mt cập nhật, giao diện cập nhật", findHb(hA.id).ticks[tk] === 1 && findHb(hA.id).mt > 0 && cardOf("TH Nước").querySelector('.hb-tick[aria-pressed="true"]'), findHb(hA.id));
-    ok("H3.6 thói quen khác không đổi", JSON.stringify(S.habits.filter(h => h.id !== hA.id)) === before);
+    ok("H3.6 thói quen khác không đổi", noMt(S.habits.filter(h => h.id !== hA.id)) === before, [beforeObj, S.habits.filter(h => h.id !== hA.id)]);
     ok("H3.7 vẫn ở tab hb sau khi tích", cur === "hb" && !!cardOf("TH Nước"));
     cardOf("TH Nước").querySelector(".hb-tick").click(); await sleep(30);
     ok("H3.8 bấm lại bỏ tích", !findHb(hA.id).ticks[tk]);
@@ -64,7 +66,7 @@ window.E2ETABHB = async function () {
     $("hbName").value = "TH Thiền"; hbSet("n", "TH Thiền"); hbSet("kind", "tick"); hbSave(); await sleep(40);
     const hC = S.habits.find(h => h.n === "TH Thiền");
     ok("H4.3 lưu thói quen mới: có dữ liệu và thẻ", !!hC && !!cardOf("TH Thiền"), hC);
-    hbOpen(hC.id); await sleep(60); hbSet("n", "TH Thiền 2"); hbSave(); await sleep(40);
+    hbOpen(hC.id); await sleep(60); $("hbName").value = "TH Thiền 2"; hbSet("n", "TH Thiền 2"); hbSave(); await sleep(40);
     ok("H4.4 sửa tên", findHb(hC.id).n === "TH Thiền 2" && !!cardOf("TH Thiền 2"));
     hbOpen(hC.id); hbArchive(hC.id); await sleep(40);
     ok("H4.5 lưu trữ: thẻ ẩn, vào mục Đã lưu trữ", !cardOf("TH Thiền 2") && findHb(hC.id).arch === 1 && /lưu trữ/i.test($("v").textContent));

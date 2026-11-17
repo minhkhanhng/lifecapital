@@ -40,7 +40,9 @@ window.E2EUAT3 = async function () {
   const wt = $("meW"); wt.value = "58,5"; wt.dispatchEvent(new Event("change")); await sleep(10);
   ok("L1.1 tên, ngày sinh 29/02 tính đúng tuổi, Nữ, chiều cao, cân nặng", S.profile.n === "Lan Anh" && S.profile.dob === "1996-02-29" && hlAge() === 30 && S.profile.sex === "f" && hlDay(tk).ht === 160 && hlDay(tk).w === 58.5, [S.profile, hlAge()]);
   ok("L1.2 dòng cân nặng ghi BMI 22,9 · Bình thường", /BMI 22,9 · Bình thường/.test(vtxt()));
-  ok("L1.3 tab Tôi có bảng vốn, từ khóa, thói quen, Mở Cài đặt", !!document.querySelector('#v input[data-target-input]') && /Từ khóa nhận diện/.test(vtxt()) && /Thói quen/.test(vtxt()) && /Mở Cài đặt/.test(vtxt()));
+  const meHb = !document.querySelector("#v .hb-row") && !/Thói quen/.test(vtxt());
+  ok("L1.3 tab Tôi có bảng vốn, từ khóa, Mở Cài đặt; thói quen đã chuyển sang tab riêng (Tôi không còn thẻ quản lý)", !!document.querySelector('#v input[data-target-input]') && /Từ khóa nhận diện/.test(vtxt()) && /Mở Cài đặt/.test(vtxt()) && meHb);
+  { const keep = cur; switchTab("hb"); await sleep(10); ok("L1.3b tab Thói quen có nút Thêm thói quen và thẻ thói quen", !!document.querySelector("#v .hbt-card") && /Thêm thói quen/.test(vtxt())); switchTab(keep); await sleep(10); }
   typeDate($("meDob"), D(3), el => dobSet(el, 1));
   const w2 = $("meW"); w2.value = "999"; w2.dispatchEvent(new Event("change")); await sleep(10);
   ok("L1.4 ngày sinh tương lai, cân nặng 999: báo lỗi, không lưu", S.profile.dob === "1996-02-29" && hlDay(tk).w === 58.5);
