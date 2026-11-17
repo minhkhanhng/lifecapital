@@ -1,5 +1,10 @@
 # Bài học (mới nhất ở trên)
 
+## 2026-11-17 · Phép đo tìm ra lỗ hổng mà review và test không thấy
+- Lỗi: đo SW thật cho thấy `net?` trả kết quả cũ tới 30 s nên nhãn "Bản đã lưu" sai khi mạng đứt giữa phiên; review chỉ ra mọi điều hướng đều nhận `index.html` và phản hồi redirect có thể vào cache.
+- Nguyên nhân: test giả lập Node không chạy trình duyệt thật; plan giả định "30 s là đủ mới".
+- Cách tránh: với service worker luôn đo bằng Chrome headless thật (profile riêng) cả trước và sau; viết ca cho đường "mạng vừa đổi", "đường dẫn khác `/`", "phản hồi lạ"; không sửa `sw.js` khi agent khác đang đo từ cùng worktree.
+
 ## 2026-11-17 · Plan viết sai hình dạng dữ liệu và ca test xanh giả
 - Lỗi: plan gói 4 giả định `bl` là số (`bl{sk:1}`) nhưng thật là `{u,d}`; ca M5.6 ban đầu dùng chung một đối tượng cho cả hai bên nên không kiểm được "hai máy cấp `gi` khác nhau".
 - Nguyên nhân: viết plan từ báo cáo review mà chưa đọc `cleanState`; test dựng dữ liệu từ cùng một biến.
