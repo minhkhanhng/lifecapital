@@ -63,7 +63,8 @@ Còn lại:
 
 ## Gói UI ui-suc-khoe (nhánh `claude/ui-suc-khoe`, từ `claude/sw-mo-nhanh`, chưa push)
 - Rà soát: `docs/review/2026-11-17-ui-suc-khoe-ra-soat.md` (0 Critical, 6 Important popup, 8 Minor). PO chọn mockup: popup Hướng B (gọn hai cột), tâm trạng xếp dọc (check-in và Hôm nay), thêm nhãn "Xem ngày" cho ô ngày Nhật ký, nút ✕ 36px trong `#hlOverlay`. Plan: `docs/superpowers/plans/2026-11-17-ui-suc-khoe.md`.
-- Test đỏ trước: E2EUI 3/15 (1440). Sau sửa: E2EUI 15/15 ở 1440 và 15/15 ở 390. Hồi quy 1440 (tôi chạy sau thay đổi cuối): E2E 95/95, E2EHL 85/85, E2EHL2 53/53, E2EUAT3 62/62, E2EUX 124/124. node --check đạt. Ảnh trước/sau: `docs/review/ui-suc-khoe/`.
+- Test đỏ trước: E2EUI 3/15 (1440). Sau sửa: E2EUI 16/16 ở 1440 (15/15 ở 390 trước khi thêm ca U6b chế độ tối). Hồi quy 1440 (tôi chạy sau thay đổi cuối): E2E 95/95, E2EHL 85/85, E2EHL2 53/53, E2EUAT3 62/62, E2EUX 124/124. node --check đạt. Ảnh trước/sau: `docs/review/ui-suc-khoe/`.
+- Review Haiku (implementer Sonnet): 1 Critical (nền chân popup sáng ở chế độ tối mặc định) đã sửa + ca U6b; Important đã sửa: bỏ `aria-label` đè nhãn "TPCN", nút seg 36px khi cảm ứng, U3 kiểm nhãn không bị cắt. Còn Minor: nhóm Loại/Lịch dùng chưa có `role="group"`; 5 nút tâm trạng dọc cao ~230px ở 390 (PO đã chọn). Sau sửa chạy lại E2EUI 16/16, E2EHL 85/85, E2EUX 124/124; E2E, E2EHL2, E2EUAT3 chạy trước sửa cuối (đều xanh).
 - Lưu ý đo: pane trình duyệt ẩn không chạy hoạt ảnh nên popup kẹt ở scale(.95) và mọi số đo lệch 5%; test tắt `transition` khi đo.
 - Chưa làm: kiểm trên 820 và chế độ tối sau sửa (trước sửa cùng lỗi bố cục), các Minor M2–M4, M8; chưa chạy sáu bộ e2e còn lại; chưa thử thiết bị thật. Không đổi `APPV`/`VERSION`/CHANGELOG.
 
