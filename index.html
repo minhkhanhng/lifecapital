@@ -5740,12 +5740,12 @@ function importData(inputEl) {
           const x = S.projects.find(y => y.id === p.id);
           if (!x) { S.projects.push(p); return; }
           // Dự án đã có: thêm phần, mốc, cập nhật trạng thái còn thiếu (theo mã), không sửa cái đã có
-          [["secs", 20], ["ms", 50], ["ups", 30]].forEach(([f, max]) => {
+          ["secs", "ms", "ups"].forEach(f => {
             const add = (p[f] || []).filter(i => !(x[f] || []).some(j => j.id === i.id));
             if (!add.length) return;
             x[f] = [...(x[f] || []), ...add];
             if (f === "ups") x.ups.sort((u, v) => v.d.localeCompare(u.d));
-            x[f] = x[f].slice(0, max);
+            x[f] = x[f].slice(0, SANE_MAX);
           });
           if (!x.desc && p.desc) x.desc = p.desc;
         });
