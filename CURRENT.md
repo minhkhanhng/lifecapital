@@ -1,10 +1,10 @@
 # CURRENT · Hiện trạng (cập nhật 2026-11-17)
 
 ## Bản đang chạy (đã xác nhận)
-- Production https://lifecapital.vercel.app: `sw.js` = `lc-0.7.1`, `APPV = 71; // v0.7.1` (đối chiếu bằng GET chỉ đọc ngày 2026-11-17); `/api/ai_plan` GET trả 200; có HSTS, `X-Content-Type-Options`, `X-Frame-Options: DENY`.
-- Commit `7dabf5f` trên `main` = `origin/main` (2026-11-05 12:59 +0700). Tag mới nhất `v0.7.1`. CHANGELOG ghi v0.7.1 ngày 05/11/2026. Ngày deploy chính xác: chưa kiểm (không xem được lịch sử Vercel).
-- `staging` cũ hơn `main` (commit cuối 2026-10-19, v0.6.0), không phải bản đang chạy.
-- Người dùng thật: chỉ PO (xác nhận 2026-11-17).
+- **PRODUCTION = v0.8.0** (phát hành 2026-11-17 theo lệnh "deploy chính thức" của PO). https://lifecapital.vercel.app: `sw.js` = `lc-0.8.0`, `APPV = 72; // v0.8.0` (đối chiếu bằng GET chỉ đọc sau deploy, Vercel `success`); `/api/ai_plan` 200; `vendor/supabase-2.117.0.umd.js` tải được, SHA-256 `7b9e9c64…388645` khớp tệp trong repo; mã không còn nạp `supabase-js` từ jsDelivr; header có `content-security-policy` (CSP mới), HSTS, `X-Frame-Options: DENY`, `X-Content-Type-Options`; icon 512/apple-touch/favicon giống hệt tệp trong repo.
+- `origin/main` = `28adc46` (tag `v0.8.0`), đẩy bằng fast-forward từ `7dabf5f` (v0.7.1, tag `v0.7.1`). Nhánh `staging` = `8010c7f` (cùng mã với production, hơn một commit tài liệu). Nhánh `feature/v0.8.0` còn trên GitHub (đã gộp). Commit tài liệu ghi hiện trạng này chỉ nằm ở máy (không đổi mã deploy).
+- CHƯA KIỂM sau phát hành (không thử được từ máy này): đăng nhập Google/Email qua Supabase dưới CSP mới, đồng bộ thời gian thực (`wss`), Google Calendar (kết nối, đồng bộ, Ngắt: có thể cần thêm `https://oauth2.googleapis.com` vào `connect-src`), cài PWA, thiết bị thật. PO KHÔNG thử được staging trước vì staging nằm sau đăng nhập Vercel và dùng chung Supabase; nếu đăng nhập/đồng bộ hỏng ở production, xem mục Hoàn tác trong `HANDOFF.md`.
+- Người dùng thật: chỉ PO (xác nhận 2026-11-17). Máy đã cài v0.7.1 sẽ thấy thanh "Có bản mới" và phải bấm Tải lại; CSP cũ/mới có thể giữ thêm một lần mở nhờ cache service worker.
 
 ## Kết quả kiểm tra (chạy 2026-11-17 trên worktree `claude/review-2026-11-17`, tách từ `main`, chưa sửa code)
 | Hạng mục | Kết quả |

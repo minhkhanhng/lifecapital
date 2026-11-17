@@ -1,5 +1,11 @@
 # HANDOFF · Bàn giao cho session sau (mục mới nhất ở trên)
 
+## 2026-11-17 · ĐÃ PHÁT HÀNH v0.8.0 LÊN PRODUCTION (theo lệnh "deploy chính thức" của PO)
+- Làm theo `docs/huong-dan-day-code-github.md` bước 6–8: `git merge --ff-only` `refs/heads/feature/v0.8.0` vào `main`, `git tag v0.8.0`, `git push origin main` (`7dabf5f..28adc46`), `git push origin v0.8.0`. Vercel `success`; kiểm production: `sw.js` `lc-0.8.0`, `APPV = 72`, `/api/ai_plan` 200, vendor SHA-256 khớp, header CSP có, icon khớp. Số liệu: CURRENT.md mục "Bản đang chạy".
+- HOÀN TÁC nếu đăng nhập/đồng bộ/Google hỏng: (1) sửa nhanh nguồn CSP nếu chỉ là `connect-src`/`frame-src` thiếu (thêm ĐÚNG nguồn bị báo "Refused to ...", ví dụ `https://oauth2.googleapis.com`), làm trên nhánh mới từ `main`, nâng `APPV`/`VERSION`/CHANGELOG, thử rồi PO cho phép đẩy; (2) hoặc đưa về v0.7.1: nhánh mới từ tag `v0.7.1`, KHÔNG force-push `main`; tạo commit revert (`git revert -m 1`/`git revert <khoảng>`) hoặc nhánh từ `v0.7.1` rồi gộp có chủ ý, kèm nâng `VERSION` lên số cao hơn (`lc-0.8.1`) để máy đã cài nhận bản và bỏ bản cache; dữ liệu người dùng không mất vì cấu trúc chỉ thêm trường (rule §11), Supabase giữ 30 bản lịch sử.
+- Việc còn lại: PO thử đăng nhập/đồng bộ/Google Calendar (kể cả nút Ngắt)/cài PWA/điện thoại thật trên production và báo lỗi; lỗi mức thấp số 6 của subtask (tích việc con có thể đẩy sự kiện lên Google dù không cần); gói 9 `hieu-nang-sau`, 10 `don-nhe`; mục E4 (cỡ chữ px, toast chồng, chữ "…"); đo lặp SW. Bản tải sao lưu JSON trước lần ra bản: PO tự làm, tôi không kiểm được.
+- Next step: PO dùng v0.8.0 vài ngày, báo lỗi; tôi sửa trên nhánh mới từ `main` (không dùng fable).
+
 ## 2026-11-17 · BẢN ỨNG VIÊN v0.8.0 ĐÃ ĐẨY LÊN STAGING (production KHÔNG đổi)
 - ĐÃ ĐẨY (PO cho phép rõ, chọn "thử KHÔNG đăng nhập"): `git push -u origin feature/v0.8.0` và `git push origin feature/v0.8.0:staging` (fast-forward `e5b871c..8010c7f`). `origin/main` vẫn `7dabf5f` (production v0.7.1). Vercel build `success` (21:41). Địa chỉ staging `https://lifecapital-git-staging-minhkhanhng.vercel.app` nằm sau đăng nhập Vercel: tôi KHÔNG mở được, chỉ chủ dự án thử. PO thử theo mục 6 của `docs/staging-v0.8.0.md` (không đăng nhập Supabase). Hoàn tác staging: mục 5 cùng tài liệu.
 - Commit HANDOFF này chỉ ở máy (nhánh remote ở `8010c7f`).
