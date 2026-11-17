@@ -1,5 +1,20 @@
 # HANDOFF · Bàn giao cho session sau (mục mới nhất ở trên)
 
+## 2026-11-17 · TẠM DỪNG theo yêu cầu PO (để dùng token cho việc khác). Đọc mục này trước khi làm tiếp
+**Bản đồ nhánh (tất cả cục bộ, CHƯA push, CHƯA deploy; production vẫn v0.7.1 = `main` = `7dabf5f`)**
+| Nhánh | Tách từ | Trạng thái |
+|---|---|---|
+| `claude/dong-bo-nhe` | gói 5 | Gói 6 xong, đã commit (`d5263a2`, `3ccb169`). Chứa gói 1, 1b, 2, 3, 4, 5, 6 xếp chồng. |
+| `claude/chu-ky-mt` | `claude/dong-bo-nhe` | Gói 6b/7 xong (sửa `mt` giả do chữ ký nhạy thứ tự khóa), đã commit (`aad29fe`, `f15ceca`, `d969e51`). BẮT BUỘC có trong bản phát hành chứa gói 6. Số liệu: CURRENT.md của nhánh đó mục Gói 6b. |
+| `claude/csp-staging` | `claude/dong-bo-nhe` | Gói 7 ROADMAP (B2 CSP + B5 tự host supabase-js): MỚI CÓ plan `docs/superpowers/plans/2026-11-17-csp-staging.md` và tệp `vendor/supabase-2.117.0.umd.js` (217 874 byte, SHA-256 `7b9e9c64109e15c338fa58c2bc77c32fb1c459bd587e22fc6b72cca80a388645`, PO cho tải 2026-11-17). CHƯA có test, CHƯA sửa `index.html`/`vercel.json`. |
+| `claude/ui-suc-khoe` | gói 5 (`claude/sw-mo-nhanh`) | UI tab Sức khỏe xong, 2 commit (`589d8ab`, `1dfda43`); E2EUI 16/16, E2EHL 85/85, E2EUX 124/124; chưa kiểm 820 và chế độ tối bằng ảnh. |
+| `claude/tab-thoi-quen` | gói 5 (`claude/sw-mo-nhanh`) | DỞ DANG, đã bị DỪNG giữa chừng: commit test đỏ E2ETABHB (`17dd35a`); còn thay đổi CHƯA commit ở `index.html`, `tests/e2e/e2e-hb.js`, `e2e-tabhb.js`, `e2e-uat2.js` (khoảng +84/−65 dòng) trong worktree `.claude/worktrees/tab-thoi-quen`. Session [Tách check-in thói quen](#local_9fa65663-e6e0-4048-bee3-96784afb7497) vẫn mở, có thể tiếp tục bằng một tin nhắn; nó có ngữ cảnh. Trước khi commit hãy chạy E2ETABHB và E2EHB, E2E, E2EUAT2, E2EDASH, E2EUX. |
+Các session đã mở (cùng thư mục, đang rảnh/dừng): UI Sức khỏe `local_16d8f0e0-be21-4596-8641-39a05673390a`, chu-ky-mt `local_93db5ae0-a870-4c11-93c8-22b57839683b`, tab thói quen `local_9fa65663-e6e0-4048-bee3-96784afb7497`.
+**Chưa làm / chưa kiểm (tổng hợp):** mobile 390×844 cho nhiều gói; 6 trong 14 bộ e2e chưa chạy lại sau chỉnh cuối các gói 5–6; thiết bị thật (iPhone/Android); đo lặp SW (lần mở bình thường chậm hơn bản cũ ở một lần đo); gói 8 `truy-cap-va-cam-ung`, 9 `hieu-nang-sau`, 10 `don-nhe` chưa làm; gộp các nhánh song song (UI, thói quen) chưa làm: ba nhánh `claude/ui-suc-khoe`, `claude/tab-thoi-quen`, `claude/dong-bo-nhe`/`claude/chu-ky-mt` đều sửa `index.html`, gộp bằng quyết định của PO rồi chạy lại toàn bộ e2e.
+**Phát hành (chỉ khi PO nói rõ):** theo `docs/huong-dan-day-code-github.md`; nâng đủ `APPV`, `VERSION` (`sw.js`), CHANGELOG; tải sao lưu JSON mới; thử staging (CSP cần thử đăng nhập Google/Supabase/Calendar thật ở staging, PO phải cho phép push staging riêng).
+**Môi trường:** không còn máy chủ thử của dự án này đang chạy (đã dừng 8803–8805; cổng 8806 là của session khác, đừng kill); cổng 8765 là dự án khác (Career OS). `preview_start` đọc nhầm cấu hình trong worktree, chạy `python3 -m http.server <cổng lạ> --bind 127.0.0.1` bằng Bash nền (lesson.md).
+- Next step khi tiếp tục (PO chọn): (a) gói `csp-staging` ở nhánh này: Sonnet implement (test đỏ trước theo plan), reviewer Opus (bảo mật), worktree `.claude/worktrees/csp-staging`; hoặc (b) hoàn tất `claude/tab-thoi-quen` (gửi tin nhắn cho session đó); hoặc (c) gộp nhánh + chạy toàn bộ e2e + mobile trước khi phát hành. Không dùng fable.
+
 ## 2026-11-17 · Gói 6 xong (đã commit cục bộ, chưa push, chưa deploy)
 - Nhánh `claude/dong-bo-nhe` (worktree `.claude/worktrees/dong-bo-nhe`) chứa cả sáu nhánh gói. Số liệu và số đo trước/sau: CURRENT.md mục Gói 6.
 - Phát hiện lỗi cũ có thể làm mất bản sửa task khi hai máy cùng mở (`stampEdits`/`taskSig` nhạy thứ tự khóa): cần gói riêng trước khi phát hành (đã đề xuất; xem CURRENT).
