@@ -7684,6 +7684,8 @@ function wipeLocal() {
     localStorage.setItem("lc2", out);
     ["lc2_mine", "lc2_unreadable"].forEach(k => localStorage.removeItem(k));
     snapKeys().forEach(k => localStorage.removeItem(k));
+    clearGCalToken(); // máy dùng chung: không để lại token Google và cờ liên kết của người trước
+    ["gcal_linked", "lc_gx_seen"].forEach(k => localStorage.removeItem(k));
   } catch (e) {}
   lastRaw = out;
   draw(true);
