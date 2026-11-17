@@ -227,7 +227,7 @@ window.E2E63 = async function () {
   ok("M6.1 làm sạch: chỉ giữ phần tắt hợp lệ", (() => { const c = cleanState({ ...JSON.parse(LS("lc2")), cfg: { mods: { pj: false, hb: true, zz: false, hl: "x" } } }).cfg; return JSON.stringify(c.mods) === '{"pj":false}'; })() && !("mods" in cleanState({ ...JSON.parse(LS("lc2")), cfg: { mods: "xx" } }).cfg));
   ok("M6.2 tải lại dữ liệu (làm sạch): vẫn giữ các phần đã tắt", JSON.stringify(cleanState(JSON.parse(LS("lc2"))).cfg.mods) === '{"pj":false,"hb":false,"hl":false}');
   setMod("pj", true); setMod("hb", true); setMod("hl", true); await sleep(10);
-  ok("M7.1 bật lại cả ba: đủ 6 tab, không còn cfg.mods, dữ liệu như cũ", [...document.querySelectorAll("#nav button")].length === 6 && !("mods" in S.cfg) && J(S.projects) === pj0 && J(S.health) === hl0);
+  ok("M7.1 bật lại cả ba: đủ 7 tab (có Thói quen), không còn cfg.mods, dữ liệu như cũ", [...document.querySelectorAll("#nav button")].length === 7 && !("mods" in S.cfg) && J(S.projects) === pj0 && J(S.health) === hl0);
   switchTab("ca"); calSubView = "focus"; draw(); await sleep(10);
   ok("M7.2 bật lại: Lịch có lại dải thói quen và chấm dự án", !!document.querySelector("#v .ev-pj") && /Chạy bộ/.test(document.querySelector("#v").textContent));
 

@@ -36,12 +36,12 @@ window.E2EHB = async function () {
   st = hbStats(h);
   ok("2.3 bỏ 2 ngày cùng tuần: đứt chuỗi, kỷ lục giữ", st.cur < 14 && st.best >= st.cur && st.best > 0, st);
 
-  // 3. Dải Thói quen trên Lịch, tích hôm nay
-  switchTab("ca"); calSubView = "focus"; draw(); await sleep(30);
-  const chip = [...document.querySelectorAll(".hb-chip")].find(c => c.textContent.includes("HB Nước"));
+  // 3. Tab Thói quen, tích hôm nay
+  switchTab("hb"); await sleep(30);
+  const chip = [...document.querySelectorAll(".hbt-card")].find(c => c.textContent.includes("HB Nước"));
   ok("3.1 dải Thói quen có chip, 7 chấm, nút tích", chip && chip.querySelectorAll(".hb-dot").length === 7 && chip.querySelector(".hb-tick"));
   chip.querySelector(".hb-tick").click(); await sleep(20);
-  ok("3.2 bấm ✓ tích hôm nay", findHb(h.id).ticks[tk] === 1 && document.querySelector(`.hb-chip .hb-tick[aria-pressed="true"]`));
+  ok("3.2 bấm ✓ tích hôm nay", findHb(h.id).ticks[tk] === 1 && document.querySelector(`.hbt-card .hb-tick[aria-pressed="true"]`));
   hbTick(h.id); await sleep(10);
   ok("3.3 bấm lại bỏ tích", !findHb(h.id).ticks[tk]);
   hbTick(h.id, D(1));
@@ -86,7 +86,7 @@ window.E2EHB = async function () {
   openEditor(tk, i); await sleep(30);
   ok("6.3 mở lại: ghi 'Thuộc thói quen'", !$("inpHabit") && /Thuộc thói quen/.test($("sheetBody").textContent));
   closeEditor();
-  sel = CW; calSubView = "focus"; draw(); await sleep(20);
+  switchTab("ca"); sel = CW; calSubView = "focus"; draw(); await sleep(20);
   ok("6.4 thẻ hoạt động có dấu thói quen", [...document.querySelectorAll(".event-item")].some(x => x.textContent.includes("HB Yoga") && x.querySelector(".ev-hb")));
 
   // 7. Bảng thói quen: sửa, trùng, lưu trữ, xóa + hoàn tác
@@ -100,9 +100,9 @@ window.E2EHB = async function () {
   ok("7.3 trùng hoạt động đã theo dõi: từ chối", !(S.habits || []).some(x => x.n === "HB Yoga 2") && $("hbOverlay").classList.contains("open"));
   closeHb();
   hbArchive(hy.id); await sleep(20);
-  ok("7.4 lưu trữ: ẩn khỏi dải", findHb(hy.id).arch && ![...document.querySelectorAll(".hb-chip")].some(c => c.textContent.includes("HB Yoga")));
-  switchTab("set"); await sleep(30);
-  ok("7.5 tab Vốn có thẻ Thói quen + đã lưu trữ", /Thói quen/.test($("v").textContent) && /đã lưu trữ \(\d+\)/.test($("v").textContent));
+  ok("7.4 lưu trữ: ẩn khỏi dải", findHb(hy.id).arch && ![...document.querySelectorAll(".hbt-card")].some(c => c.textContent.includes("HB Yoga")));
+  switchTab("hb"); await sleep(30);
+  ok("7.5 tab Thói quen có mục đã lưu trữ", /thói quen/i.test($("v").textContent) && /đã lưu trữ \(\d+\)/.test($("v").textContent));
   hbArchive(hy.id);
   hbDelete(hy.id); await sleep(20);
   ok("7.6 xóa", !findHb(hy.id));

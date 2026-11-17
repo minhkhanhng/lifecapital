@@ -15,6 +15,11 @@
 - Nhánh `claude/ui-suc-khoe` (worktree `.claude/worktrees/ui-suc-khoe`) từ `claude/sw-mo-nhanh`. Số liệu: CURRENT.md mục Gói UI.
 - Next step: gói 6 `dong-bo-nhe` như cũ (từ `claude/sw-mo-nhanh`); nhánh UI độc lập, gộp khi phát hành. Reviewer khác model.
 
+## 2026-11-17 · Gói tab-thoi-quen xong (commit cục bộ, chưa push, chưa deploy)
+- Nhánh `claude/tab-thoi-quen` (worktree `.claude/worktrees/tab-thoi-quen`, từ `claude/sw-mo-nhanh`). Thay đổi hành vi, số liệu, rủi ro gộp với `claude/ui-suc-khoe` và `claude/chu-ky-mt`: CURRENT.md mục Gói tab-thoi-quen. Plan: `docs/superpowers/plans/2026-11-17-tab-thoi-quen.md`.
+- Còn lại: nhớ tab đang mở khi mở lại app (chưa có khóa); thiết bị thật; sáng/tối ở 390/820; nâng đủ `APPV`/`VERSION`/CHANGELOG khi phát hành; dọn CSS `.hb-strip`/`.hb-chip` không còn dùng.
+- Next step: phiên khác gộp các nhánh gói; sau gộp chạy lại E2ETABHB, E2EHL, E2EHL2, E2EUAT3, E2EHB.
+
 ## 2026-11-17 · Gói 5 xong (đã commit cục bộ, chưa push, chưa deploy)
 - Nhánh `claude/sw-mo-nhanh` (worktree `.claude/worktrees/sw-mo-nhanh`) chứa cả năm nhánh gói trước. Số liệu và số đo SW thật: CURRENT.md mục Gói 5.
 - Việc nên làm trước khi phát hành: đo lặp SW (mở bình thường a2/a3 chậm hơn bản cũ ở một lần đo), thử trên thiết bị thật (iPhone/Android: nhãn, mở nhanh, icon), chạy lại 6 bộ e2e chưa chạy sau chỉnh cuối, nâng đủ `APPV`, `VERSION`, CHANGELOG.

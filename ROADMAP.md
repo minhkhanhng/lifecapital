@@ -14,6 +14,7 @@ Thứ tự đề xuất (an toàn dữ liệu → bảo mật → hiệu năng �
 | 4 | gop-hai-may | A5 `gi` Google trong `markPending`, A6 gộp `bl`/`cfg` từng khóa | Opus | Xong (nhánh `claude/gop-hai-may`, E2EMRG 21/21), chưa push |
 | 5 | sw-mo-nhanh | C1 mở bản đã lưu ngay (đã đo: chờ 4,07 s), A8 trả bản cache khi 404/500, C4 giảm CORE tải trước + nén icon 512, MỚI: hiện dấu hiệu offline khi chưa đăng nhập | Opus | Xong (nhánh `claude/sw-mo-nhanh`, test_sw 23/23, E2ESW 10/10; đã đo SW thật), chưa push |
 | 5b | ui-suc-khoe | UI popup Thêm thuốc/TPCN (6 Important), nút tâm trạng dọc, nhãn ô ngày Nhật ký, nút ✕ 36px (PO chọn popup Hướng B, tâm trạng xếp dọc) | Sonnet | Xong (nhánh `claude/ui-suc-khoe`, từ `claude/sw-mo-nhanh`, E2EUI 16/16), chưa push |
+| 5c | tab-thoi-quen | Tách thói quen khỏi Lịch thành tab riêng (bố cục C, điều hướng N2) | Sonnet | Xong (nhánh `claude/tab-thoi-quen`, E2ETABHB 32/32, bộ cũ xanh), chưa push |
 | 6 | dong-bo-nhe | C2 đồng bộ mỗi phút + `stampBase` + `cloudPendingCount`, C3 Cài đặt | Opus | Xong (nhánh `claude/dong-bo-nhe`, E2ESYNC2 24/24, có số đo trước/sau; C2d bỏ), chưa push |
 | 6b | chu-ky-mt | Lỗi cũ: chữ ký `mt` (`taskSig`) và `sameJ` nhạy thứ tự khóa làm bản cũ thắng khi gộp hai máy (task, dự án, thói quen) | Sonnet (reviewer Opus) | Xong (nhánh `claude/chu-ky-mt`, E2ESIG 29/29, save() không đổi: ~71 ms), chưa push; làm TRƯỚC khi phát hành |
 | 7 | csp-staging | B2 CSP, B5 tự host supabase-js | Opus | Chưa (thử ở `staging`; PO cho phép push staging riêng) |

@@ -8,7 +8,7 @@ window.E2EUAT2 = async function () {
   const quick = async txt => { nl.value = txt; handleNLPInput(txt); await executeNLP(); await sleep(60); };
   const rows = () => [...document.querySelectorAll("#schedBody .sch-row")].map(r => r.innerText.replace(/\s+/g, " ").trim());
   const note = () => ($("schedBody").querySelector(".sch-note") || {}).className + " | " + ($("schedBody").querySelector(".sch-note") || {}).textContent;
-  const chipOf = n => [...document.querySelectorAll(".hb-chip")].find(c => c.querySelector(".hb-n") && c.querySelector(".hb-n").textContent === n);
+  const chipOf = n => [...document.querySelectorAll(".hbt-card")].find(c => c.querySelector(".hbt-n") && c.querySelector(".hbt-n").textContent === n);
   const evAt = (k, s, h, t, c = "tc") => { (S.ev[k] = S.ev[k] || []).push({ t, c, m: "u", h, s }); sortL(S.ev[k]); };
   const cfg0 = JSON.stringify(S.cfg), caps0 = JSON.stringify(S.caps);
   const asked = [], ask0 = window.ask;
@@ -129,9 +129,10 @@ window.E2EUAT2 = async function () {
   $("inpHabit").checked = true;
   await saveEventFromForm(); await sleep(40);
   const hd = (S.habits || []).find(h => h.n === "Đi bộ");
-  draw(); await sleep(20);
+  switchTab("hb"); await sleep(20);
   let ch = chipOf("Đi bộ");
   ok("I1.1 chip 'Đi bộ': chấm hôm nay tô, '0 tuần', '1/3'", hd && ch && /0\s*tuần/.test(ch.textContent) && /1\/3|thiếu 2/.test(ch.textContent) && ch.querySelectorAll(".hb-dot.on.today").length === 1, ch && ch.textContent);
+  switchTab("ca"); draw(); await sleep(20);
   ok("I1.2 thẻ hoạt động có dấu ✓", [...document.querySelectorAll(".event-item")].some(x => x.textContent.includes("Đi bộ") && x.querySelector(".ev-hb")));
   openEditor(tk, S.ev[tk].findIndex(e => e.t === "Đi bộ")); await sleep(20);
   ok("I1.3 popup ghi 'Thuộc thói quen Đi bộ'", /Thuộc thói quen Đi bộ/.test($("sheetBody").textContent));
@@ -139,7 +140,7 @@ window.E2EUAT2 = async function () {
 
   // ===== I2
   [0, 2, 4].forEach(j => evAt(W0(-7 + j), "07:00", 0.5, "đi bo", "sk"));
-  draw(); await sleep(20); ch = chipOf("Đi bộ");
+  switchTab("hb"); draw(); await sleep(20); ch = chipOf("Đi bộ");
   ok("I2.1 buổi không dấu được đếm; chip '1 tuần' dù tuần này 1/3", ch && /1\s*tuần/.test(ch.textContent) && /1\/3|thiếu 2/.test(ch.textContent), ch && ch.textContent);
   hbOpen(hd.id); await sleep(20);
   const hbT = $("hbBody").textContent;
@@ -148,6 +149,7 @@ window.E2EUAT2 = async function () {
   closeHb();
 
   // ===== I3
+  switchTab("hb"); await sleep(20);
   hbOpen(); await sleep(20);
   $("hbName").value = "UAT Uống nước"; hbSet("n", "UAT Uống nước"); hbSet("kind", "tick"); hbSet("per", "day");
   hbSave(); await sleep(20);
@@ -199,8 +201,8 @@ window.E2EUAT2 = async function () {
   closeEditor();
   hbOpen(hd.id); hbArchive(hd.id); await sleep(20);
   ok("I5.4 Lưu trữ ẩn chip", !chipOf("Đi bộ"));
-  switchTab("set"); await sleep(30);
-  ok("I5.5 tab Vốn: 'Xem đã lưu trữ (1)'", /Xem đã lưu trữ \(1\)/.test($("v").textContent), ($("v").textContent.match(/đã lưu trữ \(\d+\)/) || [])[0]);
+  switchTab("hb"); await sleep(30);
+  ok("I5.5 tab Thói quen: 'Xem đã lưu trữ (1)'", /Xem đã lưu trữ \(1\)/.test($("v").textContent), ($("v").textContent.match(/đã lưu trữ \(\d+\)/) || [])[0]);
   hbArchive(hd.id); hbDelete(hd.id); await sleep(10);
   ok("I5.6 xóa", !findHb(hd.id));
   undoRun(); await sleep(10);
