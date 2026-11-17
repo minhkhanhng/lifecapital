@@ -8,8 +8,15 @@ window.E2ESYNC = async function () {
   const snapKeys = ks => ks.map(k => [k, lsGet(k)]);
   const restoreKeys = sn => sn.forEach(([k, v]) => { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); });
   const origSet = Storage.prototype.setItem;
-  const mainKeys = snapKeys(["lc2", "lc2_mine"]);
-  const origS = S, origEv = JSON.stringify(S.ev);
+  // Chụp TOÀN BỘ localStorage và S (bản sao sâu) để trả nguyên trạng khi xong
+  const lsAll = () => { const o = {}; for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); o[k] = localStorage.getItem(k); } return o; };
+  const lsBefore = lsAll(), sBefore = JSON.stringify(S);
+  const restoreAll = () => {
+    Storage.prototype.setItem = origSet;
+    Object.keys(lsAll()).forEach(k => { if (!(k in lsBefore)) localStorage.removeItem(k); });
+    Object.keys(lsBefore).forEach(k => { if (localStorage.getItem(k) !== lsBefore[k]) localStorage.setItem(k, lsBefore[k]); });
+    S = JSON.parse(sBefore); lastRaw = lsGet("lc2"); saveFailed = false; draw(true);
+  };
 
   // ---- A2: cloudKeep không để lc_sync mồ côi khi ghi base lỗi
   const syncKeys = snapKeys(["lc_sync", "lc_sync_base"]);
@@ -20,6 +27,14 @@ window.E2ESYNC = async function () {
     try { cloudKeep({ uid: "u", rev: 7 }, "x"); } finally { console.warn = w; Storage.prototype.setItem = origSet; }
     ok("S2.1 ghi base lỗi: không còn lc_sync mồ côi", cloudMeta() === null && cloudBaseRaw() === null, [lsGet("lc_sync"), lsGet("lc_sync_base")]);
     ok("S2.1b ghi base lỗi: có console.warn", warned === 1, warned);
+    localStorage.removeItem("lc_sync"); localStorage.removeItem("lc_sync_base");
+    cloudKeep({ uid: "u", rev: 7 }, "x");
+    // S2.3: ghi meta lỗi thì giữ nguyên meta cũ và base cũ (đang nhất quán)
+    localStorage.setItem("lc_sync", JSON.stringify({ uid: "u", rev: 3 })); localStorage.setItem("lc_sync_base", "old");
+    Storage.prototype.setItem = function (k, v) { if (k === "lc_sync") throw new DOMException("q", "QuotaExceededError"); return origSet.call(this, k, v); };
+    const w2 = console.warn; console.warn = () => {};
+    try { cloudKeep({ uid: "u", rev: 7 }, "new"); } finally { console.warn = w2; Storage.prototype.setItem = origSet; }
+    ok("S2.3 ghi meta lỗi: giữ meta rev 3 và base old", cloudMeta() && cloudMeta().rev === 3 && cloudBaseRaw() === "old", [lsGet("lc_sync"), lsGet("lc_sync_base")]);
     localStorage.removeItem("lc_sync"); localStorage.removeItem("lc_sync_base");
     cloudKeep({ uid: "u", rev: 7 }, "x");
     ok("S2.2 ghi thành công: rev 7 và base x", cloudMeta() && cloudMeta().rev === 7 && cloudBaseRaw() === "x", [lsGet("lc_sync"), lsGet("lc_sync_base")]);
@@ -46,7 +61,7 @@ window.E2ESYNC = async function () {
     ok("S3.2a khác id, cùng nội dung: vẫn 1", len(S.ev[D2]) === 1, (S.ev[D2] || []).map(e => e.id));
     ok("S3.2b khác id, khác nội dung: 2", len(S.ev[D3]) === 2, (S.ev[D3] || []).map(e => e.id));
   } catch (e) { ok("S3.err", false, String(e)); }
-  finally { S.ev = JSON.parse(origEv); }
+  finally { restoreAll(); }
 
   // ---- A4: wipeLocal xóa cả token Google và cờ liên quan
   const gKeys = snapKeys(["gcal_token", "gcal_token_exp", "gcal_linked", "lc_gx_seen"]);
@@ -57,7 +72,7 @@ window.E2ESYNC = async function () {
     ok("S4.1 wipeLocal xóa token, hạn, cờ liên kết, lc_gx_seen", ["gcal_token", "gcal_token_exp", "gcal_linked", "lc_gx_seen"].every(k => lsGet(k) === null), snapKeys(["gcal_token", "gcal_token_exp", "gcal_linked", "lc_gx_seen"]));
     ok("S4.2 wipeLocal vẫn đặt lại dữ liệu", len(S.tasks) === 0 && Object.keys(S.ev).length === 0, [len(S.tasks), Object.keys(S.ev).length]);
   } catch (e) { ok("S4.err", false, String(e)); }
-  finally { restoreKeys(gKeys); restoreKeys(mainKeys); S = origS; lastRaw = lsGet("lc2"); draw(true); }
+  finally { restoreAll(); }
 
   // ---- A7: save() báo đúng nguyên nhân (lỗi lập trình khác lỗi hết dung lượng)
   const alertTxt = () => { const el = document.getElementById("saveAlert"); return el && !el.hidden ? el.textContent : ""; };
@@ -78,7 +93,10 @@ window.E2ESYNC = async function () {
   } catch (e) { ok("S7.err", false, String(e)); }
   finally { stampEdits = origStamp; console.error = origErr; Storage.prototype.setItem = origSet; saveFailed = false; renderSaveAlert(); }
 
-  restoreKeys(mainKeys);
+  restoreAll();
+  const lsAfter = lsAll();
+  ok("S9.1 sau khi chạy: tập khóa localStorage và lc2 như trước", JSON.stringify(Object.keys(lsAfter).sort()) === JSON.stringify(Object.keys(lsBefore).sort()) && lsAfter.lc2 === lsBefore.lc2, [Object.keys(lsAfter).length, Object.keys(lsBefore).length]);
+  ok("S9.2 sau khi chạy: mọi giá trị khóa như trước", Object.keys(lsBefore).every(k => lsAfter[k] === lsBefore[k]), Object.keys(lsBefore).filter(k => lsAfter[k] !== lsBefore[k]));
   const pass = out.filter(x => x.pass).length;
   return { pass, total: out.length, fail: out.filter(x => !x.pass) };
 };
