@@ -17,7 +17,7 @@ Thứ tự đề xuất (an toàn dữ liệu → bảo mật → hiệu năng �
 | 5c | tab-thoi-quen | Tách thói quen khỏi Lịch thành tab riêng (bố cục C, điều hướng N2) | Sonnet | Xong (nhánh `claude/tab-thoi-quen`, E2ETABHB 32/32, bộ cũ xanh), chưa push |
 | 6 | dong-bo-nhe | C2 đồng bộ mỗi phút + `stampBase` + `cloudPendingCount`, C3 Cài đặt | Opus | Xong (nhánh `claude/dong-bo-nhe`, E2ESYNC2 24/24, có số đo trước/sau; C2d bỏ), chưa push |
 | 6b | chu-ky-mt | Lỗi cũ: chữ ký `mt` (`taskSig`) và `sameJ` nhạy thứ tự khóa làm bản cũ thắng khi gộp hai máy (task, dự án, thói quen) | Sonnet (reviewer Opus) | Xong (nhánh `claude/chu-ky-mt`, E2ESIG 29/29, save() không đổi: ~71 ms), chưa push; làm TRƯỚC khi phát hành |
-| 7 | csp-staging | B2 CSP, B5 tự host supabase-js | Opus | Chưa (thử ở `staging`; PO cho phép push staging riêng) |
+| 7 | csp-staging | B2 CSP, B5 tự host supabase-js | Sonnet+Opus review | Xong ở local (nhánh `claude/csp-staging`: test_csp 19/19, E2ECSP 21/21, 0 vi phạm CSP ở E2E 95/95); CHƯA thử staging (đăng nhập Google/Supabase, wss, Calendar, cài PWA); chưa push |
 | 8 | truy-cap-va-cam-ung | E1 bàn phím mở hoạt động, E2 vùng bấm 36 px, E3 nhãn truy cập/focus/báo lỗi JSON/tour | Sonnet | Chưa (E2 nhìn thấy được; kiểm 390/820/1440) |
 | 9 | hieu-nang-sau | C5 ghi `lc2_mine` trễ, C6 tách tab/minify/kính mờ tự nhẹ | Opus | Chưa (rủi ro cao hơn; làm sau cùng và chỉ khi số đo gói 5–6 chưa đủ) |
 | 10 | don-nhe | D1–D6 (pick3, defCaps, bỏ `window.claude.use`, SB_URL trùng, `tick()` 2 lần, `console.warn` catch rỗng, README 30/30, `.gitignore`) + A9 nợ nhỏ nếu PO duyệt | Haiku/Sonnet | Chưa |

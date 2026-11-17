@@ -1,5 +1,10 @@
 # Bài học (mới nhất ở trên)
 
+## 2026-11-17 · Khi chạy đỏ cho test bảo mật, đừng dùng tên miền thật làm mồi
+- Lỗi: ca thăm dò CSP dùng `cdn.jsdelivr.net/npm/csp-probe...`, nên ở pha đỏ (chưa có CSP) và khi chạy nhầm trên máy chủ không CSP, trình duyệt gửi GET thật ra Internet.
+- Nguyên nhân: chọn host thật cho dễ đọc; plan không nói rõ.
+- Cách tránh: mồi chặn dùng tên miền `.invalid` (không bao giờ ra mạng); test CSP chỉ chạy dưới máy chủ cục bộ gắn header; kiểm tĩnh `vercel.json` bằng Node trước.
+
 ## 2026-11-17 · Kiểm khi đo: số đo của implementer có thể là nhiễu
 - Lỗi: Opus báo `save()` nhanh hơn (165 → 139 ms) nhưng tôi đo lại thì 165,5 ms, không đổi.
 - Nguyên nhân: một lần đo mỗi lần chạy trên trang có nhiễu; gói không đụng đường `save()`.

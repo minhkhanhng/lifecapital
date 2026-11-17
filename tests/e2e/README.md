@@ -43,8 +43,11 @@ await __run("tests/e2e/e2e6.js", "E2E");   // trả về { r: [đạt, tổng], 
 | e2e-mrg.js | E2EMRG | Gói 4: hai máy cùng liên kết Google không tạo hai sự kiện (markPending cấp sẵn gi); gộp bl, cfg theo từng khóa (giữ false/0, khóa lạ) |
 | e2e-sw.js | E2ESW | Gói 5: nhãn "Bản đã lưu" (#netChip) hiện/ẩn theo tin {lc:"net", ok} từ SW (gửi MessageEvent giả, không cần SW thật); bỏ qua tin lạ, không là vùng bấm, cùng hàng tiêu đề ở 1440 và 390 |
 | e2e-sync2.js | E2ESYNC2 | Gói 6: bản tự lưu không parse lại khi không đổi (P3); canonState/số chưa gửi nhớ theo đúng chuỗi, kết quả đồng bộ như cũ, vòng 60 s chỉ đồng bộ khi cần (P2; sb giả) |
+| e2e-csp.js | E2ECSP | Gói 7: tự host supabase-js (sbLibLoad: nạp một lần, lỗi thì thử lại được, createClient giả, không gọi mạng) và CSP thật. CHẠY DƯỚI `python3 tests/csp/serve.py <cổng>` (gắn header CSP lấy từ vercel.json): 0 vi phạm khi chạy các luồng chính, và CSP chặn script/fetch/base/frame/object lạ. `E2ECSP("E5")` / `E2ECSP("E2")` chạy riêng từng nhóm. Bộ cũ (E2E...) cũng chạy được dưới serve.py; riêng E2EUX cần `--test-eval` vì tự `eval()` tiện ích đo |
 | perf-sync.js | PERFSYNC | Gói 6: bộ ĐO (không đạt/trượt) ở ~11k hoạt động: tick, cloudPendingCount, cloudSync, save, renderSettingsModal. Gọi thẳng `await PERFSYNC()` (có thể lâu hơn 40 s của `__run`) |
 | e2e-v063.js | E2E63 | v0.6.3: nhập Google Calendar (giả lập API), bật/tắt phần, Tổng quan gộp Tổng kết, biểu tượng tab |
+
+Test CSP tĩnh (Node, không trình duyệt): `node tests/csp/test_csp.js` (in `OK n/n`).
 
 Test gộp dữ liệu: mở http://localhost:8765/tests/merge-tests.html (tiêu đề trang ghi `PASS n/n`).
 

@@ -7477,7 +7477,8 @@ try { bgGet().then(b => { if (b) applyBg(b); }).catch(() => {}); } catch (e) {}
    ========================================================================== */
 const SB_URL = "https://bvuvgjiufpjsidyyigkb.supabase.co";
 const SB_KEY = "sb_publishable_L5otbMIzkhWqwOJeRFd2AQ_ml3vz10c"; // khóa công khai, an toàn khi nằm trong app
-const SB_LIB = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.0/+esm";
+const SB_LIB = "vendor/supabase-2.117.0.umd.js"; // tự host (UMD, gán window.supabase); sha256 ghim trong tests/csp/test_csp.js
+let sbLibP = null;
 const SB_AUTH = "lc_sb_auth";
 const DEV = (() => {
   try {
@@ -7691,10 +7692,23 @@ function cloudWanted() {
   try { if (localStorage.getItem(SB_AUTH) || localStorage.getItem("lc_sync")) return true; } catch (e) {}
   return /[?&](code|error)=/.test(location.search);
 }
+// Nạp thư viện Supabase bản tự host: chèn <script> một lần, trả createClient. Lỗi (mất mạng, chưa có trong cache SW) thì từ chối và cho thử lại.
+function sbLibLoad(src) {
+  if (window.supabase && window.supabase.createClient) return Promise.resolve(window.supabase.createClient);
+  if (sbLibP) return sbLibP;
+  sbLibP = new Promise((res, rej) => {
+    const sc = document.createElement("script");
+    sc.src = src || SB_LIB; sc.async = true;
+    sc.onload = () => { if (window.supabase && window.supabase.createClient) res(window.supabase.createClient); else { sc.remove(); rej(new Error("supabase-js không hợp lệ")); } };
+    sc.onerror = () => { sc.remove(); rej(new Error("không tải được supabase-js")); };
+    document.head.appendChild(sc);
+  }).catch(e => { sbLibP = null; throw e; });
+  return sbLibP;
+}
 function cloudLoad() {
   if (sb) return Promise.resolve(sb);
   if (sbLoading) return sbLoading;
-  sbLoading = import(SB_LIB).then(({ createClient }) => {
+  sbLoading = sbLibLoad().then(createClient => {
     sb = createClient(SB_URL, SB_KEY, {
       auth: { flowType: "pkce", storageKey: SB_AUTH, persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
     });
