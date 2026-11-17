@@ -98,6 +98,13 @@ Còn lại:
 - DANH SÁCH THỬ Ở STAGING (PO phải cho phép push staging riêng; mở DevTools console theo dõi `connect-src`/`script-src`/`frame-src`): (1) đăng nhập Google rồi đăng xuất qua Supabase (PKCE, chuyển hướng); (2) đồng bộ thời gian thực giữa 2 máy (`wss`); (3) Google Calendar: kết nối, nhập, đồng bộ, NGẮT (kiểm I-1); (4) cài PWA, chạy offline (`vendor/` có vào cache SW); (5) ảnh nền, xuất/nhập tệp, in báo cáo, AI (không dùng).
 - Rollout: staging bật CSP cưỡng chế ngay (không Report-Only vì chưa có điểm nhận báo cáo). Rút lại: SW lưu cả header của `./` trong cache nên máy đã cài vẫn mở bản lưu với CSP cũ thêm ít nhất một lần (tải lại 2 lần mới hết); đăng ký SW không bị CSP ảnh hưởng nên bản sửa vẫn về được.
 
+## Gói 9 subtask (nhánh `claude/subtask`, từ `claude/tich-hop` 6071adf, chưa push)
+- Việc con `subs:[{id,t,done?}]` trên HOẠT ĐỘNG lịch (Hộp việc giữ nguyên). PO chốt: tên + ô tích; tích hết KHÔNG tự xong; chuỗi lặp theo từng buổi (ô "cả chuỗi" chép tên, id mới, không chép done); không tính giờ vốn; Hướng B (mục thu gọn + chip n/m trên thẻ). Google Calendar và thói quen không đổi. KHÔNG đổi APPV/VERSION/CHANGELOG.
+- Code: `cleanEvSubs` (trong `cleanEv`), `subsSig` trong `evCore`, `mergeSubs` trong `mergeEv` (gộp theo id: thêm/xóa/tích/đổi tên; không gốc chung thì hợp hai bên), popup `subsHTML` + `subsToggle/subKey/subDone/subName/subDel`, `saveEventFromForm` và `rep` chép danh sách.
+- Test đỏ trước `e2e-subtask.js` E2ESUB 15/42; sau sửa 42/42 ở 1440 và 390 (tôi chạy). Haiku chạy lại sau thay đổi cuối: E2E 95/95, UAT2 71, UAT3 63, HB 34, SYNC 14, SYNC2 24, MRG 21, SIG 34, LIM 12, IMP 5, UX 124; test_csp 19/19; merge-tests PASS 35/35.
+- Lưu ý test: popup có hiệu ứng scale; khung trình duyệt ẩn thì nó kẹt ở 0.95, nên đo vùng bấm bằng `offsetHeight`. Ngày test lấy theo hôm nay để thẻ hiện trong tuần đang xem.
+- Chưa: chạy ở 820, E2E phần khác ở 390, thiết bị thật; nhập JSON thật bằng `importData` (chỉ kiểm qua `cleanState`).
+
 ## Quyết định PO (2026-11-17)
 - Từ 2026-11-17: không dùng fable nữa; ưu tiên model ít tốn token nhất mà vẫn hiệu quả (Haiku việc cơ học, Sonnet code, reviewer khác model với implementer).
 - Đau nhất: chậm / nặng. Cấm đụng: không có phần nào (mọi đề xuất vẫn qua duyệt). Quy tắc dữ liệu: không mất dữ liệu người dùng. Đường quay lại: tải JSON + tag git. Mục tiêu từng tab: dùng README, chưa PO xác nhận.
