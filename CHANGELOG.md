@@ -2,6 +2,27 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.8.0 · Tab Thói quen, việc con, đồng bộ an toàn hơn, mở nhanh · 17/11/2026
+
+**Mới**
+- Tab **Thói quen** riêng (tích hôm nay, giữ chuỗi ngày); tab Lịch gọn hơn, không còn thanh thói quen chen giữa.
+- **Việc con** (danh sách việc nhỏ) trong popup Sửa hoạt động, hiện tiến độ n/m; mở rộng/thu gọn được.
+- Nhãn **"Bản đã lưu"** cạnh tiêu đề khi chưa kết nối được máy chủ. App mở ngay từ bản đã lưu (không chờ mạng tới 4 giây), bản mới tải ngầm cho lần mở sau.
+- Mở hoạt động trên lịch bằng bàn phím (Enter hoặc Space); thêm nhãn truy cập cho ô ghi nhanh và ô loại vốn.
+
+**Sửa (an toàn dữ liệu)**
+- Không còn cắt dữ liệu thật khi vượt ngưỡng cũ (việc trên 500, dự án trên 200, thói quen trên 100, ...). Nhập tệp ở chế độ Gộp không cắt phần, mốc, cập nhật của dự án đã có.
+- Đồng bộ nhiều máy: gộp cài đặt (giờ cố định, cấu hình) từng khóa nên không mất thay đổi của máy kia; bản sửa của máy này hoặc máy kia không bị ghi đè nhầm bởi mốc thời gian giả; không tạo hai sự kiện Google cho một hoạt động; nhập Gộp không thêm lại hoạt động đã sửa.
+- Xóa dữ liệu trên máy cũng xóa luôn token Google và cờ liên kết; báo đúng nguyên nhân khi không lưu được; khi máy chủ trả lỗi 404/500 app vẫn mở từ bản đã lưu.
+- Bảo mật: tên triệu chứng tự thêm không còn chạy được mã; thêm chính sách nội dung (CSP) giới hạn nơi dữ liệu được gửi tới; thư viện đồng bộ tự host.
+
+**Đổi**
+- Token Google Calendar chỉ giữ trong phiên: đóng tab thì phải bấm Kết nối lại Google Calendar.
+- Tab Sức khỏe: popup Thêm thuốc hoặc TPCN gọn hai cột, tâm trạng xếp dọc, nút đóng 36px.
+- Vùng bấm tối thiểu 36px trên cảm ứng và cửa sổ hẹp (nút +, nhãn tình trạng ngày, nút thu gọn).
+- Nhanh hơn khi đăng nhập: đồng bộ nền nhẹ hơn, mở Cài đặt không khựng; lần cài đầu nhẹ hơn khoảng 38%.
+- Báo lỗi nhập tệp JSON dễ hiểu; tour lần đầu tự ẩn khi đổi tab.
+
 ## v0.7.1 · Favicon và logo chỉ có bông hoa, chuẩn hóa giao diện · 05/11/2026
 
 **Đổi**
