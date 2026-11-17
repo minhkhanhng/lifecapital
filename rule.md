@@ -4,7 +4,7 @@
 ## Bản đang chạy là thiêng liêng
 0. Life Capital đang chạy thật (https://lifecapital.vercel.app, nhánh `main`) và có người dùng thật. Không deploy, không push, không chạm dữ liệu thật, không migration trên dữ liệu thật. Không chạy lệnh nào trong trình duyệt trên bản thật.
 1. Commit chỉ khi PO yêu cầu. Push, deploy, tag, xóa chỉ khi PO nói rõ, và mỗi lần đồng ý chỉ áp dụng cho đúng lần đó.
-2. Fable (agent review) chỉ đọc/chạy, KHÔNG sửa code. Người điều phối sửa; mỗi lỗi Critical/Important có test đỏ trước.
+2. Agent review chỉ đọc/chạy, KHÔNG sửa code. Người điều phối hoặc implementer sửa; mỗi lỗi Critical/Important có test đỏ trước.
 
 ## Khởi động
 3. Đọc theo thứ tự: rule.md → lesson.md → CURRENT.md → HANDOFF.md. CLAUDE.md, PRODUCT.md, ROADMAP.md khi cần.
@@ -13,7 +13,7 @@
 
 ## Giao tiếp
 6. Trả lời tiếng Việt, ngắn; Claude xưng "tôi", gọi PO là "bạn". Mỗi câu kết thúc bằng **Next step**: việc, model + effort, worktree.
-7. Chọn model theo độ khó: Haiku việc cơ học; Sonnet phần lớn code và tài liệu; Opus kiến trúc, debug khó; Fable là reviewer độc lập.
+7. Chọn model ít tốn token nhất mà vẫn hiệu quả: Haiku việc cơ học; Sonnet phần lớn code và tài liệu; Opus chỉ khi kiến trúc/debug khó. Reviewer khác model với implementer. Từ 2026-11-17 PO yêu cầu KHÔNG dùng fable nữa.
 8. Context vượt 70% cửa sổ: hỏi PO (AskUserQuestion): "Chuyển session mới" / "Tiếp tục ở đây".
 9. Không rõ thì hỏi PO, đừng đoán.
 

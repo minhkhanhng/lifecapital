@@ -25,12 +25,20 @@ Ghi chú: lần chạy đầu E2E báo 94/95 (ca "A4 cột trái hiện ở màn
 - Review độc lập bằng fable: ĐÃ chạy 5 lượt ngày 2026-11-17 (`docs/review/`): 2 Critical (cùng một gốc, gộp thành A1), 20 Important, nhiều Minor. Chưa sửa gì; bản đang chạy vẫn v0.7.1. Việc fable chưa xem được: SW/offline thật, Supabase và Google thật, biến môi trường Vercel, cài đặt Supabase Auth, thiết bị thật.
 
 ## Việc PO phải tự làm (nhắc sớm)
-1. Trước khi ra bản mới: tải sao lưu JSON trong app (Cài đặt → Dữ liệu).
+Đã xong (PO báo 2026-11-17): B4 tắt "Allow new users to sign up" trong Supabase Auth; tải sao lưu JSON; thử trên điện thoại thật bản đang chạy. PO không dùng AI (không có chi phí) nên B3 và `AI_ALLOWED_EMAILS` bỏ khỏi phạm vi.
+Còn lại:
+1. Trước MỖI lần ra bản mới: tải sao lưu JSON mới.
 2. Quyền ghi GitHub / push / deploy: chỉ khi PO nói rõ (đã có đăng nhập qua Keychain theo `docs/huong-dan-day-code-github.md`).
 3. Thử trên thiết bị thật trước khi ra bản mới.
 4. Nếu dùng Career OS trong khung Browser của Claude: localStorage của `127.0.0.1:8765` đã bị `clear()` nhầm ngày 2026-11-17 (lesson.md); kiểm tra xem có mất gì không.
 
+## Gói 1 mat-du-lieu (nhánh `claude/mat-du-lieu`, chưa push)
+- Commit `f3bc0bc` test đỏ E2ELIM (9/12 đỏ), `3cd4c61` bỏ ngưỡng cắt, thay bằng `SANE_MAX = 100000` (`index.html:2389`). Kiểm lại bởi fable (trước khi PO dừng dùng fable): E2ELIM 12/12; 14 bộ cũ 832/832; tổng 844/844; merge-tests 30/30; test_ai_plan 12/12; node --check đạt. Chưa chạy mobile 390×844.
+- Ngoài phạm vi, đã tách thành gói 1b: `importData` chế độ Gộp còn cắt `secs/ms/ups` dự án đã có ở 20/50/30 (`index.html:~5743`).
+- Fable đo thêm (docs/review/2026-11-17-fable-sw-offline.md): C1 xác nhận (SW chờ tới 4,07 s khi mạng chậm/treo), A8 xác nhận (404/500 → trang lỗi dù có cache), cache cài đầu 1.354.082 B, A6 xác nhận, A5 xác nhận cơ chế; mục mới: offline không có dấu hiệu nào khi chưa đăng nhập.
+
 ## Quyết định PO (2026-11-17)
+- Từ 2026-11-17: không dùng fable nữa; ưu tiên model ít tốn token nhất mà vẫn hiệu quả (Haiku việc cơ học, Sonnet code, reviewer khác model với implementer).
 - Đau nhất: chậm / nặng. Cấm đụng: không có phần nào (mọi đề xuất vẫn qua duyệt). Quy tắc dữ liệu: không mất dữ liệu người dùng. Đường quay lại: tải JSON + tag git. Mục tiêu từng tab: dùng README, chưa PO xác nhận.
 
 ## Tôi tự chốt
