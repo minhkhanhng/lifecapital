@@ -18,7 +18,7 @@ window.E2ESIG = async function () {
   const kinds = [
     { name: "task", arr: "tasks", mk: mkTask, late: o => { o.q = "2"; o.due = "2026-12-01"; }, edit: o => { o.t = "Đổi thật"; }, field: "t" },
     { name: "project", arr: "projects", mk: mkPj, late: o => { o.ed = "2026-12-31"; o.desc = "mô tả"; }, edit: o => { o.n = "Đổi thật"; }, field: "n" },
-    { name: "habit", arr: "habits", mk: mkHb, late: o => { o.arch = 1; o.key = "sg"; }, edit: o => { o.n = "Đổi thật"; }, field: "n" }
+    { name: "habit", arr: "habits", mk: mkHb, late: o => { o.arch = 1; }, edit: o => { o.n = "Đổi thật"; }, field: "n" }
   ];
 
   // ---- G1..G3: lưu hai lần không đổi gì thì mt không đổi; sửa thật thì mt tăng

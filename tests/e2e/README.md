@@ -38,6 +38,7 @@ await __run("tests/e2e/e2e6.js", "E2E");   // trả về { r: [đạt, tổng], 
 | e2e-imp.js | E2EIMP | Gói 1b: nhập JSON chế độ Gộp không cắt phần/mốc/cập nhật của dự án đã có |
 | e2e-sync.js | E2ESYNC | Gói 2: cloudKeep không để lc_sync mồ côi, nhập Gộp theo id, wipeLocal xóa token Google, save() báo đúng lỗi |
 | e2e-xss.js | E2EXSS | Gói 3: tên triệu chứng tự thêm không chạy được HTML trong lời khuyên/tóm tắt; token Google chỉ ở sessionStorage (di trú token cũ) |
+| e2e-sig.js | E2ESIG | Gói 7: chữ ký mt và sameJ không phụ thuộc thứ tự khóa (task, dự án, thói quen; hai máy gộp) |
 | e2e-mrg.js | E2EMRG | Gói 4: hai máy cùng liên kết Google không tạo hai sự kiện (markPending cấp sẵn gi); gộp bl, cfg theo từng khóa (giữ false/0, khóa lạ) |
 | e2e-sw.js | E2ESW | Gói 5: nhãn "Bản đã lưu" (#netChip) hiện/ẩn theo tin {lc:"net", ok} từ SW (gửi MessageEvent giả, không cần SW thật); bỏ qua tin lạ, không là vùng bấm, cùng hàng tiêu đề ở 1440 và 390 |
 | e2e-sync2.js | E2ESYNC2 | Gói 6: bản tự lưu không parse lại khi không đổi (P3); canonState/số chưa gửi nhớ theo đúng chuỗi, kết quả đồng bộ như cũ, vòng 60 s chỉ đồng bộ khi cần (P2; sb giả) |
