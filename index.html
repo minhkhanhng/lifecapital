@@ -2725,6 +2725,19 @@ function snapshotDaily() {
     snapKeys().slice(0, -7).forEach(k => localStorage.removeItem(k));
   } catch (e) {}
 }
+// Số hoạt động của từng bản tự lưu, nhớ theo đúng nội dung: chỉ đọc lại bản nào vừa đổi (Cài đặt vẽ lại sau mỗi nút bấm)
+const snapN = new Map(); // khóa → { raw, n }
+function snapCount(k) {
+  let raw = null;
+  try { raw = localStorage.getItem(k); } catch (e) {}
+  const c = snapN.get(k);
+  if (c && c.raw === raw) return c.n;
+  let n = "?";
+  try { n = Object.values(JSON.parse(raw).ev).flat().length; } catch (e) {}
+  snapN.set(k, { raw, n });
+  return n;
+}
+function snapPrune(keys) { [...snapN.keys()].forEach(k => { if (!keys.includes(k)) snapN.delete(k); }); return keys; }
 function freeSpace() {
   try { localStorage.removeItem("lc2_mine"); snapKeys().slice(0, -1).forEach(k => localStorage.removeItem(k)); } catch (e) {}
 }
@@ -4443,9 +4456,8 @@ function renderSettingsModal() {
       <div class="set-row set-top">
         <span class="set-lbl">Bản tự lưu<small>Mỗi ngày một bản, giữ 7 ngày. Gộp lại chỉ thêm phần thiếu.</small></span>
         <div class="set-list">
-          ${snapKeys().reverse().map(k => {
-            let n = "?";
-            try { n = Object.values(JSON.parse(localStorage.getItem(k)).ev).flat().length; } catch (e) {}
+          ${snapPrune(snapKeys()).reverse().map(k => {
+            const n = snapCount(k);
             const d = k.slice(SNAP.length);
             return `<div class="set-inline"><span class="set-val">${d.slice(8, 10)}/${d.slice(5, 7)} · ${n} hoạt động</span><button type="button" class="btn btn-sm" onclick="restoreSnapshot('${k}')">Gộp lại</button></div>`;
           }).join("") || `<span class="set-val">Chưa có</span>`}
@@ -5901,10 +5913,12 @@ function draw(jump) {
 }
 
 // Tự động chuyển tuần khi sang thứ Hai mới
-function tick() {
+// force = false chỉ cho vòng 60 giây: đang "ok" và vừa đồng bộ trong 5 phút thì không hỏi máy chủ (đã có lc_ping thời gian thực)
+function tick(force = true) {
   pullDisk();
   if (gcalCid()) gsiLoad(); // Client ID có thể vừa về từ máy khác qua đồng bộ
-  if (sbUser && !cloudBusy && cloud.st !== "auth" && cloud.st !== "setup") cloudSoon(0); // phòng khi lỡ tín hiệu thời gian thực
+  const due = force || cloud.st !== "ok" || !cloud.at || Math.abs(Date.now() - cloud.at) > 5 * 60000; // abs: đồng hồ máy bị chỉnh lùi vẫn đồng bộ
+  if (sbUser && !cloudBusy && cloud.st !== "auth" && cloud.st !== "setup" && due) cloudSoon(0); // phòng khi lỡ tín hiệu thời gian thực
   snapshotDaily();
   updateSyncBadge(); // token Google hết hạn sau 1 giờ
   if (ed) return;
@@ -5912,11 +5926,11 @@ function tick() {
   if (w !== oldCW) { if (sel === oldCW) sel = w >= 0 ? w : sel; CW = w; lt = tk; draw(true); }
   else if (tk !== oldDay) { lt = tk; draw(); }
 }
-setInterval(tick, 60000);
+setInterval(() => tick(false), 60000);
 document.addEventListener("visibilitychange", () => {
   if (!document.hidden) { tick(); gcalFlush(); if (swReg) swReg.update().catch(() => {}); }
 });
-window.addEventListener("focus", tick);
+window.addEventListener("focus", () => tick(true));
 window.addEventListener("pageshow", e => { if (e.persisted) pullDisk(); });
 window.addEventListener("online", () => { gcalFlush(); cloudSoon(0); if (sbUser && !aiReady) aiProbe(); else if (aiReady) drawSoon(); });
 window.addEventListener("offline", () => { if (sbUser) cloudSet("offline"); if (aiReady) drawSoon(); });
@@ -7446,14 +7460,34 @@ function canonState(st) {
     : v && typeof v === "object" ? Object.keys(v).sort().reduce((o, k) => { o[k] = sortKeys(v[k]); return o; }, {}) : v;
   return JSON.stringify(sortKeys(c));
 }
+// canonState(cloudView(S)) nhớ theo đúng chuỗi JSON của dữ liệu (và ngày hôm nay: cleanState điền ngày bắt đầu còn thiếu
+// bằng hôm nay). JSON.stringify rẻ hơn canonState khoảng 10 lần nên vòng đồng bộ không đổi gì không phải tính lại.
+let canonMemo = { src: null, day: null, canon: null };
+function canonView() {
+  const src = JSON.stringify(cloudView(S)), day = ky(new Date());
+  if (src === canonMemo.src && day === canonMemo.day) return canonMemo.canon;
+  const canon = canonState(cloudView(S));
+  canonMemo = { src, day, canon };
+  return canon;
+}
 
 // Số thay đổi chưa gửi: hoạt động thêm/bớt/sửa theo từng ngày, việc trong Hộp việc, và phần còn lại (vốn, cài đặt)
+// Nhớ kết quả theo cặp (dạng chuẩn hiện tại, lc_sync_base); bản gốc đã đọc nhớ theo chuỗi lc_sync_base
+let pendMemo = { canon: null, raw: null, n: 0 }, pendBase = { raw: null, base: null };
 function cloudPendingCount() {
   const raw = cloudBaseRaw(), meta = cloudMeta();
   if (!sbUser || !meta || meta.uid !== sbUser.id) return 0;
+  const canon = canonView();
+  if (canon === pendMemo.canon && raw === pendMemo.raw) return pendMemo.n;
+  const n = pendingCount(canon, raw);
+  pendMemo = { canon, raw, n };
+  return n;
+}
+function pendingCount(canon, raw) {
   let base = null;
-  try { base = raw ? JSON.parse(raw) : null; } catch (e) {}
-  const cur = JSON.parse(canonState(cloudView(S)));
+  if (raw === pendBase.raw) base = pendBase.base;
+  else { try { base = raw ? JSON.parse(raw) : null; } catch (e) {} pendBase = { raw, base }; }
+  const cur = JSON.parse(canon);
   if (!base) return Object.values(cur.ev).flat().length + cur.tasks.length || 1;
   let n = 0;
   new Set([...Object.keys(cur.ev), ...Object.keys(base.ev)]).forEach(k => {
@@ -7535,7 +7569,7 @@ async function cloudSync() {
         const baseRaw = meta ? cloudBaseRaw() : null;
         if (theirs) {
           const blank = !Object.keys(S.ev).length && !S.tasks.length;
-          if ((baseRaw && canonState(cloudView(S)) === baseRaw) || (!baseRaw && blank)) {
+          if ((baseRaw && canonView() === baseRaw) || (!baseRaw && blank)) {
             cloudApply(theirs); // máy này không đổi gì (hoặc chưa có dữ liệu): nhận nguyên bản trên máy chủ
           } else {
             if (!baseRaw) snapshotNow("dang-nhap"); // lần đầu gộp với tài khoản: lưu một bản trên máy trước
@@ -7551,14 +7585,14 @@ async function cloudSync() {
         cloudKeep(meta, theirsRaw);
       }
       // Máy này có thay đổi chưa gửi thì gửi lên
-      const cur = canonState(cloudView(S));
+      const cur = canonView();
       if (srvRev && cur === cloudBaseRaw()) { cloudFails = 0; cloudSet("ok"); break; }
       const push = await sb.rpc("lc_push", { p_base: srvRev, p_data: JSON.parse(cur), p_device: DEV });
       if (push.error) throw push.error;
       if (push.data > 0) {
         cloudKeep({ uid, rev: push.data }, cur);
         cloudFails = 0;
-        cloudSet(canonState(cloudView(S)) === cur ? "ok" : "wait");
+        cloudSet(canonView() === cur ? "ok" : "wait");
         if (cloud.st === "wait") cloudAgain = true; // có thay đổi mới trong lúc đang gửi
         break;
       }
