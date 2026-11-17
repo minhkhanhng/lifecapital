@@ -32,8 +32,8 @@ function networkFirst(req) {
     const slow = setTimeout(() => caches.match("./").then(finish), 4000);
     fetch(req).then(res => {
       clearTimeout(slow);
-      if (res.ok) { const copy = res.clone(); caches.open(VERSION).then(c => c.put("./", copy)); }
-      finish(res);
+      if (res.ok) { const copy = res.clone(); caches.open(VERSION).then(c => c.put("./", copy)); finish(res); }
+      else caches.match("./").then(hit => finish(hit || res), () => finish(res)); // máy chủ lỗi (404/5xx): ưu tiên bản đã lưu, không có mới trả trang lỗi
     }).catch(() => {
       clearTimeout(slow);
       caches.match("./").then(hit => finish(hit || Response.error()));
