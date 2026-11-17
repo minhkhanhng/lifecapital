@@ -43,6 +43,12 @@ Còn lại:
 - Kết quả (implementer Sonnet báo; A2 sau fix-loop tôi đã đọc lại code): E2ESYNC 14/14, E2ELIM 12/12, E2EIMP 5/5, 14 bộ cũ 832/832 (lần chạy trước fix; sau fix chỉ chạy lại E2E, E2EUAT2, E2E63), merge 30/30, `node tests/sw/test_sw.js` 3/3, node --check đạt. Reviewer Haiku tìm 2 Important (A2 quá tay, test dọn chưa sạch) → đã sửa. A8 chỉ test bằng Node giả lập, cần thử SW thật khi phát hành. Chưa chạy mobile 390×844.
 - Minor ghi nhận: Gộp bỏ im lặng bản sửa trùng id (đúng plan); `sw.js` `.catch` của `caches.match` thiếu xử lý từ chối (có từ trước).
 
+## Gói 3 xss-va-token (nhánh `claude/xss-va-token`, từ `claude/dong-bo-an-toan`, CHƯA commit, chưa push)
+- B1: `esc()` bọc tên triệu chứng ở `hlAdvice()` (6 điểm) và `hlSummary()` (1 điểm); `hlSyName` giữ nguyên. B6: `gcal_token`/`gcal_token_exp` chuyển sang `sessionStorage` (`getGCalToken`, `clearGCalToken`, callback đăng nhập, `disconnectGoogleCalendar`); `gcalMigrateToken()` chép token cũ còn hạn từ `localStorage` rồi xóa, giữ `gcal_linked`. Hệ quả: đóng tab là phải kết nối lại Google.
+- Test đỏ trước: E2EXSS 4/16 (X1.1-X1.4, T6.1, T6.3-T6.6 đỏ, `window.__xss` đã chạy). Sau sửa, tôi chạy lại: E2EXSS 14/14 (có chốt: không có dữ liệu demo thì dừng), E2ESYNC 14/14, E2E63 77/77, node --check index.html/sw.js/e2e-xss.js đạt, `test_sw` 3/3. Sonnet báo thêm (chưa chạy lại sau chốt): E2E 95/95, E2EUAT2 71/71, E2EUAT3 62/62, E2EHL 85/85, E2EHL2 53/53, merge 30/30. Sáu bộ còn lại trong 14 bộ chưa chạy; chưa chạy mobile 390×844.
+- Reviewer Haiku: 0 Critical, 1 Important (test gọi `wipeLocal` không có chốt dữ liệu thử) đã sửa. Minor: `onclick="hlSy('${k}'...)"` dùng id (id đã lọc `[\w-]{1,24}` trong `cleanState`, không đổi), token cũ không có hạn thì không hết trong phiên (như trước), `e2e-v063.js` xóa khóa gcal ở sessionStorage không khôi phục (chỉ token phiên).
+- Dòng `<b>${a.t}</b><span>${a.d}</span>` vẫn in thô: mọi chuỗi lời khuyên mới phải `esc` dữ liệu người dùng ở nguồn.
+
 ## Quyết định PO (2026-11-17)
 - Từ 2026-11-17: không dùng fable nữa; ưu tiên model ít tốn token nhất mà vẫn hiệu quả (Haiku việc cơ học, Sonnet code, reviewer khác model với implementer).
 - Đau nhất: chậm / nặng. Cấm đụng: không có phần nào (mọi đề xuất vẫn qua duyệt). Quy tắc dữ liệu: không mất dữ liệu người dùng. Đường quay lại: tải JSON + tag git. Mục tiêu từng tab: dùng README, chưa PO xác nhận.

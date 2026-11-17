@@ -1,5 +1,10 @@
 # Bài học (mới nhất ở trên)
 
+## 2026-11-17 · `preview_start` đọc nhầm cấu hình của thư mục chính
+- Lỗi: trong worktree, `preview_start` báo lỗi đường dẫn `.../scratchpad/site` dù worktree có `.claude/launch.json` riêng.
+- Nguyên nhân: công cụ dùng cấu hình `launch.json` của thư mục chính, không phải của worktree.
+- Cách tránh: chạy `python3 -m http.server <cổng lạ> --bind 127.0.0.1` từ thư mục worktree bằng Bash nền (không giấu đầu ra), kiểm `<title>Life Capital` bằng `curl`, rồi `navigate`; dừng máy chủ do mình chạy khi xong.
+
 ## 2026-11-17 · Ngưỡng `.slice` "phòng thủ" trong `cleanState` cắt dữ liệu thật
 - Lỗi: việc >500, dự án >200, thói quen >100, ticks >1000, thuốc >100, triệu chứng >50, lệnh xóa Google >500 bị cắt âm thầm mỗi lần mở app và lần lưu kế tiếp ghi đè mất vĩnh viễn.
 - Nguyên nhân: giới hạn đặt để chặn tệp độc hại nhưng `cleanState` cũng chạy trên dữ liệu thật của người dùng khi tải, gộp, đồng bộ.
