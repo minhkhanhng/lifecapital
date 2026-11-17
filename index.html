@@ -2386,6 +2386,7 @@ const SAFE_K = /^(?!__proto__$)[\w-]{1,24}$/;
 // gid: id sự kiện Google (base32hex; instance của chuỗi lặp có thêm "_20261008T…Z")
 const GID = /^[\w-]{5,1024}$/;
 const GCAL_CID = /^[\w.-]{5,200}\.apps\.googleusercontent\.com$/;
+const SANE_MAX = 100000; // trần chặn tệp hỏng, không phải giới hạn dùng
 let S, rawSaved = null;
 try { rawSaved = localStorage.getItem("lc2"); } catch (e) {}
 try {
@@ -2667,7 +2668,7 @@ function mergeStates(base, mine, theirs, trust) {
     ...theirs, ...mine, ...extra, ev, caps: caps.length ? caps : mine.caps,
     bl: pick("bl"), mem: pick("mem"), cfg: pick("cfg"), pm: pick("pm"), memV: pick("memV"),
     lb: Math.max(+mine.lb || 0, +theirs.lb || 0),
-    gdel: [...new Set([...(mine.gdel || []), ...(theirs.gdel || [])])].slice(-500),
+    gdel: [...new Set([...(mine.gdel || []), ...(theirs.gdel || [])])].slice(-SANE_MAX),
     tasks,
     projects,
     habits,
@@ -5673,10 +5674,10 @@ function cleanState(d) {
     gcalAutoSync: dc.gcalAutoSync !== false,
     ...(GCAL_CID.test(dc.gcalClientId || "") ? { gcalClientId: dc.gcalClientId } : {})
   };
-  const gdel = Array.isArray(d.gdel) ? [...new Set(d.gdel.filter(g => typeof g === "string" && GID.test(g)))].slice(-500) : [];
-  const tasks = Array.isArray(d.tasks) ? d.tasks.map(cleanTask).filter(Boolean).slice(0, 500) : [];
-  const projects = Array.isArray(d.projects) ? d.projects.map(cleanProject).filter(Boolean).slice(0, 200) : [];
-  const hbSeen = new Set(), habits = Array.isArray(d.habits) ? d.habits.map(cleanHabit).filter(h => h && !hbSeen.has(h.id) && hbSeen.add(h.id)).slice(0, 100) : [];
+  const gdel = Array.isArray(d.gdel) ? [...new Set(d.gdel.filter(g => typeof g === "string" && GID.test(g)))].slice(-SANE_MAX) : [];
+  const tasks = Array.isArray(d.tasks) ? d.tasks.map(cleanTask).filter(Boolean).slice(0, SANE_MAX) : [];
+  const projects = Array.isArray(d.projects) ? d.projects.map(cleanProject).filter(Boolean).slice(0, SANE_MAX) : [];
+  const hbSeen = new Set(), habits = Array.isArray(d.habits) ? d.habits.map(cleanHabit).filter(h => h && !hbSeen.has(h.id) && hbSeen.add(h.id)).slice(0, SANE_MAX) : [];
   const profile = cleanProfile(d.profile), health = cleanHealth(d.health);
   return { ...extras(d, ["ev", "caps", "bl", "mem", "memV", "cfg", "gdel", "tasks", "pm", "lb", "sv", "projects", "habits", "profile", "health"]), ...(profile ? { profile } : {}), ...(health ? { health } : {}), projects, habits, ev, caps, bl, mem, memV: d.memV === 2 ? 2 : 0, cfg, gdel, tasks, pm: ["0", "4", "all"].includes(d.pm) ? d.pm : "0", lb: +d.lb || 0 };
 }
@@ -6039,7 +6040,7 @@ function cleanHealth(x) {
     if (Object.keys(o).some(f => f !== "mt")) days[k] = o;
   });
   const seen = new Set();
-  const meds = (Array.isArray(x.meds) ? x.meds : []).filter(m => m && K.test(m.id || "") && typeof m.n === "string" && m.n.trim() && !seen.has(m.id) && seen.add(m.id)).slice(0, 100).map(m => ({
+  const meds = (Array.isArray(x.meds) ? x.meds : []).filter(m => m && K.test(m.id || "") && typeof m.n === "string" && m.n.trim() && !seen.has(m.id) && seen.add(m.id)).slice(0, SANE_MAX).map(m => ({
     ...extras(m, ["id", "n", "kind", "dose", "sched", "times", "sd", "ed", "arch", "mt"]),
     id: m.id, n: m.n.trim().slice(0, 60), kind: m.kind === "med" ? "med" : "sup",
     ...(typeof m.dose === "string" && m.dose.trim() ? { dose: m.dose.trim().slice(0, 40) } : {}),
@@ -6047,7 +6048,7 @@ function cleanHealth(x) {
     sd: D.test(m.sd || "") ? m.sd : ky(new Date()), ...(D.test(m.ed || "") ? { ed: m.ed } : {}), ...(m.arch ? { arch: 1 } : {}), ...mt(m)
   }));
   const s2 = new Set();
-  const syc = (Array.isArray(x.syc) ? x.syc : []).filter(c => c && K.test(c.id || "") && typeof c.n === "string" && c.n.trim() && !s2.has(c.id) && s2.add(c.id)).slice(0, 50).map(c => ({ id: c.id, n: c.n.trim().slice(0, 40), ...mt(c) }));
+  const syc = (Array.isArray(x.syc) ? x.syc : []).filter(c => c && K.test(c.id || "") && typeof c.n === "string" && c.n.trim() && !s2.has(c.id) && s2.add(c.id)).slice(0, SANE_MAX).map(c => ({ id: c.id, n: c.n.trim().slice(0, 40), ...mt(c) }));
   const chk = {};
   Object.keys(x.chk || {}).filter(k => D.test(k)).forEach(k => {
     const c = x.chk[k], ok = a => Array.isArray(a) && a.length === 2 && a.every(v => int(v, 0, 3) !== null);
@@ -6065,7 +6066,7 @@ function cleanHealth(x) {
 function cleanHabit(x) {
   if (!x || !SAFE_K.test(x.id || "") || typeof x.n !== "string" || !x.n.trim()) return null;
   const D = /^\d{4}-\d\d-\d\d$/, ticks = {}, kind = x.kind === "tick" ? "tick" : "auto", per = x.per === "day" ? "day" : "week";
-  if (x.ticks && typeof x.ticks === "object") Object.keys(x.ticks).filter(k => D.test(k) && x.ticks[k]).sort().slice(-1000).forEach(k => { ticks[k] = 1; });
+  if (x.ticks && typeof x.ticks === "object") Object.keys(x.ticks).filter(k => D.test(k) && x.ticks[k]).sort().slice(-SANE_MAX).forEach(k => { ticks[k] = 1; });
   return {
     ...extras(x, ["id", "n", "c", "kind", "key", "per", "tgt", "ticks", "sd", "arch", "mt"]),
     id: x.id, n: x.n.trim().slice(0, 60), c: SAFE_K.test(x.c || "") ? x.c : "sk", kind,
@@ -6092,9 +6093,9 @@ function cleanProject(x) {
     caps,
     // v0.6.0: mô tả, phần (section), mốc, cập nhật trạng thái (mới nhất ở đầu)
     ...(typeof x.desc === "string" && x.desc.trim() ? { desc: x.desc.slice(0, 2000) } : {}),
-    ...nz("secs", arr(x.secs, 20, s => typeof s.n === "string" && s.n.trim() ? { id: s.id, n: s.n.trim().slice(0, 40) } : null)),
-    ...nz("ms", arr(x.ms, 50, m => typeof m.n === "string" && m.n.trim() && D.test(m.d || "") ? { id: m.id, n: m.n.trim().slice(0, 80), d: m.d, ...(m.done ? { done: 1 } : {}) } : null)),
-    ...nz("ups", arr(x.ups, 30, u => D.test(u.d || "") && ["ok", "risk", "off"].indexOf(u.hs) >= 0 ? { id: u.id, d: u.d, hs: u.hs, note: typeof u.note === "string" ? u.note.slice(0, 280) : "" } : null)),
+    ...nz("secs", arr(x.secs, SANE_MAX, s => typeof s.n === "string" && s.n.trim() ? { id: s.id, n: s.n.trim().slice(0, 40) } : null)),
+    ...nz("ms", arr(x.ms, SANE_MAX, m => typeof m.n === "string" && m.n.trim() && D.test(m.d || "") ? { id: m.id, n: m.n.trim().slice(0, 80), d: m.d, ...(m.done ? { done: 1 } : {}) } : null)),
+    ...nz("ups", arr(x.ups, SANE_MAX, u => D.test(u.d || "") && ["ok", "risk", "off"].indexOf(u.hs) >= 0 ? { id: u.id, d: u.d, hs: u.hs, note: typeof u.note === "string" ? u.note.slice(0, 280) : "" } : null)),
     ...(Number.isFinite(+x.mt) && +x.mt > 0 ? { mt: +x.mt } : {})
   };
   function nz(k, l) { return l.length ? { [k]: l } : {}; } // danh sách rỗng thì không ghi, dữ liệu dự án cũ giữ nguyên dạng
@@ -6117,7 +6118,7 @@ function cleanTask(x) {
     ...(SAFE_K.test(x.pj || "") ? { pj: x.pj } : {}),
     ...(SAFE_K.test(x.sec || "") ? { sec: x.sec } : {}),
     ...(/^\d{4}-\d\d-\d\d$/.test(x.due || "") ? { due: x.due } : {}),
-    subs: Array.isArray(x.subs) ? x.subs.map(cleanSub).filter(Boolean).slice(0, 100) : [],
+    subs: Array.isArray(x.subs) ? x.subs.map(cleanSub).filter(Boolean).slice(0, SANE_MAX) : [],
     ...(x.done ? { done: 1 } : {}), ...(x.demo ? { demo: 1 } : {}),
     ...(Number.isFinite(+x.mt) && +x.mt > 0 ? { mt: +x.mt } : {})
   };
