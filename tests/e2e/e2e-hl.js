@@ -214,11 +214,11 @@ window.E2EHL = async function () {
   switchTab("ca");
 
   // 10. Tab, phím tắt, nút Thêm
-  ok("10.1 6 tab: Lịch, Hộp việc, Dự án, Sức khỏe, Tổng quan, Tôi", TABS.map(t => t.id).join() === "ca,hv,pj,hl,su,me");
+  ok("10.1 7 tab: Lịch, Hộp việc, Dự án, Sức khỏe, Thói quen, Tổng quan, Tôi", TABS.map(t => t.id).join() === "ca,hv,pj,hl,hb,su,me");
   document.dispatchEvent(new KeyboardEvent("keydown", { key: "4", bubbles: true })); await sleep(10);
   ok("10.2 phím 4 mở Sức khỏe", cur === "hl");
-  document.dispatchEvent(new KeyboardEvent("keydown", { key: "6", bubbles: true })); await sleep(10);
-  ok("10.3 phím 6 mở Tôi", cur === "me");
+  document.dispatchEvent(new KeyboardEvent("keydown", { key: "7", bubbles: true })); await sleep(10);
+  ok("10.3 phím 7 mở Tôi", cur === "me");
   switchTab("set"); ok("10.4 switchTab('set') mở tab Tôi (có bảng vốn)", cur === "me" && !!document.querySelector('#v input[data-target-input]'));
   switchTab("hl"); headerAdd(); await sleep(10);
   ok("10.5 nút Thêm ở Sức khỏe mở Ghi hôm nay", $("hlOverlay").classList.contains("open") && hlEd.k === tk);

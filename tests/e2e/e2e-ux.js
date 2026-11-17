@@ -201,7 +201,7 @@ window.E2EUX = async function () {
   ok("A7.6 không còn nút Cài đặt ở thanh bên và đầu trang; tab Tôi mở được Cài đặt", !document.querySelector(".sidebar-settings") && !$("settingsBtn") && btns($("v"), /Cài đặt|Mở cài đặt/).length >= 1);
 
   // ===== Demo một dòng (Chủ nhật, thứ 2 thông báo Tổng kết tuần đứng trước: bỏ qua nó)
-  try { localStorage.setItem("lc_rv_skip", activeYear + "-" + (new Date().getDay() === 0 ? CW : CW - 1)); } catch (e) {}
+  try { localStorage.setItem("lc_rv_skip", activeYear + "-" + (new Date().getDay() === 0 ? CW : CW - 1)); localStorage.setItem("lc_ci_skip", tk); } catch (e) {} // lc_ci_skip: sau 19h banner check-in tối che dòng dữ liệu mẫu
   switchTab("ca"); await sleep(10);
   ok("B2.1 dữ liệu mẫu: một dòng, có Xóa mẫu", document.querySelector(".demo-line") && btns(document.querySelector(".demo-line"), /^Xóa mẫu$/).length === 1 && !/Đang dùng dữ liệu mẫu/.test(vt()));
 
