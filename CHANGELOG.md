@@ -2,6 +2,19 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.9.0 · Giao diện "Hôm nay trước", gọn và có động lực hơn · 18/11/2026
+
+**Mới**
+- Khối **Hôm nay** ở đầu tab Lịch: lời chào theo giờ, ba vòng tiến độ (giờ hôm nay so với mục tiêu tuần chia 7, thói quen đã tích x/y, tâm trạng) bấm được để mở đúng nơi, và ô "Tiếp theo" cho việc sắp tới.
+- Ô **Tuần này** ở đáy thanh bên (máy tính): vòng điểm cân bằng và thói quen x/y, bấm để mở Tổng quan.
+- Tab **Thói quen** thành danh sách hàng có thanh tiến độ "x/y xong" ("Xong hết..." khi đủ); ô tích chưa tích là vòng rỗng.
+
+**Đổi**
+- Lưới tuần 7 cột khi cửa sổ từ 760px; tên hoạt động hiện tối đa 2 dòng.
+- Mỗi màn chỉ có một nút chính (+ Thêm); "Tổng kết" thành nút phụ; canh trái, gọn hơn ở điện thoại.
+- Tab Sức khỏe, phần Tóm tắt: năm nút tâm trạng nằm một hàng (màn từ 600px), thẻ gợi ý trống thu thành một dòng, sáu ô "Đã ghim" chia đều 3 cột (2 cột ở màn hẹp).
+- Không đổi dữ liệu và cách đồng bộ; thanh "Có bản mới" hiện như thường lệ, bấm Tải lại.
+
 ## v0.8.0 · Tab Thói quen, việc con, đồng bộ an toàn hơn, mở nhanh · 17/11/2026
 
 **Mới**
