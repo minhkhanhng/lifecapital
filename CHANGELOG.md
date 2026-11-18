@@ -2,6 +2,16 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.9.3 · Tab Lịch gọn hơn theo chiều dọc · 18/11/2026
+
+**Đổi** (màn từ 900px)
+- Ô ghi nhanh nằm ngay trong hàng tiêu đề, không còn chiếm một hàng riêng; dòng phụ dưới tiêu đề được ẩn.
+- Khối "Hôm nay" thành một thanh mảnh: lời chào, ba vòng tiến độ và ô "Tiếp theo" cùng một hàng.
+- Lưới tuần lên cao hơn, thấy nhiều hoạt động hơn mà không cần cuộn: bắt đầu ở khoảng một phần tư màn hình thay vì gần một nửa.
+- Thẻ hoạt động gọn hơn: tên một dòng, thấp hơn khoảng 25%; cột hôm nay nổi bật hơn các ngày khác.
+- Xem trước khi ghi nhanh hiện dạng hộp thả xuống dưới ô nhập.
+- Điện thoại giữ bố cục cũ (thanh ghi nhanh vẫn cố định phía dưới).
+
 ## v0.9.2 · Các tab giãn hết bề ngang · 18/11/2026
 
 **Sửa**
