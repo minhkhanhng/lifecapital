@@ -1,5 +1,12 @@
 # HANDOFF · Bàn giao cho session sau (mục mới nhất ở trên)
 
+## 2026-11-18 · ĐÃ PHÁT HÀNH v0.9.1 LÊN PRODUCTION (PO: "Phát hành v0.9.1")
+- `git merge --ff-only refs/heads/feature/v0.9.1` vào `main`, `git tag v0.9.1`, `git push origin main` (`c1849e7..14e7326`), `git push origin v0.9.1`; Vercel `success`; kiểm production: sw `lc-0.9.1`, `APPV 74`, `/api/ai_plan` 200, vendor/icon/CSP đạt, `index.html` và `sw.js` khớp byte với repo. Số liệu: CURRENT.md "Bản đang chạy".
+- Nội dung: sửa lệch lề phải các tab canh trái (một luật CSS cap `.app-container` 980 px ≥ 900 px) và bỏ "Giờ theo loại vốn" khỏi Lịch. Chi tiết: mục "SỬA NHANH" bên dưới.
+- HOÀN TÁC: commit revert `47908f6` trên nhánh mới từ `main` (KHÔNG force-push), nâng `APPV` 75/`VERSION` `lc-0.9.2`/CHANGELOG; dữ liệu không đổi.
+- Việc còn lại: PO xem giao diện thật (Hộp việc, Dự án, Thói quen, Tôi) và thử đăng nhập/đồng bộ/Google Calendar/cài PWA/điện thoại thật; quyết giữ hay xóa mã chết `capSumHTML`; lỗi mức thấp số 6 của việc con (đẩy Google khi chỉ tích việc con); gói 9 `hieu-nang-sau`, 10 `don-nhe`; mục E4.
+- Next step: PO dùng v0.9.1, báo lỗi/ý kiến giao diện; tôi sửa trên nhánh mới từ `main` (không dùng fable).
+
 ## 2026-11-18 · SỬA NHANH sau v0.9.0 trên `claude/hotfix-bo-cuc` (từ `main` = v0.9.0; chưa push, chưa deploy)
 - PO báo các tab Hộp việc, Dự án, Thói quen "méo" và yêu cầu bỏ "Giờ theo loại vốn" khỏi tab Lịch. Nguyên nhân đo được ở 1440: nội dung bị cap 980 px canh trái nhưng `.app-header` kéo hết cột, lề phải lệch ~170 px (nội dung x=1254, tiêu đề/nút x=1424) ở hv, pj (danh sách), hb, me.
 - Sửa: một luật CSS `@media (min-width: 900px)` cap `.app-container` 980 px cho hv, hb, me và pj khi không có `.pj-shell` (chi tiết dự án 1240 px không cap), nên tiêu đề, ô ghi nhanh, nội dung thẳng hàng (đo sau sửa: cả 4 tab đều 1254; Lịch/Sức khỏe/Tổng quan không đổi, 1424). Bỏ khối `.cap-sum` khỏi tab Lịch (tuần và ngày), xóa `weekStatsHTML`.

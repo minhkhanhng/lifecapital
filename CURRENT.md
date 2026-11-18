@@ -1,11 +1,12 @@
 # CURRENT · Hiện trạng (cập nhật 2026-11-18)
 
 ## Bản đang chạy (đã xác nhận)
-- **PRODUCTION = v0.9.0** (phát hành 2026-11-18 theo lệnh "xong thì gộp rồi deploy luôn" của PO). https://lifecapital.vercel.app: `sw.js` = `lc-0.9.0`, `APPV = 73; // v0.9.0`, `/api/ai_plan` 200, vendor SHA-256 `7b9e9c64…388645` khớp, header CSP + HSTS + `X-Frame-Options: DENY`, icon khớp, và `index.html` trên production khớp từng byte (`shasum`) với repo. Vercel `success`.
-- `origin/main` = `c1849e7` (tag `v0.9.0`), fast-forward từ `28adc46` (v0.8.0, tag `v0.8.0`) gồm 4 commit: tài liệu hiện trạng v0.8.0, UI Sức khỏe › Tóm tắt gọn (Hướng A), UI toàn bộ "Hôm nay trước", nâng phiên bản. Nhánh `staging` = `8010c7f` (v0.8.0, không phải bản đang chạy).
-- Kiểm trước khi ra bản (Sonnet độc lập, trên chính `c1849e7`): 1440: 27 bộ e2e xanh (E2E 95, E2EUX 124, E2EUIALL 32, E2ESUB 48, E2EA11Y 41, E2ETABHB 32, ...); 820 và 375: các bộ UI chính xanh (E2EUIALL 24 và 28 ca áp dụng cho từng khung); CSP thật: E2E 95/95, E2EUIALL, E2ESUB, E2EA11Y 0 vi phạm, E2ECSP 21/21; merge-tests 35/35, `test_sw` 23/23, `test_csp` 19/19.
-- CHƯA KIỂM: thiết bị thật; đăng nhập Google/Email qua Supabase, đồng bộ `wss`, Google Calendar (nút Ngắt có thể cần `https://oauth2.googleapis.com` ở `connect-src`), cài PWA (từ v0.8.0, chưa ai thử); chế độ "Bỏ kính mờ"; tương phản đầy đủ (`crdrive.js`/`stdrive.js`) cho khối "Hôm nay" mới. PO đã đồng ý ra bản trước khi xem ảnh trước/sau của UI mới: nếu không ưng, hoàn tác theo `HANDOFF.md`.
-- Người dùng thật: chỉ PO. Máy đã cài v0.8.0 sẽ thấy thanh "Có bản mới", bấm Tải lại.
+- **PRODUCTION = v0.9.1** (phát hành 2026-11-18 theo lệnh "Phát hành v0.9.1" của PO). https://lifecapital.vercel.app: `sw.js` = `lc-0.9.1`, `APPV = 74; // v0.9.1`, `/api/ai_plan` 200, vendor SHA-256 `7b9e9c64…388645` khớp, header CSP + HSTS + `X-Frame-Options: DENY`, icon khớp, và `index.html` + `sw.js` trên production khớp từng byte (`shasum`) với repo; luật căn lề mới có trên production. Vercel `success`.
+- `origin/main` = `14e7326` (tag `v0.9.1`), fast-forward từ `c1849e7` (v0.9.0, tag `v0.9.0`). v0.9.1 sửa lệch bố cục (tiêu đề và nội dung Hộp việc, Dự án, Thói quen, Tôi thẳng hàng lề phải ở màn ≥ 900 px) và bỏ "Giờ theo loại vốn" khỏi tab Lịch (xem ở Tổng quan › Bảng số liệu).
+- Kiểm trước khi ra bản: Sonnet (E2EUIALL đỏ 10/46 → 46/46 ở 1440, 27/27 ở 820, 31/31 ở 375; E2E 95, E2E61 41, E2EUAT2 72, E2EUAT3 63, E2EUX 124, E2ETABHB 32, E2EHB 34, E2EUI 18, E2EA11Y 41, E2ESUB 48, E2EDASH 36, E2E63 77, E2EHL 85, E2EHL2 53, merge-tests 35/35); tôi tự chạy lại trên chính bản phát hành (`APPV 74`): E2EUIALL 46/46, E2E 95/95, `test_sw` 23/23, `test_csp` 19/19, `node --check` sạch, và đo lề phải 7 tab.
+- CHƯA KIỂM: thiết bị thật; đăng nhập Google/Email qua Supabase, đồng bộ `wss`, Google Calendar (nút Ngắt có thể cần `https://oauth2.googleapis.com` ở `connect-src`), cài PWA (từ v0.8.0); khoảng 900–1200 px; chế độ "Bỏ kính mờ"; `crdrive.js`/`stdrive.js` cho khối "Hôm nay".
+- MÃ CHẾT: `capSumHTML` và CSS `.cap-sum`/`.cap-s` không còn nơi gọi (chỉ test qua helper `__capBox`): PO quyết giữ hay xóa.
+- Người dùng thật: chỉ PO. Máy đã cài v0.9.0 sẽ thấy thanh "Có bản mới", bấm Tải lại.
 
 ## Kết quả kiểm tra (chạy 2026-11-17 trên worktree `claude/review-2026-11-17`, tách từ `main`, chưa sửa code)
 | Hạng mục | Kết quả |
