@@ -117,19 +117,18 @@ window.E2EUIALL = async function () {
     ok("H1 Tổng quan: vòng Điểm cân bằng có vạch nền", ring && ring.querySelectorAll("circle").length >= 2, ring && ring.outerHTML.slice(0, 160));
 
     // ---- Tối: khối Hôm nay đọc được ----
-    // ---- H1: lề phải tiêu đề = lề phải nội dung ở các tab bị cap 980px (chỉ màn >= 900 chuột); H2: Lịch không còn Giờ theo loại vốn ----
+    // ---- H1: lề phải tiêu đề = lề phải nội dung và cùng giãn hết bề ngang cột ở mọi tab (chỉ màn >= 900 chuột); H2: Lịch không còn Giờ theo loại vốn ----
     if (W >= 900 && !touch) {
-      const rr = e => Math.round(R(e).right); let inset = null; // Lịch (không cap) cho độ thụt chuẩn của nút so với nội dung (tiêu đề có padding-inline 4px)
+      const rr = e => Math.round(R(e).right); let inset = null, colW = null; // Lịch (không cap) cho độ thụt chuẩn của nút so với nội dung (tiêu đề có padding-inline 4px)
       for (const [t, sub, name] of [["ca", "focus", "Lịch"], ["hv", 0, "Hộp việc"], ["pj", 0, "Dự án (danh sách)"], ["hb", 0, "Thói quen"], ["me", 0, "Tôi"], ["hl", 0, "Sức khỏe"], ["su", 0, "Tổng quan"]]) {
         await go(t, sub || undefined);
         const hd = document.querySelector(".app-header"), v = document.querySelector("#v"), kids = [...v.children].filter(vis), qc = document.querySelector(".quick-capture-box");
-        const capped = ["hv", "pj", "hb", "me"].includes(t) && !document.querySelector("#v .pj-shell");
-        const vr = Math.max(...kids.map(rr)), ha = document.querySelector(".header-actions");
-        if (t === "ca") inset = vr - rr(ha);
-        if (capped) {
-          ok(`H1.${t} ${name}: lề phải tiêu đề = lề phải nội dung (±2px), nút cùng độ thụt như Lịch`, Math.abs(rr(hd) - vr) <= 2 && Math.abs((vr - rr(ha)) - inset) <= 2 && (!qc || !vis(qc) || Math.abs(rr(qc) - vr) <= 2), [rr(hd), rr(ha), vr, qc && rr(qc)]);
-          ok(`H1.${t} ${name}: nội dung không rộng quá 980px`, R(hd).width <= 981, R(hd).width);
-        } else ok(`H1.${t} ${name}: không bị cap 980px (tiêu đề rộng > 980px khi cột đủ rộng)`, R(document.querySelector(".app-container")).width <= 981 || R(hd).width > 981, R(hd).width);
+        const vr = Math.max(...kids.map(rr)), ha = document.querySelector(".header-actions"), ct = document.querySelector(".app-container");
+        if (t === "ca") { inset = vr - rr(ha); colW = R(ct).width; } // Lịch không bị cap: bề ngang cột chuẩn
+        ok(`H1.${t} ${name}: lề phải tiêu đề = lề phải nội dung (±2px), nút cùng độ thụt như Lịch`, Math.abs(rr(hd) - vr) <= 2 && Math.abs((vr - rr(ha)) - inset) <= 2 && (!qc || !vis(qc) || Math.abs(rr(qc) - vr) <= 2), [rr(hd), rr(ha), vr, qc && rr(qc)]);
+        // PO chọn Hướng C (2026-11-18): mọi tab giãn hết bề ngang cột như Lịch, không còn cap 980px
+        ok(`H1.${t} ${name}: tiêu đề giãn hết bề ngang cột (không cap 980px)`, R(hd).width >= colW - 2, [R(hd).width, colW]);
+        ok(`H1.${t} ${name}: nội dung giãn hết bề ngang cột (lề phải nội dung = lề phải cột ±2px)`, Math.abs(R(ct).width - colW) <= 2 && Math.abs(vr - rr(ct)) <= 2, [vr, rr(ct), R(ct).width, colW]);
       }
     }
     {

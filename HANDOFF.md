@@ -1,5 +1,13 @@
 # HANDOFF · Bàn giao cho session sau (mục mới nhất ở trên)
 
+## 2026-11-18 · SỬA LỆCH LẦN 2 sau v0.9.1: các tab giãn hết bề ngang (Hướng C, PO chọn) trên `claude/hotfix-bo-cuc-2` (từ `main` = v0.9.1; chưa push, chưa deploy)
+- PO báo "vẫn bị" sau v0.9.1 (ảnh production: tiêu đề và nội dung đã thẳng lề phải nhưng cả cột lệch trái, trống bên phải ~180 px). Hỏi PO với 3 hướng (A giữ canh trái 980 px, B căn giữa, C giãn hết bề ngang): PO chọn C.
+- Sửa: gỡ MỌI giới hạn 980 px (`.pj-list`, `.hbt`, `body[data-tab="me"] #v`, style inline `.hv-card`, và luật cap `.app-container` thêm ở v0.9.1), nên Hộp việc, Dự án (danh sách), Thói quen, Tôi giãn hết cột như Lịch (đo ở 1440: cả 7 tab lề phải 1424). Chi tiết dự án (`.pj-shell` 1240 px) giữ nguyên. Ở 1920 px cột nội dung bị chặn khoảng 1190 px bởi bố cục `.app-shell` (max 1480 px).
+- Test: `E2EUIALL` H1 đổi kỳ vọng (lề phải thẳng hàng và rộng bằng cột của Lịch, so với bề ngang cột Lịch để tránh xanh giả) đỏ 48/56 rồi 56/56 (1440), 27/27 (820), 31/31 (375). Hồi quy (Sonnet, 09:12–09:48, trên chính nhánh): 27 bộ 1440 xanh (E2E 95, E2EUX 124, E2EUAT2 72, E2EUAT3 63, E2EHL 85, E2ESUB 48, E2EA11Y 41, E2ETABHB 32, ...), 820 và 375: E2EUIALL, E2ETABHB, E2EA11Y, E2EUI, E2EHB, E2ESUB xanh, CSP thật E2E/E2EUIALL 0 vi phạm, E2ECSP 21/21, merge-tests 35/35, `test_sw` 23/23, `test_csp` 19/19. Tôi tự chạy E2EUIALL 56/56 và xem ảnh Hộp việc ở 1440.
+- Lưu ý thẩm mỹ: tab Tôi, hàng form có nhãn trái và ô nhập dạt phải nên khoảng trống giữa khá rộng (ô giữ cỡ cũ); không phải lỗi.
+- Chưa kiểm: thiết bị thật; khoảng 900–1200 px; ảnh chế độ tối.
+- Muốn lên production: nâng `APPV` 75, `VERSION` `lc-0.9.2`, CHANGELOG; PO nói rõ mới push. Mã chết `capSumHTML` vẫn chờ PO quyết.
+
 ## 2026-11-18 · ĐÃ PHÁT HÀNH v0.9.1 LÊN PRODUCTION (PO: "Phát hành v0.9.1")
 - `git merge --ff-only refs/heads/feature/v0.9.1` vào `main`, `git tag v0.9.1`, `git push origin main` (`c1849e7..14e7326`), `git push origin v0.9.1`; Vercel `success`; kiểm production: sw `lc-0.9.1`, `APPV 74`, `/api/ai_plan` 200, vendor/icon/CSP đạt, `index.html` và `sw.js` khớp byte với repo. Số liệu: CURRENT.md "Bản đang chạy".
 - Nội dung: sửa lệch lề phải các tab canh trái (một luật CSS cap `.app-container` 980 px ≥ 900 px) và bỏ "Giờ theo loại vốn" khỏi Lịch. Chi tiết: mục "SỬA NHANH" bên dưới.
