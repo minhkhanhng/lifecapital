@@ -2,6 +2,17 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.9.4 · Việc nổi bật nhất, hàng Đang làm / Tiếp theo / Nổi bật nhất, giãn dòng · 18/11/2026
+
+**Mới**
+- Đánh dấu **một việc nổi bật nhất trong ngày**: rê chuột lên thẻ hoạt động rồi bấm ☆, hoặc bật công tắc "Nổi bật nhất trong ngày" trong Sửa hoạt động (cách này dùng được cả trên điện thoại). Thẻ được đánh dấu hiện ★; mỗi ngày một việc, đánh dấu việc khác thì sao chuyển sang. Dấu sao đồng bộ giữa các máy và không đẩy lên Google Calendar.
+- Hàng ba ô ngay dưới thanh "Hôm nay": **Đang làm**, **Tiếp theo**, **Nổi bật nhất**; bấm một ô để mở việc đó. Tự cập nhật mỗi phút.
+
+**Đổi**
+- Tab Lịch thoáng hơn: thẻ hoạt động đệm rộng hơn và các thẻ, các cột cách nhau xa hơn.
+- Ô "Tiếp theo" chuyển khỏi thanh "Hôm nay" xuống hàng riêng cùng hai ô mới. Điện thoại xếp ba ô thành ba hàng.
+- Dữ liệu cũ đọc bình thường; bản cũ chưa cập nhật vẫn giữ nguyên trường dấu sao khi đồng bộ.
+
 ## v0.9.3 · Tab Lịch gọn hơn theo chiều dọc · 18/11/2026
 
 **Đổi** (màn từ 900px)
