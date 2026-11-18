@@ -8,7 +8,7 @@
 - Hộp việc, Dự án, Thói quen, Tôi (màn từ 900px): tiêu đề, nút và nội dung nay cùng bề rộng và thẳng hàng lề phải; trước đó nút ở đầu trang lệch khỏi nội dung khoảng 170px.
 
 **Đổi**
-- Tab Lịch bỏ mục "Giờ theo loại vốn" (cả xem tuần và xem ngày); giờ theo loại vốn vẫn xem được ở tab Tổng quan.
+- Tab Lịch bỏ mục "Giờ theo loại vốn" (cả xem tuần và xem ngày); giờ từng loại vốn vẫn xem được ở tab Tổng quan, mục "Bảng số liệu".
 
 ## v0.9.0 · Giao diện "Hôm nay trước", gọn và có động lực hơn · 18/11/2026
 
