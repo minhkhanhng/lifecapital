@@ -1,6 +1,6 @@
 # CLAUDE.md · Life Capital
 
-Điểm vào cho agent. Quy tắc bắt buộc nằm ở `rule.md` (thắng file này nếu mâu thuẫn). Thứ tự đọc: rule.md → lesson.md → CURRENT.md → HANDOFF.md.
+Điểm vào cho agent. Quy tắc bắt buộc nằm ở `rule-v2.md` (áp dụng từ 2026-11-19, thắng file này nếu mâu thuẫn). `rule.md` chỉ để đọc tham khảo, KHÔNG áp dụng. Thứ tự đọc (có giới hạn, xem rule-v2.md mục B): rule-v2.md → 5 mục đầu lesson.md → mục "Bản đang chạy" của CURRENT.md → mục đầu HANDOFF.md.
 
 ## Là gì
 PWA cá nhân chia 168 giờ/tuần cho 5 loại vốn (Sức khỏe, Quan hệ, Trải nghiệm, Kỹ năng, Tài chính/Công việc). Người dùng thật hiện tại: chỉ chủ dự án (PO). Chi tiết sản phẩm: PRODUCT.md, README.md.
