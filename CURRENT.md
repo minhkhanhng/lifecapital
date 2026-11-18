@@ -1,12 +1,13 @@
 # CURRENT · Hiện trạng (cập nhật 2026-11-18)
 
 ## Bản đang chạy (đã xác nhận)
-- **PRODUCTION = v0.9.1** (phát hành 2026-11-18 theo lệnh "Phát hành v0.9.1" của PO). https://lifecapital.vercel.app: `sw.js` = `lc-0.9.1`, `APPV = 74; // v0.9.1`, `/api/ai_plan` 200, vendor SHA-256 `7b9e9c64…388645` khớp, header CSP + HSTS + `X-Frame-Options: DENY`, icon khớp, và `index.html` + `sw.js` trên production khớp từng byte (`shasum`) với repo; luật căn lề mới có trên production. Vercel `success`.
-- `origin/main` = `14e7326` (tag `v0.9.1`), fast-forward từ `c1849e7` (v0.9.0, tag `v0.9.0`). v0.9.1 sửa lệch bố cục (tiêu đề và nội dung Hộp việc, Dự án, Thói quen, Tôi thẳng hàng lề phải ở màn ≥ 900 px) và bỏ "Giờ theo loại vốn" khỏi tab Lịch (xem ở Tổng quan › Bảng số liệu).
-- Kiểm trước khi ra bản: Sonnet (E2EUIALL đỏ 10/46 → 46/46 ở 1440, 27/27 ở 820, 31/31 ở 375; E2E 95, E2E61 41, E2EUAT2 72, E2EUAT3 63, E2EUX 124, E2ETABHB 32, E2EHB 34, E2EUI 18, E2EA11Y 41, E2ESUB 48, E2EDASH 36, E2E63 77, E2EHL 85, E2EHL2 53, merge-tests 35/35); tôi tự chạy lại trên chính bản phát hành (`APPV 74`): E2EUIALL 46/46, E2E 95/95, `test_sw` 23/23, `test_csp` 19/19, `node --check` sạch, và đo lề phải 7 tab.
-- CHƯA KIỂM: thiết bị thật; đăng nhập Google/Email qua Supabase, đồng bộ `wss`, Google Calendar (nút Ngắt có thể cần `https://oauth2.googleapis.com` ở `connect-src`), cài PWA (từ v0.8.0); khoảng 900–1200 px; chế độ "Bỏ kính mờ"; `crdrive.js`/`stdrive.js` cho khối "Hôm nay".
-- MÃ CHẾT: `capSumHTML` và CSS `.cap-sum`/`.cap-s` không còn nơi gọi (chỉ test qua helper `__capBox`): PO quyết giữ hay xóa.
-- Người dùng thật: chỉ PO. Máy đã cài v0.9.0 sẽ thấy thanh "Có bản mới", bấm Tải lại.
+- **PRODUCTION = v0.9.2** (phát hành 2026-11-18, PO: "Phát hành v0.9.2 ngay"). https://lifecapital.vercel.app: `sw.js` = `lc-0.9.2`, `APPV = 75; // v0.9.2`, `/api/ai_plan` 200, vendor SHA-256 khớp, header CSP + HSTS + `X-Frame-Options: DENY`, icon khớp, `index.html` và `sw.js` khớp từng byte với repo, không còn luật cap 980 px. Vercel `success`.
+- `origin/main` = `fd0c79e` (tag `v0.9.2`), fast-forward từ `14e7326` (v0.9.1). v0.9.2: Hộp việc, Dự án (danh sách), Thói quen, Tôi giãn hết bề ngang cột như Lịch (PO chọn Hướng C sau khi v0.9.1 vẫn "bị" vì cột lệch trái và trống bên phải). Trước đó: v0.9.1 (`14e7326`) sửa lệch lề phải + bỏ "Giờ theo loại vốn" khỏi Lịch; v0.9.0 (`c1849e7`) UI "Hôm nay trước".
+- Kiểm trước khi ra bản: Sonnet hồi quy rộng trên nội dung (27 bộ 1440, các bộ UI chính 820/375, CSP thật 0 vi phạm, merge-tests 35/35); tôi tự chạy trên chính bản phát hành (`APPV 75`): E2EUIALL 56/56, E2E 95/95, `test_sw` 23/23, `test_csp` 19/19, `node --check` sạch.
+- CHƯA KIỂM: thiết bị thật; đăng nhập Google/Email qua Supabase, đồng bộ `wss`, Google Calendar (nút Ngắt có thể cần `https://oauth2.googleapis.com` ở `connect-src`), cài PWA (từ v0.8.0); khoảng 900–1200 px; chế độ tối bằng ảnh.
+- MÃ CHẾT: `capSumHTML` và CSS `.cap-sum`/`.cap-s` (chỉ test gọi): PO quyết giữ hay xóa.
+- Đang làm tiếp (PO chọn Hướng B 2026-11-18): dàn lại chiều dọc tab Lịch (ghi nhanh vào tiêu đề, "Hôm nay" thành thanh mảnh, thẻ hoạt động gọn và thoáng hơn) trên nhánh riêng, chưa phát hành.
+- Người dùng thật: chỉ PO. Máy đã cài bản cũ sẽ thấy thanh "Có bản mới", bấm Tải lại.
 
 ## Kết quả kiểm tra (chạy 2026-11-17 trên worktree `claude/review-2026-11-17`, tách từ `main`, chưa sửa code)
 | Hạng mục | Kết quả |

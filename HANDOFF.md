@@ -1,5 +1,12 @@
 # HANDOFF · Bàn giao cho session sau (mục mới nhất ở trên)
 
+## 2026-11-18 · ĐÃ PHÁT HÀNH v0.9.2 LÊN PRODUCTION (PO: "Phát hành v0.9.2 ngay")
+- `git merge --ff-only refs/heads/feature/v0.9.2` vào `main`, `git tag v0.9.2`, `git push origin main` (`14e7326..fd0c79e`), `git push origin v0.9.2`; Vercel `success`; kiểm production: sw `lc-0.9.2`, `APPV 75`, `/api/ai_plan` 200, vendor/icon/CSP đạt, `index.html` và `sw.js` khớp byte với repo. Số liệu: CURRENT.md "Bản đang chạy".
+- Nội dung: Hộp việc, Dự án (danh sách), Thói quen, Tôi giãn hết bề ngang cột (gỡ cap 980 px). Chi tiết: mục "SỬA LỆCH LẦN 2" bên dưới.
+- HOÀN TÁC: commit revert `14899fb` trên nhánh mới từ `main` (KHÔNG force-push), nâng `APPV` 76/`VERSION` `lc-0.9.3`/CHANGELOG; dữ liệu không đổi.
+- Việc kế tiếp (PO đã chọn Hướng B): dàn lại chiều dọc tab Lịch. Việc còn lại khác: PO thử đăng nhập/đồng bộ/Google Calendar/PWA/điện thoại thật; quyết giữ hay xóa mã chết `capSumHTML`; lỗi mức thấp số 6 của việc con; gói 9, 10; mục E4.
+- Next step: xem nhánh chiều dọc (Lịch) khi xong; không dùng fable.
+
 ## 2026-11-18 · SỬA LỆCH LẦN 2 sau v0.9.1: các tab giãn hết bề ngang (Hướng C, PO chọn) trên `claude/hotfix-bo-cuc-2` (từ `main` = v0.9.1; chưa push, chưa deploy)
 - PO báo "vẫn bị" sau v0.9.1 (ảnh production: tiêu đề và nội dung đã thẳng lề phải nhưng cả cột lệch trái, trống bên phải ~180 px). Hỏi PO với 3 hướng (A giữ canh trái 980 px, B căn giữa, C giãn hết bề ngang): PO chọn C.
 - Sửa: gỡ MỌI giới hạn 980 px (`.pj-list`, `.hbt`, `body[data-tab="me"] #v`, style inline `.hv-card`, và luật cap `.app-container` thêm ở v0.9.1), nên Hộp việc, Dự án (danh sách), Thói quen, Tôi giãn hết cột như Lịch (đo ở 1440: cả 7 tab lề phải 1424). Chi tiết dự án (`.pj-shell` 1240 px) giữ nguyên. Ở 1920 px cột nội dung bị chặn khoảng 1190 px bởi bố cục `.app-shell` (max 1480 px).
