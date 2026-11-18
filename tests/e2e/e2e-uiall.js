@@ -125,7 +125,7 @@ window.E2EUIALL = async function () {
         const hd = document.querySelector(".app-header"), v = document.querySelector("#v"), kids = [...v.children].filter(vis), qc = document.querySelector(".quick-capture-box");
         const vr = Math.max(...kids.map(rr)), ha = document.querySelector(".header-actions"), ct = document.querySelector(".app-container");
         if (t === "ca") { inset = vr - rr(ha); colW = R(ct).width; } // Lịch không bị cap: bề ngang cột chuẩn
-        ok(`H1.${t} ${name}: lề phải tiêu đề = lề phải nội dung (±2px), nút cùng độ thụt như Lịch`, Math.abs(rr(hd) - vr) <= 2 && Math.abs((vr - rr(ha)) - inset) <= 2 && (!qc || !vis(qc) || Math.abs(rr(qc) - vr) <= 2), [rr(hd), rr(ha), vr, qc && rr(qc)]);
+        ok(`H1.${t} ${name}: lề phải tiêu đề = lề phải nội dung (±2px), nút cùng độ thụt như Lịch`, Math.abs(rr(hd) - vr) <= 2 && Math.abs((vr - rr(ha)) - inset) <= 2 && (!qc || !vis(qc) || (hd.contains(qc) ? rr(qc) <= R(ha).left && R(qc).left >= R(document.querySelector('.page-head')).right : Math.abs(rr(qc) - vr) <= 2)), [rr(hd), rr(ha), vr, qc && rr(qc)]); // Hướng B: ô ghi nhanh nằm trong header, giữa tiêu đề và nút (không còn hàng riêng)
         // PO chọn Hướng C (2026-11-18): mọi tab giãn hết bề ngang cột như Lịch, không còn cap 980px
         ok(`H1.${t} ${name}: tiêu đề giãn hết bề ngang cột (không cap 980px)`, R(hd).width >= colW - 2, [R(hd).width, colW]);
         ok(`H1.${t} ${name}: nội dung giãn hết bề ngang cột (lề phải nội dung = lề phải cột ±2px)`, Math.abs(R(ct).width - colW) <= 2 && Math.abs(vr - rr(ct)) <= 2, [vr, rr(ct), R(ct).width, colW]);
@@ -134,6 +134,61 @@ window.E2EUIALL = async function () {
     {
       for (const sv of ["focus", "timeline"]) { sel = CW; await go("ca", sv); ok(`H2.${sv} tab Lịch (${sv}) không có Giờ theo loại vốn`, !document.querySelector("#v .cap-sum")); }
       ok("H2.3 capSumHTML(CW) vẫn trả khối .cap-sum (popup Tổng kết còn dùng)", !!__capBox().querySelector(".cap-sum .cap-s"));
+    }
+
+    // ---- V1: Lịch chiều dọc (PO chọn Hướng B, 2026-11-18): ghi nhanh vào hàng tiêu đề, Hôm nay thành thanh mảnh, thẻ hoạt động gọn ----
+    // Hằng ĐO TRƯỚC khi sửa (1440x900, demo, cột Hộp việc mở): đỉnh lưới tuần y=416 (gồm dải Dữ liệu mẫu 28px), .today-hero cao 137, ô ghi nhanh cao 52 (riêng một hàng),
+    // header cao 83, thẻ hoạt động cao 64 (tên tối đa 3 dòng, cột rộng ~106px), khoảng cách giữa hai thẻ 6px.
+    const V_OLD = { gridTop: 416, hero: 137, qc: 52, hdr: 83, ev: 64 };
+    sel = CW; await go("ca", "focus");
+    if (W >= 900 && !touch) {
+      // V1.1 ô ghi nhanh nằm trong hàng tiêu đề, cùng hàng với tiêu đề (Lịch, Hộp việc, Dự án)
+      for (const [t, name] of [["ca", "Lịch"], ["hv", "Hộp việc"], ["pj", "Dự án"]]) {
+        await go(t, t === "ca" ? "focus" : undefined);
+        const hd = document.querySelector(".app-header"), inp = $("nlpInput"), tt = $("pageTitle"), box = document.querySelector(".quick-capture-box");
+        const rh = R(hd), ri = R(inp), rt = R(tt);
+        ok(`V1.1 ${name}: ô ghi nhanh nằm trong rect .app-header, cùng hàng với tiêu đề (lệch ≤ 12px)`, vis(inp) && ri.top >= rh.top - 1 && ri.bottom <= rh.bottom + 1 && ri.left >= rh.left && ri.right <= rh.right && Math.abs((ri.top + ri.height / 2) - (rt.top + rt.height / 2)) <= 12 && ri.left >= rt.right - 1, [rh, ri, rt]);
+        ok(`V1.1b ${name}: header một hàng (cao ≤ ${V_OLD.hdr - 12}px, trước ${V_OLD.hdr}) và ô ghi nhanh không còn chiếm hàng riêng`, R(hd).height <= V_OLD.hdr - 12 && hd.contains(box), [R(hd).height, hd.contains(box)]);
+      }
+      sel = CW; await go("ca", "focus");
+      // V1.2 đỉnh lưới tuần (ngưỡng 240: mục tiêu ≈185 không có dải Dữ liệu mẫu, +≈36px dải Dữ liệu mẫu khi chạy demo; trước 416)
+      const g = document.querySelector(".week-cards-grid"), top = R(g).top + scrollY;
+      ok(`V1.2 đỉnh lưới tuần ≤ 240px (trước ${V_OLD.gridTop})`, top <= 240, top);
+      ok("V1.2b lưới chiếm ≥ 60% chiều cao màn nằm dưới đỉnh lưới (lưới + cột Hộp việc)", (innerHeight - top) / innerHeight >= 0.6, [innerHeight, top]);
+      // V1.3 khối Hôm nay thành thanh mảnh
+      const hr = document.querySelector("#v .today-hero"), st = hr ? q(".th-stat", hr) : [], nx2 = hr && hr.querySelector(".th-nx"), gr = hr && hr.querySelector(".th-greet");
+      ok(`V1.3 .today-hero cao ≤ 64px (trước ${V_OLD.hero}), vẫn có lời chào, 3 vòng và ô Tiếp theo trên cùng một hàng`, hr && R(hr).height <= 64 && !!gr && st.length === 3 && vis(nx2) && [...st, nx2, gr].every(e => Math.abs((R(e).top + R(e).height / 2) - (R(hr).top + R(hr).height / 2)) <= 16), hr && [R(hr).height, st.length, [...st, nx2, gr].map(e => e && Math.round(R(e).top))]);
+      const hit = st.map(b => { const r = R(b), el = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return !!el && b.contains(el) && r.height >= 28; });
+      ok("V1.3b 3 vòng và ô Tiếp theo bấm được (đúng phần tử ở tâm, aria-label giữ nguyên)", hit.length === 3 && hit.every(Boolean) && st.every(b => b.getAttribute("aria-label")) && (() => { const r = R(nx2), el = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return nx2.contains(el) || el === nx2.querySelector("button"); })(), hit);
+      // V1.4 thẻ hoạt động gọn
+      const evs = q(".week-cards-grid .event-item").filter(vis), ttl = evs.map(e => e.querySelector(".event-title"));
+      const oneLine = ttl.every(t => t.scrollHeight <= t.clientHeight + 1 && t.getClientRects().length > 0 && Math.round(R(t).height) <= 20);
+      ok("V1.4a tên hoạt động đúng 1 dòng (ellipsis) ở mọi thẻ", evs.length >= 8 && oneLine, ttl.map(t => [t.scrollHeight, t.clientHeight]).slice(0, 12));
+      ok(`V1.4b chiều cao thẻ ≤ 75% cũ (≤ ${Math.floor(V_OLD.ev * 0.75)}px, cũ ${V_OLD.ev})`, evs.every(e => R(e).height <= Math.floor(V_OLD.ev * 0.75) + 0.5), evs.map(e => Math.round(R(e).height)));
+      const gaps = []; q(".week-cards-grid .day-events-list").forEach(l => { const c = q(".event-item", l); for (let i = 1; i < c.length; i++) gaps.push(Math.round(R(c[i]).top - R(c[i - 1]).bottom)); });
+      ok("V1.4c khoảng cách giữa hai thẻ liên tiếp trong cột ≥ 6px", gaps.length >= 1 && gaps.every(x => x >= 6), gaps);
+      const cards = q(".week-cards-grid .day-card"), tdC = cards.find(c => c.classList.contains("today")), oth = cards.find(c => !c.classList.contains("today") && !c.classList.contains("past"));
+      ok("V1.4d cột hôm nay nổi hơn: bóng/viền dày hơn cột khác", tdC && oth && (getComputedStyle(tdC).boxShadow.length > getComputedStyle(oth).boxShadow.length), tdC && oth && [getComputedStyle(tdC).boxShadow, getComputedStyle(oth).boxShadow]);
+      ok("V1.4e lưới không cuộn lồng (document cuộn, .week-cards-grid và .wk-wrap không overflow auto/scroll)", ["overflowY", "overflowX"].every(p => !/auto|scroll/.test(getComputedStyle(document.querySelector(".week-cards-grid"))[p]) && !/auto|scroll/.test(getComputedStyle(document.querySelector(".wk-wrap"))[p])));
+      // V1.5 ô ghi nhanh vẫn hoạt động: xem trước, không đẩy lưới xuống, Enter thêm đúng hoạt động
+      const inp = $("nlpInput"), hd2 = document.querySelector(".app-header"), tom = ky(ad(new Date(), 1));
+      const topBefore = R(document.querySelector(".week-cards-grid")).top, hBefore = R(hd2).height, n0 = (S.ev[tom] || []).length;
+      inp.value = "Mai 18h cầu lông 2 tiếng"; handleNLPInput(inp.value); await sl(40);
+      const pv = $("nlpPreview");
+      ok("V1.5a xem trước hiện đúng (cầu lông, 18:00–20:00, 2h) và không đẩy lưới/header", vis(pv) && /cầu lông/.test(pv.textContent) && /18:00/.test(pv.textContent) && /20:00/.test(pv.textContent) && Math.abs(R(document.querySelector(".week-cards-grid")).top - topBefore) <= 1 && Math.abs(R(hd2).height - hBefore) <= 1, [pv.textContent.trim(), R(document.querySelector(".week-cards-grid")).top, topBefore, R(hd2).height, hBefore]);
+      ok("V1.5b xem trước nằm trong khung nhìn ngang và dưới ô nhập (không cắt)", vis(pv) && R(pv).left >= 0 && R(pv).right <= innerWidth && R(pv).top >= R(inp).bottom - 2, [R(pv), R(inp)]);
+      inp.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true, cancelable: true })); await sl(150);
+      // dữ liệu mẫu có bữa tối cùng giờ: hành vi cũ là hiện hộp "Trùng giờ" rồi "Vẫn thêm"; giữ nguyên hành vi đó
+      const askBox = $("askOverlay").classList.contains("open") ? $("askTitle").textContent : "";
+      if (askBox) { $("askActs").querySelector('[data-a="ok"]').click(); await sl(150); }
+      ok("V1.5d nếu trùng giờ thì hộp 'Trùng giờ' hiện đúng (hành vi cũ)", askBox === "" || askBox === "Trùng giờ", askBox);
+      const added = (S.ev[tom] || []).filter(e => /cầu lông/i.test(e.t) && e.s === "18:00" && e.h === 2);
+      ok("V1.5c Enter thêm đúng hoạt động ngày mai 18:00, 2h và xóa ô nhập", added.length >= 1 && (S.ev[tom] || []).length === n0 + 1 && inp.value === "", [(S.ev[tom] || []).map(e => e.t + e.s + e.h), inp.value]);
+    }
+    if (touch && W < 500) {
+      await go("ca", "focus");
+      const qc = document.querySelector(".quick-capture-box"), r = R(qc), cs = getComputedStyle(qc);
+      ok("V1.6 điện thoại: ô ghi nhanh vẫn là thanh cố định dưới, không tràn ngang", cs.position === "fixed" && r.left >= 0 && r.right <= W && r.top > innerHeight * 0.55 && document.documentElement.scrollWidth <= W + 1, [cs.position, r, document.documentElement.scrollWidth]);
     }
 
     const root = document.documentElement, th0 = root.getAttribute("data-theme"); root.setAttribute("data-theme", "dark");

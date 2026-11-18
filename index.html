@@ -2178,14 +2178,13 @@ body[data-tab="hb"] #addBtn { display: none; } /* tab Thói quen đã có nút T
   .cap-s, .cap-s:nth-child(n) { flex: none; min-width: 96px; padding: 6px 10px 7px; }
   .cap-s b { font-size: 16px; }
 }
-/* Lưới tuần 7 cột khi khung hẹp (mở cột Hộp việc): tên hoạt động xuống 2 dòng, giờ trong ngày lên hàng thứ */
+/* Lưới tuần 7 cột khi khung hẹp (mở cột Hộp việc): giờ trong ngày lên hàng thứ; tên hoạt động luôn 1 dòng (ellipsis) */
 @container (max-width: 150px) {
   .day-card-header { padding: 8px 8px 6px 10px; }
   .day-card-header .day-name { letter-spacing: 0; overflow: hidden; text-overflow: ellipsis; }
   .day-card-header .day-h { grid-row: 1; padding: 0 6px; }
   .day-card-header .day-date { grid-column: 1 / -1; font-size: 16px; }
   .day-card.today .day-card-header .day-date { padding: 0 7px; }
-  .event-title { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere; line-height: 1.3; }
 }
 /* Thói quen: danh sách hàng, thanh tiến độ hôm nay */
 .hbt-head.card { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px 12px; padding: 12px 16px; }
@@ -2217,6 +2216,42 @@ body[data-tab="hb"] #addBtn { display: none; } /* tab Thói quen đã có nút T
 /* Sức khỏe: nút tâm trạng desktop không giãn; Dự án: chip đủ vùng bấm trên cảm ứng */
 @media (min-width: 600px) { .hl-today .hl-vert .hl-m { max-width: 168px; } }
 @media (pointer: coarse), (max-width: 640px) { .pj-capchip { min-height: 36px; } }
+/* ===== Hướng B "Lịch chiều dọc" (PO chọn 2026-11-18): đầu trang gọn, lưới tuần là phần chính ===== */
+/* Thẻ hoạt động gọn: tên 1 dòng (ellipsis), giờ + thời lượng ở hàng dưới */
+.event-item { padding: 6px 10px; }
+.week-cards-grid { gap: 12px; }
+/* Cột hôm nay nổi, các ngày khác nhạt hơn (chữ vẫn đủ 4.5:1 vì nền không tối đi) */
+.day-card:not(.today):not(.hv-over) { box-shadow: var(--lit), var(--raise-1); }
+.day-card:not(.today):hover { box-shadow: var(--lit), var(--raise-2); }
+@media (min-width: 900px) {
+  /* 1. Ô ghi nhanh vào hàng tiêu đề; phụ đề bỏ để có chỗ; xem trước hiện như hộp thả xuống, không làm cao header */
+  .app-header { flex-wrap: nowrap; gap: 16px; padding-block: 4px; margin-bottom: 8px; }
+  .page-sub { display: none; }
+  .app-header .quick-capture-box { position: relative; flex: 1 1 280px; min-width: 200px; max-width: 520px; margin: 0 auto; padding: 4px 6px 4px 14px; }
+  .app-header .quick-preview-bar { position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 40; padding: 8px 12px; border: 1px solid var(--lg-edge); border-radius: 14px; background: var(--sf-pop, var(--sf-2)); box-shadow: var(--raise-3); }
+  .header-actions { flex: none; flex-wrap: nowrap; }
+  /* 2. Hôm nay: thanh mảnh một hàng */
+  .today-hero { flex-direction: row; align-items: center; gap: 12px; padding: 6px 10px; margin-bottom: 8px; }
+  .th-head { flex: none; flex-direction: column; align-items: flex-start; gap: 0; flex-wrap: nowrap; }
+  .th-greet { font-size: 16px; line-height: 1.25; white-space: nowrap; }
+  .th-date { font-size: 12px; line-height: 1.25; }
+  .th-row { flex: 1; min-width: 0; grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.4fr); gap: 8px; }
+  .th-next { grid-column: auto; }
+  .th-stat, .th-nx { min-height: 40px; padding-block: 4px; border-radius: 12px; }
+  .th-stat { gap: 8px; }
+  .th-stat .th-ring { width: 28px; height: 28px; }
+  .th-sv b { font-size: 14px; }
+  .th-nx { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 8px; align-content: center; align-items: baseline; padding-left: 14px; }
+  .th-nx, .th-sv { line-height: 1.25; }
+  .th-nx b { line-height: 1.25; }
+  .th-nx .th-nl { grid-column: 1; grid-row: 1; }
+  .th-nx b { grid-column: 2; grid-row: 1; }
+  .th-nx > span:last-child { grid-column: 1 / -1; grid-row: 2; }
+  /* 3. Thanh chọn tuần: bớt khoảng cách */
+  .wk-bar { margin-bottom: 8px; }
+  .demo-line { margin-bottom: 4px; }
+}
+@media (min-width: 900px) and (max-width: 1199px) { .th-sv b small { display: none; } }
 /* Gói 8 (E2, hướng C): vùng bấm tối thiểu 36px trên cảm ứng và cửa sổ hẹp (bố cục điện thoại). Nút "+" cao 36 thật; nhãn tình trạng ngày (.hl-day) và nút thu gọn (.hv-toggle) giữ nguyên hình dạng, vùng bấm vô hình lên 36x36 (::after). Máy tính chuột (>= 900px) không đổi. */
 @media (pointer: coarse), (max-width: 899px) {
   .day-card-add-btn { min-height: 36px; }
@@ -2266,6 +2301,17 @@ body[data-tab="hb"] #addBtn { display: none; } /* tab Thói quen đã có nút T
       </div>
       <p class="page-sub" id="pageSub"></p>
     </div>
+    <!-- Tính năng 4: Natural Language Quick Command Bar (Hướng B: nằm trong hàng tiêu đề ở màn >= 900px; dưới 900px là thanh cố định gần thanh tab) -->
+    <div class="quick-capture-box">
+      <div class="quick-capture-row">
+        <input id="nlpInput" class="quick-capture-input" aria-label="Ghi nhanh"
+               placeholder="Ghi nhanh, vd: Mai 18h cầu lông 2 tiếng"
+               oninput="handleNLPInput(this.value)"
+               onkeydown="handleNLPKeydown(event)">
+        <button class="btn btn-sm btn-primary" onclick="executeNLP()">Ghi</button>
+      </div>
+      <div class="quick-preview-bar" id="nlpPreview" style="display:none;"></div>
+    </div>
     <div class="header-actions">
       <button type="button" class="btn btn-sm cloud-badge" id="cloudBadge" hidden onclick="cloudBadgeClick()"></button>
       <button type="button" class="btn btn-sm" id="syncBadge" hidden></button>
@@ -2273,18 +2319,6 @@ body[data-tab="hb"] #addBtn { display: none; } /* tab Thói quen đã có nút T
       <button class="btn btn-sm btn-primary" id="addBtn" onclick="headerAdd()">Thêm</button>
     </div>
   </header>
-
-  <!-- Tính năng 4: Natural Language Quick Command Bar -->
-  <div class="quick-capture-box">
-    <div class="quick-capture-row">
-      <input id="nlpInput" class="quick-capture-input" aria-label="Ghi nhanh"
-             placeholder="Ghi nhanh, vd: Mai 18h cầu lông 2 tiếng"
-             oninput="handleNLPInput(this.value)"
-             onkeydown="handleNLPKeydown(event)">
-      <button class="btn btn-sm btn-primary" onclick="executeNLP()">Ghi</button>
-    </div>
-    <div class="quick-preview-bar" id="nlpPreview" style="display:none;"></div>
-  </div>
 
   <div class="review-prompt-banner save-alert" id="saveAlert" role="alert" hidden></div>
 
