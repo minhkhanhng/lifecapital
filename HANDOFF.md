@@ -1,5 +1,12 @@
 # HANDOFF · Bàn giao cho session sau (mục mới nhất ở trên)
 
+## 2026-11-18 · ĐÃ PHÁT HÀNH v0.9.4 LÊN PRODUCTION (PO: "Phát hành v0.9.4")
+- `git merge --ff-only refs/heads/feature/v0.9.4` vào `main`, `git tag v0.9.4`, `git push origin main` (`e28c0f6..0e26392`), `git push origin v0.9.4`; Vercel `success`; kiểm production: sw `lc-0.9.4`, `APPV 77`, `/api/ai_plan` 200, vendor/icon/CSP đạt, `index.html` và `sw.js` khớp byte, có `evStar`/`now3Data`. Số liệu: CURRENT.md "Bản đang chạy".
+- Nội dung: sao nổi bật nhất, hàng 3 ô, giãn dòng thoáng (chi tiết: mục "Tab Lịch: giãn dòng thoáng, đánh dấu sao" bên dưới).
+- HOÀN TÁC: commit revert `1e99981` trên nhánh mới từ `main` (KHÔNG force-push), nâng `APPV` 78/`VERSION` `lc-0.9.5`/CHANGELOG; dữ liệu `star` là trường cộng thêm nên bản cũ giữ nguyên, không mất dữ liệu.
+- Việc còn lại: PO xem v0.9.4 thật (thẻ có sao, hàng 3 ô, giãn dòng, tên bị cắt ở cột hẹp) và thử đăng nhập/đồng bộ/Google Calendar/PWA/điện thoại thật; ★ ở chế độ Ngày; quyết giữ hay xóa mã chết `capSumHTML`; lỗi mức thấp số 6 của việc con (đẩy Google khi chỉ tích việc con); gói 9 `hieu-nang-sau`, 10 `don-nhe`; mục E4.
+- Next step: PO dùng v0.9.4, báo lỗi/ý kiến giao diện; tôi sửa trên nhánh mới từ `main` (không dùng fable).
+
 ## 2026-11-18 · Tab Lịch: giãn dòng thoáng, đánh dấu sao, hàng 3 ô "Đang làm / Tiếp theo / Nổi bật nhất" trên `claude/lich-sao` (từ `main` = v0.9.3; chưa push, chưa deploy)
 - PO chọn Hướng A (mockup), rồi yêu cầu thêm: giãn dòng thoáng hơn; chỉ hiện sao ở thẻ được đánh dấu. Haiku implement, tôi kiểm chứng và sửa 2 chỗ (padding chừa cho sao chỉ ở thẻ có sao; test T2.10 theo ý mới).
 - Giãn dòng (mức thoáng): thẻ `.event-item` đệm 10×12, cách nhau 12 px, cột cách 12 px; đỉnh lưới tuần ở 1440 (demo, cột Hộp việc mở): 214 → 284 (hàng 3 ô ~56 px + giãn).

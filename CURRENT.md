@@ -1,11 +1,12 @@
 # CURRENT · Hiện trạng (cập nhật 2026-11-18)
 
 ## Bản đang chạy (đã xác nhận)
-- **PRODUCTION = v0.9.3** (phát hành 2026-11-18, PO: "Phát hành v0.9.3"). https://lifecapital.vercel.app: `sw.js` = `lc-0.9.3`, `APPV = 76; // v0.9.3`, `/api/ai_plan` 200, vendor SHA-256 khớp, header CSP + HSTS + `X-Frame-Options: DENY`, icon khớp, `index.html` và `sw.js` khớp từng byte với repo. Vercel `success`.
-- `origin/main` = `e28c0f6` (tag `v0.9.3`), fast-forward từ `fd0c79e` (v0.9.2). v0.9.3: tab Lịch gọn theo chiều dọc (≥ 900 px): ô ghi nhanh trong hàng tiêu đề, "Hôm nay" thành thanh mảnh 56 px, thẻ hoạt động tên một dòng; lưới tuần từ y≈416 lên ≈214 (≈186 khi không có dải Dữ liệu mẫu). Trước đó: v0.9.2 `fd0c79e` (các tab giãn hết bề ngang), v0.9.1 `14e7326`, v0.9.0 `c1849e7`.
-- Kiểm trước khi ra bản: Sonnet (E2EUIALL đỏ 61/74 → 75/75; 27 bộ 1440 xanh; 820/375 các bộ UI chính xanh; merge-tests 35/35); tôi tự chạy trên chính bản phát hành (`APPV 76`): E2EUIALL 75/75, E2E 95/95, `test_sw` 23/23, `test_csp` 19/19, `node --check` sạch; đo y đỉnh lưới 214, hero 56, header 48 và xem ảnh 1440.
-- CHƯA KIỂM: thiết bị thật; đăng nhập Google/Email qua Supabase, đồng bộ `wss`, Google Calendar (nút Ngắt có thể cần `https://oauth2.googleapis.com` ở `connect-src`), cài PWA (từ v0.8.0); màn 900–1199 px (ô ghi nhanh hẹp, nhãn vòng bị ellipsis); chế độ tối/"Bỏ kính mờ" bằng mắt.
-- ĐÁNH ĐỔI đã biết: tên hoạt động trong cột hẹp cắt mạnh hơn (đọc đủ bằng tooltip/mở hoạt động); xem trước ghi nhanh là hộp thả xuống đè nội dung bên dưới; dòng phụ dưới tiêu đề bị ẩn từ 900 px.
+- **PRODUCTION = v0.9.4** (phát hành 2026-11-18, PO: "Phát hành v0.9.4"). https://lifecapital.vercel.app: `sw.js` = `lc-0.9.4`, `APPV = 77; // v0.9.4`, `/api/ai_plan` 200, vendor SHA-256 khớp, header CSP + HSTS + `X-Frame-Options: DENY`, icon khớp, `index.html` và `sw.js` khớp từng byte với repo; có `evStar` và `now3Data`. Vercel `success`.
+- `origin/main` = `0e26392` (tag `v0.9.4`), fast-forward từ `e28c0f6` (v0.9.3). v0.9.4: đánh dấu việc nổi bật nhất trong ngày (trường `star: 1`, một mỗi ngày; ★ ở thẻ được đánh dấu, ☆ khi rê/focus, công tắc "Nổi bật nhất trong ngày" trong Sửa/Thêm hoạt động; không đẩy Google), hàng 3 ô `#now3` (Đang làm / Tiếp theo / Nổi bật nhất) dưới thanh Hôm nay, tab Lịch giãn dòng thoáng (thẻ đệm 10×12, cách 12 px). Trước đó: v0.9.3 `e28c0f6`, v0.9.2 `fd0c79e`, v0.9.1 `14e7326`, v0.9.0 `c1849e7`.
+- Kiểm trước khi ra bản: Haiku (toàn bộ bộ README ở 1440; UIALL/TABHB/A11Y/UI/HB/SUB/STAR ở 820 và 375; merge-tests 35/35); tôi tự chạy lại sau chỉnh sửa của tôi và trên chính bản phát hành (`APPV 77`): E2ESTAR 44/44, E2E 95/95, E2EUIALL 77/77, E2EUX 124/124 (1440), `test_sw` 23/23, `test_csp` 19/19, `node --check` sạch, kiểm tay vòng đánh dấu.
+- Bản cũ chưa cập nhật giữ nguyên `star: 1` khi đồng bộ (đã xác nhận: `extras()` của v0.9.3 giữ trường lạ).
+- CHƯA KIỂM: thiết bị thật; rê chuột thật (chỉ kiểm focus và CSS); đăng nhập Google/Email qua Supabase, đồng bộ `wss`, Google Calendar (nút Ngắt có thể cần `https://oauth2.googleapis.com` ở `connect-src`), cài PWA (từ v0.8.0); màn 900–1199 px; chế độ tối/"Bỏ kính mờ" bằng mắt.
+- ĐÁNH ĐỔI đã biết: ★ chỉ hiện ở thẻ tab Lịch tuần (chưa ở chế độ Ngày); trên cảm ứng chỉ đánh dấu qua popup; tên hoạt động trong cột hẹp cắt mạnh hơn; chuỗi lặp mới tạo không gắn sao.
 - MÃ CHẾT: `capSumHTML` và CSS `.cap-sum`/`.cap-s` (chỉ test gọi): PO quyết giữ hay xóa.
 - Người dùng thật: chỉ PO. Máy đã cài bản cũ sẽ thấy thanh "Có bản mới", bấm Tải lại.
 
