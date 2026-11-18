@@ -1,5 +1,12 @@
 # HANDOFF · Bàn giao cho session sau (mục mới nhất ở trên)
 
+## 2026-11-18 · ĐÃ PHÁT HÀNH v0.9.5 LÊN PRODUCTION (PO: "duyệt, deploy đi")
+- `git merge --ff-only feature/v0.9.5` vào `main`, `git tag v0.9.5`, `git push origin main` (`0e26392..ce09e12`), `git push origin v0.9.5`; Vercel `success`; kiểm production: sw `lc-0.9.5`, `APPV 78`, `/api/ai_plan` 200, vendor/icon/CSP đạt, `index.html` và `sw.js` khớp byte với repo. Số liệu: CURRENT.md "Bản đang chạy".
+- Nội dung: gộp khối Hôm nay và Lúc này vào 1 card duy nhất (`.today-box.card`), đồng bộ tuyệt đối trật tự và khoảng cách text trong cả 6 ô (nhãn uppercase 11px ở trên, giá trị/nội dung 14px ở dưới, khoảng cách 2 dòng cố định 4px), đệm hở viền ô nâng lên 10px 14px, min-height 56px, khoảng cách từ lời chào sang cụm ô 24px thoáng đãng, thanh chọn tuần tinh gọn thành toolbar một dòng thanh thoát.
+- HOÀN TÁC: commit revert `ce09e12` trên nhánh mới từ `main` (KHÔNG force-push), nâng `APPV` 79/`VERSION` `lc-0.9.6`/CHANGELOG; dữ liệu không đổi.
+- Việc còn lại: PO trải nghiệm bản v0.9.5 trên các thiết bị và phản hồi; nhắc PO bấm Tải lại khi thanh "Có bản mới" hiện lên.
+- Next step: PO dùng v0.9.5, báo ý kiến hoặc yêu cầu tính năng tiếp theo.
+
 ## 2026-11-18 · ĐÃ PHÁT HÀNH v0.9.4 LÊN PRODUCTION (PO: "Phát hành v0.9.4")
 - `git merge --ff-only refs/heads/feature/v0.9.4` vào `main`, `git tag v0.9.4`, `git push origin main` (`e28c0f6..0e26392`), `git push origin v0.9.4`; Vercel `success`; kiểm production: sw `lc-0.9.4`, `APPV 77`, `/api/ai_plan` 200, vendor/icon/CSP đạt, `index.html` và `sw.js` khớp byte, có `evStar`/`now3Data`. Số liệu: CURRENT.md "Bản đang chạy".
 - Nội dung: sao nổi bật nhất, hàng 3 ô, giãn dòng thoáng (chi tiết: mục "Tab Lịch: giãn dòng thoáng, đánh dấu sao" bên dưới).
