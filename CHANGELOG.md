@@ -2,6 +2,14 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.9.5 · Bố cục Hôm nay đồng đều, thanh tuần tinh gọn · 18/11/2026
+
+**Đổi**
+- Khung **Hôm nay** gộp thống nhất cả phần Lời chào, ba vòng chỉ số và hàng Lúc này (Đang làm · Tiếp theo · Nổi bật nhất) trong cùng một card duy nhất với viền bo êm ái.
+- Đồng bộ tuyệt đối trật tự và khoảng cách text trong cả 6 ô: dòng trên là nhãn phân loại chữ hoa gọn gàng (11px), dòng dưới là giá trị/nội dung nổi bật (14px), khoảng cách giữa 2 dòng cố định chính xác 4px.
+- Đệm hở giữa chữ và viền ô nâng lên 10px 14px, chiều cao mỗi ô thoáng đãng 56px, khoảng cách giữa các ô và lời chào tăng lên 24px thoáng mắt.
+- Thanh chọn tuần tinh gọn thành toolbar một dòng thanh thoát, giữ trọn nhịp khoảng cách 8pt chuẩn thiết kế UI chuyên nghiệp.
+
 ## v0.9.4 · Việc nổi bật nhất, hàng Đang làm / Tiếp theo / Nổi bật nhất, giãn dòng · 18/11/2026
 
 **Mới**

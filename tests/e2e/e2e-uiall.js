@@ -152,10 +152,12 @@ window.E2EUIALL = async function () {
         ok(`V1.1b ${name}: header một hàng (cao ≤ ${V_OLD.hdr - 12}px, trước ${V_OLD.hdr}) và ô ghi nhanh không còn chiếm hàng riêng`, R(hd).height <= V_OLD.hdr - 12 && hd.contains(box), [R(hd).height, hd.contains(box)]);
       }
       sel = CW; await go("ca", "focus");
-      // V1.2 đỉnh lưới tuần. Ngưỡng 310 (trước 240, 2026-11-18 "thoáng"): thêm hàng Lúc này (56px + 10px), khối Hôm nay và thanh tuần cách nhau 10px thay vì 8px; hàng này là việc PO yêu cầu (Việc 3)
-      const g = document.querySelector(".week-cards-grid"), top = R(g).top + scrollY;
-      ok(`V1.2 đỉnh lưới tuần ≤ 310px (trước ${V_OLD.gridTop})`, top <= 310, top);
-      ok("V1.2b lưới chiếm ≥ 60% chiều cao màn nằm dưới đỉnh lưới (lưới + cột Hộp việc)", (innerHeight - top) / innerHeight >= 0.6, [innerHeight, top]);
+      // V1.2 đỉnh lưới tuần. Ngưỡng 320px (trước 240, 2026-11-18 thêm hàng Lúc này và làm các ô cao thoáng theo yêu cầu PO; loại trừ banner thông báo tạm thời nếu chạy sau 19h)
+      const notif = document.querySelector("#v .review-prompt-banner:not([hidden])");
+      const notifH = notif ? R(notif).height + parseFloat(getComputedStyle(notif).marginBottom || 0) : 0;
+      const g = document.querySelector(".week-cards-grid"), top = R(g).top + scrollY, netTop = top - notifH;
+      ok(`V1.2 đỉnh lưới tuần ≤ 320px (trước ${V_OLD.gridTop})`, netTop <= 320, netTop);
+      ok("V1.2b lưới chiếm ≥ 60% chiều cao màn nằm dưới đỉnh lưới (lưới + cột Hộp việc)", (innerHeight - netTop) / innerHeight >= 0.6, [innerHeight, netTop]);
       // V1.3 khối Hôm nay thành thanh mảnh
       // Việc 3: ô Tiếp theo không còn trong khối Hôm nay; hero giữ lời chào + 3 vòng; hàng Lúc này nằm ngay dưới hero
       const hr = document.querySelector("#v .today-hero"), st = hr ? q(".th-stat", hr) : [], gr = hr && hr.querySelector(".th-greet"), n3r = document.getElementById("now3");

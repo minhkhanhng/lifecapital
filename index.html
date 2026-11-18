@@ -383,7 +383,7 @@ input[type="time"] { min-width: 105px; }
   transition: transform 0.1s ease, box-shadow 0.1s ease;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
   text-align: left;
 }
 .event-item-top {
@@ -2130,28 +2130,30 @@ body[data-tab="hb"] #addBtn { display: none; } /* tab Thói quen đã có nút T
 .side-week + .sidebar-keys { margin-top: 0; }
 @media (max-width: 899px) { .side-week { display: none; } }
 /* Khối Hôm nay (tab Lịch, tuần hiện tại) */
-.today-hero { padding: 14px 16px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
-.th-head { display: flex; align-items: baseline; gap: 2px 12px; flex-wrap: wrap; }
-.th-greet { margin: 0; font-size: 18px; font-weight: 700; line-height: 1.3; color: var(--tx); }
-.th-date { font-size: 13px; color: var(--tx-sec); }
-.th-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.th-stat { font: inherit; color: var(--tx); text-align: left; border: 0; background: var(--th-fill); border-radius: 14px; padding: 8px 10px; cursor: pointer; min-height: 56px; min-width: 0; display: flex; align-items: center; gap: 10px; }
+.today-box { padding: 16px 18px; margin-bottom: 18px; display: flex; flex-direction: column; gap: 0; border-radius: 20px; }
+.today-box .today-hero { padding: 0 !important; margin-bottom: 0 !important; background: transparent !important; box-shadow: none !important; border: 0 !important; border-radius: 0 !important; }
+.today-box .now3 { margin-bottom: 0 !important; padding-top: 14px; border: 0 !important; }
+.today-hero { padding: 14px 16px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 12px; }
+.th-head { display: flex; align-items: baseline; gap: 4px 12px; flex-wrap: wrap; }
+.th-greet { margin: 0; font-size: 18px; font-weight: 700; line-height: 1.25; color: var(--tx); }
+.th-date { font-size: 13px; line-height: 1.25; color: var(--tx-sec); }
+.th-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.th-stat { font: inherit; color: var(--tx); text-align: left; border: 0; background: var(--th-fill); border-radius: 14px; padding: 10px 14px; cursor: pointer; min-height: 56px; max-height: 62px; min-width: 0; display: flex; align-items: center; gap: 10px; box-sizing: border-box; }
 .th-stat:hover { background: var(--ac-soft); }
-.th-ring { flex: none; }
-.th-sv { display: flex; flex-direction: column; min-width: 0; line-height: 1.3; }
-.th-sv b { font-size: 16px; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.th-sv b small { font-size: 12px; font-weight: 500; color: var(--mu); }
-.th-sv > span { font-size: 12px; color: var(--tx-sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.th-ring { flex: none; width: 32px; height: 32px; }
+.th-sv { display: flex; flex-direction: column; gap: 4px; justify-content: center; min-width: 0; flex: 1; }
+.th-l, .n3-l { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--tx-sec); line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.th-v, .n3-v { display: block; font-size: 14px; font-weight: 600; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; color: var(--tx); }
+.th-v b { font-size: 14px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.th-v b small { font-size: 11px; font-weight: 500; color: var(--mu); }
 /* Việc 3: hàng "Lúc này" (đang làm · tiếp theo · nổi bật nhất) dưới khối Hôm nay, trên thanh chọn tuần */
-.now3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 10px; }
-.n3-c { font: inherit; color: var(--tx); text-align: left; border: 0; background: var(--th-fill); border-radius: 14px; padding: 8px 12px; min-width: 0; min-height: 44px; max-height: 64px; display: flex; flex-direction: column; justify-content: center; gap: 2px; box-shadow: inset 4px 0 0 var(--cap, var(--ac)); }
+.now3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 10px; }
+.n3-c { font: inherit; color: var(--tx); text-align: left; border: 0; background: var(--th-fill); border-radius: 14px; padding: 10px 14px; min-width: 0; min-height: 56px; max-height: 62px; display: flex; flex-direction: column; justify-content: center; gap: 4px; box-shadow: inset 4px 0 0 var(--cap, var(--ac)); box-sizing: border-box; }
 button.n3-c { cursor: pointer; }
 button.n3-c:hover { background: var(--ac-soft); }
 .n3-empty { box-shadow: none; }
 .n3-doing { --cap: var(--c-olive); }
 .n3-star { --cap: var(--wa); }
-.n3-l { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tx-sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.n3-v { display: block; font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .n3-empty .n3-v { color: var(--tx-sec); font-weight: 400; }
 .n3-tm { font-weight: 600; font-variant-numeric: tabular-nums; }
 @media (max-width: 599px) {
@@ -2161,13 +2163,16 @@ button.n3-c:hover { background: var(--ac-soft); }
   .n3-v { flex: 1; min-width: 0; }
 }
 @media (max-width: 640px) {
+  .today-box { padding: 12px 14px; margin-bottom: 16px; border-radius: 18px; }
+  .today-box .today-hero { padding: 0 !important; gap: 8px; margin-bottom: 0 !important; }
+  .today-box .now3 { padding-top: 10px; margin-bottom: 0 !important; }
   .today-hero { padding: 10px 12px; gap: 8px; margin-bottom: 10px; }
   .th-greet { font-size: 16px; }
-  .th-row { gap: 6px; }
-  .th-stat { flex-direction: column; justify-content: center; text-align: center; gap: 4px; padding: 8px 4px; }
-  .th-sv { align-items: center; max-width: 100%; }
+  .th-row { gap: 8px; }
+  .th-stat { flex-direction: column; justify-content: center; text-align: center; gap: 4px; padding: 8px 6px; min-height: 52px; }
+  .th-sv { align-items: center; max-width: 100%; gap: 2px; }
   .th-stat .th-ring { width: 32px; height: 32px; }
-  .th-sv b small { display: none; }
+  .th-v b small { display: none; }
 }
 /* Lịch: dải mẫu một dòng, hàng tuần một dòng, nút ◀ ▶ đủ vùng bấm */
 .demo-line { padding: 0 4px; min-height: 28px; margin-bottom: 8px; flex-wrap: nowrap; }
@@ -2235,25 +2240,25 @@ button.n3-c:hover { background: var(--ac-soft); }
 .day-card:not(.today):hover { box-shadow: var(--lit), var(--raise-2); }
 @media (min-width: 900px) {
   /* 1. Ô ghi nhanh vào hàng tiêu đề; phụ đề bỏ để có chỗ; xem trước hiện như hộp thả xuống, không làm cao header */
-  .app-header { flex-wrap: nowrap; gap: 16px; padding-block: 4px; margin-bottom: 8px; }
+  .app-header { flex-wrap: nowrap; gap: 16px; padding-block: 4px; margin-bottom: 18px; }
   .page-sub { display: none; }
   .app-header .quick-capture-box { position: relative; flex: 1 1 280px; min-width: 200px; max-width: 520px; margin: 0 auto; padding: 4px 6px 4px 14px; }
   .app-header .quick-preview-bar { position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 40; padding: 8px 12px; border: 1px solid var(--lg-edge); border-radius: 14px; background: var(--sf-pop, var(--sf-2)); box-shadow: var(--raise-3); }
   .header-actions { flex: none; flex-wrap: nowrap; }
-  /* 2. Hôm nay: thanh mảnh một hàng */
-  .today-hero { flex-direction: row; align-items: center; gap: 12px; padding: 6px 10px; margin-bottom: 10px; }
-  .th-head { flex: none; flex-direction: column; align-items: flex-start; gap: 0; flex-wrap: nowrap; }
-  .th-greet { font-size: 16px; line-height: 1.25; white-space: nowrap; }
-  .th-date { font-size: 12px; line-height: 1.25; }
-  .th-row { flex: 1; min-width: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-  .th-stat { min-height: 40px; padding-block: 4px; border-radius: 12px; gap: 8px; }
-  .th-stat .th-ring { width: 28px; height: 28px; }
-  .th-sv b { font-size: 14px; }
-  .th-sv { line-height: 1.25; }
-  /* 3. Thanh chọn tuần và các khối: khoảng cách dọc 10px */
-  .app-header { margin-bottom: 10px; }
-  .wk-bar { margin-bottom: 10px; }
-  .demo-line { margin-bottom: 4px; }
+  /* 2. Hôm nay: thoáng đãng, đệm êm, ô cao ráo trong thẻ hợp nhất */
+  .today-box { padding: 16px 20px 18px; margin-bottom: 18px; border-radius: 20px; }
+  .today-hero { flex-direction: row; align-items: center; gap: 24px; padding: 0 !important; margin-bottom: 0 !important; }
+  .th-head { flex: none; min-width: 190px; flex-direction: column; align-items: flex-start; gap: 4px; flex-wrap: nowrap; }
+  .th-greet { font-size: 18px; line-height: 1.25; white-space: nowrap; }
+  .th-date { font-size: 13px; line-height: 1.25; }
+  .th-row { flex: 1; min-width: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .th-stat { min-height: 56px; max-height: 62px; padding: 10px 14px; border-radius: 14px; gap: 10px; box-sizing: border-box; }
+  .th-stat .th-ring { width: 32px; height: 32px; }
+  .today-box .now3 { padding-top: 14px; margin-bottom: 0 !important; gap: 12px; }
+  .today-box .n3-c { min-height: 56px; max-height: 62px; padding: 10px 14px; gap: 4px; box-sizing: border-box; }
+  /* 3. Thanh chọn tuần và các khối: khoảng cách dọc nhịp chuẩn thoáng */
+  .wk-bar { margin-bottom: 12px; }
+  .demo-line { margin-bottom: 8px; }
   /* Việc 1 (thoáng): thẻ 10×12, cách nhau 12px, đầu cột cách tiêu đề 10px */
   .event-item { padding: 10px 12px; }
   .day-events-list { gap: 12px; padding: 10px 8px 6px; }
@@ -2709,7 +2714,7 @@ const save = () => {
    hay cửa sổ khác đã ghi mà tab này không nhận được (tab bị trình duyệt tạm dừng, trang khôi phục từ
    bộ nhớ đệm, bản cũ của app không biết lắng nghe…): gộp hai bên thay vì ghi đè.
    Dữ liệu do bản này ghi có sv = 2. Bên ghi không có sv (bản cũ) thì chỉ cộng thêm, không xóa gì. */
-const APPV = 77; // v0.9.4
+const APPV = 78; // v0.9.5
 const SV = 3; // 3 (v0.4.0): hoạt động có mã riêng và thời điểm sửa; bản ghi sv khác được gộp kiểu cộng thêm
 let lastRaw = rawSaved, oldWriterSeen = 0;
 // Đồng bộ giữa các thiết bị (v0.4.0, xem phần ĐỒNG BỘ ở cuối tệp)
@@ -3945,7 +3950,7 @@ function todayHeroHTML() {
   const dh = dayH(tk), tgDay = S.caps.reduce((a, c) => a + (+c.tg || 0), 0) / 7;
   const hb0 = hbToday(), hb = hb0 && hb0.n ? hb0 : null;
   const hl = modOn("hl") ? ((S.health && S.health.days && S.health.days[tk]) || {}) : null;
-  const stat = (ring, val, lb, act, aria) => `<button type="button" class="th-stat" onclick="${act}" aria-label="${esc(aria)}">${ring}<span class="th-sv"><b>${val}</b><span>${lb}</span></span></button>`;
+  const stat = (ring, val, lb, act, aria) => `<button type="button" class="th-stat" onclick="${act}" aria-label="${esc(aria)}">${ring}<span class="th-sv"><span class="th-l">${lb}</span><span class="th-v"><b>${val}</b></span></span></button>`;
   const s1 = stat(ringSVG(tgDay ? dh / tgDay : dh ? 1 : 0, "var(--c-olive)"), `${r1(dh)}h${tgDay ? `<small> / ${r1(tgDay)}h</small>` : ""}`, "Giờ hôm nay", "openDayView()", `Giờ hôm nay ${r1(dh)} giờ, mở chế độ Ngày`);
   const s2 = hb ? stat(ringSVG(hb.n ? hb.done / hb.n : 0, "var(--ac-ring)"), `${hb.done}/${hb.n}`, hb.n && hb.done === hb.n ? "Thói quen · xong hết" : "Thói quen", "switchTab('hb')", `Thói quen hôm nay ${hb.done} trên ${hb.n}, mở tab Thói quen`)
     : (b => stat(ringSVG(b.score != null ? b.score / 100 : 0, "var(--ac-ring)"), b.score != null ? b.score + "%" : "–", "Cân bằng tuần", "switchTab('su')", "Mở Tổng quan"))(balanceOf(CW));
@@ -5101,10 +5106,12 @@ const V = {
     // Năm đã có ở tiêu đề trang; bỏ năm để hàng chọn tuần vừa một dòng trên điện thoại
     const dateRangeStr = `${selWeekStart.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" })} – ${selWeekEnd.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" })}`;
 
+    const todayBox = (sel === CW && calSubView !== "year" && W[CW])
+      ? `<section class="today-box card" aria-label="Hôm nay và lúc này">${todayHeroHTML()}${now3HTML()}</section>`
+      : "";
     const headerBar = `
       ${calendarNotices()}
-      ${todayHeroHTML()}
-      ${now3HTML()}
+      ${todayBox}
       <div class="card wk-bar">
         ${wkNavHTML(calSubView === "year")}
         <div class="segmented-control">
