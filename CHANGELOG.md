@@ -2,6 +2,11 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.9.2 · Các tab giãn hết bề ngang · 18/11/2026
+
+**Sửa**
+- Hộp việc, Dự án (danh sách), Thói quen, Tôi: nội dung giãn hết bề ngang cột như tab Lịch, không còn bị giới hạn 980px lệch về bên trái với khoảng trống lớn bên phải. Tiêu đề, nút, ô ghi nhanh và nội dung cùng thẳng lề phải.
+
 ## v0.9.1 · Sửa lệch bố cục các tab, bỏ Giờ theo loại vốn ở Lịch · 18/11/2026
 
 **Sửa**
