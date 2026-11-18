@@ -4,7 +4,7 @@
    SW báo trang {lc:"net", ok} sau mỗi lần hỏi máy chủ để trang hiện/ẩn nhãn "Bản đã lưu".
    Tệp tĩnh và thư viện Supabase (đã ghim phiên bản): dùng bản đã lưu, chưa có thì tải.
    Mỗi lần phát hành phải đổi VERSION để máy người dùng nhận bản mới và hiện thanh "Có bản mới". */
-const VERSION = "lc-0.9.0";
+const VERSION = "lc-0.9.1";
 const CORE = ["./", "manifest.json", "favicon.ico", "favicon-32x32.png", "logo-96.png", "logo-192.png", "icon-192.png", "apple-touch-icon.png"]; // icon 512 vào cache qua cacheFirst khi trình duyệt cần
 const CDN = "https://cdn.jsdelivr.net/npm/"; // thư viện ghim phiên bản, không đổi nội dung
 

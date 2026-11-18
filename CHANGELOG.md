@@ -2,6 +2,14 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.9.1 · Sửa lệch bố cục các tab, bỏ Giờ theo loại vốn ở Lịch · 18/11/2026
+
+**Sửa**
+- Hộp việc, Dự án, Thói quen, Tôi (màn từ 900px): tiêu đề, nút và nội dung nay cùng bề rộng và thẳng hàng lề phải; trước đó nút ở đầu trang lệch khỏi nội dung khoảng 170px.
+
+**Đổi**
+- Tab Lịch bỏ mục "Giờ theo loại vốn" (cả xem tuần và xem ngày); giờ theo loại vốn vẫn xem được ở tab Tổng quan.
+
 ## v0.9.0 · Giao diện "Hôm nay trước", gọn và có động lực hơn · 18/11/2026
 
 **Mới**
