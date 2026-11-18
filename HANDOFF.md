@@ -1,5 +1,12 @@
 # HANDOFF · Bàn giao cho session sau (mục mới nhất ở trên)
 
+## 2026-11-18 · ĐÃ PHÁT HÀNH v0.9.3 LÊN PRODUCTION (PO: "Phát hành v0.9.3")
+- `git merge --ff-only refs/heads/feature/v0.9.3` vào `main`, `git tag v0.9.3`, `git push origin main` (`fd0c79e..e28c0f6`), `git push origin v0.9.3`; Vercel `success`; kiểm production: sw `lc-0.9.3`, `APPV 76`, `/api/ai_plan` 200, vendor/icon/CSP đạt, `index.html` và `sw.js` khớp byte với repo. Số liệu: CURRENT.md "Bản đang chạy".
+- Nội dung: dàn lại chiều dọc tab Lịch (Hướng B). Chi tiết và đánh đổi: mục "Dàn lại chiều dọc tab Lịch" bên dưới.
+- HOÀN TÁC: commit revert `8787bbf` trên nhánh mới từ `main` (KHÔNG force-push), nâng `APPV` 77/`VERSION` `lc-0.9.4`/CHANGELOG; dữ liệu không đổi.
+- Việc còn lại: PO xem v0.9.3 thật (nhất là tên hoạt động bị cắt ở cột hẹp, màn 900–1199 px) và thử đăng nhập/đồng bộ/Google Calendar/PWA/điện thoại thật; quyết giữ hay xóa mã chết `capSumHTML`; lỗi mức thấp số 6 của việc con (đẩy Google khi chỉ tích việc con); gói 9 `hieu-nang-sau`, 10 `don-nhe`; mục E4.
+- Next step: PO dùng v0.9.3, báo lỗi/ý kiến giao diện; tôi sửa trên nhánh mới từ `main` (không dùng fable).
+
 ## 2026-11-18 · Dàn lại chiều dọc tab Lịch (Hướng B, PO chọn) trên `claude/lich-chieu-doc` (từ `main` = v0.9.2; chưa push, chưa deploy)
 - PO nhận xét phần đầu trang Lịch trống còn lưới tuần chi chít (lưới bắt đầu y≈400 của 900). Hướng B (3 mockup): ô ghi nhanh vào hàng tiêu đề, "Hôm nay" thành thanh mảnh, thẻ hoạt động gọn.
 - Thay đổi (index.html, ≥ 900 px chuột; dưới 900 px giữ bố cục di động): `.quick-capture-box` chuyển vào `.app-header` (giữa tiêu đề và nút; `#nlpInput`, `aria-label`, nút Ghi, `#nlpPreview` giữ nguyên, xem trước thành hộp thả xuống tuyệt đối); `.page-sub` ẩn (còn trong DOM); `.today-hero` thành thanh một hàng (cao 56 px: lời chào + 3 vòng + ô Tiếp theo); `.wk-bar` margin-bottom 8; thẻ `.event-item` padding 6×10, tên luôn 1 dòng ellipsis (bỏ container query ≤150 px làm xuống 2 dòng); cột không phải hôm nay bóng nhẹ hơn. Không có cuộn lồng nhau.
