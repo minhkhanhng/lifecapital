@@ -39,8 +39,9 @@ window.E2EUIALL = async function () {
     ok("B5 số thói quen hôm nay = số đã xong / tổng", stats[1] && stats[1].textContent.includes(`${hbDone}/${hbAll.length}`), [stats[1] && stats[1].textContent, hbDone, hbAll.length]);
     ok("B6 giờ hôm nay khớp dayH(tk)", stats[0] && stats[0].textContent.includes(r1(dayH(tk)) + "h"), [stats[0] && stats[0].textContent, dayH(tk)]);
     ok("B7b khối Hôm nay không có nút tích thói quen (chỉ số x/y)", hero && !hero.querySelector(".hb-tick, .hb-dot, .hb-chip"));
-    const nx = hero && hero.querySelector(".th-next");
-    ok("B7 có ô Tiếp theo (việc kế tiếp hoặc nút thêm)", vis(nx) && (nx.querySelector("button, [role=button]")), nx && nx.textContent);
+    // Việc 3 (2026-11-18): ô Tiếp theo chuyển khỏi khối Hôm nay sang hàng Lúc này (#now3) ngay dưới khối
+    const n3 = document.getElementById("now3");
+    ok("B7 hàng Lúc này có ô Tiếp theo (việc kế tiếp, hoặc 'Hết việc hôm nay'), nằm ngoài khối Hôm nay", vis(n3) && /Tiếp theo/.test(n3.textContent) && !(hero && hero.contains(n3)), n3 && n3.textContent);
     sel = CW - 1 >= 0 ? CW - 1 : CW + 1; draw(true); await sl(40);
     ok("B8 tuần khác: không có khối Hôm nay", !document.querySelector("#v .today-hero"));
     sel = CW; draw(true); await sl(40);
@@ -151,22 +152,25 @@ window.E2EUIALL = async function () {
         ok(`V1.1b ${name}: header một hàng (cao ≤ ${V_OLD.hdr - 12}px, trước ${V_OLD.hdr}) và ô ghi nhanh không còn chiếm hàng riêng`, R(hd).height <= V_OLD.hdr - 12 && hd.contains(box), [R(hd).height, hd.contains(box)]);
       }
       sel = CW; await go("ca", "focus");
-      // V1.2 đỉnh lưới tuần (ngưỡng 240: mục tiêu ≈185 không có dải Dữ liệu mẫu, +≈36px dải Dữ liệu mẫu khi chạy demo; trước 416)
+      // V1.2 đỉnh lưới tuần. Ngưỡng 310 (trước 240, 2026-11-18 "thoáng"): thêm hàng Lúc này (56px + 10px), khối Hôm nay và thanh tuần cách nhau 10px thay vì 8px; hàng này là việc PO yêu cầu (Việc 3)
       const g = document.querySelector(".week-cards-grid"), top = R(g).top + scrollY;
-      ok(`V1.2 đỉnh lưới tuần ≤ 240px (trước ${V_OLD.gridTop})`, top <= 240, top);
+      ok(`V1.2 đỉnh lưới tuần ≤ 310px (trước ${V_OLD.gridTop})`, top <= 310, top);
       ok("V1.2b lưới chiếm ≥ 60% chiều cao màn nằm dưới đỉnh lưới (lưới + cột Hộp việc)", (innerHeight - top) / innerHeight >= 0.6, [innerHeight, top]);
       // V1.3 khối Hôm nay thành thanh mảnh
-      const hr = document.querySelector("#v .today-hero"), st = hr ? q(".th-stat", hr) : [], nx2 = hr && hr.querySelector(".th-nx"), gr = hr && hr.querySelector(".th-greet");
-      ok(`V1.3 .today-hero cao ≤ 64px (trước ${V_OLD.hero}), vẫn có lời chào, 3 vòng và ô Tiếp theo trên cùng một hàng`, hr && R(hr).height <= 64 && !!gr && st.length === 3 && vis(nx2) && [...st, nx2, gr].every(e => Math.abs((R(e).top + R(e).height / 2) - (R(hr).top + R(hr).height / 2)) <= 16), hr && [R(hr).height, st.length, [...st, nx2, gr].map(e => e && Math.round(R(e).top))]);
+      // Việc 3: ô Tiếp theo không còn trong khối Hôm nay; hero giữ lời chào + 3 vòng; hàng Lúc này nằm ngay dưới hero
+      const hr = document.querySelector("#v .today-hero"), st = hr ? q(".th-stat", hr) : [], gr = hr && hr.querySelector(".th-greet"), n3r = document.getElementById("now3");
+      ok(`V1.3 .today-hero cao ≤ 64px (trước ${V_OLD.hero}), vẫn có lời chào và 3 vòng cùng một hàng; không còn ô Tiếp theo trong hero (chuyển sang hàng Lúc này)`, hr && R(hr).height <= 64 && !!gr && st.length === 3 && !hr.querySelector(".th-next, .th-nx") && !/Tiếp theo/.test(hr.textContent) && [...st, gr].every(e => Math.abs((R(e).top + R(e).height / 2) - (R(hr).top + R(hr).height / 2)) <= 16), hr && [R(hr).height, st.length, /Tiếp theo/.test(hr.textContent)]);
+      ok("V1.3c hàng Lúc này nằm ngay dưới khối Hôm nay (khoảng ≤ 16px)", !!n3r && R(n3r).top - R(hr).bottom <= 16 && R(n3r).top >= R(hr).bottom - 1, n3r && [R(hr).bottom, R(n3r).top]);
       const hit = st.map(b => { const r = R(b), el = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return !!el && b.contains(el) && r.height >= 28; });
-      ok("V1.3b 3 vòng và ô Tiếp theo bấm được (đúng phần tử ở tâm, aria-label giữ nguyên)", hit.length === 3 && hit.every(Boolean) && st.every(b => b.getAttribute("aria-label")) && (() => { const r = R(nx2), el = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return nx2.contains(el) || el === nx2.querySelector("button"); })(), hit);
+      ok("V1.3b 3 vòng bấm được (đúng phần tử ở tâm, aria-label giữ nguyên)", hit.length === 3 && hit.every(Boolean) && st.every(b => b.getAttribute("aria-label")), hit);
       // V1.4 thẻ hoạt động gọn
       const evs = q(".week-cards-grid .event-item").filter(vis), ttl = evs.map(e => e.querySelector(".event-title"));
       const oneLine = ttl.every(t => t.scrollHeight <= t.clientHeight + 1 && t.getClientRects().length > 0 && Math.round(R(t).height) <= 20);
       ok("V1.4a tên hoạt động đúng 1 dòng (ellipsis) ở mọi thẻ", evs.length >= 8 && oneLine, ttl.map(t => [t.scrollHeight, t.clientHeight]).slice(0, 12));
-      ok(`V1.4b chiều cao thẻ ≤ 75% cũ (≤ ${Math.floor(V_OLD.ev * 0.75)}px, cũ ${V_OLD.ev})`, evs.every(e => R(e).height <= Math.floor(V_OLD.ev * 0.75) + 0.5), evs.map(e => Math.round(R(e).height)));
+      ok(`V1.4b chiều cao thẻ ≤ 64px (thoáng, 2026-11-18; cũ ${V_OLD.ev})`, evs.every(e => R(e).height <= 64.5), evs.map(e => Math.round(R(e).height)));
+      ok("V1.4f đệm thẻ ≥ 10px trên/dưới × 12px trái/phải (thoáng)", evs.every(e => { const cs = getComputedStyle(e); return parseFloat(cs.paddingTop) >= 10 && parseFloat(cs.paddingLeft) >= 12; }), evs.map(e => getComputedStyle(e).padding));
       const gaps = []; q(".week-cards-grid .day-events-list").forEach(l => { const c = q(".event-item", l); for (let i = 1; i < c.length; i++) gaps.push(Math.round(R(c[i]).top - R(c[i - 1]).bottom)); });
-      ok("V1.4c khoảng cách giữa hai thẻ liên tiếp trong cột ≥ 6px", gaps.length >= 1 && gaps.every(x => x >= 6), gaps);
+      ok("V1.4c khoảng cách giữa hai thẻ liên tiếp trong cột ≥ 12px (thoáng; cũ 6px)", gaps.length >= 1 && gaps.every(x => x >= 12), gaps);
       const cards = q(".week-cards-grid .day-card"), tdC = cards.find(c => c.classList.contains("today")), oth = cards.find(c => !c.classList.contains("today") && !c.classList.contains("past"));
       ok("V1.4d cột hôm nay nổi hơn: bóng/viền dày hơn cột khác", tdC && oth && (getComputedStyle(tdC).boxShadow.length > getComputedStyle(oth).boxShadow.length), tdC && oth && [getComputedStyle(tdC).boxShadow, getComputedStyle(oth).boxShadow]);
       ok("V1.4e lưới không cuộn lồng (document cuộn, .week-cards-grid và .wk-wrap không overflow auto/scroll)", ["overflowY", "overflowX"].every(p => !/auto|scroll/.test(getComputedStyle(document.querySelector(".week-cards-grid"))[p]) && !/auto|scroll/.test(getComputedStyle(document.querySelector(".wk-wrap"))[p])));

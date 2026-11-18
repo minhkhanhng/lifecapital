@@ -48,6 +48,7 @@ await __run("tests/e2e/e2e6.js", "E2E");   // trả về { r: [đạt, tổng], 
 | perf-sync.js | PERFSYNC | Gói 6: bộ ĐO (không đạt/trượt) ở ~11k hoạt động: tick, cloudPendingCount, cloudSync, save, renderSettingsModal. Gọi thẳng `await PERFSYNC()` (có thể lâu hơn 40 s của `__run`) |
 | e2e-v063.js | E2E63 | v0.6.3: nhập Google Calendar (giả lập API), bật/tắt phần, Tổng quan gộp Tổng kết, biểu tượng tab |
 | e2e-uiall.js | E2EUIALL | Gói 12 UI toàn bộ (hướng A "Hôm nay trước"): không tràn ngang, thang chữ 8 bậc và độ đậm 400–700 mọi tab; khối Hôm nay (lời chào, 3 vòng, Tiếp theo), ô Tuần này ở thanh bên, lưới tuần 7 cột từ 760 px, một nút tô màu ở đầu trang, Thói quen dạng hàng + thanh tiến độ, canh trái nhất quán, vùng bấm 36 px cảm ứng, tối. Chạy ở 1440, 820, 375 (cảm ứng) |
+| e2e-star.js | E2ESTAR | Việc 2–3 (2026-11-18): sao "nổi bật nhất" một việc mỗi ngày (dữ liệu star, gộp hai máy, không đẩy Google), ☆ ẩn đến khi rê/focus, công tắc trong popup Sửa; hàng "Lúc này" (Đang làm · Tiếp theo · Nổi bật nhất, now3Data với giờ giả). Chạy ở 1440, 820, 375 |
 
 Test CSP tĩnh (Node, không trình duyệt): `node tests/csp/test_csp.js` (in `OK n/n`).
 

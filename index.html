@@ -2134,22 +2134,32 @@ body[data-tab="hb"] #addBtn { display: none; } /* tab Thói quen đã có nút T
 .th-head { display: flex; align-items: baseline; gap: 2px 12px; flex-wrap: wrap; }
 .th-greet { margin: 0; font-size: 18px; font-weight: 700; line-height: 1.3; color: var(--tx); }
 .th-date { font-size: 13px; color: var(--tx-sec); }
-.th-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.4fr); gap: 8px; }
-.th-stat, .th-nx { font: inherit; color: var(--tx); text-align: left; border: 0; background: var(--th-fill); border-radius: 14px; padding: 8px 10px; cursor: pointer; min-height: 56px; min-width: 0; }
-.th-stat { display: flex; align-items: center; gap: 10px; }
-.th-stat:hover, .th-nx:hover { background: var(--ac-soft); }
+.th-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.th-stat { font: inherit; color: var(--tx); text-align: left; border: 0; background: var(--th-fill); border-radius: 14px; padding: 8px 10px; cursor: pointer; min-height: 56px; min-width: 0; display: flex; align-items: center; gap: 10px; }
+.th-stat:hover { background: var(--ac-soft); }
 .th-ring { flex: none; }
 .th-sv { display: flex; flex-direction: column; min-width: 0; line-height: 1.3; }
 .th-sv b { font-size: 16px; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .th-sv b small { font-size: 12px; font-weight: 500; color: var(--mu); }
 .th-sv > span { font-size: 12px; color: var(--tx-sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.th-next { min-width: 0; display: flex; grid-column: -2 / -1; }
-.th-nx { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 1px; box-shadow: inset 4px 0 0 var(--cap, var(--ac)); padding-left: 14px; }
-.th-nl { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tx-sec); }
-.th-nx b { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.th-nx > span:last-child { font-size: 12px; color: var(--tx-sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.th-nx-add { box-shadow: none; padding-left: 10px; }
-@media (max-width: 1099px) { .th-row { grid-template-columns: repeat(3, minmax(0, 1fr)); } .th-next { grid-column: 1 / -1; } .th-nx { min-height: 48px; } }
+/* Việc 3: hàng "Lúc này" (đang làm · tiếp theo · nổi bật nhất) dưới khối Hôm nay, trên thanh chọn tuần */
+.now3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-bottom: 10px; }
+.n3-c { font: inherit; color: var(--tx); text-align: left; border: 0; background: var(--th-fill); border-radius: 14px; padding: 8px 12px; min-width: 0; min-height: 44px; max-height: 64px; display: flex; flex-direction: column; justify-content: center; gap: 2px; box-shadow: inset 4px 0 0 var(--cap, var(--ac)); }
+button.n3-c { cursor: pointer; }
+button.n3-c:hover { background: var(--ac-soft); }
+.n3-empty { box-shadow: none; }
+.n3-doing { --cap: var(--c-olive); }
+.n3-star { --cap: var(--wa); }
+.n3-l { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--tx-sec); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.n3-v { display: block; font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.n3-empty .n3-v { color: var(--tx-sec); font-weight: 400; }
+.n3-tm { font-weight: 600; font-variant-numeric: tabular-nums; }
+@media (max-width: 599px) {
+  .now3 { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .n3-c { flex-direction: row; align-items: center; gap: 10px; min-height: 44px; max-height: none; padding: 8px 12px; }
+  .n3-l { flex: none; }
+  .n3-v { flex: 1; min-width: 0; }
+}
 @media (max-width: 640px) {
   .today-hero { padding: 10px 12px; gap: 8px; margin-bottom: 10px; }
   .th-greet { font-size: 16px; }
@@ -2231,33 +2241,47 @@ body[data-tab="hb"] #addBtn { display: none; } /* tab Thói quen đã có nút T
   .app-header .quick-preview-bar { position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 40; padding: 8px 12px; border: 1px solid var(--lg-edge); border-radius: 14px; background: var(--sf-pop, var(--sf-2)); box-shadow: var(--raise-3); }
   .header-actions { flex: none; flex-wrap: nowrap; }
   /* 2. Hôm nay: thanh mảnh một hàng */
-  .today-hero { flex-direction: row; align-items: center; gap: 12px; padding: 6px 10px; margin-bottom: 8px; }
+  .today-hero { flex-direction: row; align-items: center; gap: 12px; padding: 6px 10px; margin-bottom: 10px; }
   .th-head { flex: none; flex-direction: column; align-items: flex-start; gap: 0; flex-wrap: nowrap; }
   .th-greet { font-size: 16px; line-height: 1.25; white-space: nowrap; }
   .th-date { font-size: 12px; line-height: 1.25; }
-  .th-row { flex: 1; min-width: 0; grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.4fr); gap: 8px; }
-  .th-next { grid-column: auto; }
-  .th-stat, .th-nx { min-height: 40px; padding-block: 4px; border-radius: 12px; }
-  .th-stat { gap: 8px; }
+  .th-row { flex: 1; min-width: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .th-stat { min-height: 40px; padding-block: 4px; border-radius: 12px; gap: 8px; }
   .th-stat .th-ring { width: 28px; height: 28px; }
   .th-sv b { font-size: 14px; }
-  .th-nx { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 8px; align-content: center; align-items: baseline; padding-left: 14px; }
-  .th-nx, .th-sv { line-height: 1.25; }
-  .th-nx b { line-height: 1.25; }
-  .th-nx .th-nl { grid-column: 1; grid-row: 1; }
-  .th-nx b { grid-column: 2; grid-row: 1; }
-  .th-nx > span:last-child { grid-column: 1 / -1; grid-row: 2; }
-  /* 3. Thanh chọn tuần: bớt khoảng cách */
-  .wk-bar { margin-bottom: 8px; }
+  .th-sv { line-height: 1.25; }
+  /* 3. Thanh chọn tuần và các khối: khoảng cách dọc 10px */
+  .app-header { margin-bottom: 10px; }
+  .wk-bar { margin-bottom: 10px; }
   .demo-line { margin-bottom: 4px; }
+  /* Việc 1 (thoáng): thẻ 10×12, cách nhau 12px, đầu cột cách tiêu đề 10px */
+  .event-item { padding: 10px 12px; }
+  .day-events-list { gap: 12px; padding: 10px 8px 6px; }
+}
+@media (max-width: 899px) {
+  .event-item { padding: 8px 10px; }
+  .day-events-list { gap: 10px; }
 }
 @media (min-width: 900px) and (max-width: 1199px) { .th-sv b small { display: none; } }
+/* Việc 2 (sao): nút ☆/★ là anh em của thẻ (không lồng trong role=button), góc phải trên; tên tránh vùng sao */
+.ev-wrap { position: relative; min-width: 0; }
+.ev-wrap:has(.ev-star.on) > .event-item .event-item-top { padding-right: 22px; } /* chỉ thẻ đã đánh dấu chừa chỗ cho ★; thẻ khác dùng hết bề ngang cho tên */
+.ev-wrap:hover .ev-star:not(.on), .ev-wrap:focus-within .ev-star:not(.on) { background: var(--sf-2); box-shadow: 0 0 0 1px var(--lg-rim, rgba(0,0,0,.08)); } /* ☆ hiện khi rê/focus: nền riêng để đọc rõ khi đè lên đuôi tên */
+.ev-star { position: absolute; top: 6px; right: 6px; width: 24px; height: 24px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--mu); font: inherit; font-size: 16px; line-height: 24px; text-align: center; cursor: pointer; }
+.ev-star:hover { color: var(--tx); }
+.ev-star.on { color: var(--wa); }
+.ev-star:not(.on) { opacity: 0; } /* ☆ chỉ hiện khi rê chuột lên thẻ hoặc nút có focus bàn phím; vẫn trong DOM, Tab tới được */
+.ev-wrap:focus-within .ev-star { opacity: 1; }
+@media (hover: hover) { .ev-wrap:hover .ev-star { opacity: 1; } }
+@media (pointer: coarse) { .ev-star:not(.on) { pointer-events: none; } } /* cảm ứng: không có ☆ để bấm, chỉ qua Sửa hoạt động */
+.ev-star:focus-visible { outline: 2px solid var(--ac); outline-offset: 1px; }
 /* Gói 8 (E2, hướng C): vùng bấm tối thiểu 36px trên cảm ứng và cửa sổ hẹp (bố cục điện thoại). Nút "+" cao 36 thật; nhãn tình trạng ngày (.hl-day) và nút thu gọn (.hv-toggle) giữ nguyên hình dạng, vùng bấm vô hình lên 36x36 (::after). Máy tính chuột (>= 900px) không đổi. */
 @media (pointer: coarse), (max-width: 899px) {
   .day-card-add-btn { min-height: 36px; }
   .hl-day, .hv-toggle { position: relative; }
   .hl-day::after { content: ""; position: absolute; inset: -6px 0; }
   .hv-toggle::after { content: ""; position: absolute; inset: -6px; }
+  .ev-star::after { content: ""; position: absolute; inset: -6px; } /* vùng bấm sao 36px, hình vẫn 24px */
 }
 </style>
 <script>
@@ -3926,15 +3950,50 @@ function todayHeroHTML() {
   const s2 = hb ? stat(ringSVG(hb.n ? hb.done / hb.n : 0, "var(--ac-ring)"), `${hb.done}/${hb.n}`, hb.n && hb.done === hb.n ? "Thói quen · xong hết" : "Thói quen", "switchTab('hb')", `Thói quen hôm nay ${hb.done} trên ${hb.n}, mở tab Thói quen`)
     : (b => stat(ringSVG(b.score != null ? b.score / 100 : 0, "var(--ac-ring)"), b.score != null ? b.score + "%" : "–", "Cân bằng tuần", "switchTab('su')", "Mở Tổng quan"))(balanceOf(CW));
   const s3 = hl ? stat(ringSVG(hl.mood ? hl.mood / 5 : 0, "#4a859c"), HL_MOOD[hl.mood] || "Chưa ghi", "Tâm trạng", `hlOpen('${tk}')`, `Tâm trạng hôm nay: ${HL_MOOD[hl.mood] || "chưa ghi"}, mở ghi sức khỏe`) : "";
-  const hm = `${String(hr).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
-  const es = (S.ev[tk] || []).map((e, i) => ({ e, i })).filter(x => x.e.s && x.e.s >= hm).sort((a, b) => a.e.s.localeCompare(b.e.s));
-  const nx = es[0];
-  const next = nx ? `<button type="button" class="th-nx" style="--cap:${CM(nx.e.c).c}" onclick="openEditor('${tk}', ${nx.i})"><span class="th-nl">Tiếp theo</span><b>${esc(nx.e.s)} ${esc(nx.e.t)}</b><span>${r1(nx.e.h)}h · ${esc(CM(nx.e.c).n)}</span></button>`
-    : `<button type="button" class="th-nx th-nx-add" onclick="openEditor('${tk}')"><span class="th-nl">Tiếp theo</span><b>Trống phần còn lại hôm nay</b><span>+ Thêm hoạt động</span></button>`;
   return `<section class="today-hero card" aria-label="Hôm nay">
     <div class="th-head"><h3 class="th-greet">Chào buổi ${g}${nm ? ", " + esc(nm) : ""}</h3><span class="th-date">${DN_VI[dow(now)]}, ${dm(tk)}</span></div>
-    <div class="th-row">${s1}${s2}${s3}<div class="th-next">${next}</div></div>
+    <div class="th-row">${s1}${s2}${s3}</div>
   </section>`;
+}
+// Việc 2 (sao): đánh dấu MỘT việc nổi bật nhất mỗi ngày. Chỉ đổi trường star trên hoạt động: không markPending, không đẩy Google Calendar.
+function evStar(k, i) {
+  const L = S.ev[k] || [], e = L[i];
+  if (!e) return;
+  const on = !e.star;
+  L.forEach(x => { if (x.star) delete x.star; });
+  if (on) e.star = 1;
+  save(); draw();
+  const b = document.querySelector(`.ev-star[data-ev="${k}|${i}"]`);
+  if (b) b.focus({ preventScroll: true });
+}
+// Việc 3: hàng "Lúc này" dưới khối Hôm nay. Đang làm = việc hôm nay có giờ bắt đầu <= bây giờ < bắt đầu + thời lượng (lấy việc bắt đầu muộn nhất); Tiếp theo = giờ bắt đầu gần nhất sau bây giờ; Nổi bật = việc có sao.
+function now3Data(now = new Date()) {
+  const L = S.ev[ky(now)] || [], cur = now.getHours() * 60 + now.getMinutes();
+  const mins = s => { const [h, m] = s.split(":").map(Number); return h * 60 + m; };
+  const timed = L.map((e, i) => ({ e, i })).filter(x => /^([01]\d|2[0-3]):[0-5]\d$/.test(x.e.s || ""));
+  const doing = timed.filter(x => mins(x.e.s) <= cur && cur < mins(x.e.s) + (+x.e.h || 0) * 60).sort((a, b) => mins(b.e.s) - mins(a.e.s))[0] || null;
+  const next = timed.filter(x => mins(x.e.s) > cur).sort((a, b) => mins(a.e.s) - mins(b.e.s))[0] || null;
+  const star = L.map((e, i) => ({ e, i })).find(x => x.e.star) || null;
+  return { doing, next, star };
+}
+function now3HTML(now = new Date()) {
+  if (sel !== CW || calSubView === "year" || !W[CW]) return "";
+  const d = now3Data(now), k = ky(now), hm = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+  const cell = (cls, label, x, emptyTxt, lead) => x
+    ? `<button type="button" class="n3-c ${cls}" style="--cap:${CM(x.e.c).c}" onclick="openEditor('${k}', ${x.i})" aria-label="${label}: ${x.e.s ? esc(x.e.s) + " " : ""}${esc(x.e.t)}"><span class="n3-l">${label}</span><span class="n3-v">${lead}${x.e.s ? `<span class="n3-tm">${esc(x.e.s)}</span> ` : ""}${esc(x.e.t)}</span></button>`
+    : `<div class="n3-c n3-empty ${cls}" title="${emptyTxt}"><span class="n3-l">${label}</span><span class="n3-v">${emptyTxt}</span></div>`;
+  return `<section class="now3" id="now3" data-k="${hm}|${d.doing ? d.doing.i : ""}|${d.next ? d.next.i : ""}|${d.star ? d.star.i : ""}" aria-label="Lúc này">${cell("n3-doing", "Đang làm", d.doing, "Không có việc đang làm", "")}${cell("n3-next", "Tiếp theo", d.next, "Hết việc hôm nay", "")}${cell("n3-star", "Nổi bật nhất", d.star, "Chưa đánh dấu: rê chuột lên một việc rồi bấm ☆, hoặc bật trong Sửa hoạt động", "★ ")}</section>`;
+}
+// Làm mới hàng Lúc này khi sang phút mới (tick): chỉ thay khi nội dung đổi
+function now3Refresh() {
+  const el = document.getElementById("now3");
+  if (!el) return;
+  const h = now3HTML();
+  if (!h) return;
+  const t = document.createElement("template");
+  t.innerHTML = h;
+  const nx = t.content.firstElementChild;
+  if (nx && nx.dataset.k !== el.dataset.k) el.replaceWith(nx);
 }
 
 // Nút Thêm trên header: ở Hộp việc thì thêm việc, ở Lịch thì thêm hoạt động
@@ -5045,6 +5104,7 @@ const V = {
     const headerBar = `
       ${calendarNotices()}
       ${todayHeroHTML()}
+      ${now3HTML()}
       <div class="card wk-bar">
         ${wkNavHTML(calSubView === "year")}
         <div class="segmented-control">
@@ -5080,6 +5140,7 @@ const V = {
               ${es.map((e, idx) => {
                 const cap = CM(e.c);
                 return `
+                  <div class="ev-wrap">
                   <div class="event-item" style="--cap: ${cap.c}" tabindex="0" role="button" aria-label="${esc(e.t)}, ${e.s ? esc(e.s) + ', ' : ''}${r1(e.h)} giờ" onclick="openEditor('${k}', ${idx})" onkeydown="evOpenKey(event, '${k}', ${idx})">
                     <div class="event-item-top">
                       <span class="event-title" title="${esc(e.t)}">${modOn("pj") && e.pj && findPj(e.pj) ? `<span class="ev-pj" style="--pj:${findPj(e.pj).col}" title="Dự án: ${esc(findPj(e.pj).n)}"></span>` : ""}${e.tk ? '<span class="ev-linked" title="Từ Hộp việc"></span>' : ""}${hbOfTitle(e.t) ? `<span class="ev-hb" title="Thói quen: ${esc(hbOfTitle(e.t).n)}">✓</span>` : ""}${esc(e.t)}${e.subs && e.subs.length ? `<span class="ev-subs" title="Việc con: ${e.subs.filter(x => x.done).length}/${e.subs.length} xong">${e.subs.filter(x => x.done).length}/${e.subs.length}</span>` : ""}</span>
@@ -5088,6 +5149,8 @@ const V = {
                       <span>${e.s ? e.s + ' · ' : ''}${r1(e.h)}h</span>
                       <span style="color:${cap.c}; font-weight:500;" title="${esc(cap.n)}">${esc(cap.n)}</span>
                     </div>
+                  </div>
+                  <button type="button" class="ev-star${e.star ? " on" : ""}" data-ev="${k}|${idx}" aria-pressed="${e.star ? "true" : "false"}" aria-label="${e.star ? "Bỏ đánh dấu: " : "Đánh dấu nổi bật nhất: "}${esc(e.t)}" onclick="evStar('${k}', ${idx})">${e.star ? "★" : "☆"}</button>
                   </div>
                 `;
               }).join("")}
@@ -5761,6 +5824,8 @@ function renderEditorSheet() {
         </select>
       </div>
 
+      <label class="hb-ed" for="inpStar"><input type="checkbox" id="inpStar" ${X && X.star ? "checked" : ""}> Nổi bật nhất trong ngày <small>chỉ một việc mỗi ngày; bật ở đây thì bỏ sao việc khác cùng ngày</small></label>
+
       ${subsHTML()}
 
       ${!modOn("hb") ? "" : (() => { const hm = X ? hbOfTitle(X.t) : null; return hm
@@ -5918,6 +5983,12 @@ async function saveEventFromForm(keepOpen) {
     }
   }
 
+  // Nổi bật nhất (Việc 2): chỉ đổi trường star của việc vừa lưu; bật thì bỏ sao việc khác cùng ngày. Không markPending (sao không gửi Google).
+  const starTgt = wasEdit ? L[ei] : (($("inpRepeat") && $("inpRepeat").value) ? null : o);
+  if (starTgt && $("inpStar")) {
+    if ($("inpStar").checked) { L.forEach(x => { if (x !== starTgt && x.star) delete x.star; }); starTgt.star = 1; }
+    else delete starTgt.star;
+  }
   sortL(L);
   if ($("inpHabit") && $("inpHabit").checked && !hbOfTitle(title) && hbFold(title)) {
     const hb = hbAdd({ n: title, c: o.c, kind: "auto", per: "week", tgt: 3, match: title });
@@ -6069,8 +6140,9 @@ function cleanEvSubs(l) {
 function cleanEv(e) {
   if (!e || typeof e.t !== "string" || !(+e.h > 0 && +e.h <= 24) || !SAFE_K.test(e.c || "")) return null;
   return {
-    ...extras(e, ["id", "mt", "t", "c", "m", "h", "s", "r", "tk", "pj", "sec", "gid", "gi", "gx", "ds", "demo", "subs"]),
+    ...extras(e, ["id", "mt", "t", "c", "m", "h", "s", "r", "tk", "pj", "sec", "gid", "gi", "gx", "ds", "demo", "subs", "star"]),
     ...cleanEvSubs(e.subs),
+    ...(e.star ? { star: 1 } : {}), // nổi bật nhất trong ngày (Việc 2): chỉ giữ khi bật
     ...(SAFE_K.test(e.id || "") ? { id: e.id } : {}),
     ...(SAFE_K.test(e.pj || "") ? { pj: e.pj } : {}), // dự án (v0.5.0)
     ...(SAFE_K.test(e.sec || "") ? { sec: e.sec } : {}), // phần trong dự án (v0.6.0)            // mã riêng (v0.4.0), thiếu thì cleanState cấp
@@ -6307,6 +6379,7 @@ function tick(force = true) {
   snapshotDaily();
   updateSyncBadge(); // token Google hết hạn sau 1 giờ
   if (ed) return;
+  now3Refresh(); // Việc 3: hàng Lúc này đổi theo phút (chỉ thay khi nội dung đổi)
   const oldCW = CW, oldDay = lt, w = wkNow();
   if (w !== oldCW) { if (sel === oldCW) sel = w >= 0 ? w : sel; CW = w; lt = tk; draw(true); }
   else if (tk !== oldDay) { lt = tk; draw(); }

@@ -20,7 +20,7 @@
   const ovC = ovl ? parse(getComputedStyle(ovl).backgroundColor) : null;
   const layers = el => { const L = []; let op = 1; for (let e = el; e && e !== document.documentElement; e = e.parentElement) { const s = getComputedStyle(e); op *= +s.opacity; const c = parse(s.backgroundColor); if (c && c[3] > 0) L.push(c); if (c && c[3] >= 0.999) break; if (e.classList && e.classList.contains("modal-overlay")) break; } return { L, op }; };
   const effBg = el => { const { L, op } = layers(el); return { list: bases.map(b0 => { let b = ovl && el.closest(".modal-overlay.open") && ovC ? over(ovC, b0) : b0; for (let i = L.length - 1; i >= 0; i--) b = over(L[i], b); return b; }), op }; };
-  const vis = el => { const r = el.getBoundingClientRect(); const s = getComputedStyle(el); return r.width > 0 && r.height > 0 && s.visibility !== "hidden" && s.display !== "none"; };
+  const vis = el => { const r = el.getBoundingClientRect(); const s = getComputedStyle(el); return r.width > 0 && r.height > 0 && s.visibility !== "hidden" && s.display !== "none" && +s.opacity > 0; }; // opacity 0 (☆ ẩn của thẻ chưa đánh dấu) không phải chữ người đọc thấy
   const out = [];
   const root = ovl || document.body;
   for (const el of root.querySelectorAll("*")) {
