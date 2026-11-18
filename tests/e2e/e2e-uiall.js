@@ -1,3 +1,4 @@
+window.__capBox = window.__capBox || function () { const o = document.getElementById("__capT"); if (o) o.remove(); const d = document.createElement("div"); d.id = "__capT"; d.innerHTML = capSumHTML(CW); document.body.appendChild(d); setTimeout(() => d.remove(), 0); return d; }; // chỉ kiểm HTML do capSumHTML(CW) trả về (popup Tổng kết dùng chung)
 // Gói UI toàn bộ (hướng A "Hôm nay trước", PO chọn 2026-11-18). Đo hình học nên chạy ở 1440 (chuột), 820 (chuột, hẹp), 375 (cảm ứng).
 // Chạy sau loadDemo(). Khôi phục S, storage, tab, giao diện khi xong.
 window.E2EUIALL = async function () {
@@ -53,7 +54,7 @@ window.E2EUIALL = async function () {
     const demo = document.querySelector(".demo-line");
     ok("B11 dải Dữ liệu mẫu một dòng (≤ 32px)", !demo || R(demo).height <= 32, demo && R(demo).height);
     if (touch) {
-      const cs = document.querySelector(".cap-sum");
+      const cs = __capBox().querySelector(".cap-sum");
       ok("B12 điện thoại: Giờ theo loại vốn gọn (≤ 110px)", cs && R(cs).height <= 110, cs && R(cs).height);
       ok("B13 điện thoại: khối Hôm nay ở màn đầu (top ≤ 220)", hero && R(hero).top + scrollY <= 220, hero && R(hero).top + scrollY);
       const wb = q(".wk-bar button").filter(vis).map(b => [b.textContent.trim(), Math.round(R(b).width), Math.round(R(b).height)]).filter(([, w, h]) => w < 36 || h < 36);
@@ -116,6 +117,26 @@ window.E2EUIALL = async function () {
     ok("H1 Tổng quan: vòng Điểm cân bằng có vạch nền", ring && ring.querySelectorAll("circle").length >= 2, ring && ring.outerHTML.slice(0, 160));
 
     // ---- Tối: khối Hôm nay đọc được ----
+    // ---- H1: lề phải tiêu đề = lề phải nội dung ở các tab bị cap 980px (chỉ màn >= 900 chuột); H2: Lịch không còn Giờ theo loại vốn ----
+    if (W >= 900 && !touch) {
+      const rr = e => Math.round(R(e).right); let inset = null; // Lịch (không cap) cho độ thụt chuẩn của nút so với nội dung (tiêu đề có padding-inline 4px)
+      for (const [t, sub, name] of [["ca", "focus", "Lịch"], ["hv", 0, "Hộp việc"], ["pj", 0, "Dự án (danh sách)"], ["hb", 0, "Thói quen"], ["me", 0, "Tôi"], ["hl", 0, "Sức khỏe"], ["su", 0, "Tổng quan"]]) {
+        await go(t, sub || undefined);
+        const hd = document.querySelector(".app-header"), v = document.querySelector("#v"), kids = [...v.children].filter(vis), qc = document.querySelector(".quick-capture-box");
+        const capped = ["hv", "pj", "hb", "me"].includes(t) && !document.querySelector("#v .pj-shell");
+        const vr = Math.max(...kids.map(rr)), ha = document.querySelector(".header-actions");
+        if (t === "ca") inset = vr - rr(ha);
+        if (capped) {
+          ok(`H1.${t} ${name}: lề phải tiêu đề = lề phải nội dung (±2px), nút cùng độ thụt như Lịch`, Math.abs(rr(hd) - vr) <= 2 && Math.abs((vr - rr(ha)) - inset) <= 2 && (!qc || !vis(qc) || Math.abs(rr(qc) - vr) <= 2), [rr(hd), rr(ha), vr, qc && rr(qc)]);
+          ok(`H1.${t} ${name}: nội dung không rộng quá 980px`, R(hd).width <= 981, R(hd).width);
+        } else ok(`H1.${t} ${name}: không bị cap 980px (tiêu đề rộng > 980px khi cột đủ rộng)`, R(document.querySelector(".app-container")).width <= 981 || R(hd).width > 981, R(hd).width);
+      }
+    }
+    {
+      for (const sv of ["focus", "timeline"]) { sel = CW; await go("ca", sv); ok(`H2.${sv} tab Lịch (${sv}) không có Giờ theo loại vốn`, !document.querySelector("#v .cap-sum")); }
+      ok("H2.3 capSumHTML(CW) vẫn trả khối .cap-sum (popup Tổng kết còn dùng)", !!__capBox().querySelector(".cap-sum .cap-s"));
+    }
+
     const root = document.documentElement, th0 = root.getAttribute("data-theme"); root.setAttribute("data-theme", "dark");
     await go("ca", "focus");
     const h2 = document.querySelector("#v .today-hero");

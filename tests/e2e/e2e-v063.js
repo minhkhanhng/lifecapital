@@ -1,3 +1,4 @@
+window.__capBox = window.__capBox || function () { const o = document.getElementById("__capT"); if (o) o.remove(); const d = document.createElement("div"); d.id = "__capT"; d.innerHTML = capSumHTML(CW); document.body.appendChild(d); setTimeout(() => d.remove(), 0); return d; }; // chỉ kiểm HTML do capSumHTML(CW) trả về (popup Tổng kết dùng chung)
 // v0.6.3: nhập từ Google Calendar (giả lập API, không đăng nhập thật), bật/tắt phần, biểu tượng tab, Tổng kết gộp vào Tổng quan.
 // Chạy sau loadDemo().
 window.E2E63 = async function () {
@@ -209,7 +210,7 @@ window.E2E63 = async function () {
   ok("M2.8 Tổng quan: không có thẻ Giờ theo dự án", !/Giờ theo dự án/.test(vt()));
   setMod("hb", false); await sleep(10);
   switchTab("ca"); calSubView = "focus"; draw(); await sleep(10);
-  ok("M3.1 tắt Thói quen: Lịch không còn dải thói quen", !document.querySelector("#v .hb-strip, #v .hb-chip") && !/THÓI QUEN/i.test($("v").querySelector(".cap-sum") ? $("v").querySelector(".cap-sum").nextElementSibling ? $("v").querySelector(".cap-sum").nextElementSibling.textContent : "" : ""));
+  ok("M3.1 tắt Thói quen: Lịch không còn dải thói quen", !document.querySelector("#v .hb-strip, #v .hb-chip") && [...$("v").children].every(c => !/^\s*THÓI QUEN/i.test(c.textContent)));
   openEditor(tk); await sleep(10);
   ok("M3.2 popup thêm: không có Theo dõi thành thói quen", !$("inpHabit"));
   closeEditor();

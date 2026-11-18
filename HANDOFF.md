@@ -1,5 +1,13 @@
 # HANDOFF · Bàn giao cho session sau (mục mới nhất ở trên)
 
+## 2026-11-18 · SỬA NHANH sau v0.9.0 trên `claude/hotfix-bo-cuc` (từ `main` = v0.9.0; chưa push, chưa deploy)
+- PO báo các tab Hộp việc, Dự án, Thói quen "méo" và yêu cầu bỏ "Giờ theo loại vốn" khỏi tab Lịch. Nguyên nhân đo được ở 1440: nội dung bị cap 980 px canh trái nhưng `.app-header` kéo hết cột, lề phải lệch ~170 px (nội dung x=1254, tiêu đề/nút x=1424) ở hv, pj (danh sách), hb, me.
+- Sửa: một luật CSS `@media (min-width: 900px)` cap `.app-container` 980 px cho hv, hb, me và pj khi không có `.pj-shell` (chi tiết dự án 1240 px không cap), nên tiêu đề, ô ghi nhanh, nội dung thẳng hàng (đo sau sửa: cả 4 tab đều 1254; Lịch/Sức khỏe/Tổng quan không đổi, 1424). Bỏ khối `.cap-sum` khỏi tab Lịch (tuần và ngày), xóa `weekStatsHTML`.
+- LƯU Ý: `capSumHTML` + CSS `.cap-sum`/`.cap-s` giờ LÀ MÃ CHẾT (không còn nơi gọi trong `index.html`, chỉ test gọi qua helper `__capBox`); comment trên hàm đã sửa cho đúng. Cần PO quyết giữ hay xóa (xóa thì chuyển/loại các ca test cap-s).
+- Test: E2EUIALL đỏ 10/46 trước sửa (H1 lệch 170 px ở 4 tab, H2 Lịch còn `.cap-sum`) rồi 46/46 (1440), 27/27 (820), 31/31 (375). Chuyển (không xóa) các ca cũ kiểm `.cap-sum` trên Lịch sang kiểm `capSumHTML(CW)` trong phần tử tạm: e2e-uat2 J3.1/J3.3, e2e-ux A9.1/A9.2/V2.16–V2.18, e2e61 1.4/4.4, e2e-uiall B12; e2e-tabhb H2.3 đổi thành "Lịch KHÔNG có cap-sum"; e2e-v063 M3.1 bỏ tham chiếu `.cap-sum`. Sau sửa (Sonnet báo, 1440): E2E 95, E2E61 41, E2EUAT2 72, E2EUAT3 63, E2EUX 124, E2ETABHB 32, E2EHB 34, E2EUI 18, E2EA11Y 41, E2ESUB 48, E2EDASH 36, E2E63 77, E2EHL 85, E2EHL2 53; 820/375: UIALL, TABHB, A11Y, UI xanh; merge-tests 35/35. Tôi tự đo lề phải 7 tab ở 1440 và xem ảnh Hộp việc.
+- Chưa kiểm: khoảng 900–1200 px; thiết bị thật; ca H1 chỉ chạy ≥ 900 px.
+- Muốn lên production: nâng `APPV` 74, `VERSION` `lc-0.9.1`, CHANGELOG; PO nói rõ mới push.
+
 ## 2026-11-18 · ĐÃ PHÁT HÀNH v0.9.0 LÊN PRODUCTION (PO: "xong thì gộp rồi deploy luôn")
 - `git merge --ff-only refs/heads/feature/v0.9.0` vào `main`, `git tag v0.9.0`, `git push origin main` (`28adc46..c1849e7`), `git push origin v0.9.0`; Vercel `success`; production khớp repo (sw `lc-0.9.0`, `APPV 73`, `index.html` khớp byte, vendor/icon/CSP đạt). Số liệu: CURRENT.md "Bản đang chạy".
 - Gồm: UI "Hôm nay trước" (khối Hôm nay, ô Tuần này ở thanh bên, Thói quen dạng hàng, tuần 7 cột, một nút chính) và tab Sức khỏe › Tóm tắt gọn. Không đổi dữ liệu/đồng bộ/SW/CSP. Chi tiết: `docs/review/2026-11-18-ui-toan-bo-ra-soat.md`, CURRENT.md mục Gói 12.

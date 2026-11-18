@@ -2216,7 +2216,8 @@ body[data-tab="hb"] #addBtn { display: none; } /* tab Thói quen đã có nút T
 }
 /* Canh trái nhất quán; ô Ghi nhanh cùng bề rộng nội dung */
 .pj-empty { margin: 0; }
-@media (min-width: 900px) { body[data-tab="hv"] .quick-capture-box, body[data-tab="pj"] .quick-capture-box { max-width: 980px; } }
+/* Hotfix v0.9.0: tab canh trái bị cap 980px thì cả tiêu đề cũng cap, lề phải nút và nội dung thẳng hàng. Dự án dạng chi tiết (.pj-shell 1240px) không cap */
+@media (min-width: 900px) { body[data-tab="hv"] .app-container, body[data-tab="hb"] .app-container, body[data-tab="me"] .app-container, body[data-tab="pj"]:not(:has(.pj-shell)) .app-container { max-width: 980px; } }
 /* Sức khỏe: nút tâm trạng desktop không giãn; Dự án: chip đủ vùng bấm trên cảm ứng */
 @media (min-width: 600px) { .hl-today .hl-vert .hl-m { max-width: 168px; } }
 @media (pointer: coarse), (max-width: 640px) { .pj-capchip { min-height: 36px; } }
@@ -3712,7 +3713,7 @@ function openDayView() {
   draw();
 }
 
-// Giờ từng loại vốn trong một tuần (gồm giờ cố định): dùng chung ở tab Lịch và popup Tổng kết
+// Giờ từng loại vốn trong một tuần (gồm giờ cố định): tab Lịch đã bỏ khối này (PO 2026-11-18), hàm giữ lại, hiện chỉ test gọi
 function capSumHTML(wi) {
   const bal = balanceOf(wi), weak = bal.weakest && bal.weakest.c.k;
   const cells = S.caps.map(c => {
@@ -3850,12 +3851,6 @@ function dHealthHTML(ws) {
   document.addEventListener("focusout", hide);
   document.addEventListener("scroll", hide, true);
 })();
-
-// Tab Lịch: tổng kết tuần theo loại vốn (thói quen có tab riêng)
-function weekStatsHTML(ws) {
-  const wi = W.findIndex(w => +w === +ws);
-  return wi >= 0 ? capSumHTML(wi) : "";
-}
 
 function renderNav() {
   const n = inboxCount(), tabs = tabsOn();
@@ -5072,7 +5067,7 @@ const V = {
         `;
       }
       cards += '</div></div>';
-      return headerBar + weekStatsHTML(selWeekStart) + withInbox(cards);
+      return headerBar + withInbox(cards);
     }
 
     // 2. Chế độ DÒNG THỜI GIAN 24H
@@ -5131,7 +5126,7 @@ const V = {
         }
       }
 
-      return headerBar + weekStatsHTML(selWeekStart) + withInbox(`
+      return headerBar + withInbox(`
         <div class="timeline-container">
           ${dayNav}
           <div class="tl-head ${isViewingToday ? "today" : activeDate < tk ? "past" : ""}">

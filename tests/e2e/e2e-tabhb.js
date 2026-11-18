@@ -37,7 +37,7 @@ window.E2ETABHB = async function () {
     }
     calSubView = "focus";
     switchTab("ca"); await sleep(30);
-    ok("H2.3 tab Lịch vẫn có Giờ theo loại vốn", !!document.querySelector("#v .cap-sum"));
+    ok("H2.3 tab Lịch KHÔNG còn Giờ theo loại vốn (PO bỏ 2026-11-18)", !document.querySelector("#v .cap-sum"));
 
     // --- Tab Thói quen
     switchTab("hb"); await sleep(40);

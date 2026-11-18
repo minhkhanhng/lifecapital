@@ -1,3 +1,4 @@
+window.__capBox = window.__capBox || function () { const o = document.getElementById("__capT"); if (o) o.remove(); const d = document.createElement("div"); d.id = "__capT"; d.innerHTML = capSumHTML(CW); document.body.appendChild(d); setTimeout(() => d.remove(), 0); return d; }; // chỉ kiểm HTML do capSumHTML(CW) trả về (popup Tổng kết dùng chung)
 // E2E v0.6.1: bỏ Nạp/Tiêu/Pin, mọi giờ tính vào bánh xe. Chạy sau loadDemo() trên dữ liệu sạch.
 window.E2E61 = async function () {
   const out = [], ok = (id, pass, info) => out.push({ id, pass: !!pass, info });
@@ -13,7 +14,7 @@ window.E2E61 = async function () {
   calSubView = "timeline"; draw(); await sleep(50); scan("1.2 Chế độ ngày");
   calSubView = "year"; draw(); await sleep(50); scan("1.3 Năm (máy tính + điện thoại)");
   calSubView = "focus"; draw();
-  const tiles = [...document.querySelectorAll("#v .cap-s .cap-s-n")].map(x => x.textContent);
+  const tiles = [...__capBox().querySelectorAll(".cap-s .cap-s-n")].map(x => x.textContent);
   ok("1.4 tổng kết tuần: mỗi loại vốn một ô, đúng thứ tự", tiles.join("|") === S.caps.map(c => c.n).join("|"), tiles);
   for (const t of ["hv", "pj", "su", "set"]) { switchTab(t); await sleep(60); scan("1.5 tab " + t); }
   switchTab("ca"); openSettingsModal(); await sleep(50); scan("1.6 Cài đặt", $("settingsSheetBody"));
@@ -60,7 +61,7 @@ window.E2E61 = async function () {
   ok("4.2 điểm = 60% trung bình + 40% thấp nhất", b.score === exp, [b.score, exp]);
   ok("4.3 yếu nhất đúng vốn thấp nhất", b.weakest && b.weakest.ratio === Math.min(...rs));
   draw(); await sleep(30);
-  ok("4.4 dòng tổng kết hiện điểm cân bằng", document.querySelector("#v .cap-sum-h").textContent.includes("cân bằng " + exp + "%"));
+  ok("4.4 dòng tổng kết hiện điểm cân bằng", __capBox().querySelector(".cap-sum-h").textContent.includes("cân bằng " + exp + "%"));
   const empty = W.findIndex((_, i) => !evs(i).length && i !== wi);
   ok("4.5 tuần trống: chưa đủ dữ liệu", empty < 0 || balanceOf(empty).score === null);
   openWeeklyReviewModal(wi); await sleep(30);

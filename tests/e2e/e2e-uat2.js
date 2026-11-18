@@ -1,3 +1,4 @@
+window.__capBox = window.__capBox || function () { const o = document.getElementById("__capT"); if (o) o.remove(); const d = document.createElement("div"); d.id = "__capT"; d.innerHTML = capSumHTML(CW); document.body.appendChild(d); setTimeout(() => d.remove(), 0); return d; }; // chỉ kiểm HTML do capSumHTML(CW) trả về (popup Tổng kết dùng chung)
 // Đi đúng từng bước UAT H1–H8, I1–I7, J1–J5 như người test, rồi các trường hợp biên.
 window.E2EUAT2 = async function () {
   const out = [], ok = (id, pass, info) => out.push({ id, pass: !!pass, info: pass ? undefined : info });
@@ -232,13 +233,13 @@ window.E2EUAT2 = async function () {
   const th = [...document.querySelectorAll("#v .sum-table th")].map(x => x.textContent.trim());
   ok("J2.2 bảng giờ theo loại vốn: một cột giờ, không 'Ròng'", !/Ròng/.test($("v").textContent) && th.includes("Mục tiêu"), th);
   switchTab("ca"); await sleep(20);
-  const b = balanceOf(CW), weakEl = document.querySelector("#v .cap-s.weak");
-  ok("J3.1 tổng kết theo loại vốn: điểm cân bằng và vốn yếu nhất khớp bánh xe", document.querySelector("#v .cap-sum-h").textContent.includes("cân bằng " + b.score + "%") && weakEl && weakEl.querySelector(".cap-s-n").textContent === b.weakest.c.n, [document.querySelector("#v .cap-sum-h").textContent, weakEl && weakEl.textContent]);
+  const b = balanceOf(CW), weakEl = __capBox().querySelector(".cap-s.weak");
+  ok("J3.1 tổng kết theo loại vốn: điểm cân bằng và vốn yếu nhất khớp bánh xe", __capBox().querySelector(".cap-sum-h").textContent.includes("cân bằng " + b.score + "%") && weakEl && weakEl.querySelector(".cap-s-n").textContent === b.weakest.c.n, [__capBox().querySelector(".cap-sum-h").textContent, weakEl && weakEl.textContent]);
   switchTab("su"); await sleep(20);
   ok("J3.2 ô Điểm cân bằng cùng điểm", [...$("v").querySelectorAll(".dk")].some(x => /Điểm cân bằng/.test(x.textContent) && x.querySelector(".dk-v").textContent.replace(/\s/g, "") === b.score + "%"));
   switchTab("ca");
   S.caps.forEach(c => { c.tg = 0; }); draw();
-  ok("J3.3 chưa đặt mục tiêu: vẫn đủ giờ từng vốn, không thanh mục tiêu, không ghi cân bằng", document.querySelectorAll("#v .cap-s").length === S.caps.length && !document.querySelector("#v .cap-s-bar") && !/cân bằng/.test(document.querySelector("#v .cap-sum-h").textContent));
+  ok("J3.3 chưa đặt mục tiêu: vẫn đủ giờ từng vốn, không thanh mục tiêu, không ghi cân bằng", __capBox().querySelectorAll(".cap-s").length === S.caps.length && !__capBox().querySelector(".cap-s-bar") && !/cân bằng/.test(__capBox().querySelector(".cap-sum-h").textContent));
   S.caps = JSON.parse(caps1); draw();
 
   // ===== Trường hợp biên

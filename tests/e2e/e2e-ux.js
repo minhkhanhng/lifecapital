@@ -1,3 +1,4 @@
+window.__capBox = window.__capBox || function () { const o = document.getElementById("__capT"); if (o) o.remove(); const d = document.createElement("div"); d.id = "__capT"; d.innerHTML = capSumHTML(CW); document.body.appendChild(d); setTimeout(() => d.remove(), 0); return d; }; // chỉ kiểm HTML do capSumHTML(CW) trả về (popup Tổng kết dùng chung)
 // Kiểm các thay đổi rà soát UX (nhóm A, B, C) và trường hợp biên. Chạy sau loadDemo().
 window.E2EUX = async function () {
   const out = [], ok = (id, pass, info) => out.push({ id, pass: !!pass, info: pass ? undefined : info });
@@ -161,9 +162,9 @@ window.E2EUX = async function () {
   S.caps.forEach(c => { c.tg = 0; }); draw(); await sleep(10);
   ok("A6.1 chưa đặt mục tiêu: không có thẻ Nhận định, chỉ một nút Đặt mục tiêu", !/Nhận định/.test(vt()) && btns($("v"), /^Đặt mục tiêu$/).length === 1, btns($("v"), /^Đặt mục tiêu$/).length);
   switchTab("ca"); await sleep(10);
-  ok("A9.1 Lịch: chưa có mục tiêu vẫn đủ giờ từng loại vốn, không thanh mục tiêu", document.querySelectorAll("#v .cap-s").length === S.caps.length && !document.querySelector("#v .cap-s-bar"));
+  ok("A9.1 Lịch: chưa có mục tiêu vẫn đủ giờ từng loại vốn, không thanh mục tiêu", __capBox().querySelectorAll(".cap-s").length === S.caps.length && !__capBox().querySelector(".cap-s-bar"));
   S.caps = JSON.parse(caps0); draw();
-  ok("A9.2 có mục tiêu: mỗi ô có giờ / mục tiêu và thanh", [...document.querySelectorAll("#v .cap-s")].every(c => c.querySelector(".cap-s-bar") && /\/ \d/.test(c.textContent)));
+  ok("A9.2 có mục tiêu: mỗi ô có giờ / mục tiêu và thanh", [...__capBox().querySelectorAll(".cap-s")].every(c => c.querySelector(".cap-s-bar") && /\/ \d/.test(c.textContent)));
   // số vừa đổi tự tắt tô nền
   switchTab("su"); await sleep(10);
   dirty = true; PV = Object.fromEntries([...document.querySelectorAll("#v [data-k]")].map(e => [e.dataset.k, -1])); draw(); await sleep(10);
@@ -247,11 +248,11 @@ window.E2EUX = async function () {
   const evI = document.querySelector(".event-item");
   ok("V2.15 hoạt động có chấm màu loại vốn (không vạch viền) và nền nhuộm màu vốn", (el => el && getComputedStyle(el, "::before").backgroundColor !== "rgba(0, 0, 0, 0)" && getComputedStyle(el, "::before").borderTopLeftRadius === "50%")(evI.querySelector(".event-item-top")) && !/3px 0px 0px 0px inset/.test(getComputedStyle(evI).boxShadow));
   // Tổng kết theo loại vốn
-  const cells = [...document.querySelectorAll("#v .cap-s")];
+  const cells = [...__capBox().querySelectorAll(".cap-s")];
   ok("V2.16 Lịch: mỗi loại vốn một ô, số giờ đúng wk()", cells.length === S.caps.length && S.caps.every((c, i) => cells[i].querySelector("b").textContent.startsWith(r1(wk(CW, c.k)) + "h")), cells.map(c => c.textContent.replace(/\s+/g, " ")));
-  ok("V2.17 dòng tổng: tổng giờ = al(), số hoạt động", document.querySelector("#v .cap-sum-h").textContent.includes(r1(al(CW)) + "h · " + evs(CW).length + " hoạt động"));
+  ok("V2.17 dòng tổng: tổng giờ = al(), số hoạt động", __capBox().querySelector(".cap-sum-h").textContent.includes(r1(al(CW)) + "h · " + evs(CW).length + " hoạt động"));
   const bw = balanceOf(CW).weakest;
-  ok("V2.18 vốn yếu nhất được đánh dấu", !bw || (document.querySelectorAll("#v .cap-s.weak").length === 1 && document.querySelector("#v .cap-s.weak .cap-s-n").textContent === bw.c.n));
+  ok("V2.18 vốn yếu nhất được đánh dấu", !bw || (__capBox().querySelectorAll(".cap-s.weak").length === 1 && __capBox().querySelector(".cap-s.weak .cap-s-n").textContent === bw.c.n));
   openWeeklyReviewModal(CW); await sleep(20);
   const rb = $("v"), rvKids = [...rb.children].filter(x => x.offsetParent);
   const dk = rvKids[1] ? [...rvKids[1].children] : [];
