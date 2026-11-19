@@ -2,6 +2,15 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.9.7 · Tách 4 ngày trên / 3 ngày dưới khi mở Hộp việc · 19/11/2026
+
+**Mới**
+- Khi mở cột Hộp việc cạnh lịch, lưới tuần tự động tách thành 2 hàng rộng rãi thay vì cố nhồi nhét 7 ngày vào 1 hàng:
+  - Hàng trên: 4 ngày đầu tuần (Thứ 2, Thứ 3, Thứ 4, Thứ 5) chia đều 4 cột.
+  - Hàng dưới: 3 ngày cuối tuần (Thứ 6, Thứ 7, Chủ Nhật) dàn đều 3 cột thoáng rộng.
+  - Tên hoạt động và giờ giấc hiển thị đầy đủ, không còn bị cắt ngắn `...`.
+- Khi đóng Hộp việc (bấm Ẩn), lưới tuần tự động trở lại 7 ngày trên một hàng ngang như bình thường.
+
 ## v0.9.6 · Sửa bố cục 3 ô Hôm nay trên điện thoại · 19/11/2026
 
 **Sửa**

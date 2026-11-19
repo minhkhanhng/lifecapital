@@ -341,7 +341,22 @@ input[type="time"] { min-width: 105px; }
 .wk-wrap { container-type: inline-size; min-width: 0; }
 @container (max-width: 759px) { .week-cards-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 @container (max-width: 599px) { .week-cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 640px) { .week-cards-grid { grid-template-columns: minmax(0, 1fr) !important; } } /* điện thoại: một cột */
+@media (max-width: 640px) {
+  .week-cards-grid { grid-template-columns: minmax(0, 1fr) !important; }
+  .week-cards-grid > .day-card { grid-column: span 1 !important; }
+} /* điện thoại: một cột */
+/* Khi mở Hộp việc (desktop): tách thành 4 ngày ở trên và 3 ngày ở dưới dàn đều (PO chọn 2026-11-19) */
+@media (min-width: 641px) {
+  .cal-with-inbox:not(.collapsed) .week-cards-grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+  .cal-with-inbox:not(.collapsed) .week-cards-grid > .day-card:nth-child(-n+4) {
+    grid-column: span 3;
+  }
+  .cal-with-inbox:not(.collapsed) .week-cards-grid > .day-card:nth-child(n+5) {
+    grid-column: span 4;
+  }
+}
 @supports not (container-type: inline-size) {
   @media (max-width: 992px) { .week-cards-grid { grid-template-columns: repeat(4, 1fr); } }
   @media (max-width: 640px) { .week-cards-grid { grid-template-columns: 1fr; } }
@@ -2716,7 +2731,7 @@ const save = () => {
    hay cửa sổ khác đã ghi mà tab này không nhận được (tab bị trình duyệt tạm dừng, trang khôi phục từ
    bộ nhớ đệm, bản cũ của app không biết lắng nghe…): gộp hai bên thay vì ghi đè.
    Dữ liệu do bản này ghi có sv = 2. Bên ghi không có sv (bản cũ) thì chỉ cộng thêm, không xóa gì. */
-const APPV = 79; // v0.9.6
+const APPV = 80; // v0.9.7
 const SV = 3; // 3 (v0.4.0): hoạt động có mã riêng và thời điểm sửa; bản ghi sv khác được gộp kiểu cộng thêm
 let lastRaw = rawSaved, oldWriterSeen = 0;
 // Đồng bộ giữa các thiết bị (v0.4.0, xem phần ĐỒNG BỘ ở cuối tệp)

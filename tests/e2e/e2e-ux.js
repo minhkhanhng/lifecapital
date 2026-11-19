@@ -241,8 +241,17 @@ window.E2EUX = async function () {
   const dIdx = dow(new Date());
   ok("V2.11 ngày đã qua có lớp past, ngày tới không", document.querySelectorAll(".day-card.past").length === dIdx && !document.querySelector(".day-card.today.past"));
   ok("V2.12 đầu cột: thứ, ngày, tổng giờ tách riêng", [...document.querySelectorAll(".day-card")].every(c => c.querySelector(".day-name") && /^\d+\/\d+$/.test(c.querySelector(".day-date").textContent.trim())) && [...document.querySelectorAll(".day-card .day-h")].every(x => /^\d+(,\d)?h$/.test(x.textContent)));
-  const cols = getComputedStyle(document.querySelector(".week-cards-grid")).gridTemplateColumns.split(" ").length, ww = document.querySelector(".wk-wrap").clientWidth;
-  ok("V2.13 đủ rộng (≥760px, hướng A 2026-11-18) thì 7 cột như lịch tuần thường thấy", ww >= 760 ? cols === 7 : cols <= 4, [ww, cols]);
+  const cards = [...document.querySelectorAll(".week-cards-grid .day-card")];
+  const isInboxOpen = !document.querySelector(".cal-with-inbox")?.classList.contains("collapsed");
+  if (isInboxOpen && cards.length === 7) {
+    const r1Top = Math.round(cards[0].getBoundingClientRect().top), r2Top = Math.round(cards[4].getBoundingClientRect().top);
+    const r1Same = [0, 1, 2, 3].every(i => Math.abs(Math.round(cards[i].getBoundingClientRect().top) - r1Top) <= 2);
+    const r2Same = [4, 5, 6].every(i => Math.abs(Math.round(cards[i].getBoundingClientRect().top) - r2Top) <= 2);
+    ok("V2.13 mở Hộp việc: tách 4 ngày trên (Thứ 2–5) và 3 ngày dưới (Thứ 6–CN)", r1Same && r2Same && r2Top > r1Top, [r1Top, r2Top]);
+  } else {
+    const cols = getComputedStyle(document.querySelector(".week-cards-grid")).gridTemplateColumns.split(" ").length, ww = document.querySelector(".wk-wrap").clientWidth;
+    ok("V2.13 đủ rộng (≥760px, hướng A 2026-11-18) thì 7 cột như lịch tuần thường thấy", ww >= 760 ? cols === 7 : cols <= 4, [ww, cols]);
+  }
   const bgOf = el => getComputedStyle(el).backgroundColor;
   ok("V2.14 thứ bậc: tiêu đề và hàng chọn tuần không hộp; thẻ ngày là khối nổi (nền trắng trong, bóng nhiều lớp, không viền)", bgOf(document.querySelector(".app-header")) === "rgba(0, 0, 0, 0)" && bgOf(document.querySelector(".wk-bar")) === "rgba(0, 0, 0, 0)" && (a => a >= 0.3 && a <= 0.98)(parseFloat(bgOf(document.querySelector(".day-card")).split(",")[3] || "1")) && getComputedStyle(document.querySelector(".day-card")).boxShadow.split(/,(?![^(]*\))/).length >= 3 && /rgba\(0, 0, 0, 0\)|transparent/.test(getComputedStyle(document.querySelector(".day-card")).borderTopColor));
   const evI = document.querySelector(".event-item");
