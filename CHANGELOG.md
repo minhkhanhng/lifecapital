@@ -2,6 +2,13 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.9.6 · Sửa bố cục 3 ô Hôm nay trên điện thoại · 19/11/2026
+
+**Sửa**
+- Khắc phục lỗi chữ giá trị (`0h`, `–`, `Chưa ghi`) bị dính sát mép đáy ô trên điện thoại: gỡ bỏ giới hạn chiều cao `max-height`, bổ sung đệm đáy đều đặn 10px.
+- Thu nhỏ vòng tròn tiến độ trên điện thoại xuống 24×24px thanh thoát, cân xứng với tỷ lệ ô.
+- Căn chỉnh chữ nhãn `CÂN BẰNG TUẦN` nằm trọn vẹn ở giữa ô, không bị chèn ép sát viền 2 bên.
+
 ## v0.9.5 · Bố cục Hôm nay đồng đều, thanh tuần tinh gọn · 18/11/2026
 
 **Đổi**

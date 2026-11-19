@@ -2169,9 +2169,11 @@ button.n3-c:hover { background: var(--ac-soft); }
   .today-hero { padding: 10px 12px; gap: 8px; margin-bottom: 10px; }
   .th-greet { font-size: 16px; }
   .th-row { gap: 8px; }
-  .th-stat { flex-direction: column; justify-content: center; text-align: center; gap: 4px; padding: 8px 6px; min-height: 52px; }
-  .th-sv { align-items: center; max-width: 100%; gap: 2px; }
-  .th-stat .th-ring { width: 32px; height: 32px; }
+  .th-stat { flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 4px; padding: 10px 4px; min-height: 72px; max-height: none; }
+  .th-sv { align-items: center; max-width: 100%; gap: 3px; }
+  .th-stat .th-ring { width: 24px; height: 24px; }
+  .th-l { font-size: 11px; letter-spacing: 0; line-height: 1.2; }
+  .th-v { font-size: 14px; line-height: 1.2; }
   .th-v b small { display: none; }
 }
 /* Lịch: dải mẫu một dòng, hàng tuần một dòng, nút ◀ ▶ đủ vùng bấm */
@@ -2714,7 +2716,7 @@ const save = () => {
    hay cửa sổ khác đã ghi mà tab này không nhận được (tab bị trình duyệt tạm dừng, trang khôi phục từ
    bộ nhớ đệm, bản cũ của app không biết lắng nghe…): gộp hai bên thay vì ghi đè.
    Dữ liệu do bản này ghi có sv = 2. Bên ghi không có sv (bản cũ) thì chỉ cộng thêm, không xóa gì. */
-const APPV = 78; // v0.9.5
+const APPV = 79; // v0.9.6
 const SV = 3; // 3 (v0.4.0): hoạt động có mã riêng và thời điểm sửa; bản ghi sv khác được gộp kiểu cộng thêm
 let lastRaw = rawSaved, oldWriterSeen = 0;
 // Đồng bộ giữa các thiết bị (v0.4.0, xem phần ĐỒNG BỘ ở cuối tệp)
