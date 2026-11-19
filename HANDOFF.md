@@ -1,5 +1,12 @@
 # HANDOFF · Bàn giao cho session sau (mục mới nhất ở trên)
 
+## 2026-11-19 · ĐÃ PHÁT HÀNH v0.9.7 LÊN PRODUCTION (PO: "duyệt")
+- `git merge --ff-only claude/cal-inbox-grid` vào `main`, `git tag v0.9.7`, `git push origin main` (`fe97601..25659e2`), `git push origin v0.9.7`, `git push origin main:staging`; Vercel `success`; kiểm production: sw `lc-0.9.7`, `APPV 80`, `/api/ai_plan` 200, vendor/icon/CSP đạt, `index.html` và `sw.js` khớp byte với repo.
+- Nội dung: khi mở cột Hộp việc, lưới tuần tự động tách 4 ngày ở trên (Thứ 2–5) và 3 ngày ở dưới (Thứ 6–CN) dàn đều 100% bề ngang, tên hoạt động hiển thị đầy đủ không bị cắt ngắn; khi đóng Hộp việc trở lại 7 ngày trên một hàng (Phương án 1 PO duyệt).
+- HOÀN TÁC: commit revert `25659e2` trên nhánh mới từ `main` (KHÔNG force-push), nâng `APPV` 81/`VERSION` `lc-0.9.8`/CHANGELOG; dữ liệu không đổi.
+- Việc còn lại: PO trải nghiệm bản v0.9.7 trên máy thật; nhắc PO bấm Tải lại khi thanh "Có bản mới" hiện lên.
+- Next step: PO dùng v0.9.7, báo ý kiến hoặc yêu cầu công việc tiếp theo.
+
 ## 2026-11-19 · ĐÃ PHÁT HÀNH v0.9.6 LÊN PRODUCTION (PO: "duyệt")
 - `git merge --ff-only claude/fix-mobile-today` vào `main`, `git tag v0.9.6`, `git push origin main` (`a8e537a..9a51788`), `git push origin v0.9.6`, `git push origin main:staging`; Vercel `success`; kiểm production: sw `lc-0.9.6`, `APPV 79`, `/api/ai_plan` 200, vendor/icon/CSP đạt, `index.html` và `sw.js` khớp byte với repo.
 - Nội dung: sửa bố cục 3 ô Hôm nay trên mobile (gỡ bỏ max-height, đệm đáy 10px thoáng đãng tránh dính sát mép viền dưới, thu nhỏ vòng tròn tiến độ xuống 24×24px thanh thoát, căn chỉnh nhãn CÂN BẰNG TUẦN trọn vẹn ở giữa ô theo Phương án 1 được PO duyệt).

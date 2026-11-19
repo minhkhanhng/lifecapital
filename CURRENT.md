@@ -1,9 +1,9 @@
 # CURRENT · Hiện trạng (cập nhật 2026-11-19)
 
 ## Bản đang chạy (đã xác nhận)
-- **PRODUCTION = v0.9.6** (phát hành 2026-11-19, PO: "duyệt"). https://lifecapital.vercel.app: `sw.js` = `lc-0.9.6`, `APPV = 79; // v0.9.6`, `/api/ai_plan` 200, vendor SHA-256 khớp, header CSP + HSTS + `X-Frame-Options: DENY`, icon khớp, `index.html` và `sw.js` khớp từng byte với repo. Vercel `success`.
-- `origin/main` = `9a51788` (tag `v0.9.6`), fast-forward từ `ce09e12` (v0.9.5). v0.9.6: sửa bố cục 3 ô Hôm nay trên mobile (gỡ bỏ max-height khống chế desktop, đệm đáy 10px thoáng đãng tránh dính sát mép viền dưới, thu nhỏ vòng tròn tiến độ xuống 24×24px thanh thoát, căn chỉnh nhãn CÂN BẰNG TUẦN trọn vẹn ở giữa ô). Trước đó: v0.9.5 `ce09e12`, v0.9.4 `0e26392`, v0.9.3 `e28c0f6`, v0.9.2 `fd0c79e`, v0.9.1 `14e7326`, v0.9.0 `c1849e7`.
-- Kiểm trước khi ra bản: E2EUIALL 32/32 (375); E2ESTAR 44/44 (375); ảnh chụp màn hình kiểm chứng trực tiếp cả trạng thái rỗng và có dữ liệu demo trên khổ mobile 390×844.
+- **PRODUCTION = v0.9.7** (phát hành 2026-11-19, PO: "duyệt"). https://lifecapital.vercel.app: `sw.js` = `lc-0.9.7`, `APPV = 80; // v0.9.7`, `/api/ai_plan` 200, vendor SHA-256 khớp, header CSP + HSTS + `X-Frame-Options: DENY`, icon khớp, `index.html` và `sw.js` khớp từng byte với repo. Vercel `success`.
+- `origin/main` = `25659e2` (tag `v0.9.7`), fast-forward từ `9a51788` (v0.9.6). v0.9.7: khi mở Hộp việc, lưới tuần tự động tách 4 ngày ở trên (Thứ 2–5) và 3 ngày ở dưới (Thứ 6–CN) dàn đều 100% bề ngang, tên hoạt động hiển thị đầy đủ không bị cắt ngắn; khi đóng Hộp việc trở lại 7 ngày trên một hàng. Trước đó: v0.9.6 `9a51788`, v0.9.5 `ce09e12`, v0.9.4 `0e26392`, v0.9.3 `e28c0f6`, v0.9.2 `fd0c79e`, v0.9.1 `14e7326`, v0.9.0 `c1849e7`.
+- Kiểm trước khi ra bản: E2EUIALL 77/77 (1440) và 32/32 (375); E2ESTAR 44/44 (1440); ảnh chụp màn hình kiểm chứng trực tiếp cả 2 trạng thái mở Hộp việc (4/3) và đóng Hộp việc (7) trên desktop 1440×900.
 - Bản cũ chưa cập nhật giữ nguyên `star: 1` khi đồng bộ (đã xác nhận: `extras()` của v0.9.3 giữ trường lạ).
 - CHƯA KIỂM: thiết bị thật; rê chuột thật (chỉ kiểm focus và CSS); đăng nhập Google/Email qua Supabase, đồng bộ `wss`, Google Calendar (nút Ngắt có thể cần `https://oauth2.googleapis.com` ở `connect-src`), cài PWA (từ v0.8.0); màn 900–1199 px; chế độ tối/"Bỏ kính mờ" bằng mắt.
 - ĐÁNH ĐỔI đã biết: ★ chỉ hiện ở thẻ tab Lịch tuần (chưa ở chế độ Ngày); trên cảm ứng chỉ đánh dấu qua popup; tên hoạt động trong cột hẹp cắt mạnh hơn; chuỗi lặp mới tạo không gắn sao.
