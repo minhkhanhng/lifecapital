@@ -2,6 +2,12 @@
 
 Địa chỉ: https://lifecapital.vercel.app · Dữ liệu nằm trong trình duyệt của từng máy; cập nhật phiên bản không xóa dữ liệu.
 
+## v0.9.8 · Sửa nhanh: việc nhỏ dài tới 300 chữ, sửa nhanh việc nhỏ ở tab Dự án, bấm tiêu đề ngày ở tuần để xem dòng thời gian · 20/11/2026
+
+- Tên việc nhỏ cho phép tới 300 ký tự (trước là 120).
+- Tab Dự án: bấm tên việc nhỏ để sửa tên và thời lượng như ở Hộp việc.
+- Tab Lịch (Tuần): bấm tiêu đề một ngày mở dòng thời gian chi tiết của đúng ngày đó.
+
 ## v0.9.7 · Tách 4 ngày trên / 3 ngày dưới khi mở Hộp việc · 19/11/2026
 
 **Mới**

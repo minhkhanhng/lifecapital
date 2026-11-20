@@ -2731,7 +2731,7 @@ const save = () => {
    hay cửa sổ khác đã ghi mà tab này không nhận được (tab bị trình duyệt tạm dừng, trang khôi phục từ
    bộ nhớ đệm, bản cũ của app không biết lắng nghe…): gộp hai bên thay vì ghi đè.
    Dữ liệu do bản này ghi có sv = 2. Bên ghi không có sv (bản cũ) thì chỉ cộng thêm, không xóa gì. */
-const APPV = 80; // v0.9.7
+const APPV = 81; // v0.9.8
 const SV = 3; // 3 (v0.4.0): hoạt động có mã riêng và thời điểm sửa; bản ghi sv khác được gộp kiểu cộng thêm
 let lastRaw = rawSaved, oldWriterSeen = 0;
 // Đồng bộ giữa các thiết bị (v0.4.0, xem phần ĐỒNG BỘ ở cuối tệp)
@@ -4964,6 +4964,12 @@ function yrScrolled(box) {
     document.querySelectorAll(".yr-tabs button").forEach((b, i) => { b.classList.toggle("btn-primary", i === q); b.classList.toggle("btn-ghost", i !== q); b.setAttribute("aria-selected", i === q); });
   }
 }
+function openDayFromWeek(j) {
+  timelineDayIdx = j;
+  calSubView = "timeline";
+  draw(true);
+  window.scrollTo(0, 0);
+}
 function openDayFromYear(i, j) {
   sel = i;
   timelineDayIdx = j;
@@ -5153,7 +5159,7 @@ const V = {
 
         cards += `
           <div class="day-card ${isToday ? 'today' : k < tk ? 'past' : ''} ${j > 4 ? 'wkend' : ''}" ondragover="dayOver(event)" ondragleave="dayLeave(event)" ondrop="dayDrop(event, '${k}')">
-            <div class="day-card-header">
+            <div class="day-card-header" role="button" tabindex="0" style="cursor:pointer" title="Xem chi tiết ngày" onclick="openDayFromWeek(${j})" onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openDayFromWeek(${j}); }">
               <span class="day-name">${DN_VI[j]}</span>
               <span class="day-date">${dt.toLocaleDateString("vi-VN", { day: "numeric", month: "numeric" })}</span>
               ${dh ? `<span class="day-h" title="Tổng giờ trong ngày">${r1(dh)}h</span>` : ""}
@@ -5605,7 +5611,7 @@ const subsCnt = l => (l || []).length ? `${l.filter(x => x.done).length}/${l.len
 function subsRows() {
   return edSubs.map((x, i) => `<div class="ed-sub">
     <label class="ed-sub-ck"><input type="checkbox" ${x.done ? "checked" : ""} onchange="subDone(${i}, this.checked)" aria-label="Xong: ${esc(x.t)}"></label>
-    <input class="ed-sub-t ${x.done ? "done" : ""}" value="${esc(x.t)}" maxlength="120" oninput="subName(${i}, this.value)" aria-label="Tên việc con ${i + 1}">
+    <input class="ed-sub-t ${x.done ? "done" : ""}" value="${esc(x.t)}" maxlength="300" oninput="subName(${i}, this.value)" aria-label="Tên việc con ${i + 1}">
     <button type="button" class="ed-sub-x" onclick="subDel(${i})" aria-label="Xóa việc con: ${esc(x.t)}">×</button>
   </div>`).join("");
 }
@@ -5614,7 +5620,7 @@ function subsHTML() {
     <button type="button" class="subs-tg" id="subsToggle" aria-expanded="${edSubsOpen}" aria-controls="subsPanel" onclick="subsToggle()">Việc con<span class="subs-chip" id="subsCount">${subsCnt(edSubs)}</span><span class="subs-caret" aria-hidden="true">${edSubsOpen ? "▾" : "▸"}</span></button>
     <div class="subs-panel" id="subsPanel" ${edSubsOpen ? "" : "hidden"}>
       <div id="subsList">${subsRows()}</div>
-      <input id="inpSub" placeholder="Thêm việc con, Enter để thêm" maxlength="120" aria-label="Thêm việc con" onkeydown="subKey(event)">
+      <input id="inpSub" placeholder="Thêm việc con, Enter để thêm" maxlength="300" aria-label="Thêm việc con" onkeydown="subKey(event)">
     </div>
   </div>`;
 }
@@ -5640,12 +5646,12 @@ function subAdd() {
   const i = $("inpSub"); if (!i) return;
   const t = i.value.trim();
   if (!t) return;
-  edSubs.push({ id: nid("s"), t: t.slice(0, 120) });
+  edSubs.push({ id: nid("s"), t: t.slice(0, 300) });
   i.value = "";
   subsRefresh(true); i.focus();
 }
 function subDone(i, on) { if (!edSubs[i]) return; if (on) edSubs[i].done = 1; else delete edSubs[i].done; subsRefresh(true); }
-function subName(i, v) { if (edSubs[i]) edSubs[i].t = v.slice(0, 120); }
+function subName(i, v) { if (edSubs[i]) edSubs[i].t = v.slice(0, 300); }
 function subDel(i) { edSubs.splice(i, 1); subsRefresh(true); const n = $("inpSub"); if (n) n.focus(); }
 // Danh sách để lưu: bỏ dòng tên rỗng
 const subsToSave = () => edSubs.filter(x => x.t.trim()).map(x => ({ ...x, t: x.t.trim() }));
@@ -6157,7 +6163,7 @@ function cleanEvSubs(l) {
     let id = SAFE_K.test(x.id || "") && !seen.has(x.id) ? x.id : "u" + fnv(i + "|" + x.t);
     while (seen.has(id)) id += "x";
     seen.add(id);
-    out.push({ ...extras(x, ["id", "t", "done"]), id, t: x.t.slice(0, 120), ...(x.done ? { done: 1 } : {}) });
+    out.push({ ...extras(x, ["id", "t", "done"]), id, t: x.t.slice(0, 300), ...(x.done ? { done: 1 } : {}) });
   });
   return out.length ? { subs: out } : {};
 }
@@ -6641,7 +6647,7 @@ function cleanProject(x) {
 function cleanSub(x) {
   if (!x || !SAFE_K.test(x.id || "") || typeof x.t !== "string" || !x.t.trim()) return null;
   const h = +x.h;
-  return { ...extras(x, ["id", "t", "h", "done"]), id: x.id, t: x.t.slice(0, 120), h: h > 0 && h <= 12 ? Math.round(h * 100) / 100 : 1, ...(x.done ? { done: 1 } : {}) };
+  return { ...extras(x, ["id", "t", "h", "done"]), id: x.id, t: x.t.slice(0, 300), h: h > 0 && h <= 12 ? Math.round(h * 100) / 100 : 1, ...(x.done ? { done: 1 } : {}) };
 }
 function cleanTask(x) {
   if (!x || !SAFE_K.test(x.id || "") || typeof x.t !== "string" || !x.t.trim()) return null;
@@ -6713,7 +6719,7 @@ function addTask(title) {
 function addSub(taskId, text) {
   const t = findTask(taskId), p = parseSubText(text);
   if (!t || !p.t) return false;
-  t.subs.push({ id: nid("s"), t: p.t.slice(0, 120), h: p.h || SUB_DEF_H });
+  t.subs.push({ id: nid("s"), t: p.t.slice(0, 300), h: p.h || SUB_DEF_H });
   delete t.done;
   save();
   return true;
@@ -6744,7 +6750,7 @@ function hvInputEnter(el) {
 }
 function hvKeydown(e) {
   const el = e.target;
-  if (e.key === "Escape" && el.dataset.hv === "edit") { e.preventDefault(); e.stopPropagation(); hvEdit = null; draw(); return; }
+  if (e.key === "Escape" && el.dataset.hv === "edit") { e.preventDefault(); e.stopPropagation(); hvEdit = null; draw(); if (pjDet) renderPjItem(true); return; }
   if (e.key === "Escape" && el.dataset.hv === "pjsec") { e.preventDefault(); e.stopPropagation(); pjSecEdit = null; draw(); return; }
   if (e.key !== "Enter" || e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) return;
   if (enterWaitsIME(e, el, hvInputEnter)) return;
@@ -6754,6 +6760,7 @@ function hvKeydown(e) {
 function startHvEdit(kind, id) {
   hvEdit = { kind, id };
   draw();
+  if (pjDet) renderPjItem(true);
   setTimeout(() => { const i = $("hvEditName"); if (i) { i.focus(); i.select(); } }, 0);
 }
 function saveHvEdit() {
@@ -6765,13 +6772,14 @@ function saveHvEdit() {
   } else {
     const f = findSub(hvEdit.id);
     if (f && name && name.trim()) {
-      f.sub.t = name.trim().slice(0, 120);
+      f.sub.t = name.trim().slice(0, 300);
       if (dur > 0 && dur <= 12) f.sub.h = Math.round(dur * 100) / 100;
     }
   }
   hvEdit = null;
   save();
   draw();
+  if (pjDet) renderPjItem(true);
 }
 // Đổi dự án của việc: hỏi có đổi luôn các hoạt động đã xếp từ việc này không
 async function setTaskPj(id, v) {
@@ -9254,10 +9262,15 @@ function renderPjItem(force) {
         </div>
         <div class="pjd-sec">
           <b>Việc nhỏ <small>${t.subs.length ? `${it.nD}/${t.subs.length} xong · tổng ${hrs(tot)}` : "chưa chia nhỏ"}</small></b>
-          ${t.subs.map(s => { const x = m.get(s.id); return `
+          ${t.subs.map(s => { const x = m.get(s.id); if (hvEdit && hvEdit.kind === "sub" && hvEdit.id === s.id) return `
+            <div class="pjd-li editing" style="display:flex;gap:8px;align-items:center">
+              <input id="hvEditName" data-hv="edit" value="${esc(s.t)}" maxlength="300" onkeydown="hvKeydown(event)" aria-label="Tên việc nhỏ" style="flex:1;min-width:0">
+              <input id="hvEditDur" data-hv="edit" type="number" min="0.25" max="12" step="0.25" value="${s.h}" onkeydown="hvKeydown(event)" aria-label="Thời lượng (giờ)" style="width:72px">
+              <button type="button" class="btn btn-sm btn-primary" onclick="saveHvEdit()">Lưu</button>
+            </div>`; return `
             <div class="pjd-li ${s.done ? "done" : ""}">
               <input type="checkbox" ${s.done ? "checked" : ""} onchange="toggleDone('sub','${s.id}')" aria-label="Xong: ${esc(s.t)}">
-              <span>${esc(s.t)}</span><small>${hrs(s.h)}</small>
+              <button type="button" class="hv-name" style="text-align:left" onclick="startHvEdit('sub','${s.id}')" title="Bấm để sửa">${esc(s.t)}</button><small>${hrs(s.h)}</small>
               ${x ? `<button type="button" class="hv-when" onclick="openEditor('${x.k}', ${x.i})">${pjWhen(x)}</button>` : s.done ? "<span></span>" : `<button type="button" class="btn btn-sm" onclick="openSched('sub','${s.id}')">Xếp</button>`}
               ${xBtn(`deleteSub('${s.id}')`, "Xóa " + esc(s.t))}
             </div>`; }).join("")}
@@ -9335,7 +9348,7 @@ async function pjSerEdit(field, v) {
   const p = pjDet && findPj(pjDet.pj), it = p && pjModel(p).find(i => i.kind === "ser" && i.id === pjDet.id);
   v = String(v || "").trim();
   if (!it || !v) { const n = document.querySelector("#pjItBody .pjd-name"); if (n) n.value = n.defaultValue; return; }
-  if (field === "t") v = v.slice(0, 120);
+  if (field === "t") v = v.slice(0, 300);
   const up = it.evs.filter(x => !evPast(x.k, x.e));
   let list = it.evs;
   if (up.length && up.length < it.evs.length) {
